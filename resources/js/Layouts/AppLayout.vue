@@ -41,7 +41,7 @@ const logout = () => {
 
         <div class="min-h-screen bg-gray-100 flex">
             <!-- Sidebar -->
-            <nav class=" fixed bg-white border-r border-gray-100 w-64 h-full">
+            <nav class=" fixed bg-blue-500 border-r border-gray-100 w-64 h-full z-40">
                 <div class=" flex flex-col h-full">
                     <!-- Logo -->
                     <div class="flex justify-center shrink-0 flex items-center p-4 w-full max-w-lg bg-white p-8 shadow-lg rounded-lg ">
@@ -51,20 +51,20 @@ const logout = () => {
                     </div>
 
                     <!-- Navigation Links -->
-                    <div class="flex-2 p-4 space-y-20">
-                        <div class="flex justify-center w-full max-w-lg bg-white p-8 shadow-lg rounded-lg">
+                    <div class="flex-2 p-4 space-y-20 ">
+                        <div class="flex items-center justify-center w-full max-w-lg bg-white p-8 shadow-lg rounded-lg">
                             <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                             </NavLink>
                         </div>
                         
-                        <div class="flex justify-center w-full max-w-lg bg-white p-8 shadow-lg rounded-lg">
+                        <div class="flex items-center justify-center w-full max-w-lg bg-white p-8 shadow-lg rounded-lg">
                             <NavLink :href="route('cicl')" :active="route().current('cicl')">
                             CICL
                             </NavLink>
                         </div>
                         
-                        <div class="flex justify-center w-full max-w-lg bg-white p-8 shadow-lg rounded-lg">
+                        <div class="flex items-center justify-center w-full max-w-lg bg-white p-8 shadow-lg rounded-lg">
                             <NavLink :href="route('new')" :active="route().current('new')">
                             New Client
                             </NavLink>
@@ -73,7 +73,7 @@ const logout = () => {
                     </div>
 
                     <!-- User and Settings -->
-                    <div class="flex justify-center w-full max-w-lg bg-white p-8 shadow-lg rounded-lg">
+                    <div class="flex items-center justify-center w-full max-w-lg bg-white p-8 shadow-lg rounded-lg">
                         <div class="relative">
                             <!-- Teams Dropdown -->
                             <Dropdown v-if="$page.props.jetstream.hasTeamFeatures" align="right" width="60">
@@ -178,24 +178,25 @@ const logout = () => {
                 </div>
             </nav>
 
-            <!-- Main Content -->
-            <div class="flex-1 ml-64">
+       <!-- Main Content -->
+       <div class="flex-1 ml-64">
                 <!-- Page Heading -->
-                <header v-if="$slots.header" class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <header v-if="$slots.header" class="ml-64 bg-blue-500 fixed top-0 left-0 w-full z-30">
+                    <div class="max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
                         <slot name="header" />
                     </div>
                 </header>
 
                 <!-- Page Content -->
-                <main>
+                <main class="pt-24 mt-20"> <!-- Adjust padding to match header height -->
                     <slot />
                 </main>
-            </div>
+</div>
+
         </div>
     </div>
 </template>
 
 <style scoped>
-/* Add any additional styles if needed */
+
 </style>
