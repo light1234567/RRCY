@@ -9,15 +9,18 @@
       <img id="header-image-right" src="images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-20 w-auto" />
     </header>
     <main class="flex-grow flex flex-col md:flex-row items-center justify-center p-2 md:p-4 lg:p-6 overflow-hidden">
-      <div class="flex w-full max-w-6xl flex-col md:flex-row h-screen">
+      <div class="flex w-full max-w-6xl flex-col md:flex-row h-1/2">
         <!-- Left Side: Images -->
-        <div class="w-full md:w-1/2 p-2 md:p-4 shadow-md border border-gray-300 flex-grow overflow-hidden relative">
-          <div class="absolute inset-0 bg-blue-600 opacity-10 z-10"></div>
+        <div class="w-full md:w-1/2 p-4 md:p-2 shadow-md border border-white bg-white flex-grow relative">
+          <!-- Blue Overlay -->
+          <div class="absolute inset-0z-10"></div>
+
+          <!-- Image Container -->
           <div class="w-full h-full space-y-4 flex flex-col justify-between relative z-20">
-            <div class="w-full h-1/2 flex items-center justify-center">
+            <div class="w-full h-1/2 flex items-center justify-center custom-shadow border border-black">
               <img :src="currentImage1" alt="Image 1" class="w-full h-full object-cover" />
             </div>
-            <div class="w-full h-1/2 flex items-center justify-center">
+            <div class="w-full h-1/2 flex items-center justify-center custom-shadow border border-black">
               <img :src="currentImage2" alt="Image 2" class="w-full h-full object-cover" />
             </div>
           </div>
@@ -83,10 +86,10 @@
                   <InputError class="mt-1" :message="form.errors.password_confirmation" />
                 </div>
                 <div>
-                  <InputLabel for="service_type" value="Service Type" />
+                  <InputLabel for="role" value="Role" />
                   <select
-                    id="service_type"
-                    v-model="form.service_type"
+                    id="role"
+                    v-model="form.role"
                     class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                     required
                   >
@@ -99,7 +102,7 @@
                     <option value="educational services">Educational Services</option>
                     <option value="psd">PSD</option>
                   </select>
-                  <InputError class="mt-1" :message="form.errors.service_type" />
+                  <InputError class="mt-1" :message="form.errors.role" />
                 </div>
               </div>
               <div class="flex items-center justify-end mt-1">
@@ -118,7 +121,7 @@
       </div>
     </main>
 
-    <div class="bg-blue-900 py-0">
+ <div class="bg-blue-900 py-0">
       <div class="flex flex-wrap justify-between items-center mt-4 px-4 pb-1">
         <!-- Facebook Link -->
         <a href="#" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
@@ -126,19 +129,27 @@
           <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
             <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
           </svg>
-          <span class="text-gray-300 text-xs">Regional Rehabilitation Center for Youth</span>
+          <span class="text-gray-300 hover:text-white text-xs">Regional Rehabilitation Center for Youth</span>
         </a>
         <!-- Copyright Text -->
-        <p class="text-base leading-6 text-gray-300 text-xs mb-2">
+        <p class="text-base leading-6 text-gray-300 hover:text-white text-xs mb-2">
           © All rights reserved.
         </p>
         <!-- Website Link -->
-        <a href="https://www.dswd.gov.ph/" class="flex items-center text-gray-300 hover:text-gray-600 space-x-2 mb-2">
+        <a href="https://www.dswd.gov.ph/" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
           <span class="sr-only">Website</span>
           <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.25.139-.099.347.077.447.08zm-1.507 7.176c-1.035.492-2.603.876-4.122.91a12.934 12.934 0 01-4.436-.81 1.67 1.67 0 00-.188-.051c-.229.226-.367.576-.367.957v2.858c0 .767.308 1.415.743 1.918-.511.108-1.034.164-1.569.164a7.515 7.515 0 01-1.818-.226c.418-.518.675-1.168.675-1.88v-2.477c0-.927.604-1.757 1.484-2.037a14.276 14.276 0 004.868.347c1.64-.417 3.134-1.288 4.453-2.224a4.563 4.563 0 01-.106-.895v-.006c.011-1.261-1.007-2.279-2.263-2.279-1.263 0-2.268 1.036-2.268 2.316v.003a.295.295 0 01-.272.27c-.05-.051-.107-.089-.156-.142-.55-.568-1.264-.964-2.039-1.164-.651-.168-1.337-.27-2.019-.272zm.918 4.557c.92.287 1.843.604 2.768.937a2.872 2.872 0 001.29.227c.57.068 1.095-.06 1.56-.285.374-.154.71-.44.941-.762a2.65 2.65 0 00-.063-3.664c-.231-.321-.542-.62-.866-.817a3.173 3.173 0 00-1.344-.44c-.594-.03-1.198.13-1.738.39-.557.261-1.068.59-1.553.953-.572.398-1.115.875-1.628 1.376v1.584c.335.394.677.794 1.055 1.161z" clip-rule="evenodd"></path>
+            <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z" clip-rule="evenodd"></path>
           </svg>
-          <span class="text-gray-300 text-xs">dswd.gov.ph</span>
+          <span class="text-gray-300 hover:text-white text-xs ml-2">dswd.gov.ph</span>
+        </a>
+        <!-- Location Link -->
+        <a href="#" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
+          <span class="sr-only">Location</span>
+          <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm0 14.2c-1.58 0-2.88-1.29-2.88-2.88s1.29-2.88 2.88-2.88 2.88 1.29 2.88 2.88-1.29 2.88-2.88 2.88zM12 4.5c-3.92 0-7.1 3.18-7.1 7.1 0 3.35 3.3 7.88 7.1 11.4 3.79-3.52 7.1-8.05 7.1-11.4 0-3.92-3.18-7.1-7.1-7.1z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="text-gray-300 hover:text-white text-xs">Purok 7, Bago Oshiro, Tugbok District, Davao City</span>
         </a>
       </div>
     </div>
@@ -158,7 +169,7 @@ const form = useForm({
   email: '',
   password: '',
   password_confirmation: '',
-  service_type: '', // Added field for dropdown
+  role: '', 
 })
 
 const submit = () => {
@@ -166,9 +177,10 @@ const submit = () => {
 }
 
 const images = [
-  'images/your-image1.png',
-  'images/your-image2.png',
-  'images/your-image3.png'
+  'images/4.png',
+  'images/5.png',
+  'images/6.png',
+  'images/8.png',
 ];
 
 const currentImage1 = ref(images[0]);
@@ -186,3 +198,9 @@ onMounted(() => {
   setInterval(changeImage, 3000); // Change image every 3 seconds
 });
 </script>
+
+<style>
+.custom-shadow {
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5); /* Adjust the values to get the desired shadow effect */
+}
+</style>

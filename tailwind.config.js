@@ -15,7 +15,10 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Roboto Mono', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                'custom-blue': 'rgb(13, 57, 145)', // Define your custom RGB color
             },
         },
     },

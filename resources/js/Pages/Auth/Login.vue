@@ -4,9 +4,9 @@
   </Head>
 
   <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat; font-family: 'Roboto Mono', monospace;">
-    <header id="header" class="w-full py-2 bg-white shadow-md flex items-center justify-end px-4 sm:px-8 lg:px-16">
-      <img id="header-image-left" src="images/headerlogo2.png" alt="Left Logo" class="h-12 sm:h-16 lg:h-20 w-auto ml-4" />
-      <img id="header-image-right" src="images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-20 w-auto ml-4" />
+    <header id="header" class="w-full py-2 bg-white shadow-md flex items-center justify-between px-4 sm:px-8 lg:px-16">
+      <img id="header-image-left" src="images/headerlogo2.png" alt="Left Logo" class="h-12 sm:h-16 lg:h-20 w-auto" />
+      <img id="header-image-right" src="images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-20 w-auto" />
     </header>
     <main class="flex-grow flex flex-col md:flex-row items-center justify-center p-4 md:p-6 lg:p-8 overflow-hidden">
       <div class="flex w-full max-w-5xl flex-col md:flex-row">
@@ -46,18 +46,16 @@
                   <InputError class="mt-2" :message="form.errors.password" />
                 </div>
               </div>
-              <div class="block mt-2">
+              <div class="flex items-center justify-between mt-2">
                 <label class="flex items-center">
                   <Checkbox v-model:checked="form.remember" name="remember" />
                   <span class="ml-2 text-sm text-gray-600">Remember me</span>
                 </label>
-              </div>
-              <div class="flex items-center justify-start mt-2">
-                <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <Link v-if="canResetPassword" :href="route('password.request')" class="ml-auto underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Forgot your password?
                 </Link>
               </div>
-              <div class="flex items-center justify-end mt-2">
+              <div class="flex items-center justify-end mt-2 pt-8">
                 <PrimaryButton type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                   Log in
                 </PrimaryButton>
@@ -72,23 +70,23 @@
         </div>
 
         <!-- Image Box -->
-        <div class="w-full md:w-1/2 p-4 md:p-6 shadow-md border border-white bg-white flex-grow relative">
-          <!-- Blue Overlay -->
-          <div class="absolute inset-0 bg-blue-600 opacity-10 z-10"></div>
+        <div class="w-full md:w-1/2 p-4 md:p-6 flex-grow relative">
+        <!-- Blue Overlay -->
+        <div class="absolute inset- z-10"></div>
 
-          <!-- Image Container -->
-          <div class="w-full h-full space-y-4 flex flex-col justify-between relative z-20">
-            <div class="w-full h-1/2 flex items-center justify-center">
-              <img :src="currentImage1" alt="Image 1" class="w-full h-full object-cover" />
-            </div>
-            <div class="w-full h-1/2 flex items-center justify-center">
-              <img :src="currentImage2" alt="Image 2" class="w-full h-full object-cover" />
-            </div>
+        <!-- Image Container -->
+        <div class="w-full h-full space-y-4 flex flex-col justify-between relative z-20">
+          <div class="w-full h-1/2 flex items-center justify-center custom-shadow border border-black">
+            <img :src="currentImage1" alt="Image 1" class="w-full h-full object-cover" />
+          </div>
+          <div class="w-full h-1/2 flex items-center justify-center custom-shadow border border-black">
+            <img :src="currentImage2" alt="Image 2" class="w-full h-full object-cover" />
           </div>
         </div>
       </div>
+    </div>
     </main>
-    <div class="bg-blue-900 py-2">
+    <div class="bg-blue-900 py-">
       <div class="flex flex-wrap justify-between items-center mt-4 px-4 pb-1">
         <!-- Facebook Link -->
         <a href="#" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
@@ -196,5 +194,8 @@ onMounted(() => {
 html, body {
   height: 100%;
   margin: 0;
+}
+.custom-shadow {
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5); /* Adjust the values to get the desired shadow effect */
 }
 </style>
