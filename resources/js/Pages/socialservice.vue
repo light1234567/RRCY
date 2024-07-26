@@ -1,7 +1,14 @@
 <script>
+import { ref } from 'vue';
+
 export default {
   data() {
     return {
+      currentTab: 0,
+      tabs: [
+        'Admission Slip',
+        'General Intake Sheet'
+      ],
       form: {
         name: '',
         sex: '',
@@ -72,409 +79,268 @@ export default {
       // Implement form submission logic
       console.log(this.form);
       alert('Form submitted');
+    },
+    setCurrentTab(index) {
+      this.currentTab = index;
     }
   }
 };
 </script>
 
-<style scoped>
-.form-container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  
-}
 
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-fieldset {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 20px;
-}
-
-legend {
-  font-weight: bold;
-  font-size: 1.2em;
-  margin-bottom: 10px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  margin-right: 50%;
-}
-
-.form-group input, .form-group select, .form-group textarea {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
-.checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  
-}
-
-.checkbox-group input[type="checkbox"]
-{
-  height: 20px; /* Adjust size */
-  width: 20px;
-}
-
-
-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-</style>
 <template>
-  <div class="form-container">
+  <div class="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg">
+    <!-- Tab Navigation -->
+    <div class="flex space-x-4 mb-6">
+      <button
+        v-for="(tab, index) in tabs"
+        :key="index"
+        :class="{'bg-blue-500 text-white': currentTab === index, 'bg-gray-200': currentTab !== index }"
+        class="py-2 px-4 rounded-md"
+        @click="setCurrentTab(index)"
+      >
+        {{ tab }}
+      </button>
+    </div>
+
     <form @submit.prevent="submitForm">
-      <fieldset>
-        <legend>Admission Slip</legend>
-        <div class="form-group">
-          <label for="name">Name:</label>
-          <input type="text" id="name" v-model="form.name" placeholder="Enter name" required>
+      <!-- Admission Slip Tab -->
+      <fieldset v-if="currentTab === 0" class="border border-gray-300 p-4 mb-4 rounded-lg">
+        <legend class="text-lg font-bold mb-4">Admission Slip</legend>
+        <div class="mb-4">
+          <label for="name" class="block mb-1">Name:</label>
+          <input type="text" id="name" v-model="form.name" placeholder="Enter name" required class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="sex">Sex:</label>
-          <select id="sex" v-model="form.sex" required>
+        <div class="mb-4">
+          <label for="sex" class="block mb-1">Sex:</label>
+          <select id="sex" v-model="form.sex" required class="w-full px-3 py-2 border rounded-md">
             <option value="" disabled>Select</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
         </div>
-        <div class="form-group">
-          <label for="address">Address:</label>
-          <input type="text" id="address" v-model="form.address" placeholder="Enter address" required>
+        <div class="mb-4">
+          <label for="address" class="block mb-1">Address:</label>
+          <input type="text" id="address" v-model="form.address" placeholder="Enter address" required class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="religion">Religion:</label>
-          <input type="text" id="religion" v-model="form.religion" placeholder="Enter religion">
+        <div class="mb-4">
+          <label for="religion" class="block mb-1">Religion:</label>
+          <input type="text" id="religion" v-model="form.religion" placeholder="Enter religion" class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="dob">Date/Place of Birth:</label>
-          <input type="date" id="dob" v-model="form.dob" required>
+        <div class="mb-4">
+          <label for="dob" class="block mb-1">Date/Place of Birth:</label>
+          <input type="date" id="dob" v-model="form.dob" required class="w-full px-3 py-2 border rounded-md">
         </div>
-      </fieldset>
-
-      <fieldset>
-        <div class="form-group">
-          <label for="committingCourt">Committing Court:</label>
-          <input type="text" id="committingCourt" v-model="form.committingCourt" placeholder="Enter committing court">
+        <div class="mb-4">
+          <label for="committingCourt" class="block mb-1">Committing Court:</label>
+          <input type="text" id="committingCourt" v-model="form.committingCourt" placeholder="Enter committing court" class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="criminalCaseNo">Crim. Case #:</label>
-          <input type="text" id="criminalCaseNo" v-model="form.criminalCaseNo" placeholder="Enter criminal case number">
+        <div class="mb-4">
+          <label for="criminalCaseNo" class="block mb-1">Crim. Case #:</label>
+          <input type="text" id="criminalCaseNo" v-model="form.criminalCaseNo" placeholder="Enter criminal case number" class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="offenseCommitted">Offense Committed:</label>
-          <input type="text" id="offenseCommitted" v-model="form.offenseCommitted" placeholder="Enter offense committed">
+        <div class="mb-4">
+          <label for="offenseCommitted" class="block mb-1">Offense Committed:</label>
+          <input type="text" id="offenseCommitted" v-model="form.offenseCommitted" placeholder="Enter offense committed" class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="dateAdmitted">Date admitted to Center:</label>
-          <input type="date" id="dateAdmitted" v-model="form.dateAdmitted" required>
+        <div class="mb-4">
+          <label for="dateAdmitted" class="block mb-1">Date admitted to Center:</label>
+          <input type="date" id="dateAdmitted" v-model="form.dateAdmitted" required class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="daysInJail">No. of Days in Jail:</label>
-          <input type="number" id="daysInJail" v-model="form.daysInJail" placeholder="Enter number of days" min="0" required>
+        <div class="mb-4">
+          <label for="daysInJail" class="block mb-1">No. of Days in Jail:</label>
+          <input type="number" id="daysInJail" v-model="form.daysInJail" placeholder="Enter number of days" min="0" required class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="daysInDetention">No. of Days in Detention Center:</label>
-          <input type="number" id="daysInDetention" v-model="form.daysInDetention" placeholder="Enter number of days" min="0" required>
+        <div class="mb-4">
+          <label for="daysInDetention" class="block mb-1">No. of Days in Detention Center:</label>
+          <input type="number" id="daysInDetention" v-model="form.daysInDetention" placeholder="Enter number of days" min="0" required class="w-full px-3 py-2 border rounded-md">
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Distinguishing Marks</legend>
-        <div class="form-group">
-          <label for="tattoo">a. Tattoo/Scars:</label>
-          <input type="text" id="tattoo" v-model="form.distinguishingMarks.tattoo" placeholder="Enter tattoo details">
+        <legend class="text-lg font-bold mb-4">Distinguishing Marks</legend>
+        <div class="mb-4">
+          <label for="tattoo" class="block mb-1">a. Tattoo/Scars:</label>
+          <input type="text" id="tattoo" v-model="form.distinguishingMarks.tattoo" placeholder="Enter tattoo details" class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="height">b. Height:</label>
-          <input type="text" id="height" v-model="form.distinguishingMarks.height" placeholder="Enter height">
+        <div class="mb-4">
+          <label for="height" class="block mb-1">b. Height:</label>
+          <input type="text" id="height" v-model="form.distinguishingMarks.height" placeholder="Enter height" class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="weight">c. Weight:</label>
-          <input type="text" id="weight" v-model="form.distinguishingMarks.weight" placeholder="Enter weight">
+        <div class="mb-4">
+          <label for="weight" class="block mb-1">c. Weight:</label>
+          <input type="text" id="weight" v-model="form.distinguishingMarks.weight" placeholder="Enter weight" class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="eyeColor">d. Colour of Eye:</label>
-          <input type="text" id="eyeColor" v-model="form.distinguishingMarks.eyeColor" placeholder="Enter eye color">
+        <div class="mb-4">
+          <label for="eyeColor" class="block mb-1">d. Colour of Eye:</label>
+          <input type="text" id="eyeColor" v-model="form.distinguishingMarks.eyeColor" placeholder="Enter eye color" class="w-full px-3 py-2 border rounded-md">
         </div>
-        <div class="form-group">
-          <label for="skinColor">e. Skin:</label>
-          <input type="text" id="skinColor" v-model="form.distinguishingMarks.skinColor" placeholder="Enter skin color">
+        <div class="mb-4">
+          <label for="skinColor" class="block mb-1">e. Skin:</label>
+          <input type="text" id="skinColor" v-model="form.distinguishingMarks.skinColor" placeholder="Enter skin color" class="w-full px-3 py-2 border rounded-md">
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Documents Submitted</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.documents.scsr"> 1.) SCSR</label>
-          <label><input type="checkbox" v-model="form.documents.courtOrder"> 2.) Court Order</label>
-          <label><input type="checkbox" v-model="form.documents.medicalCertificates"> 3.) Medical Certificates</label>
-          <label><input type="checkbox" v-model="form.documents.consConsent"> 4.) Consent from Parents</label>
-          <label><input type="checkbox" v-model="form.documents.schoolRecords"> 5.) School Records</label>
-          <label><input type="checkbox" v-model="form.documents.others"> 6.) Others</label>
+        <legend class="text-lg font-bold mb-4">Documents Submitted</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.scsr" class="form-checkbox h-5 w-5"> <span>1.) SCSR</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.courtOrder" class="form-checkbox h-5 w-5"> <span>2.) Court Order</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.medicalCertificates" class="form-checkbox h-5 w-5"> <span>3.) Medical Certificates</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.consConsent" class="form-checkbox h-5 w-5"> <span>4.) Consent from Parents</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.schoolRecords" class="form-checkbox h-5 w-5"> <span>5.) School Records</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.others" class="form-checkbox h-5 w-5"> <span>6.) Others</span></label>
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Additional Information</legend>
-        <div class="form-group">
-          <label for="generalImpression">General Impression upon admission:</label>
-          <textarea id="generalImpression" v-model="form.generalImpression" placeholder="Enter general impression"></textarea>
+        <legend class="text-lg font-bold mb-4">Additional Information</legend>
+        <div class="mb-4">
+          <label for="generalImpression" class="block mb-1">General Impression upon admission:</label>
+          <textarea id="generalImpression" v-model="form.generalImpression" placeholder="Enter general impression" class="w-full px-3 py-2 border rounded-md"></textarea>
         </div>
-        <div class="form-group">
-          <label for="actionTaken">Action Taken:</label>
-          <textarea id="actionTaken" v-model="form.actionTaken" placeholder="Enter action taken"></textarea>
+        <div class="mb-4">
+          <label for="actionTaken" class="block mb-1">Action Taken:</label>
+          <textarea id="actionTaken" v-model="form.actionTaken" placeholder="Enter action taken" class="w-full px-3 py-2 border rounded-md"></textarea>
         </div>
       </fieldset>
 
-      <!-- New sections from intake sheet images -->
-
-      <fieldset>
-        <legend>General Intake Sheet</legend>
-        <div class="form-group">
-          <label for="name">Name of Client:</label>
-          <input type="text" id="name" v-model="form.name" placeholder="Enter name" required>
+      <!-- General Intake Sheet Tab -->
+      <fieldset v-if="currentTab === 1" class="border border-gray-300 p-4 mb-4 rounded-lg">
+        <legend class="text-lg font-bold mb-4">General Intake Sheet</legend>
+        <div class="mb-4">
+          <label for="name" class="block mb-1">Name of Client:</label>
+          <input type="text" id="name" v-model="form.name" placeholder="Enter name" required class="w-full px-3 py-2 border rounded-md">
         </div>
-
-        <div class="form-group">
-          <label for="date">Date:</label>
-          <input type="date" id="date" v-model="form.date" placeholder="Enter Date" required>
+        <div class="mb-4">
+          <label for="date" class="block mb-1">Date:</label>
+          <input type="date" id="date" v-model="form.date" placeholder="Enter Date" required class="w-full px-3 py-2 border rounded-md">
         </div>
-
-        <div class="form-group">
-          <label for="age">Age:</label>
-          <input type="number" id="age" v-model="form.age" placeholder="Enter Age" required>
+        <div class="mb-4">
+          <label for="age" class="block mb-1">Age:</label>
+          <input type="number" id="age" v-model="form.age" placeholder="Enter Age" required class="w-full px-3 py-2 border rounded-md">
         </div>
-
-        <div class="form-group">
-          <label for="sex">Sex:</label>
-          <select id="sex" v-model="form.sex" required>
+        <div class="mb-4">
+          <label for="sex" class="block mb-1">Sex:</label>
+          <select id="sex" v-model="form.sex" required class="w-full px-3 py-2 border rounded-md">
             <option value="" disabled>Select</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label for="address">Address:</label>
-          <input type="text" id="address" v-model="form.address" placeholder="Enter address" required>
+        <div class="mb-4">
+          <label for="address" class="block mb-1">Address:</label>
+          <input type="text" id="address" v-model="form.address" placeholder="Enter address" required class="w-full px-3 py-2 border rounded-md">
         </div>
-
-        <div class="form-group">
-          <label for="religion">Religion:</label>
-          <input type="text" id="religion" v-model="form.religion" placeholder="Enter religion">
+        <div class="mb-4">
+          <label for="religion" class="block mb-1">Religion:</label>
+          <input type="text" id="religion" v-model="form.religion" placeholder="Enter religion" class="w-full px-3 py-2 border rounded-md">
         </div>
-
-        <div class="form-group">
-          <label for="occupation">Occupation:</label>
-          <input type="text" id="occupation" v-model="form.occupation" placeholder="Enter Occupation">
+        <div class="mb-4">
+          <label for="occupation" class="block mb-1">Occupation:</label>
+          <input type="text" id="occupation" v-model="form.occupation" placeholder="Enter Occupation" class="w-full px-3 py-2 border rounded-md">
         </div>
-
-
-
-        <div class="form-group">
-          <label for="dob">Date/Place of Birth:</label>
-          <input type="date" id="dob" v-model="form.dob" required>
+        <div class="mb-4">
+          <label for="dob" class="block mb-1">Date/Place of Birth:</label>
+          <input type="date" id="dob" v-model="form.dob" required class="w-full px-3 py-2 border rounded-md">
         </div>
-
-        <div class="form-group">
-          <label for="HEA">Highest Educational Attainment:</label>
-          <input type="text" id="HEA" v-model="form.HEA" placeholder="Enter Attainment">
+        <div class="mb-4">
+          <label for="HEA" class="block mb-1">Highest Educational Attainment:</label>
+          <input type="text" id="HEA" v-model="form.HEA" placeholder="Enter Attainment" class="w-full px-3 py-2 border rounded-md">
         </div>
-
-        <div class="form-group">
-          <label for="religion">Name of School:</label>
-          <input type="text" id="religion" v-model="form.NOS" placeholder="Enter Name of School">
+        <div class="mb-4">
+          <label for="religion" class="block mb-1">Name of School:</label>
+          <input type="text" id="religion" v-model="form.NOS" placeholder="Enter Name of School" class="w-full px-3 py-2 border rounded-md">
         </div>
-
-        <div class="form-group">
-          <label for="religion">Class Adviser:</label>
-          <input type="text" id="religion" v-model="form.classAdviser" placeholder="Enter Class Adviser">
+        <div class="mb-4">
+          <label for="religion" class="block mb-1">Class Adviser:</label>
+          <input type="text" id="religion" v-model="form.classAdviser" placeholder="Enter Class Adviser" class="w-full px-3 py-2 border rounded-md">
         </div>
-
-      </fieldset>
-
-      <fieldset>
-        <legend>Problem Presented</legend>
-        <div class="form-group">
-          <textarea v-model="form.problemPresented"></textarea>
+        <legend class="text-lg font-bold mb-4">Problem Presented</legend>
+        <div class="mb-4">
+          <textarea v-model="form.problemPresented" class="w-full px-3 py-2 border rounded-md"></textarea>
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Brief Physical Description</legend>
-        <div class="form-group">
-          <textarea v-model="form.physicalDescription" placeholder="Childs Description"></textarea>
+        <legend class="text-lg font-bold mb-4">Brief Physical Description</legend>
+        <div class="mb-4">
+          <textarea v-model="form.physicalDescription" placeholder="Childs Description" class="w-full px-3 py-2 border rounded-md"></textarea>
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Major Life Events</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.majorLifeEvents.deathOfParents"> Death of Parents</label>
-          <label><input type="checkbox" v-model="form.majorLifeEvents.separationFromFamily"> Separation from the family</label>
-
-          <label><input type="checkbox" v-model="form.majorLifeEvents.Victimofnaturalmanmadedisaster"> Victim of natural / manmade disaster</label>
-          <label><input type="checkbox" v-model="form.majorLifeEvents.Victimofapprehension"> Victim of apprehension</label>
-          <label><input type="checkbox" v-model="form.majorLifeEvents.Victimofphysicalabuse"> Victim of physical abuse</label>
-          <label><input type="checkbox" v-model="form.majorLifeEvents.withsuicidaltendencies"> With suicidal tendencies</label>
-          <label><input type="checkbox" v-model="form.majorLifeEvents.mistakenidentity"> Mistaken identity</label>
-
-          <label><input type="checkbox" v-model="form.majorLifeEvents.abandonment"> Abandonment</label>
-          <label><input type="checkbox" v-model="form.majorLifeEvents.seriousAccident"> Serious Accident</label>
-          
-          <label><input type="checkbox" v-model="form.majorLifeEvents.Victimofdemolition"> Victim of demolition</label>
-          <label><input type="checkbox" v-model="form.majorLifeEvents.Victimofsexualabuse"> Victim of sexual abuse</label>
-          <label><input type="checkbox" v-model="form.majorLifeEvents.Victimofverbalabuse"> Victim of verbal abuse</label>
-          <label><input type="checkbox" v-model="form.majorLifeEvents.AcquiredDisability"> Acquired Disability</label>
-          
-          <textarea v-model="form.majorLifeEvents.Othersplsspecify" placeholder="Others pls specify"> Others pls specify</textarea>
-
-
-          <!-- Add more checkboxes as needed -->
+        <legend class="text-lg font-bold mb-4">Major Life Events</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.deathOfParents" class="form-checkbox h-5 w-5"> <span>Death of Parents</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.separationFromFamily" class="form-checkbox h-5 w-5"> <span>Separation from the family</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofnaturalmanmadedisaster" class="form-checkbox h-5 w-5"> <span>Victim of natural / manmade disaster</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofapprehension" class="form-checkbox h-5 w-5"> <span>Victim of apprehension</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofphysicalabuse" class="form-checkbox h-5 w-5"> <span>Victim of physical abuse</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.withsuicidaltendencies" class="form-checkbox h-5 w-5"> <span>With suicidal tendencies</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.mistakenidentity" class="form-checkbox h-5 w-5"> <span>Mistaken identity</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.abandonment" class="form-checkbox h-5 w-5"> <span>Abandonment</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.seriousAccident" class="form-checkbox h-5 w-5"> <span>Serious Accident</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofdemolition" class="form-checkbox h-5 w-5"> <span>Victim of demolition</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofsexualabuse" class="form-checkbox h-5 w-5"> <span>Victim of sexual abuse</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofverbalabuse" class="form-checkbox h-5 w-5"> <span>Victim of verbal abuse</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.AcquiredDisability" class="form-checkbox h-5 w-5"> <span>Acquired Disability</span></label>
+          <textarea v-model="form.majorLifeEvents.Othersplsspecify" placeholder="Others pls specify" class="w-full px-3 py-2 border rounded-md"></textarea>
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Enduring Life Strain</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
+        <legend class="text-lg font-bold mb-4">Enduring Life Strain</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Life Transition</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
+        <legend class="text-lg font-bold mb-4">Life Transition</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Development Changes</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
+        <legend class="text-lg font-bold mb-4">Development Changes</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Normalization</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
+        <legend class="text-lg font-bold mb-4">Normalization</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
         </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Feelings/Behaviour towards the incident</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
+        <legend class="text-lg font-bold mb-4">Feelings/Behaviour towards the incident</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
+        </div>
+        <legend class="text-lg font-bold mb-4">Attachments</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
+        </div>
+        <legend class="text-lg font-bold mb-4">Skills</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
+        </div>
+        <legend class="text-lg font-bold mb-4">Resources</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
+        </div>
+        <legend class="text-lg font-bold mb-4">Activities or source of income in the street</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
+        </div>
+        <legend class="text-lg font-bold mb-4">Initial Assessment</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
+        </div>
+        <legend class="text-lg font-bold mb-4">Recommendations</legend>
+        <div class="mb-4 space-y-2">
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
+          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
         </div>
       </fieldset>
 
-      <fieldset>
-              <legend>Attachments</legend>
-              <div class="form-group checkbox-group">
-                <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-                <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-                <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-                <!-- Add more checkboxes as needed -->
-              </div>
-        </fieldset>
-
-        <fieldset>
-        <legend>Skills</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Resources</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Activities or source of income in the street</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Initial Assessment</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>Reccomendations</legend>
-        <div class="form-group checkbox-group">
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.poverty"> Poverty</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness"> Physical illness</label>
-          <label><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity"> Lack of educational opportunity</label>
-          <!-- Add more checkboxes as needed -->
-        </div>
-      </fieldset>
-
-
-      <button type="submit">Submit</button>
+      <button type="submit" class="py-2 px-4 bg-blue-500 text-white rounded-md">Submit</button>
     </form>
   </div>
 </template>
-

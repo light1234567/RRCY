@@ -1,9 +1,11 @@
 <script>
+import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import socialservice from './socialservice.vue';
 import anecdotalreport from './anecdotalreport.vue';
 import incidentalreport from './incidentalreport.vue';
 import sessionreport from './sessionreport.vue';
+import { usePage } from '@inertiajs/vue3';
 
 export default {
   name: 'NewClient',
@@ -16,7 +18,8 @@ export default {
   },
   data() {
     return {
-      currentTab: 0,
+
+      
       tabs: [
         'Social Service',
         'Psychological Reports',
@@ -25,11 +28,37 @@ export default {
         'Nursing Care',
         'Educational Services',
         'PSD Reports',
-        'Anecdotal Report',
-        'Incidental Report Form',
-        'Session Form'
-      ]
+      ],
+      user: {
+        role: '' // Role will be set dynamically
+      }
     };
+  },
+  computed: {
+    availableTabs() {
+      switch (this.user.role) {
+        case 'social services':
+          return ['Social Service'];
+        case 'psychological':
+          return ['Psychological Reports'];
+        case 'court order':
+          return ['Court Order'];
+        case 'homelife services':
+          return ['Homelife Services'];
+        case 'nursing care':
+          return ['Nursing Care'];
+        case 'educational services':
+          return ['Educational Services'];
+        case 'psd':
+          return ['PSD Reports'];
+        default:
+          return this.tabs;
+      }
+    }
+  },
+  mounted() {
+    const { props } = usePage();
+    this.user.role = props.auth.user.role || '(User)'; // Set user role from Inertia props
   }
 };
 </script>
@@ -97,7 +126,7 @@ export default {
       </h2>
       <div class="tabs">
         <button
-          v-for="(tab, index) in tabs"
+          v-for="(tab, index) in availableTabs"
           :key="index"
           :class="{ active: currentTab === index }"
           @click="currentTab = index"
@@ -109,23 +138,26 @@ export default {
     <div>
       <!-- Tabs Content -->
       <div>
-        <div v-if="currentTab === 0">
+        <div v-if="user.role === 'social services'">
           <socialservice></socialservice>
         </div>
-        <div v-if="currentTab === 1">sss</div>
-        <div v-if="currentTab === 2"></div>
-        <div v-if="currentTab === 3"></div>
-        <div v-if="currentTab === 4"></div>
-        <div v-if="currentTab === 5"></div>
-        <div v-if="currentTab === 6"></div>
-        <div v-if="currentTab === 7">
-          <anecdotalreport></anecdotalreport>
+        <div v-if="user.role === 'psychological'">
+          Psycho ni nga page
         </div>
-        <div v-if="currentTab === 8">
-          <incidentalreport></incidentalreport>
+        <div v-if="user.role === 'court order'">
+          court order ni
         </div>
-        <div v-if="currentTab === 9">
-          <sessionreport></sessionreport>
+        <div v-if="user.role === 'homelife services'">
+          homelife ni
+        </div>
+        <div v-if="user.role === 'nursing care'">
+          nursing ni
+        </div>
+        <div v-if="user.role === 'educational services'">
+          educ ni
+        </div>
+        <div v-if="user.role === 'psd'">
+          psd ka
         </div>
       </div>
     </div>

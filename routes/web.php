@@ -30,3 +30,4 @@ Route::middleware([
         return Inertia::render('NewClient');
     })->name('new');
 });
+

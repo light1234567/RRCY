@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController; // Import the UserController with the correct namespace
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Define the route to get the user role
+Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);

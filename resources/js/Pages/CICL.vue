@@ -85,6 +85,7 @@
   import AppLayout from '@/Layouts/AppLayout.vue';
   import { ref, computed } from 'vue';
   import { useRouter } from 'vue-router';
+  import ClientRecord from './ClientRecord.vue';
   
   // Sample data for clients
   const clients = ref([
