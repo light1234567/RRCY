@@ -9,7 +9,7 @@ class CreateDistinguishingMarksTable extends Migration
     {
         Schema::create('distinguishing_marks', function (Blueprint $table) {
             $table->id('distinguishing_marks_id');
-            $table->unsignedBigInteger('client_id');
+            $table->unsignedBigInteger('admission_id');
             $table->string('tattoo_scars', 100);
             $table->decimal('height', 5, 2);
             $table->decimal('weight', 5, 2);
@@ -17,7 +17,7 @@ class CreateDistinguishingMarksTable extends Migration
             $table->string('skin', 50);
             $table->timestamps();
 
-            $table->foreign('client_id')->references('client_id')->on('clients')->onDelete('cascade');
+            $table->foreign('admission_id')->references('admission_id')->on('admissions')->onDelete('cascade');
         });
     }
 
