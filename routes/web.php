@@ -4,6 +4,12 @@ use App\Http\Controllers\AdmissionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ClientController;
+
+Route::get('/clients', [ClientController::class, 'index']);
+
+Route::get('/clients/{id}', [ClientController::class, 'show'])->name('ClientDetails');
+Route::post('/admission', [AdmissionController::class, 'store']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [

@@ -1,71 +1,54 @@
 <template>
-  <AppLayout title="ClientDetails"> 
+  <AppLayout title="Client Details">
     <template #header>
-      <!-- Header content here -->
+      <!-- Optional header content here -->
     </template>
 
-    <template #sidebar>
-      <div class="bg-gray-800 text-white w-64 h-full fixed top-0 left-0 p-4">
-        <ul>
-          <li class="py-2">
-            <router-link to="/" class="hover:text-gray-400">Dashboard</router-link>
-          </li>
-          <li class="py-2">
-            <router-link to="/cicl" class="hover:text-gray-400">CICL List</router-link>
-          </li>
-          <li class="py-2">
-            <router-link to="/settings" class="hover:text-gray-400">Settings</router-link>
-          </li>
-          <!-- Add more sidebar items as needed -->
-        </ul>
-      </div>
-    </template>
-
-    <div class="ml-64 p-4">
-      <div v-if="client" class="profile-info">
-        <img :src="client.profilePicture" alt="Profile Picture" class="profile-picture" />
-        <div>
-          <p><strong>Client ID:</strong> {{ client.id }}</p>
-          <p><strong>Client Name:</strong> {{ client.name }}</p>
-          <p><strong>Email:</strong> {{ client.email }}</p>
-          <p><strong>Phone Number:</strong> {{ client.phone }}</p>
-          <p><strong>Date of Birth:</strong> {{ client.dob }}</p>
-        </div>
-      </div>
+    <div v-if="client" class="ml-64 p-4">
+      <h1>Client Details</h1>
+      <img :src="client.profilePicture || 'default-profile.png'" alt="Profile Picture" class="profile-picture" />
+      <p><strong>Client ID:</strong> {{ client.id }}</p>
+      <p><strong>Client Name:</strong> {{ client.name }}</p>
+      <p><strong>Email:</strong> {{ client.email }}</p>
+      <p><strong>Phone Number:</strong> {{ client.phone }}</p>
+      <p><strong>Date of Birth:</strong> {{ client.dob }}</p>
       
-      <div class="sector-services" v-if="client.sectors.length > 0">
-        <h2>Services Required</h2>
+      <div class="sector-services" v-if="client.sectors && client.sectors.length > 0">
+        <h2 class="text-lg font-semibold">Services Required</h2>
         <ul>
           <li v-for="sector in client.sectors" :key="sector">{{ sector }}</li>
         </ul>
       </div>
-      <p v-if="!client">Loading...</p> <!-- Display loading message while fetching data -->
+      
+      <button @click="goBack" class="mt-2 p-2 bg-blue-500 text-white rounded">Back</button>
     </div>
+    
+    <p v-else>Loading...</p> <!-- Display loading message while fetching data -->
   </AppLayout>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import axios from 'axios';
 
 const route = useRoute();
-const client = ref(null); // Start with null until data is fetched
+const router = useRouter();
+const client = ref(null);
 
-// Fetch client details based on the ID from the route
 onMounted(async () => {
-  const clientId = route.params.id;
   try {
-    const response = await fetch(`/api/clients/${clientId}`); // Ensure this URL is correct
-    if (response.ok) {
-      client.value = await response.json();
-    } else {
-      console.error('Failed to fetch client details:', response.statusText);
-    }
+    const response = await axios.get(`/api/clients/${route.params.id}`);
+    client.value = response.data;
   } catch (error) {
-    console.error('Failed to fetch client details:', error);
+    console.error('Error fetching client details:', error);
   }
 });
+
+const goBack = () => {
+  router.push('/');
+};
 </script>
 
 <style scoped>
@@ -96,32 +79,15 @@ onMounted(async () => {
 }
 
 /* Sidebar styling */
-.sidebar {
-  width: 16rem; /* Adjust width as needed */
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
+.bg-gray-800 {
   background-color: #2d3748; /* Sidebar background color */
+}
+
+.text-white {
   color: #edf2f7; /* Text color */
-  padding: 1rem;
 }
 
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.sidebar li {
-  padding: 0.5rem 0;
-}
-
-.sidebar a {
-  color: #edf2f7;
-  text-decoration: none;
-}
-
-.sidebar a:hover {
-  color: #e2e8f0;
+.hover\:text-gray-400:hover {
+  color: #e2e8f0; /* Hover color */
 }
 </style>

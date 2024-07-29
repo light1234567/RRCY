@@ -9,10 +9,11 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // Import components for routes
 import ClientDetails from '@/Pages/ClientDetails.vue';
-import CICL from '@/Pages/CICL.vue'; // Assuming you have a CICL component
+import CICL from '@/Pages/CICL.vue'; // Adjust the path if necessary
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
+// Define routes
 const routes = [
     {
         path: '/cicl',
@@ -28,11 +29,13 @@ const routes = [
     // Add other routes as needed
 ];
 
+// Create router instance
 const router = createRouter({
     history: createWebHistory(),
     routes,
 });
 
+// Set up Inertia app
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
