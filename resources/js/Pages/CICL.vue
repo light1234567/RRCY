@@ -8,10 +8,10 @@
           <div class="p-2 flex justify-between items-center">
             <span class="ml-4 text-red-600 text-lg font-bold">CICL LIST</span>
             <div class="relative w-80">
-              <input 
-                v-model="searchQuery" 
-                type="text" 
-                placeholder="Search" 
+              <input
+                v-model="searchQuery"
+                type="text"
+                placeholder="Search"
                 class="mb-2 p border border-gray-300 rounded w-full"
               />
               <span class="absolute inset-y-0 right-0 flex items-center pr-3 pb-2">
@@ -31,17 +31,16 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unique ID</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Crime Status</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admitted | Discharged</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr
                   v-for="(client, index) in filteredClients"
                   :key="client.id"
-                  @click="handleRowClick(client)"
                   class="cursor-pointer hover:bg-gray-100"
                 >
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center">
-                    <!-- Profile Picture -->
                     <div :style="getProfilePictureStyle(getInitials(client.name))" class="mr-3 rounded-full">
                       {{ getInitials(client.name) }}
                     </div>
@@ -51,24 +50,17 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ client.crimeStatus }}</td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div class="flex space-x-4">
-                      <!-- Left Box -->
-                      <button class="mr-12 ml-5"
-                        @click.stop="handleLeftClick($event, client)"
-                        :class="getBoxStyles(index).leftBoxClass + ' p-3 rounded'"
-                      >
-                      </button>
-
-                      <!-- Right Box -->
-                      <button 
-                        @click.stop="handleRightClick($event, client)"
-                        :class="getBoxStyles(index).rightBoxClass + ' p-3 rounded'"
-                      >
-                      </button>
+                      <button class="mr-12 ml-5" :class="getBoxStyles(index).leftBoxClass + ' p-3 rounded'"></button>
+                      <button :class="getBoxStyles(index).rightBoxClass + ' p-3 rounded'"></button>
                     </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <button @click="editClient(client.id)" class="text-blue-600 hover:text-blue-900">Edit</button>
+                    <button @click="deleteClient(client.id)" class="text-red-600 hover:text-red-900 ml-4">Delete</button>
                   </td>
                 </tr>
                 <tr v-if="filteredClients.length === 0">
-                  <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No clients found</td>
+                  <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No clients found</td>
                 </tr>
               </tbody>
             </table>
@@ -111,40 +103,31 @@ const filteredClients = computed(() => {
   );
 });
 
-// Function to handle row click
-const handleRowClick = (client) => {
-  // Navigate to the ClientDetails page with the client ID as a route parameter
-  router.push({ name: 'ClientDetails', params: { id: client.id } });
+// Function to edit client
+const editClient = (id) => {
+    router.push({ name: 'ClientEdit', params: { id } });
 };
 
-// Function to handle left box click
-const handleLeftClick = (event, client) => {
-  event.stopPropagation(); // Prevents the row click event from being triggered
-  console.log(`Left box clicked for client: ${client.name}`);
-};
 
-// Function to handle right box click
-const handleRightClick = (event, client) => {
-  event.stopPropagation(); // Prevents the row click event from being triggered
-  console.log(`Right box clicked for client: ${client.name}`);
-};
+// Function to delete client
+const deleteClient = async (id) => {
+  const confirmDelete = confirm('Are you sure you want to delete this client?');
+  if (!confirmDelete) return;
 
-// Function to determine box styles based on index
-const getBoxStyles = (index) => {
-  if (index % 3 === 2) {
-    // Every 3rd item (2, 5, 8, ...)
-    return {
-      leftBoxClass: 'border border-black bg-transparent',
-      rightBoxClass: 'bg-blue-500 border-none'
-    };
-  } else {
-    // All other items
-    return {
-      leftBoxClass: 'bg-blue-500 border-none',
-      rightBoxClass: 'border border-black bg-transparent'
-    };
+  try {
+    await axios.delete(`/api/clients/${id}`);
+    clients.value = clients.value.filter(client => client.id !== id);
+    alert('Client deleted successfully.');
+  } catch (error) {
+    // Check if the error response is available
+    const errorMessage = error.response?.data?.message || 'An error occurred while deleting the client. Please try again.';
+    console.error('Error deleting client:', error);
+    alert(errorMessage);
   }
 };
+
+
+
 
 // Function to get initials from name
 const getInitials = (name) => {
@@ -155,7 +138,7 @@ const getInitials = (name) => {
 // Function to generate profile picture style
 const getProfilePictureStyle = (initials) => {
   return {
-    backgroundColor: '#4A90E2', // Customizable color
+    backgroundColor: '#4A90E2',
     color: 'white',
     display: 'flex',
     alignItems: 'center',
@@ -167,8 +150,28 @@ const getProfilePictureStyle = (initials) => {
     fontWeight: 'bold',
   };
 };
+
+// Function to get box styles
+const getBoxStyles = (index) => {
+  const leftBoxClass = index % 2 === 0 ? 'bg-blue-500' : 'bg-red-500';
+  const rightBoxClass = index % 2 === 0 ? 'bg-red-500' : 'bg-blue-500';
+  return { leftBoxClass, rightBoxClass };
+};
 </script>
 
-<style scoped>
-/* Your styles here */
+<style>
+.p {
+  height: 35px;
+  width: 80px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.bg-box-left {
+  background-color: rgb(239, 68, 68);
+}
+
+.bg-box-right {
+  background-color: rgb(59, 130, 246);
+}
 </style>

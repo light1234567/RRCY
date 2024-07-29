@@ -7,6 +7,11 @@ use Inertia\Inertia;
 use App\Http\Controllers\ClientController;
 
 Route::get('/clients', [ClientController::class, 'index']);
+Route::get('/clients/{id}', [ClientController::class, 'show']);
+Route::put('/clients/{id}', [ClientController::class, 'update']);
+Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
+
+Route::get('/clients', [ClientController::class, 'index']);
 
 
 Route::post('/admission', [AdmissionController::class, 'store']);
@@ -37,4 +42,3 @@ Route::middleware([
         return Inertia::render('NewClient');
     })->name('new');
 });
-
