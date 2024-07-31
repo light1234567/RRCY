@@ -1,346 +1,655 @@
-<script>
+<template>
+    <div>
+        <h1 class="text-2xl p-2 text-red-500 mt-4 font-bold mb-8">
+            Admission Form
+        </h1>
+        <form @submit.prevent="saveForm">
+            <!-- Client Information -->
+            <fieldset class="border border-gray-300 p-8 mb-4 rounded-lg">
+                <legend class="text-lg font-bold">CLIENT INFORMATION</legend>
+                <div class="grid grid-cols-1">
+                    <!-- Name, Sex, and Date of Birth -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="md:col-span-1 mb-4">
+                    <label for="clientFirstName" class="block mb-1">First Name: *</label>
+                    <input
+                        type="text"
+                        id="clientFirstName"
+                        v-model="form.client.first_name"
+                        class="w-full px-3 py-2 border rounded-md"
+                        required
+                    />
+                </div>
+                <div class="md:col-span-1 mb-4">
+                    <label for="clientMiddleName" class="block mb-1">Middle Name:</label>
+                    <input
+                        type="text"
+                        id="clientMiddleName"
+                        v-model="form.client.middle_name"
+                        class="w-full px-3 py-2 border rounded-md"
+                    />
+                </div>
+                <div class="md:col-span-1 mb-4">
+                    <label for="clientLastName" class="block mb-1">Last Name: *</label>
+                    <input
+                        type="text"
+                        id="clientLastName"
+                        v-model="form.client.last_name"
+                        class="w-full px-3 py-2 border rounded-md"
+                        required
+                    />
+                </div>
+                <div class="md:col-span-1 mb-4">
+                    <label for="clientSex" class="block mb-1">Sex: *</label>
+                    <select
+                        id="clientSex"
+                        v-model="form.client.sex"
+                        class="w-full px-3 py-2 border rounded-md"
+                        required
+                    >
+                        <option value="male" selected>Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+                    <!-- Date of Birth and Place of Birth -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="md:col-span-1 mb-4">
+                    <label for="clientDob" class="block mb-1">Date of Birth: *</label>
+                    <input
+                        type="date"
+                        id="clientDob"
+                        v-model="form.client.date_of_birth"
+                        class="w-full px-3 py-2 border rounded-md"
+                        required
+                    />
+                </div>
+                <div class="md:col-span-1 mb-4">
+                    <label for="clientPlaceOfBirth" class="block mb-1">Place of Birth: *</label>
+                    <input
+                        type="text"
+                        id="clientPlaceOfBirth"
+                        v-model="form.client.place_of_birth"
+                        class="w-full px-3 py-2 border rounded-md"
+                        required
+                    />
+                </div>
+            </div>
+
+                    <!-- Address Breakdown -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="mb-4">
+                    <label for="clientProvince" class="block mb-1">Province: *</label>
+                    <select
+                        id="clientProvince"
+                        v-model="form.client.province"
+                        class="w-full px-3 py-2 border rounded-md"
+                        @change="updateCitiesAndBarangays"
+                        required
+                    >
+                        <option value="" disabled selected>Select Province</option>
+                        <option value="Davao del Norte">Davao del Norte</option>
+                        <option value="Davao del Sur">Davao del Sur</option>
+                        <option value="Davao Oriental">Davao Oriental</option>
+                        <option value="Davao de Oro">Davao de Oro</option>
+                        <option value="Davao Occidental">Davao Occidental</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="clientCity" class="block mb-1">City/Municipality: *</label>
+                    <select
+                        id="clientCity"
+                        v-model="form.client.city"
+                        class="w-full px-3 py-2 border rounded-md"
+                        @change="updateBarangays"
+                        required
+                    >
+                        <option value="" disabled selected>Select City/Municipality</option>
+                        <option v-for="city in cities" :key="city" :value="city">{{ city }}</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="clientBarangay" class="block mb-1">Barangay: *</label>
+                    <select
+                        id="clientBarangay"
+                        v-model="form.client.barangay"
+                        class="w-full px-3 py-2 border rounded-md"
+                        required
+                    >
+                        <option value="" disabled selected>Select Barangay</option>
+                        <option v-for="barangay in barangays" :key="barangay" :value="barangay">{{ barangay }}</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="clientStreet" class="block mb-1">House/Building Number and Street Name:</label>
+                    <input
+                        type="text"
+                        id="clientStreet"
+                        v-model="form.client.street"
+                        class="w-full px-3 py-2 border rounded-md"
+                    />
+                </div>
+            </div>
+
+                    <!-- Religion -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="mb-4">
+                    <label for="clientReligion" class="block mb-1">Religion: *</label>
+                    <select
+                        id="clientReligion"
+                        v-model="form.client.religion"
+                        class="w-full px-3 py-2 border rounded-md"
+                        required
+                    >
+                        <option value="" disabled selected>Select Religion</option>
+                        <option value="Aglipayan">Aglipayan</option>
+                        <option value="Baha'i">Baha'i</option>
+                        <option value="Buddhist">Buddhist</option>
+                        <option value="Catholic">Catholic</option>
+                        <option value="Christian">Christian</option>
+                        <option value="Hindu">Hindu</option>
+                        <option value="Islam">Islam</option>
+                        <option value="Iglesia ni Cristo">Iglesia ni Cristo</option>
+                        <option value="Jehovah's Witness">Jehovah's Witness</option>
+                        <option value="Judeo-Christian">Judeo-Christian</option>
+                        <option value="Kapitiran">Kapitiran</option>
+                        <option value="Latter-Day Saints (Mormons)">Latter-Day Saints (Mormons)</option>
+                        <option value="Liberal Christian">Liberal Christian</option>
+                        <option value="Maranatha">Maranatha</option>
+                        <option value="Methodist">Methodist</option>
+                        <option value="Nazarene">Nazarene</option>
+                        <option value="Orthodox">Orthodox</option>
+                        <option value="Pentecostal">Pentecostal</option>
+                        <option value="Protestant">Protestant</option>
+                        <option value="Quakers">Quakers</option>
+                        <option value="Rastafari">Rastafari</option>
+                        <option value="Roman Catholic">Roman Catholic</option>
+                        <option value="SDA (Seventh-Day Adventist)">SDA (Seventh-Day Adventist)</option>
+                        <option value="Shinto">Shinto</option>
+                        <option value="Sikh">Sikh</option>
+                        <option value="Taoist">Taoist</option>
+                        <option value="The Church of God">The Church of God</option>
+                        <option value="Unitarian Universalist">Unitarian Universalist</option>
+                        <option value="Universal Church">Universal Church</option>
+                        <option value="Voodoo">Voodoo</option>
+                        <option value="Zoroastrian">Zoroastrian</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+                </div>
+            </fieldset>
+			<!-- Distinguishing Marks -->
+            <fieldset class="border border-gray-300 p-8 mb-4 rounded-lg">
+                <legend class="text-lg font-bold mb-4">
+                    DISTINGUISHING MARKS
+                </legend>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div class="mb-4">
+                        <label for="tattooScars" class="block mb-1"
+                            >Tattoo/Scars:</label
+                        >
+                        <input
+                            type="text"
+                            id="tattooScars"
+                            v-model="form.distinguishing_marks.tattoo_scars"
+                            class="w-full px-3 py-2 border rounded-md"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="height" class="block mb-1"
+                            >Height (cm):</label
+                        >
+                        <input
+                            type="number"
+                            id="height"
+                            v-model="form.distinguishing_marks.height"
+                            class="w-full px-3 py-2 border rounded-md"
+                        />
+                    </div>
+                    <div class="mb-4">
+                        <label for="weight" class="block mb-1"
+                            >Weight (kg):</label
+                        >
+                        <input
+                            type="number"
+                            id="weight"
+                            v-model="form.distinguishing_marks.weight"
+                            class="w-full px-3 py-2 border rounded-md"
+                        />
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="mb-4">
+                        <label for="colourOfEye" class="block mb-1"
+                            >Colour of Eye:</label
+                        >
+                        <select
+                            id="colourOfEye"
+                            v-model="form.distinguishing_marks.colour_of_eye"
+                            class="w-full px-3 py-2 border rounded-md"
+                        >
+                            <option value="" disabled selected>
+                                Select eye color
+                            </option>
+                            <option value="Brown">Brown</option>
+                            <option value="Black">Black</option>
+                            <option value="Blue">Blue</option>
+                            <option value="Green">Green</option>
+                            <option value="Hazel">Hazel</option>
+                            <option value="Gray">Gray</option>
+                            <option value="Amber">Amber</option>
+                            <option value="Other">Other</option>
+
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="skinColour" class="block mb-1"
+                            >Skin Colour:</label
+                        >
+                        <select
+                            id="skinColour"
+                            v-model="form.distinguishing_marks.skin_colour"
+                            class="w-full px-3 py-2 border rounded-md"
+                        >
+                            <option value="" disabled selected>
+                                Select skin color
+                            </option>
+                            <option value="Light">Light</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Olive">Olive</option>
+                            <option value="Tan">Tan</option>
+                            <option value="Brown">Brown</option>
+                            <option value="Dark">Dark</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Admission Details -->
+            <fieldset class="border border-gray-300 p-8 mb-4 rounded-lg">
+                <legend class="text-lg font-bold mb-4">ADMISSION DETAILS</legend>
+                <div class="grid grid-cols-1 gap-2">
+                    <div class="mb-4 col-span-1">
+                        <label for="committingCourt" class="block mb-1">Committing Court: *</label>
+                        <input
+                            type="text"
+                            id="committingCourt"
+                            v-model="form.admission.committing_court"
+                            class="w-full px-3 py-2 border rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="mb-4">
+                            <label for="crimCaseNumber" class="block mb-1">Criminal Case Number: *</label>
+                            <input
+                                type="text"
+                                id="crimCaseNumber"
+                                v-model="form.admission.crim_case_number"
+                                class="w-full px-3 py-2 border rounded-md"
+                                required
+                            />
+                        </div>
+                        <div class="mb-4">
+                            <label for="offenseCommitted" class="block mb-1">Offense Committed: *</label>
+                            <select
+                                id="offenseCommitted"
+                                v-model="form.admission.offense_committed"
+                                class="w-full px-3 py-2 border rounded-md"
+                                required
+                            >
+                                <option value="" disabled selected>Select offense</option>
+                                <<option value="" disabled selected>
+                                    Select offense
+                                </option>
+                                <option value="Animal Cruelty">Animal Cruelty</option>
+<option value="Arson">Arson</option>
+<option value="Assault">Assault</option>
+<option value="Burglary">Burglary</option>
+<option value="Child Abuse">Child Abuse</option>
+<option value="Cybercrime">Cybercrime</option>
+<option value="Destruction of Property">Destruction of Property</option>
+<option value="Driving Without a License">Driving Without a License</option>
+<option value="Drug Possession">Drug Possession</option>
+<option value="Drug Trafficking">Drug Trafficking</option>
+<option value="DUI (Driving Under the Influence)">DUI (Driving Under the Influence)</option>
+<option value="Embezzlement">Embezzlement</option>
+<option value="Extortion">Extortion</option>
+<option value="Forgery">Forgery</option>
+<option value="Fraud">Fraud</option>
+<option value="Gambling">Gambling</option>
+<option value="Graffiti">Graffiti</option>
+<option value="Harassment">Harassment</option>
+<option value="Homicide">Homicide</option>
+<option value="Identity Theft">Identity Theft</option>
+<option value="Illegal Possession of Firearms">Illegal Possession of Firearms</option>
+<option value="Interference with Law Enforcement">Interference with Law Enforcement</option>
+<option value="Kidnapping">Kidnapping</option>
+<option value="Larceny">Larceny</option>
+<option value="Loitering">Loitering</option>
+<option value="Manslaughter">Manslaughter</option>
+<option value="Murder">Murder</option>
+<option value="Negligence">Negligence</option>
+<option value="Nuisance">Nuisance</option>
+<option value="Public Intoxication">Public Intoxication</option>
+<option value="Rape">Rape</option>
+<option value="Robbery">Robbery</option>
+<option value="Sexual Assault">Sexual Assault</option>
+<option value="Sexual Exploitation">Sexual Exploitation</option>
+<option value="Shoplifting">Shoplifting</option>
+<option value="Stalking">Stalking</option>
+<option value="Theft">Theft</option>
+<option value="Threats">Threats</option>
+<option value="Trespassing">Trespassing</option>
+<option value="Unlawful Assembly">Unlawful Assembly</option>
+<option value="Vandalism">Vandalism</option>
+<option value="Vehicular Manslaughter">Vehicular Manslaughter</option>
+<option value="Violation of Probation">Violation of Probation</option>
+<option value="Weapon Possession">Weapon Possession</option>
+<option value="Witness Tampering">Witness Tampering</option>
+<option value="Other">Other</option>
+
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="dateAdmitted" class="block mb-1">Date Admitted: *</label>
+                            <input
+                                type="date"
+                                id="dateAdmitted"
+                                v-model="form.admission.date_admitted"
+                                class="w-full px-3 py-2 border rounded-md"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="mb-4">
+                            <label for="daysInJail" class="block mb-1">Days in Jail: *</label>
+                            <input
+                                type="number"
+                                id="daysInJail"
+                                v-model="form.admission.days_in_jail"
+                                class="w-full px-3 py-2 border rounded-md"
+                                required
+                            />
+                        </div>
+                        <div class="mb-4">
+                            <label for="daysInDetentionCenter" class="block mb-1">Days in Detention Center: *</label>
+                            <input
+                                type="number"
+                                id="daysInDetentionCenter"
+                                v-model="form.admission.days_in_detention_center"
+                                class="w-full px-3 py-2 border rounded-md"
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Documents Submitted -->
+            <fieldset class="border border-gray-300 p-8 mb-4 rounded-lg">
+                <legend class="text-lg font-bold mb-4">DOCUMENTS SUBMITTED</legend>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="mb-4">
+                        <label class="block mb-1 font-semibold">Documents Submitted:</label>
+                        <div class="flex flex-col space-y-2">
+                            <div class="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="SCSR"
+                                    v-model="form.documents_submitted.documents"
+                                    class="mr-2"
+                                />
+                                <span>SCSR</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="Court Order"
+                                    v-model="form.documents_submitted.documents"
+                                    class="mr-2"
+                                />
+                                <span>Court Order</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="Medical Certificates"
+                                    v-model="form.documents_submitted.documents"
+                                    class="mr-2"
+                                />
+                                <span>Medical Certificates</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="Commitment Order"
+                                    v-model="form.documents_submitted.documents"
+                                    class="mr-2"
+                                />
+                                <span>Commitment Order</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="Consent from Parents"
+                                    v-model="form.documents_submitted.documents"
+                                    class="mr-2"
+                                />
+                                <span>Consent from Parents</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="School Records"
+                                    v-model="form.documents_submitted.documents"
+                                    class="mr-2"
+                                />
+                                <span>School Records</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="Others"
+                                    v-model="form.documents_submitted.documents"
+                                    class="mr-2"
+                                    @change="toggleOtherDocuments"
+                                />
+                                <span>Others</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        v-if="form.documents_submitted.documents.includes('Others')"
+                        class="mb-4"
+                    >
+                        <label for="otherDocuments" class="block mb-1 font-semibold">Other Documents:</label>
+                        <input
+                            type="text"
+                            id="otherDocuments"
+                            v-model="form.documents_submitted.others"
+                            class="w-full px-3 py-2 border rounded-md"
+                        />
+                    </div>
+<div class="mb-4 col-span-1">
+                        <label for="generalImpression" class="block mb-1">General Impression: *</label>
+                        <input
+                            type="text"
+                            id="generalImpression"
+                            v-model="form.admission.general_impression"
+                            class="w-full px-3 py-2 border rounded-md"
+                            required
+                        />
+                    </div>
+                    <div class="mb-4 col-span-1">
+                        <label for="actionTaken" class="block mb-1">action Taken: *</label>
+                        <input
+                            type="text"
+                            id="actionTaken"
+                            v-model="form.admission.action_taken"
+                            class="w-full px-3 py-2 border rounded-md"
+                            required
+                        />
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Submit Button -->
+            <button
+                type="submit"
+                class="bg-blue-900 text-white ml-6 mb-4 px-12 py-2 rounded-md"
+            >
+                Save
+            </button>
+        </form>
+    </div>
+</template>
+
+<script setup>
 import { ref } from 'vue';
+import axios from 'axios';
 
-export default {
-  data() {
-    return {
-      currentTab: 0,
-      tabs: [
-        'Admission Slip',
-        'General Intake Sheet'
-      ],
-      form: {
-        name: '',
-        sex: '',
-        dphpate:'',
-        age: '',
-        address: '',
-        religion: '',
-        occupation:'',
-        HEA:'',
-        NOS:'',
-        classAdviser:'',
-        dob: '',
-        committingCourt: '',
-        criminalCaseNo: '',
-        offenseCommitted: '',
-        dateAdmitted: '',
-        daysInJail: '',
-        daysInDetention: '',
-        distinguishingMarks: {
-          tattoo: '',
-          height: '',
-          weight: '',
-          eyeColor: '',
-          skinColor: ''
-        },
-        documents: {
-          scsr: false,
-          courtOrder: false,
-          medicalCertificates: false,
-          consConsent: false,
-          schoolRecords: false,
-          others: false
-        },
-        generalImpression: '',
-        actionTaken: '',
-        problemPresented: '',
-        physicalDescription: '',
-
-        majorLifeEvents: {
-          deathOfParents: false,
-          abandonment: false,
-          separationFromFamily: false,
-          seriousAccident: false,
-          Victimofnaturalmanmadedisaster: false,
-          Victimofapprehension : false,
-          Victimofphysicalabuse : false,
-          withsuicidaltendencies : false,
-          mistakenidentity : false,
-          Victimofdemolition : false,
-          Victimofsexualabuse : false,
-          Victimofverbalabuse : false,
-          AcquiredDisability : false,
-          Othersplsspecify : '',
-
-          // Add more fields as needed
-        },
-        enduringLifeStrain: {
-          poverty: false,
-          physicalIllness: false,
-          lackOfOpportunity: false,
-          // Add more fields as needed
-        }
-      }
-    };
-  },
-  methods: {
-    submitForm() {
-      // Implement form submission logic
-      console.log(this.form);
-      alert('Form submitted');
+const form = ref({
+    client: {
+        first_name: '',
+        middle_name: '',
+        last_name: '',
+        sex: 'male',
+        date_of_birth: '',
+        place_of_birth: '',
+        province: '',
+        city: '',
+        barangay: '',
+        street: '',
+        religion: ''
     },
-    setCurrentTab(index) {
-      this.currentTab = index;
+    distinguishing_marks: {
+        tattoo_scars: '',
+        height: '',
+        weight: '',
+        colour_of_eye: '',
+        skin_colour: ''
+    },
+    admission: {
+        committing_court: '',
+        crim_case_number: '',
+        offense_committed: '',
+        date_admitted: '',
+        days_in_jail: '',
+        days_in_detention_center: '',
+        action_taken: '',
+        general_impression: ''
+    },
+    documents_submitted: {
+        documents: [],
+        others: ''
     }
-  }
+});
+
+const cities = ref([]);
+const barangays = ref([]);
+
+const updateCitiesAndBarangays = () => {
+    const province = form.value.client.province;
+    const provinceCities = {
+    "Davao del Norte": ["Tagum City", "Panabo City", "Samal City", "Carmen", "Kapalong", "New Corella", "San Isidro", "Santo Tomas", "Talaingod"],
+    "Davao del Sur": ["Davao City", "Digos City", "Bansalan", "Hagonoy", "Kiblawan", "Magsaysay", "Malalag", "Matanao", "Padada", "Santa Cruz", "Sulop"],
+    "Davao Oriental": ["Mati City", "Baganga", "Banaybanay", "Boston", "Caraga", "Cateel", "Governor Generoso", "Lupon", "Manay", "San Isidro", "Tarragona"],
+    "Davao de Oro": ["Compostela", "Monkayo", "Maco", "Mabini", "Mawab", "Montevista", "Nabunturan", "New Bataan", "Pantukan", "Laak", "Maragusan"],
+    "Davao Occidental": ["Malita", "Don Marcelino", "Jose Abad Santos", "Santa Maria", "Sarangani"]
+};
+    cities.value = provinceCities[province] || [];
+    barangays.value = [];
+    form.value.client.city = '';
+    form.value.client.barangay = '';
+};
+
+const updateBarangays = () => {
+    const city = form.value.client.city;
+    const cityBarangays = {
+    
+    "Tagum City": ["Apokon", "Bincungan", "Canocotan", "Cuambogan", "La Filipina", "Mankilam", "Magugpo East", "Magugpo North", "Magugpo Poblacion", "Magugpo South", "Magugpo West", "Nueva Fuerza", "Pagsabangan", "Pandapan", "San Agustin", "San Isidro", "Visayan Village"],
+    "Panabo City": ["A. O. Floirendo", "Cacao", "Cagangohan", "Consolacion", "Datu Abdul Dadia", "Gredu", "J.P. Laurel", "Katipunan", "Kauswagan", "Kiotoy", "Klinan", "Little Panay", "Lower Panaga", "Mabunao", "Maduao", "Manay", "New Malaga", "New Pandan", "New Visayas", "Nanyo", "Quezon", "Salvacion", "San Francisco", "San Nicolas", "San Pedro", "San Roque", "San Vicente", "Santo Niño", "Sindaton", "Southern Davao", "Tagpore", "Tibungol", "Upper Licanan"],
+    "Samal City": ["Adecor", "Aumbay", "Balet", "Caliclic", "Camudmud", "Catagman", "Cawag", "Cogon", "Del Monte", "Liberty", "Limao", "Mambago-A", "Mambago-B", "Miranda", "Moncado", "Peñaplata", "Poblacion", "San Agustin", "San Antonio", "San Isidro", "San Jose", "San Miguel", "Santa Cruz", "Santo Niño", "Sion", "Tagbaobo", "Tagbay", "Tagbitan-ag", "Tagburos", "Tagdaliao", "Tagpopongan", "Tambo"],
+    "Carmen": ["Adecor", "Alejal", "Anibongan", "Asuncion", "Ising", "La Paz", "Magsaysay", "Pagsabangan", "Pangyan", "Sabangan", "Salvacion", "San Isidro", "Santo Niño", "Taba", "Tuganay", "Tuganay Proper", "Tubod"],
+    "Kapalong": ["Banutan", "Capungagan", "Florida", "Gupitan", "Mamacao", "Maniki", "Maug", "New Agutaya", "Nueva Fuerza", "Pag-asa", "Pag-tulagan", "Pandapan", "Patok", "Poblacion", "Sampao", "San Isidro", "Santo Niño", "Simulao", "Tiburcia", "Upper Tagasan", "Waan"],
+    "New Corella": ["Carcor", "Del Pilar", "El Salvador", "Limba-an", "Macgum", "Magsaysay", "Mesaoy", "New Bohol", "Patrocenio", "Poblacion", "San Roque", "Santa Fe", "Santo Niño", "Suawon", "Suaon"],
+    "San Isidro": ["Bato", "Binigasan", "Dacudao", "Datu Balong", "Datu Salumay", "Igangon", "Kipalili", "Libuton", "Lumiad", "Mabantao", "Mahayag", "Mamacao", "Manat", "Monte Dujali", "Pagsabangan", "Patag", "Sabangan", "Sampao", "San Roque", "Santa Filomena", "Santo Niño", "Sasa", "Suawon", "Upper Tagasan", "Upper Wangan"],
+    "Santo Tomas": ["Balagunan", "Balisong", "Bobongan", "Casig-ang", "Esperanza", "Kinabalan", "Kipilas", "Magwawa", "New Visayas", "Pantaron", "Poblacion", "San Jose", "San Miguel", "San Pedro", "Santo Niño", "Talomo", "Tibal-og"],
+    "Talaingod": ["Bayabas", "Dagohoy", "Datu Davao", "Kauswagan", "Nangan", "Panganan", "Pantaron", "San Jose", "Santa Cruz", "Santa Maria", "Santo Niño", "Sulangon"],
+
+    "Davao City": ["Agdao", "Baguio", "Buhangin", "Bunawan", "Calinan", "Marilog", "Poblacion", "Talomo", "Toril", "Tugbok"],
+    "Digos City": ["Aplaya", "Balabag", "Binaton", "Cogon", "Colorado", "Dawis", "Goma", "Kapatagan", "Kiagot", "Magsaysay", "Mahayahay", "Matti", "Rizal", "San Jose", "San Miguel", "San Roque", "Sinawilan", "Soong", "Tiguman", "Tres de Mayo", "Zone 1", "Zone 2", "Zone 3", "Zone 4"],
+    "Bansalan": ["Anonang", "Bitaug", "Bonifacio", "Cagangohan", "Dumoy", "Eman", "Kinuskusan", "Libertad", "Linawan", "Magsaysay", "Marber", "New Clarin", "New Ilocos", "Poblacion", "Rizal", "Salvador", "San Isidro", "San Miguel", "Santa Maria", "Tinongtongan", "Tubo-Tubo"],
+    "Hagonoy": ["Balutakay", "Clib", "Guihing", "Guihing Proper", "Kibanban", "Lanuro", "Lapulabao", "Leling", "Libertad", "Mahayahay", "Malabang", "Malinao", "Malian", "Manguring", "New Iloilo", "Paligue", "Pangyan", "Poblacion", "San Guillermo", "San Isidro", "San Miguel", "San Pedro", "Santa Cruz", "Santa Maria", "Tibungol", "Tibungol Proper"],
+    "Kiblawan": ["Abnate", "Bagong Silang", "Balasiao", "Bonifacio", "Bugac", "Buno", "Cogon", "Crossing Digos", "Datalbasak", "Davao-Bongabong", "Eastern Kiblawan", "Guia", "Guinaitan", "Kisupaan", "Libertad", "Lumiad", "Malawanit", "New Clarin", "New Ilocos", "Pangi", "Poblacion", "San Isidro", "San Jose", "San Miguel", "San Pedro", "Santo Niño", "Suawon", "Upper Tagasan"],
+    "Magsaysay": ["Abnate", "Bagong Silang", "Balnate", "Barayong", "Barobo", "Bato", "Bulatok", "Cogon", "Cuambog", "Dalumay", "Darapuay", "Dasay", "Datalmayahai", "Goma", "Guio-ang", "Igpit", "Kanapulo", "Kibalang", "Kibo", "Kibongot", "Kinuskusan", "Labuyan", "La Fortuna", "Lambajon", "Lapuan", "Lasang", "Lavigan", "Linawan", "Lower Igpit", "Lower Sibulan", "Mal", "Malalag", "Malalag Tubig", "Malinao", "Marber", "Matti", "Mulao", "New Bantayan", "New Clarin", "New Ilocos", "New Katipunan", "Pangi", "Poblacion", "Salid", "Salvador", "San Antonio", "San Isidro", "San Jose", "San Miguel", "San Pedro", "Santa Cruz", "Santa Fe", "Santa Maria", "Santa Rita", "Santo Niño", "Sinawilan", "Sinuda", "Suawon", "Tibungol", "Tibungol Proper"],
+    "Malalag": ["Bagumbayan", "Balao", "Bolton", "Bulacan", "Bungawan", "Calian", "Caputian", "Del Pilar", "Ilangay", "Ilogon", "Lapu-lapu", "Liberty", "Lomonay", "Mabuhay", "Magsaysay", "Mahipon", "Mal", "Malalag", "Malalag Tubig", "Malinao", "Matanao", "New Clarin", "New Danao", "New Iloilo", "New Israel", "New Sibonga", "Old Clarin", "Old Danao", "Palao", "Paligue", "Panabang", "Patag", "Pikit", "Poblacion", "San Antonio", "San Isidro", "San Jose", "San Juan", "San Miguel", "Santa Cruz", "Santa Filomena", "Santa Maria", "Santa Rita", "Santo Niño", "Sinawilan", "Sinsuat", "Suawon", "Talaingod", "Tamara", "Tambacan", "Tibungol", "Tibungol Proper"],
+    "Matanao": ["Bagumbayan", "Bangkal", "Basiawan", "Bato", "Bolton", "Bonifacio", "Bugac", "Calian", "Cogon", "Dacudao", "Dalumpinas", "Darapuay", "Del Pilar", "Eman", "Guia", "Karaos", "Katipunan", "Kinuskusan", "La Paz", "Libertad", "Lower Igpit", "Lower Mal", "Lower Sibulan", "Lumalaleng", "Mabini", "Malalag Tubig", "Malinao", "Marber", "Matanao", "Matti", "New Bantayan", "New Clarin", "New Iloilo", "New Katipunan", "Pangi", "Poblacion", "Salvacion", "San Antonio", "San Isidro", "San Jose", "San Juan", "San Miguel", "San Pedro", "Santa Cruz", "Santa Maria", "Santo Niño", "Sinawilan", "Sinuda", "Suawon", "Tibungol", "Tibungol Proper"],
+    "Padada": ["Aplaya", "Bagong Silang", "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5", "Barangay 6", "Barangay 7", "Barangay 8", "Barangay 9", "Barangay 10", "Barangay 11", "Barangay 12", "Barangay 13", "Barangay 14", "Barangay 15", "Barangay 16", "Barangay 17", "Barangay 18", "Barangay 19", "Barangay 20", "Barangay 21", "Barangay 22", "Barangay 23", "Barangay 24", "Barangay 25", "Barangay 26", "Barangay 27", "Barangay 28", "Barangay 29", "Barangay 30", "Barangay 31", "Barangay 32", "Barangay 33", "Barangay 34", "Barangay 35", "Barangay 36", "Barangay 37", "Barangay 38", "Barangay 39", "Barangay 40", "Barangay 41", "Barangay 42", "Barangay 43", "Barangay 44", "Barangay 45", "Barangay 46", "Barangay 47", "Barangay 48", "Barangay 49", "Barangay 50", "Barangay 51", "Barangay 52", "Barangay 53", "Barangay 54", "Barangay 55", "Barangay 56", "Barangay 57", "Barangay 58", "Barangay 59", "Barangay 60", "Barangay 61", "Barangay 62", "Barangay 63", "Barangay 64", "Barangay 65", "Barangay 66", "Barangay 67", "Barangay 68", "Barangay 69", "Barangay 70", "Barangay 71", "Barangay 72", "Barangay 73", "Barangay 74", "Barangay 75", "Barangay 76", "Barangay 77", "Barangay 78", "Barangay 79", "Barangay 80", "Barangay 81", "Barangay 82", "Barangay 83", "Barangay 84", "Barangay 85", "Barangay 86", "Barangay 87", "Barangay 88", "Barangay 89", "Barangay 90", "Barangay 91", "Barangay 92", "Barangay 93", "Barangay 94", "Barangay 95", "Barangay 96", "Barangay 97", "Barangay 98", "Barangay 99", "Barangay 100"],
+    "Santa Cruz": ["Astorga", "Bato", "Bucana", "Calinan", "Calinan Proper", "Canocotan", "Carmen", "Catigan", "Darong", "Davao-Bukidnon Road", "Digos", "Goma", "Guinobatan", "Inawayan", "Ising", "Junction Digos", "Kibuaya", "Labangal", "Lambajon", "Lavigan", "Linao", "Magbukuan", "Mahayag", "Malabog", "Malalag Tubig", "Malasila", "Malinao", "Mapua", "Matanao", "Matiao", "New Clarin", "New Iloilo", "New Katipunan", "Pangi", "Poblacion", "San Agustin", "San Antonio", "San Isidro", "San Jose", "San Miguel", "Santa Cruz", "Santa Maria", "Santa Rita", "Santo Niño", "Sinawilan", "Sinuda", "Suawon", "Tibungol", "Tibungol Proper"],
+    "Sulop": ["Bagong Silang", "Balabag", "Basiawan", "Bato", "Bolton", "Bugac", "Calian", "Cogon", "Dacudao", "Dalumpinas", "Darapuay", "Del Pilar", "Eman", "Guia", "Karaos", "Katipunan", "Kinuskusan", "La Paz", "Libertad", "Lower Igpit", "Lower Mal", "Lower Sibulan", "Lumalaleng", "Mabini", "Malalag Tubig", "Malinao", "Marber", "Matanao", "Matti", "New Bantayan", "New Clarin", "New Iloilo", "New Katipunan", "Pangi", "Poblacion", "Salvacion", "San Antonio", "San Isidro", "San Jose", "San Juan", "San Miguel", "San Pedro", "Santa Cruz", "Santa Maria", "Santo Niño", "Sinawilan", "Sinuda", "Suawon", "Tibungol", "Tibungol Proper"],
+
+    "Mati City": ["Barangay Central", "Barangay Dahican", "Barangay Dawan", "Barangay Macambol", "Barangay Matiao", "Barangay Sainz", "Barangay Sanghay", "Barangay Tagbinonga"],
+    "Baganga": ["Barangay Campawan", "Barangay Dapnan", "Barangay Kinablangan", "Barangay Lambajon", "Barangay Mahan-ub", "Barangay San Isidro"],
+    "Banaybanay": ["Barangay Cabangcalan", "Barangay Calubihan", "Barangay Causwagan", "Barangay Panikian", "Barangay Pintatagan", "Barangay Poblacion", "Barangay Piso"],
+    "Boston": ["Barangay Cabacungan", "Barangay Caatihan", "Barangay Cawayanan", "Barangay Sibahay", "Barangay Simulao"],
+    "Caraga": ["Barangay Dapnan", "Barangay Matikad", "Barangay Pichon", "Barangay Poblacion", "Barangay San Luis"],
+    "Cateel": ["Barangay Abijod", "Barangay Aliwagwag", "Barangay Aragon", "Barangay Baybay", "Barangay Maglahus", "Barangay Mainit", "Barangay San Alfonso", "Barangay San Antonio", "Barangay San Isidro"],
+    "Governor Generoso": ["Barangay Anitap", "Barangay Don Aurelio Chicote", "Barangay Don Mariano Marcos", "Barangay Lavigan", "Barangay Manuel Roxas", "Barangay Pundaguitan", "Barangay Santiago", "Barangay Sigaboy", "Barangay Surop"],
+    "Lupon": ["Barangay Bagumbayan", "Barangay Banaybanay", "Barangay Calapagan", "Barangay Cocornon", "Barangay Langka", "Barangay Lapulapu", "Barangay Macangao", "Barangay Mahayag", "Barangay Marayag", "Barangay New Visayas", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Vicente"],
+    "Manay": ["Barangay Cabacungan", "Barangay Caatihan", "Barangay Cawayanan", "Barangay Central", "Barangay Cugman", "Barangay Del Pilar", "Barangay Lambajon", "Barangay Matiao", "Barangay Panikian", "Barangay Poblacion", "Barangay San Ignacio", "Barangay San Isidro"],
+    "San Isidro": ["Barangay Abijod", "Barangay Aliwagwag", "Barangay Aragon", "Barangay Bagumbayan", "Barangay Cabacungan", "Barangay Caatihan", "Barangay Calapagan", "Barangay Cawayanan", "Barangay Central", "Barangay Cugman", "Barangay Del Pilar", "Barangay Kinablangan", "Barangay Lambajon", "Barangay Lapulapu", "Barangay Macangao", "Barangay Mahayag", "Barangay Marayag", "Barangay Matiao", "Barangay Panikian", "Barangay Pichon", "Barangay Poblacion", "Barangay San Ignacio", "Barangay San Isidro", "Barangay San Luis", "Barangay San Vicente"],
+    "Tarragona": ["Barangay Cabangcalan", "Barangay Calubihan", "Barangay Causwagan", "Barangay Central", "Barangay Dapnan", "Barangay Lambajon", "Barangay Langka", "Barangay Lavigan", "Barangay Matikad", "Barangay Pichon", "Barangay Poblacion", "Barangay San Ignacio", "Barangay San Isidro", "Barangay San Luis", "Barangay San Vicente", "Barangay Sainz", "Barangay Sanghay", "Barangay Tagbinonga"],
+
+    "Compostela": ["Barangay Gabi", "Barangay Lagab", "Barangay Mangayon", "Barangay Mapaca", "Barangay Maparat", "Barangay Ngan", "Barangay Osmeña", "Barangay Panansalan", "Barangay San Miguel", "Barangay San Roque", "Barangay Santa Fe", "Barangay Siocon", "Barangay Tamia", "Barangay Tibagon"],
+    "Monkayo": ["Barangay Awao", "Barangay Banlag", "Barangay Baylo", "Barangay Casoon", "Barangay Haguimitan", "Barangay Inambatan", "Barangay Katipunan", "Barangay Macopa", "Barangay Olaycon", "Barangay Pasian", "Barangay Poblacion", "Barangay Rizal", "Barangay Salvacion", "Barangay San Isidro", "Barangay San Jose", "Barangay Santa Fe", "Barangay Santo Niño", "Barangay Union"],
+    "Maco": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"],
+    "Mabini": ["Barangay Cabuyuan", "Barangay Cuambog", "Barangay Del Pilar", "Barangay Elizalde", "Barangay Anitap", "Barangay New Barili", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Antonio", "Barangay San Isidro", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Tagbinonga", "Barangay Teresa"],
+    "Mawab": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"],
+    "Montevista": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"],
+    "Nabunturan": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"],
+    "New Bataan": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"],
+    "Pantukan": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"],
+    "Laak": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"],
+    "Maragusan": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"],
+
+    "Malita": ["Barangay Bitoon", "Barangay Buhangin", "Barangay Calian", "Barangay Culaman", "Barangay Datu Danwata", "Barangay Demoloc", "Barangay Kidalapong", "Barangay Kilalag", "Barangay Lacaron", "Barangay Lais", "Barangay Lagumit", "Barangay Little Baguio", "Barangay Litos", "Barangay Macol", "Barangay Mana", "Barangay Pangaleon", "Barangay Pinalpalan", "Barangay Poblacion", "Barangay Sangay", "Barangay Talogoy", "Barangay Tubalan"],
+    "Don Marcelino": ["Barangay Baluntaya", "Barangay Calian", "Barangay Dalupan", "Barangay Kinanga", "Barangay Kiwanan", "Barangay Lacaron", "Barangay Lapuan", "Barangay Litos", "Barangay Mabuhay", "Barangay Malalan", "Barangay Manuel Peralta", "Barangay Nueva Villa", "Barangay Pinalpalan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santo Niño", "Barangay Sugal", "Barangay Talagutong", "Barangay Taytayan"],
+    "Jose Abad Santos": ["Barangay Abaran", "Barangay Buguis", "Barangay Caburan", "Barangay Calian", "Barangay Culaman", "Barangay Demoloc", "Barangay La Paz", "Barangay Lacaron", "Barangay Macol", "Barangay Malalan", "Barangay Malibato", "Barangay Malita", "Barangay Marapangi", "Barangay Pinalpalan", "Barangay Poblacion", "Barangay Sangay", "Barangay Sarangani", "Barangay Talogoy", "Barangay Tubalan", "Barangay Upper Tubalan"],
+    "Santa Maria": ["Barangay Basiawan", "Barangay Datu Danwata", "Barangay Demoloc", "Barangay Kialeg", "Barangay Kinanga", "Barangay Kiwanan", "Barangay Lacaron", "Barangay Lais", "Barangay Little Baguio", "Barangay Mana", "Barangay Nueva Villa", "Barangay Pinalpalan", "Barangay Poblacion", "Barangay San Antonio", "Barangay San Isidro", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Sugal", "Barangay Talogoy", "Barangay Tubalan", "Barangay Upper Tubalan"],
+    "Sarangani": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"]
+};
+    barangays.value = cityBarangays[city] || [];
+    form.value.client.barangay = '';
+};
+
+const toggleOtherDocuments = () => {
+    if (!form.value.documents_submitted.documents.includes('Others')) {
+        form.value.documents_submitted.others = '';
+    }
+};
+
+const message = ref('');
+const success = ref(true);
+
+const saveForm = async () => {
+    try {
+        const response = await axios.post('/api/save-admission', form.value);
+        alert('Form saved successfully!');
+    } catch (error) {
+        alert('Failed to save form. Please try again.');
+        console.error(error);
+    }
 };
 </script>
 
-
-<template>
-  <div class="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg">
-    <!-- Tab Navigation -->
-    <div class="flex space-x-4 mb-6">
-      <button
-        v-for="(tab, index) in tabs"
-        :key="index"
-        :class="{'bg-blue-500 text-white': currentTab === index, 'bg-gray-200': currentTab !== index }"
-        class="py-2 px-4 rounded-md"
-        @click="setCurrentTab(index)"
-      >
-        {{ tab }}
-      </button>
-    </div>
-
-    <form @submit.prevent="submitForm">
-      <!-- Admission Slip Tab -->
-      <fieldset v-if="currentTab === 0" class="border border-gray-300 p-4 mb-4 rounded-lg">
-        <legend class="text-lg font-bold mb-4">Admission Slip</legend>
-        <div class="mb-4">
-          <label for="name" class="block mb-1">Name:</label>
-          <input type="text" id="name" v-model="form.name" placeholder="Enter name" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="sex" class="block mb-1">Sex:</label>
-          <select id="sex" v-model="form.sex" required class="w-full px-3 py-2 border rounded-md">
-            <option value="" disabled>Select</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label for="address" class="block mb-1">Address:</label>
-          <input type="text" id="address" v-model="form.address" placeholder="Enter address" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="religion" class="block mb-1">Religion:</label>
-          <input type="text" id="religion" v-model="form.religion" placeholder="Enter religion" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="dob" class="block mb-1">Date/Place of Birth:</label>
-          <input type="date" id="dob" v-model="form.dob" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="committingCourt" class="block mb-1">Committing Court:</label>
-          <input type="text" id="committingCourt" v-model="form.committingCourt" placeholder="Enter committing court" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="criminalCaseNo" class="block mb-1">Crim. Case #:</label>
-          <input type="text" id="criminalCaseNo" v-model="form.criminalCaseNo" placeholder="Enter criminal case number" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="offenseCommitted" class="block mb-1">Offense Committed:</label>
-          <input type="text" id="offenseCommitted" v-model="form.offenseCommitted" placeholder="Enter offense committed" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="dateAdmitted" class="block mb-1">Date admitted to Center:</label>
-          <input type="date" id="dateAdmitted" v-model="form.dateAdmitted" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="daysInJail" class="block mb-1">No. of Days in Jail:</label>
-          <input type="number" id="daysInJail" v-model="form.daysInJail" placeholder="Enter number of days" min="0" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="daysInDetention" class="block mb-1">No. of Days in Detention Center:</label>
-          <input type="number" id="daysInDetention" v-model="form.daysInDetention" placeholder="Enter number of days" min="0" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <legend class="text-lg font-bold mb-4">Distinguishing Marks</legend>
-        <div class="mb-4">
-          <label for="tattoo" class="block mb-1">a. Tattoo/Scars:</label>
-          <input type="text" id="tattoo" v-model="form.distinguishingMarks.tattoo" placeholder="Enter tattoo details" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="height" class="block mb-1">b. Height:</label>
-          <input type="text" id="height" v-model="form.distinguishingMarks.height" placeholder="Enter height" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="weight" class="block mb-1">c. Weight:</label>
-          <input type="text" id="weight" v-model="form.distinguishingMarks.weight" placeholder="Enter weight" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="eyeColor" class="block mb-1">d. Colour of Eye:</label>
-          <input type="text" id="eyeColor" v-model="form.distinguishingMarks.eyeColor" placeholder="Enter eye color" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="skinColor" class="block mb-1">e. Skin:</label>
-          <input type="text" id="skinColor" v-model="form.distinguishingMarks.skinColor" placeholder="Enter skin color" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <legend class="text-lg font-bold mb-4">Documents Submitted</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.scsr" class="form-checkbox h-5 w-5"> <span>1.) SCSR</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.courtOrder" class="form-checkbox h-5 w-5"> <span>2.) Court Order</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.medicalCertificates" class="form-checkbox h-5 w-5"> <span>3.) Medical Certificates</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.consConsent" class="form-checkbox h-5 w-5"> <span>4.) Consent from Parents</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.schoolRecords" class="form-checkbox h-5 w-5"> <span>5.) School Records</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.documents.others" class="form-checkbox h-5 w-5"> <span>6.) Others</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Additional Information</legend>
-        <div class="mb-4">
-          <label for="generalImpression" class="block mb-1">General Impression upon admission:</label>
-          <textarea id="generalImpression" v-model="form.generalImpression" placeholder="Enter general impression" class="w-full px-3 py-2 border rounded-md"></textarea>
-        </div>
-        <div class="mb-4">
-          <label for="actionTaken" class="block mb-1">Action Taken:</label>
-          <textarea id="actionTaken" v-model="form.actionTaken" placeholder="Enter action taken" class="w-full px-3 py-2 border rounded-md"></textarea>
-        </div>
-      </fieldset>
-
-      <!-- General Intake Sheet Tab -->
-      <fieldset v-if="currentTab === 1" class="border border-gray-300 p-4 mb-4 rounded-lg">
-        <legend class="text-lg font-bold mb-4">General Intake Sheet</legend>
-        <div class="mb-4">
-          <label for="name" class="block mb-1">Name of Client:</label>
-          <input type="text" id="name" v-model="form.name" placeholder="Enter name" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="date" class="block mb-1">Date:</label>
-          <input type="date" id="date" v-model="form.date" placeholder="Enter Date" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="age" class="block mb-1">Age:</label>
-          <input type="number" id="age" v-model="form.age" placeholder="Enter Age" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="sex" class="block mb-1">Sex:</label>
-          <select id="sex" v-model="form.sex" required class="w-full px-3 py-2 border rounded-md">
-            <option value="" disabled>Select</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label for="address" class="block mb-1">Address:</label>
-          <input type="text" id="address" v-model="form.address" placeholder="Enter address" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="religion" class="block mb-1">Religion:</label>
-          <input type="text" id="religion" v-model="form.religion" placeholder="Enter religion" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="occupation" class="block mb-1">Occupation:</label>
-          <input type="text" id="occupation" v-model="form.occupation" placeholder="Enter Occupation" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="dob" class="block mb-1">Date/Place of Birth:</label>
-          <input type="date" id="dob" v-model="form.dob" required class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="HEA" class="block mb-1">Highest Educational Attainment:</label>
-          <input type="text" id="HEA" v-model="form.HEA" placeholder="Enter Attainment" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="religion" class="block mb-1">Name of School:</label>
-          <input type="text" id="religion" v-model="form.NOS" placeholder="Enter Name of School" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <div class="mb-4">
-          <label for="religion" class="block mb-1">Class Adviser:</label>
-          <input type="text" id="religion" v-model="form.classAdviser" placeholder="Enter Class Adviser" class="w-full px-3 py-2 border rounded-md">
-        </div>
-        <legend class="text-lg font-bold mb-4">Problem Presented</legend>
-        <div class="mb-4">
-          <textarea v-model="form.problemPresented" class="w-full px-3 py-2 border rounded-md"></textarea>
-        </div>
-        <legend class="text-lg font-bold mb-4">Brief Physical Description</legend>
-        <div class="mb-4">
-          <textarea v-model="form.physicalDescription" placeholder="Childs Description" class="w-full px-3 py-2 border rounded-md"></textarea>
-        </div>
-        <legend class="text-lg font-bold mb-4">Major Life Events</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.deathOfParents" class="form-checkbox h-5 w-5"> <span>Death of Parents</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.separationFromFamily" class="form-checkbox h-5 w-5"> <span>Separation from the family</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofnaturalmanmadedisaster" class="form-checkbox h-5 w-5"> <span>Victim of natural / manmade disaster</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofapprehension" class="form-checkbox h-5 w-5"> <span>Victim of apprehension</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofphysicalabuse" class="form-checkbox h-5 w-5"> <span>Victim of physical abuse</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.withsuicidaltendencies" class="form-checkbox h-5 w-5"> <span>With suicidal tendencies</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.mistakenidentity" class="form-checkbox h-5 w-5"> <span>Mistaken identity</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.abandonment" class="form-checkbox h-5 w-5"> <span>Abandonment</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.seriousAccident" class="form-checkbox h-5 w-5"> <span>Serious Accident</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofdemolition" class="form-checkbox h-5 w-5"> <span>Victim of demolition</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofsexualabuse" class="form-checkbox h-5 w-5"> <span>Victim of sexual abuse</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.Victimofverbalabuse" class="form-checkbox h-5 w-5"> <span>Victim of verbal abuse</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.majorLifeEvents.AcquiredDisability" class="form-checkbox h-5 w-5"> <span>Acquired Disability</span></label>
-          <textarea v-model="form.majorLifeEvents.Othersplsspecify" placeholder="Others pls specify" class="w-full px-3 py-2 border rounded-md"></textarea>
-        </div>
-        <legend class="text-lg font-bold mb-4">Enduring Life Strain</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Life Transition</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Development Changes</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Normalization</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Feelings/Behaviour towards the incident</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Attachments</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Skills</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Resources</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Activities or source of income in the street</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Initial Assessment</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-        <legend class="text-lg font-bold mb-4">Recommendations</legend>
-        <div class="mb-4 space-y-2">
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.poverty" class="form-checkbox h-5 w-5"> <span>Poverty</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.physicalIllness" class="form-checkbox h-5 w-5"> <span>Physical illness</span></label>
-          <label class="flex items-center space-x-2"><input type="checkbox" v-model="form.enduringLifeStrain.lackOfOpportunity" class="form-checkbox h-5 w-5"> <span>Lack of educational opportunity</span></label>
-        </div>
-      </fieldset>
-
-      <button type="submit" class="py-2 px-4 bg-blue-500 text-white rounded-md">Submit</button>
-    </form>
-  </div>
-</template>
+<style scoped>
+/* Add your styles here if needed */
+</style>

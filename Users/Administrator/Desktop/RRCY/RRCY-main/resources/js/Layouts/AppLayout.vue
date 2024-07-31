@@ -70,6 +70,7 @@
                 :href="route('dashboard')"
                 :active="route().current('dashboard')"
                 class="flex items-center space-x-4"
+                @click="handleNavClick('dashboard')"
               >
                 <!-- Dashboard Icon -->
                 <svg
@@ -112,6 +113,7 @@
                 :href="route('cicl')"
                 :active="route().current('cicl')"
                 class="flex items-center space-x-4"
+                @click="handleNavClick('cicl')"
               >
                 <!-- List Icon -->
                 <svg
@@ -141,7 +143,7 @@
                 </span>
               </NavLink>
             </div>
-            <div>
+
             <!-- New Client Link with Icon -->
             <div
               :class="{
@@ -154,6 +156,7 @@
                 :href="route('new')"
                 :active="route().current('new')"
                 class="flex items-center space-x-4"
+                @click="handleNavClick('new')"
               >
                 <!-- Add Icon -->
                 <svg
@@ -183,7 +186,18 @@
                 </span>
               </NavLink>
             </div>
-          </div>
+
+            <!-- Edit Link with Icon and Tabs -->
+            <div
+              :class="{
+                'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
+                'w-full h-auto': !isSidebarCollapsed
+              }"
+              class="flex items-center justify-between max-w-lg p-8 shadow-lg rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
+            >
+             
+            </div>
+
           </div>
           <!-- Logout Button -->
           <div class="flex items-center justify-center w-full max-w-lg p-8 shadow-lg rounded-lg mt-auto">
@@ -229,15 +243,15 @@
       >
         <!-- Page Heading -->
         <header v-if="$slots.header">
-            <slot name="header" />
-            <h2 id="header" class="w-full py-2 bg-white shadow-md flex items-center justify-end px-4 sm:px-8 lg:px-16">
-                <img id="header-image-left" src="images/headerlogo2.png" alt="Left Logo" class="h-12 sm:h-16 lg:h-15 w-auto mr-4" />
-                <img id="header-image-right" src="images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-15 w-auto" />
-            </h2>
+          <slot name="header" />
+          <h2 id="header" class="w-full py-2 bg-white shadow-md flex items-center justify-end px-4 sm:px-8 lg:px-16">
+            <img id="header-image-left" src="images/headerlogo2.png" alt="Left Logo" class="h-12 sm:h-16 lg:h-15 w-auto mr-4" />
+            <img id="header-image-right" src="images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-15 w-auto" />
+          </h2>
         </header>
 
         <!-- Page Content -->
-        <main class="pt-24 mt-20"> <!-- Adjust padding to match header height -->
+        <main class=""> <!-- Adjust padding to match header height -->
           <slot />
         </main>
       </div>
@@ -264,6 +278,31 @@ const toggleSidebar = () => {
 
 const logout = () => {
   router.post(route('logout'));
+};
+
+const handleNavClick = (routeName) => {
+  changeAllStatus();
+  router.visit(route(routeName));
+};
+
+const changeAllStatus = () => {
+  // Iterate over each client and set the Status to 'inactive'
+  const updateRequests = clients.map(client => 
+    axios.patch(`/api/clients/${client.id}`, { Status: 'inactive' })
+      .then(response => {
+        client.Status = 'inactive';
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  );
+
+  // Wait for all requests to complete
+  Promise.all(updateRequests)
+    .then(() => {
+      // Remove the clients from the list to only show active clients
+      clients = clients.filter(client => client.Status === 'active');
+    });
 };
 </script>
 

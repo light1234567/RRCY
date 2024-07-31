@@ -9,19 +9,19 @@ class CreateAdmissionsTable extends Migration
     public function up()
     {
         Schema::create('admissions', function (Blueprint $table) {
-            $table->id('admission_id');
+            $table->id(); // Automatically creates an 'id' column
             $table->unsignedBigInteger('client_id');
-            $table->string('committing_court', 100);
-            $table->string('crim_case_number', 50);
-            $table->string('offense_committed', 100);
+            $table->string('committing_court');
+            $table->string('crim_case_number');
+            $table->string('offense_committed');
             $table->date('date_admitted');
-            $table->smallInteger('days_in_jail');
-            $table->smallInteger('days_in_detention_center');
-            $table->text('general_impression');
-            $table->text('action_taken');
+            $table->integer('days_in_jail');
+            $table->integer('days_in_detention_center');
+            $table->string('action_taken');
+            $table->string('general_impression');
             $table->timestamps();
 
-            $table->foreign('client_id')->references('client_id')->on('clients')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
 

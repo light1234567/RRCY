@@ -12,9 +12,7 @@ export default {
   components: {
     AppLayout,
     socialservice,
-    anecdotalreport,
-    incidentalreport,
-    sessionreport
+    
   },
   data() {
     return {
@@ -121,10 +119,8 @@ export default {
 <template>
   <AppLayout>
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight flex items-center justify-start p-3 ">
-        New Client
-      </h2>
-      <div class="tabs">
+      
+     <!-- <div class="tabs">
         <button
           v-for="(tab, index) in availableTabs"
           :key="index"
@@ -132,8 +128,8 @@ export default {
           @click="currentTab = index"
         >
           {{ tab }}
-        </button>
-      </div>
+        </button> 
+      </div>-->
     </template>
     <div>
       <!-- Tabs Content -->
