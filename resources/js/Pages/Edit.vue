@@ -4,26 +4,26 @@
       <!-- Add your header content here if needed -->
     </template>
 
-    <div v-if="loading">Loading client data...</div>
+    <div v-if="loading" class="text-center py-4">Loading client data...</div>
     <div v-else>
       <div class="flex border-b">
         <button 
           v-for="(tab, index) in availableTabs" 
           :key="index" 
-          @click="currentTab = index" 
-          :class="['py-2 px-4 focus:outline-none', currentTab === index ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500']"
+          @click="currentTab = tab" 
+          :class="['py-2 px-4 focus:outline-none', currentTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500']"
         >
           {{ tab }}
         </button>
       </div>
       <div class="p-4">
-        <div v-if="currentTab === 0"><EditSocialServiceTab/></div>
-        <div v-if="currentTab === 1"><EditPsychologicalTab/></div>
-        <div v-if="currentTab === 2"><EditCourtOrderTab/></div>
-        <div v-if="currentTab === 3"><EditHomelifeTab/></div>
-        <div v-if="currentTab === 4"><EditNursingcareTab/></div>
-        <div v-if="currentTab === 5"><EditEducationalTab/></div>
-        <div v-if="currentTab === 6"><EditPSDTab/></div>
+        <div v-if="currentTab === 'Social Service'"><EditSocialServiceTab/></div>
+        <div v-if="currentTab === 'Psychological Reports'"><EditPsychologicalTab/></div>
+        <div v-if="currentTab === 'Court Order'"><EditCourtOrderTab/></div>
+        <div v-if="currentTab === 'Homelife Services'"><EditHomelifeTab/></div>
+        <div v-if="currentTab === 'Nursing Care'"><EditNursingcareTab/></div>
+        <div v-if="currentTab === 'Educational Services'"><EditEducationalTab/></div>
+        <div v-if="currentTab === 'PSD Reports'"><EditPSDTab/></div>
       </div>
     </div>
   </AppLayout>
@@ -53,11 +53,14 @@ const tabs = ref([
   'PSD Reports'
 ]);
 
-const user = ref({ role: '' }); // Role will be set dynamically
-const currentTab = ref(0);
+const currentTab = ref(''); // Set to an empty string initially
+
 const route = useRoute();
 const client = ref(null);
 const loading = ref(true);
+const user = ref({ role: '' }); // Role will be set dynamically
+
+
 
 const availableTabs = computed(() => {
   if (user.value.role === 'social services') {
@@ -77,7 +80,7 @@ const availableTabs = computed(() => {
     case 'psd':
       return ['PSD Reports'];
     default:
-      return tabs.value;
+      return [];
   }
 });
 
@@ -90,36 +93,14 @@ onMounted(async () => {
     const response = await axios.get(`/api/clients/${route.params.id}`);
     client.value = response.data;
     loading.value = false;
+    
+    // Initialize currentTab based on availableTabs if not set
+    if (!currentTab.value && availableTabs.value.length > 0) {
+      currentTab.value = availableTabs.value[0];
+    }
   } catch (error) {
     console.error('Error fetching client data:', error);
     loading.value = false;
-  }
-
-  // Set the current tab based on the user role
-  switch (user.value.role) {
-    case 'social services':
-      currentTab.value = 0;
-      break;
-    case 'psychological':
-      currentTab.value = 1;
-      break;
-    case 'court order':
-      currentTab.value = 2;
-      break;
-    case 'homelife services':
-      currentTab.value = 3;
-      break;
-    case 'nursing care':
-      currentTab.value = 4;
-      break;
-    case 'educational services':
-      currentTab.value = 5;
-      break;
-    case 'psd':
-      currentTab.value = 6;
-      break;
-    default:
-      currentTab.value = 0;
   }
 });
 </script>
