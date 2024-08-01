@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+[x-cloak] {
+    display: none;
+}
+
+.transition-transform {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .transform {
+    transform: translateX(0);
+  }
+  
+  .-translate-x-full {
+    transform: translateX(-100%);
+  }
