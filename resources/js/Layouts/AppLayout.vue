@@ -13,11 +13,11 @@
         }"
         class="fixed bg-custom-blue border-r border-gray-100 h-full z-40 transition-all duration-300"
       >
-        <div class="flex flex-col h-full">
+        <div class="flex flex-col h-full relative">
           <!-- Sidebar Toggle Button (Arrow Icon) -->
           <button
             @click="toggleSidebar"
-            class="absolute top-4 right-4 text-white focus:outline-none"
+            class="absolute top-4 right-4 text-white focus:outline-none z-50"
           >
             <svg
               v-if="!isSidebarCollapsed"
@@ -49,11 +49,22 @@
             </svg>
           </button>
 
-          <!-- Logo -->
-          <div class="flex justify-center items-center w-full max-w-lg p-8 shadow-lg rounded-lg">
-            <a>
-              <ApplicationMark class="block h-25 w-auto" />
-            </a>
+          <!-- UserProfileImage -->
+          <div class="flex flex-col items-center p-4">
+            <UserProfileImage
+              :userImage="userImage"
+              :userName="userName"
+            />
+          </div>
+
+          <!-- Application Mark and User Menu -->
+          <div class="flex flex-col items-center p-4">
+            <ApplicationMark
+              :isSidebarCollapsed="isSidebarCollapsed"
+              :userName="userName"
+              :userRole="userRole"
+              :userImage="userImage"
+            />
           </div>
 
           <!-- Navigation Links -->
@@ -64,13 +75,13 @@
                 'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
                 'w-full h-auto': !isSidebarCollapsed
               }"
-              class="flex  items-center justify-between max-w-lg p-8 shadow-lg rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
+              class="flex items-center justify-between max-w-lg p-8 shadow-lg rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
+              @click="changeAllStatus"
             >
               <NavLink
                 :href="route('dashboard')"
                 :active="route().current('dashboard')"
                 class="flex items-center space-x-4"
-                @click="handleNavClick('dashboard')"
               >
                 <!-- Dashboard Icon -->
                 <svg
@@ -104,16 +115,16 @@
             <!-- CICL Link with Icon -->
             <div
               :class="{
-                'px-2 w-16 h-16 mt-6 mb-6': isSidebarCollapsed,
+                'px-2 w-16 h-16 mt-6 mb-8': isSidebarCollapsed,
                 'w-full h-auto': !isSidebarCollapsed
               }"
               class="flex items-center justify-between mb-20 max-w-lg p-8 shadow-lg rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
+              @click="changeAllStatus"
             >
               <NavLink
                 :href="route('cicl')"
                 :active="route().current('cicl')"
                 class="flex items-center space-x-4"
-                @click="handleNavClick('cicl')"
               >
                 <!-- List Icon -->
                 <svg
@@ -147,16 +158,16 @@
             <!-- New Client Link with Icon -->
             <div
               :class="{
-                'px-2 w-16 h-16 mt-6': isSidebarCollapsed,
-                'w-full h-auto mt-1': !isSidebarCollapsed
+                 'px-2 w-16 h-16 mt-6 mb-6': isSidebarCollapsed,
+                 'w-full h-auto': !isSidebarCollapsed
               }"
               class="flex items-center justify-between max-w-lg p-8 shadow-lg rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
+              @click="changeAllStatus"
             >
               <NavLink
                 :href="route('new')"
                 :active="route().current('new')"
                 class="flex items-center space-x-4"
-                @click="handleNavClick('new')"
               >
                 <!-- Add Icon -->
                 <svg
@@ -186,19 +197,8 @@
                 </span>
               </NavLink>
             </div>
-
-            <!-- Edit Link with Icon and Tabs -->
-            <div
-              :class="{
-                'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
-                'w-full h-auto': !isSidebarCollapsed
-              }"
-              class="flex items-center justify-between max-w-lg p-8 shadow-lg rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
-            >
-             
-            </div>
-
           </div>
+
           <!-- Logout Button -->
           <div class="flex items-center justify-center w-full max-w-lg p-8 shadow-lg rounded-lg mt-auto">
             <button
@@ -237,7 +237,7 @@
       <div
         :class="{
           'ml-64': !isSidebarCollapsed,
-          'ml-16': isSidebarCollapsed
+          'ml-20': isSidebarCollapsed
         }"
         class="flex-1 transition-all duration-300"
       >
@@ -251,7 +251,7 @@
         </header>
 
         <!-- Page Content -->
-        <main class=""> <!-- Adjust padding to match header height -->
+        <main class="pt-24 mt-20"> <!-- Adjust padding to match header height -->
           <slot />
         </main>
       </div>
@@ -260,16 +260,19 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { ref, onMounted } from 'vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
 import NavLink from '@/Components/NavLink.vue';
+import UserProfileImage from '@/Components/UserProfileImage.vue';
+import axios from 'axios';
 
-const props = defineProps({
-  title: String,
-});
+const props = usePage().props;
 
+const userImage = ref(props.auth.user.profile_photo_url || 'images/default.jpg');
+const userName = ref(props.auth.user.name || 'Default Name');
+const userRole = ref(props.auth.user.role || '(User)');
 const isSidebarCollapsed = ref(false);
 
 const toggleSidebar = () => {
@@ -280,16 +283,23 @@ const logout = () => {
   router.post(route('logout'));
 };
 
-const handleNavClick = (routeName) => {
-  changeAllStatus();
-  router.visit(route(routeName));
+const clients = ref([]);
+
+const fetchClients = () => {
+  axios.get('/api/clients')
+    .then(response => {
+      clients.value = response.data.filter(client => client.Status === 'active');
+    })
+    .catch(error => {
+      console.log(error);
+    });
 };
 
 const changeAllStatus = () => {
-  // Iterate over each client and set the Status to 'inactive'
-  const updateRequests = clients.map(client => 
+  console.log('changeAllStatus triggered');
+  const updateRequests = clients.value.map(client => 
     axios.patch(`/api/clients/${client.id}`, { Status: 'inactive' })
-      .then(response => {
+      .then(() => {
         client.Status = 'inactive';
       })
       .catch(error => {
@@ -297,17 +307,26 @@ const changeAllStatus = () => {
       })
   );
 
-  // Wait for all requests to complete
   Promise.all(updateRequests)
     .then(() => {
-      // Remove the clients from the list to only show active clients
-      clients = clients.filter(client => client.Status === 'active');
+      clients.value = clients.value.filter(client => client.Status === 'active');
     });
 };
+
+onMounted(() => {
+  fetchClients();
+});
 </script>
 
 <style scoped>
-.bg-custom-blue {
-  background-color: #1E3A8A; /* Your custom blue color */
+/* Ensure the sidebar toggle button is always clickable */
+.sidebar-button {
+  z-index: 50; /* Higher z-index to ensure it's above other elements */
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 </style>
