@@ -1,11 +1,11 @@
 <template>
     <div>
-        <h1 class="text-2xl p-2 text-red-500 mt-4 font-bold mb-8">
+        <h1 class="text-2xl p-2 text-red-500 -mt-40 ml-12 font-bold mb-8">
             Admission Form
         </h1>
         <form @submit.prevent="saveForm">
             <!-- Client Information -->
-            <fieldset class="border border-gray-300 p-8 mb-4 rounded-lg">
+            <fieldset class="border bg-white shadow-sm mr-16 border-gray-300 p-8 ml-12 mb-8 rounded-lg">
                 <legend class="text-lg font-bold">CLIENT INFORMATION</legend>
                 <div class="grid grid-cols-1">
                     <!-- Name, Sex, and Date of Birth -->
@@ -182,7 +182,7 @@
                 </div>
             </fieldset>
 			<!-- Distinguishing Marks -->
-            <fieldset class="border border-gray-300 p-8 mb-4 rounded-lg">
+            <fieldset class="border bg-white shadow-sm mr-16 border-gray-300 p-8 ml-12 mb-8 rounded-lg">
                 <legend class="text-lg font-bold mb-4">
                     DISTINGUISHING MARKS
                 </legend>
@@ -271,7 +271,7 @@
             </fieldset>
 
             <!-- Admission Details -->
-            <fieldset class="border border-gray-300 p-8 mb-4 rounded-lg">
+            <fieldset class="border bg-white shadow-sm mr-16 border-gray-300 p-8 ml-12 mb-8 rounded-lg">
                 <legend class="text-lg font-bold mb-4">ADMISSION DETAILS</legend>
                 <div class="grid grid-cols-1 gap-2">
                     <div class="mb-4 col-span-1">
@@ -393,7 +393,7 @@
             </fieldset>
 
             <!-- Documents Submitted -->
-            <fieldset class="border border-gray-300 p-8 mb-4 rounded-lg">
+            <fieldset class="border bg-white shadow-sm mr-16 border-gray-300 p-8 ml-12 mb-8 rounded-lg">
                 <legend class="text-lg font-bold mb-4">DOCUMENTS SUBMITTED</legend>
                 <div class="grid grid-cols-1 gap-4">
                     <div class="mb-4">
@@ -503,7 +503,7 @@
             <!-- Submit Button -->
             <button
                 type="submit"
-                class="bg-blue-900 text-white ml-6 mb-4 px-12 py-2 rounded-md"
+                class="bg-blue-900 text-white ml-12 mb-4 px-12 py-2 rounded-md"
             >
                 Save
             </button>
