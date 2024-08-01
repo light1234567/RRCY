@@ -85,4 +85,14 @@ class AdmissionController extends Controller
             return response()->json(['error' => 'Failed to save form. Please try again.'], 500);
         }
     }
+
+    public function getAllData()
+    {
+        $clients = Client::with([
+            'admissions.distinguishingMarks',
+            'admissions.documents'
+        ])->get();
+        return response()->json($clients);
+    }
+    
 }

@@ -12,9 +12,7 @@ Route::patch('/clients/{id}', [ClientController::class, 'updateStatus']);
 Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
 Route::post('/admission', [AdmissionController::class, 'store']);
 Route::post('/save-admission', [AdmissionController::class, 'saveForm']);
-
-
-
+Route::get('/clients-data', [AdmissionController::class, 'getAllData']);
 
 
 // Define the route to get the user role

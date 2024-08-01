@@ -21,7 +21,7 @@ class CreateClientsTable extends Migration
             $table->string('barangay');
             $table->string('street')->nullable();
             $table->string('religion')->nullable();
-            $table->string('status')->nullable();
+            $table->string('Status')->nullable();
             $table->timestamps();
         });
     }

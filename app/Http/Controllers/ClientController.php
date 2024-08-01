@@ -1,7 +1,5 @@
 <?php
 
-// app/Http/Controllers/ClientController.php
-
 namespace App\Http\Controllers;
 
 use App\Models\Client;
@@ -16,10 +14,17 @@ class ClientController extends Controller
         return response()->json($clients);
     }
 
+    // Fetch all clients with related admissions, distinguishing marks, and documents
+    public function fetchAllClientsData()
+    {
+        $clients = Client::with(['admissions.distinguishingMarks', 'admissions.documents'])->get();
+        return response()->json($clients);
+    }
+
     // Fetch a single client by ID
     public function show($id)
     {
-        $client = Client::find($id);
+        $client = Client::with(['admissions.distinguishingMarks', 'admissions.documents'])->find($id);
 
         if (!$client) {
             return response()->json(['message' => 'Client not found'], 404);
