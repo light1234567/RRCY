@@ -60,8 +60,6 @@ const client = ref(null);
 const loading = ref(true);
 const user = ref({ role: '' }); // Role will be set dynamically
 
-
-
 const availableTabs = computed(() => {
   if (user.value.role === 'social services') {
     return tabs.value;
@@ -84,20 +82,28 @@ const availableTabs = computed(() => {
   }
 });
 
+const roleToTab = {
+  'social services': 'Social Service',
+  'psychological': 'Psychological Reports',
+  'court order': 'Court Order',
+  'homelife services': 'Homelife Services',
+  'nursing care': 'Nursing Care',
+  'educational services': 'Educational Services',
+  'psd': 'PSD Reports'
+};
+
 onMounted(async () => {
   const { props } = usePage();
   user.value.role = props.auth.user.role || ''; // Set user role from Inertia props
+
+  // Set currentTab based on user role
+  currentTab.value = roleToTab[user.value.role] || tabs.value[0];
 
   // Fetch client data based on the ID from the route
   try {
     const response = await axios.get(`/api/clients/${route.params.id}`);
     client.value = response.data;
     loading.value = false;
-    
-    // Initialize currentTab based on availableTabs if not set
-    if (!currentTab.value && availableTabs.value.length > 0) {
-      currentTab.value = availableTabs.value[0];
-    }
   } catch (error) {
     console.error('Error fetching client data:', error);
     loading.value = false;

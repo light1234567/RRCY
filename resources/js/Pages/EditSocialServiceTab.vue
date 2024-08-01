@@ -2,15 +2,21 @@
   <div>
     <div v-if="loading" class="text-center py-4">Loading client data...</div>
     <div v-else>
-      <div class="flex border-b">
-        <button 
-          v-for="(tab, index) in availableTabs" 
-          :key="index" 
-          @click="currentTab = tab" 
-          :class="['py-2 px-4 focus:outline-none', currentTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500']"
+      <div class="border-b p-4">
+        <label for="tabs" class="block text-gray-700">Select a tab:</label>
+        <select
+          id="tabs"
+          v-model="currentTab"
+          class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
         >
-          {{ tab }}
-        </button>
+          <option 
+            v-for="(tab, index) in availableTabs" 
+            :key="index" 
+            :value="tab"
+          >
+            {{ tab }}
+          </option>
+        </select>
       </div>
       <div class="p-4">
         <div v-if="currentTab === 'Checklist of Requirements'">Checklist of Requirements</div>
@@ -27,7 +33,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
@@ -77,35 +82,52 @@ onMounted(async () => {
   }
 });
 </script>
-
 <style scoped>
-.flex {
-  display: flex;
-}
 .border-b {
   border-bottom: 1px solid #ddd;
 }
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-.focus\:outline-none {
-  outline: none;
-}
-.border-blue-500 {
-  border-color: #3b82f6;
-}
-.text-blue-500 {
-  color: #3b82f6;
-}
-.text-gray-500 {
-  color: #6b7280;
-}
 .p-4 {
   padding: 1rem;
+}
+.block {
+  display: block;
+}
+.w-full {
+  width: 100%;
+}
+.mt-1 {
+  margin-top: 0.25rem;
+}
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+.rounded-md {
+  border-radius: 0.375rem;
+}
+.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.focus\:border-blue-500 {
+  border-color: #3b82f6;
+}
+.focus\:ring {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+.focus\:ring-blue-500 {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+.focus\:ring-opacity-50 {
+  --tw-ring-opacity: 0.5;
+}
+.text-center {
+  text-align: center;
+}
+.py-4 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.text-gray-700 {
+  color: #4a5568;
 }
 </style>
