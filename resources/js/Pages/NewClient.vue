@@ -2,9 +2,7 @@
 import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import socialservice from './socialservice.vue';
-import anecdotalreport from './anecdotalreport.vue';
-import incidentalreport from './incidentalreport.vue';
-import sessionreport from './sessionreport.vue';
+
 import { usePage } from '@inertiajs/vue3';
 
 export default {

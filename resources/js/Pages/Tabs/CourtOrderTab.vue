@@ -38,7 +38,8 @@ import { ref, onMounted, computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-import AdmissionSlipDisplay from './AdmissionSlipDisplay.vue';
+import AdmissionSlipDisplay from '../Display/SocialService/AdmissionSlipDisplay.vue';
+
 
 const tabs = ref([
   'Checklist of Requirements',

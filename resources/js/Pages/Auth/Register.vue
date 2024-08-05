@@ -1,9 +1,9 @@
 <template>
   <Head title="Register">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=albert-sans:400">
   </Head>
 
-  <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat; font-family: 'Roboto Mono', monospace;">
+  <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat; ">
     <header id="header" class="w-full py-2 bg-white shadow-md flex items-center justify-between px-4 sm:px-8 lg:px-16">
       <img id="header-image-left" src="images/headerlogo2.png" alt="Left Logo" class="h-12 sm:h-16 lg:h-20 w-auto" />
       <img id="header-image-right" src="images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-20 w-auto" />
@@ -106,7 +106,7 @@
                 </div>
               </div>
               <div class="flex items-center justify-end mt-1">
-                <PrimaryButton class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                <PrimaryButton class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-customBlue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                   Register
                 </PrimaryButton>
               </div>
@@ -121,7 +121,7 @@
       </div>
     </main>
 
- <div class="bg-blue-900 py-0">
+ <div class="bg-customBlue py-0">
       <div class="flex flex-wrap justify-between items-center mt-4 px-4 pb-1">
         <!-- Facebook Link -->
         <a href="#" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">

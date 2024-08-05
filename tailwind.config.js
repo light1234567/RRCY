@@ -18,8 +18,11 @@ export default {
                 sans: ['Roboto Mono', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                'custom-blue': 'rgb(13, 57, 145)', // Define your custom RGB color
+                'customBlue': 'rgb(6, 18, 56)', // Define your custom RGB color
+                'customglue': '#202A4D',
             },
+            
+            
         },
     },
 

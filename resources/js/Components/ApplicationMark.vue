@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <!-- User Name and Role Section -->
-    <div v-if="!isSidebarCollapsed" class="text-center truncate -mt-2">
+    <div v-if="!isSidebarCollapsed" class="text-center truncate -mt-4">
       <div
         :class="{
           'text-xs': isSidebarCollapsed,
@@ -29,7 +29,7 @@
     </div>
 
     <!-- Dropdown Content -->
-    <div v-if="isDropdownOpen" ref="dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+    <div v-if="isDropdownOpen" ref="dropdown" class="absolute mt-2 w-48 bg-white rounded-md shadow-lg z-10">
       <div class="block px-4 py-2 text-xs text-gray-400">Manage Account</div>
 
       <DropdownLink :href="route('profile.show')">Profile</DropdownLink>

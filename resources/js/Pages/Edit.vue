@@ -6,7 +6,7 @@
 
     <div v-if="loading" class="text-center py-4">Loading client data...</div>
     <div v-else>
-      <div class="flex border-b">
+      <div class="flex -mt-40 border-b">
         <button 
           v-for="(tab, index) in availableTabs" 
           :key="index" 
@@ -17,13 +17,13 @@
         </button>
       </div>
       <div class="p-4">
-        <div v-if="currentTab === 'Social Service'"><EditSocialServiceTab/></div>
-        <div v-if="currentTab === 'Psychological Reports'"><EditPsychologicalTab/></div>
-        <div v-if="currentTab === 'Court Order'"><EditCourtOrderTab/></div>
-        <div v-if="currentTab === 'Homelife Services'"><EditHomelifeTab/></div>
-        <div v-if="currentTab === 'Nursing Care'"><EditNursingcareTab/></div>
-        <div v-if="currentTab === 'Educational Services'"><EditEducationalTab/></div>
-        <div v-if="currentTab === 'PSD Reports'"><EditPSDTab/></div>
+        <div v-if="currentTab === 'Social Service'"><SocialServiceTab/></div>
+        <div v-if="currentTab === 'Psychological Reports'"><PsychologicalTab/></div>
+        <div v-if="currentTab === 'Court Order'"><CourtOrderTab/></div>
+        <div v-if="currentTab === 'Homelife Services'"><HomelifeTab/></div>
+        <div v-if="currentTab === 'Nursing Care'"><NursingcareTab/></div>
+        <div v-if="currentTab === 'Educational Services'"><EducationalTab/></div>
+        <div v-if="currentTab === 'PSD Reports'"><PSDTab/></div>
       </div>
     </div>
   </AppLayout>
@@ -32,16 +32,17 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import axios from 'axios';
 import { usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import EditSocialServiceTab from './EditSocialServiceTab.vue';
-import EditPsychologicalTab from './EditPsychologicalTab.vue';
-import EditCourtOrderTab from './EditCourtOrderTab.vue';
-import EditHomelifeTab from './EditHomelifeTab.vue';
-import EditNursingcareTab from './EditNursingcareTab.vue';
-import EditEducationalTab from './EditEducationalTab.vue';
-import EditPSDTab from './EditPSDTab.vue';
+
+// Adjusted import paths
+import SocialServiceTab from './Tabs/SocialServiceTab.vue';
+import PsychologicalTab from './Tabs/PsychologicalTab.vue';
+import CourtOrderTab from './Tabs/CourtOrderTab.vue';
+import HomelifeTab from './Tabs/HomelifeTab.vue';
+import NursingcareTab from './Tabs/NursingcareTab.vue';
+import EducationalTab from './Tabs/EducationalTab.vue';
+import PSDTab from './Tabs/PSDTab.vue';
 
 const tabs = ref([
   'Social Service',
@@ -56,8 +57,6 @@ const tabs = ref([
 const currentTab = ref(''); // Set to an empty string initially
 
 const route = useRoute();
-const client = ref(null);
-const loading = ref(true);
 const user = ref({ role: '' }); // Role will be set dynamically
 
 const availableTabs = computed(() => {
@@ -81,7 +80,6 @@ const availableTabs = computed(() => {
       return [];
   }
 });
-
 const roleToTab = {
   'social services': 'Social Service',
   'psychological': 'Psychological Reports',
@@ -92,22 +90,12 @@ const roleToTab = {
   'psd': 'PSD Reports'
 };
 
-onMounted(async () => {
+onMounted(() => {
   const { props } = usePage();
-  user.value.role = props.auth.user.role || ''; // Set user role from Inertia props
+  user.value.role = props.auth.user.role; // Set user role from Inertia props
 
   // Set currentTab based on user role
   currentTab.value = roleToTab[user.value.role] || tabs.value[0];
-
-  // Fetch client data based on the ID from the route
-  try {
-    const response = await axios.get(`/api/clients/${route.params.id}`);
-    client.value = response.data;
-    loading.value = false;
-  } catch (error) {
-    console.error('Error fetching client data:', error);
-    loading.value = false;
-  }
 });
 </script>
 
@@ -126,7 +114,7 @@ onMounted(async () => {
   padding-left: 1rem;
   padding-right: 1rem;
 }
-.focus\:outline-none {
+.focus:outline-none {
   outline: none;
 }
 .border-blue-500 {

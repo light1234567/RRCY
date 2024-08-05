@@ -8,11 +8,8 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { createRouter, createWebHistory } from 'vue-router';
 
 // Import components for routes
-import ClientEdit from '@/Components/ClientEdit.vue';
-import ClientDetails from '@/Pages/ClientDetails.vue';
 import CICL from '@/Pages/CICL.vue'; // Assuming you have a CICL component
-import Edit from '@/Pages/Edit.vue'; // Import Edit component
-
+import Edit from '@/Pages/Edit.vue'; // Corrected import path for Edit component
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -23,23 +20,9 @@ const routes = [
         component: CICL
     },
     {
-        path: '/clients/:id',
-        name: 'ClientDetails',
-        component: ClientDetails,
-        props: true // Allows passing route params as props
-    },
-    {
-        path: '/clients/:id/edit',
-        name: 'ClientEdit',
-        component: ClientEdit,
-        props: true
-    },
-    {
         path: '/edit',
-        name: 'edit.tab',
-        component: Edit,
-       
         name: 'edit',
+        component: Edit,
     },
 ];
 
@@ -61,5 +44,4 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
-    
 });

@@ -8,7 +8,7 @@
       </div>
   
       <!-- Dropdown Content -->
-      <div v-if="isOpen" ref="dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+      <div v-if="isOpen" ref="dropdown" class="absolute mt-2 w-48 bg-white rounded-md shadow-lg z-10">
         <div class="block py-2 text-xs text-gray-400">Manage Account</div>
   
         <DropdownLink :href="route('profile.show')">Profile</DropdownLink>
