@@ -33,16 +33,6 @@ class ClientController extends Controller
         return response()->json($client);
     }
 
-    // Update a client's details
-    public function updateStatus($id, Request $request)
-    {
-        $client = Client::findOrFail($id);
-        $client->Status = $request->input('Status');
-        $client->save();
-
-        return response()->json(['message' => 'Client status updated successfully', 'client' => $client], 200);
-    }
-
     // Delete a client by ID
     public function destroy($id)
     {
