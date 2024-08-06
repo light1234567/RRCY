@@ -27,18 +27,18 @@ class RrcyFormController extends Controller
         return response()->json($rrcyForm, 201);
     }
 
-    public function show($id)
+    public function show($clientId, $form)
     {
-        $rrcyForm = RrcyForm::find($id);
+        $rrcyForm = RrcyForm::where('client_id', $clientId)->where('form', $form)->first();
         if ($rrcyForm) {
             return response()->json($rrcyForm);
         }
         return response()->json(['message' => 'Not found'], 404);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $clientId, $form)
     {
-        $rrcyForm = RrcyForm::find($id);
+        $rrcyForm = RrcyForm::where('client_id', $clientId)->where('form', $form)->first();
         if ($rrcyForm) {
             $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
@@ -54,9 +54,9 @@ class RrcyFormController extends Controller
         return response()->json(['message' => 'Not found'], 404);
     }
 
-    public function destroy($id)
+    public function destroy($clientId, $form)
     {
-        $rrcyForm = RrcyForm::find($id);
+        $rrcyForm = RrcyForm::where('client_id', $clientId)->where('form', $form)->first();
         if ($rrcyForm) {
             $rrcyForm->delete();
             return response()->json(['message' => 'Deleted successfully']);

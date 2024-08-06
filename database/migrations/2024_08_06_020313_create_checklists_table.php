@@ -9,7 +9,7 @@ class CreateChecklistsTable extends Migration
     public function up()
     {
         Schema::create('checklists', function (Blueprint $table) {
-            $table->id();
+            // $table->id(); // Remove this line
             $table->unsignedBigInteger('client_id');
             $table->string('document');
             $table->boolean('yes')->default(false);
@@ -17,6 +17,7 @@ class CreateChecklistsTable extends Migration
             $table->text('remarks')->nullable();
             $table->timestamps();
 
+            $table->primary(['client_id', 'document']);
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
@@ -26,4 +27,3 @@ class CreateChecklistsTable extends Migration
         Schema::dropIfExists('checklists');
     }
 }
-

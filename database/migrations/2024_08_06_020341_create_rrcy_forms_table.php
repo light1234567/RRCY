@@ -9,7 +9,7 @@ class CreateRrcyFormsTable extends Migration
     public function up()
     {
         Schema::create('rrcy_forms', function (Blueprint $table) {
-            $table->id();
+            // $table->id(); // Remove this line
             $table->unsignedBigInteger('client_id');
             $table->string('form');
             $table->boolean('yes')->default(false);
@@ -17,6 +17,7 @@ class CreateRrcyFormsTable extends Migration
             $table->text('remarks')->nullable();
             $table->timestamps();
 
+            $table->primary(['client_id', 'form']);
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }

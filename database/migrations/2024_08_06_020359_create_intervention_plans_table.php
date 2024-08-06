@@ -13,6 +13,9 @@ class CreateInterventionPlansTable extends Migration
             $table->unsignedBigInteger('client_id');
             $table->string('period');
             $table->date('date_prepared');
+            $table->string('prepared_by')->nullable();  // Added field
+            $table->string('conformed_by')->nullable(); // Added field
+            $table->string('noted_by')->nullable();  
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
