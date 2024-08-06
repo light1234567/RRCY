@@ -1,7 +1,7 @@
 <template>
     <div class="p-8 bg-white shadow-xl rounded-lg max-w-4xl mx-auto my-8 border border-gray-200">
       <div class="relative flex justify-between items-center mb-2">
-      <img src="images/headerlogo2.png" alt="Logo" class="h-40 w-80 relative z-10">
+      <img src="/images/headerlogo2.png" alt="Logo" class="h-40 w-80 relative z-10">
       <p class="text-sm ">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
       </div>
        
@@ -186,33 +186,41 @@
   </div>
   
   </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    name: 'ClientList',
-    data() {
-      return {
-        clients: []
-      };
-    },
-    mounted() {
+<script>
+import axios from 'axios';
+
+export default {
+  name: 'ClientList',
+  data() {
+    return {
+      clients: [],
+      id: null
+    };
+  },
+  mounted() {
+    this.id = this.$route.params.id;
+    this.fetchClientsData();
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      this.id = newId;
       this.fetchClientsData();
-    },
-    methods: {
-      fetchClientsData() {
-        axios.get('/api/clients-data')
-          .then(response => {
-            this.clients = response.data.filter(client => client.Status === 'active');
-          })
-          .catch(error => {
-            console.error('Error fetching client data:', error);
-          });
-      }
     }
-  };
-  </script>
+  },
+  methods: {
+    fetchClientsData() {
+      axios.get(`/api/clients-data/${this.id}`)
+        .then(response => {
+          this.clients = response.data.filter(client => client.id === parseInt(this.id));
+        })
+        .catch(error => {
+          console.error('Error fetching client data:', error);
+        });
+    }
+  }
+};
+</script>
+
   
   <style scoped>
     /* Ensure the form fits within A4 dimensions for printing */

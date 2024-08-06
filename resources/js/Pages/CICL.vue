@@ -55,6 +55,7 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button @click.stop="showDeleteModal(client.id)" class="text-red-600 hover:text-red-900 ml-4">Delete</button>
+                    <button @click.stop="navigateToEditPage(client.id)" class="text-blue-600 hover:text-blue-900 ml-4">Navigate</button>
                   </td>
                 </tr>
                 <tr v-if="filteredClients.length === 0">
@@ -172,7 +173,7 @@ const getBoxStyles = (index) => {
   return { leftBoxClass, rightBoxClass };
 };
 
-// Function to navigate to edit page
+// Function to activate client
 const activateClient = async (id) => {
   try {
     await axios.patch(`/api/clients/${id}`, { Status: 'active' });
@@ -181,15 +182,22 @@ const activateClient = async (id) => {
       client.Status = 'active';
     }
     alert('Client status updated to active.');
-    
-    // Redirecting to the specified route with a refresh query parameter
-    window.location.href = router.resolve({ name: 'edit', params: { id } }).href + `?refresh=${Date.now()}`;
   } catch (error) {
     console.error('Error updating client status:', error);
     const errorMessage = error.response?.data?.message || 'An error occurred while updating the client status. Please try again.';
     alert(errorMessage);
   }
 };
+
+
+
+
+const navigateToEditPage = (id) => {
+  const resolvedRoute = router.resolve({ name: 'edit', params: { id: id } });
+  window.location.href = resolvedRoute.href;
+};
+
+
 </script>
 
 

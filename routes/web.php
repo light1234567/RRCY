@@ -21,9 +21,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('new');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    // Route for the main edit page
-    Route::get('/edit', function () {
-        return Inertia::render('Edit');
-    })->name('edit');
-});
+// Route for the main edit page with an id parameter
+Route::get('/edit/{id}', function ($id) {
+    return Inertia::render('Edit', ['id' => $id]);
+})->name('edit');

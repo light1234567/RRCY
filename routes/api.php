@@ -12,8 +12,9 @@ Route::patch('/clients/{id}', [ClientController::class, 'updateStatus']);
 Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
 Route::post('/admission', [AdmissionController::class, 'store']);
 Route::post('/save-admission', [AdmissionController::class, 'saveForm']);
-Route::get('/clients-data', [AdmissionController::class, 'getAllData']);
+Route::get('/clients-data/{id}', [AdmissionController::class, 'getAllData']);
 
 
 // Define the route to get the user role
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
+

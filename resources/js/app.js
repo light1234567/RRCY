@@ -20,7 +20,7 @@ const routes = [
         component: CICL
     },
     {
-        path: '/edit',
+        path: '/edit/:id',
         name: 'edit',
         component: Edit,
     },
