@@ -19,16 +19,9 @@
         </select>
       </div>
       <div class="p-4">
-        <div v-if="currentTab === 'Checklist of Requirements'">Checklist of Requirements</div>
-        <div v-if="currentTab === 'First Intervention Plan'">First Intervention Plan</div>
-        <div v-if="currentTab === 'Admission Slip'"><AdmissionSlipDisplay/></div>
-        <div v-if="currentTab === 'General Intake 1'">General Intake 1</div>
-        <div v-if="currentTab === 'General Intake 2'">General Intake 2</div>
-        <div v-if="currentTab === 'Kasabutan'">Kasabutan</div>
-        <div v-if="currentTab === 'Data Privacy Consent'">Data Privacy Consent</div>
-        <div v-if="currentTab === 'Talambuhay'">Talambuhay</div>
-        <div v-if="currentTab === 'INDICATORS OF SOCIAL FUNCTIONING'">INDICATORS OF SOCIAL FUNCTIONING</div>
-        <div v-if="currentTab === 'Admission Contract'">Admission Contract</div>
+        <div v-if="currentTab === 'Intervention Plan'"><InterventionPlan/></div>
+        <div v-if="currentTab === 'IPA Format'"><IPAFORMAT/></div>
+        <div v-if="currentTab === 'Progress Notes'"><Progressnotes/></div>
       </div>
     </div>
   </div>
@@ -38,30 +31,26 @@ import { ref, onMounted, computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-import AdmissionSlipDisplay from '../Display/SocialService/AdmissionSlipDisplay.vue';
+import InterventionPlan from '../Display/Psychological/InterventionPlan.vue';
+import IPAFORMAT from '../Display/Psychological/IPAFORMAT.vue';
+import Progressnotes from '../Display/Psychological/Progressnotes.vue';
+
 
 
 const tabs = ref([
-  'Checklist of Requirements',
-  'First Intervention Plan',
-  'Admission Slip',
-  'General Intake 1',
-  'General Intake 2',
-  'Kasabutan',
-  'Data Privacy Consent',
-  'Talambuhay',
-  'INDICATORS OF SOCIAL FUNCTIONING',
-  'Admission Contract',
+  'Intervention Plan',
+  'IPA Format',
+  'Progress Notes'
 ]);
 
-const currentTab = ref('Checklist of Requirements'); // Default tab value
+const currentTab = ref('Intervention Plan'); // Default tab value
 const route = useRoute();
 const client = ref(null);
 const loading = ref(true);
 const user = ref({ role: '' }); // Role will be set dynamically
 
 const availableTabs = computed(() => {
-  if (user.value.role === 'social services') {
+  if (user.value.role === 'psychological') {
     return tabs.value;
   }
   // Define available tabs based on user role if needed

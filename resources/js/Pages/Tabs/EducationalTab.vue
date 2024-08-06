@@ -19,16 +19,9 @@
         </select>
       </div>
       <div class="p-4">
-        <div v-if="currentTab === 'Checklist of Requirements'">Checklist of Requirements</div>
-        <div v-if="currentTab === 'First Intervention Plan'">First Intervention Plan</div>
-        <div v-if="currentTab === 'Admission Slip'"><AdmissionSlipDisplay/></div>
-        <div v-if="currentTab === 'General Intake 1'">General Intake 1</div>
-        <div v-if="currentTab === 'General Intake 2'">General Intake 2</div>
-        <div v-if="currentTab === 'Kasabutan'">Kasabutan</div>
-        <div v-if="currentTab === 'Data Privacy Consent'">Data Privacy Consent</div>
-        <div v-if="currentTab === 'Talambuhay'">Talambuhay</div>
-        <div v-if="currentTab === 'INDICATORS OF SOCIAL FUNCTIONING'">INDICATORS OF SOCIAL FUNCTIONING</div>
-        <div v-if="currentTab === 'Admission Contract'">Admission Contract</div>
+        <div v-if="currentTab === 'Learner Academic Form'"><LearnerAcademicForm/></div>
+        <div v-if="currentTab === 'Learner Assessment Form'"><LearnerAssessmentForm/></div>
+   
       </div>
     </div>
   </div>
@@ -38,23 +31,16 @@ import { ref, onMounted, computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
-import AdmissionSlipDisplay from '../Display/SocialService/AdmissionSlipDisplay.vue';
+import LearnerAcademicForm from '../Display/Educational/LearnerAcademicForm.vue';
+import LearnerAssessmentForm from '../Display/Educational/LearnerAssessmentForm.vue';
 
 
 const tabs = ref([
-  'Checklist of Requirements',
-  'First Intervention Plan',
-  'Admission Slip',
-  'General Intake 1',
-  'General Intake 2',
-  'Kasabutan',
-  'Data Privacy Consent',
-  'Talambuhay',
-  'INDICATORS OF SOCIAL FUNCTIONING',
-  'Admission Contract',
+  'Learner Academic Form',
+  'Learner Assessment Form',
 ]);
 
-const currentTab = ref('Checklist of Requirements'); // Default tab value
+const currentTab = ref('Learner Academic Form'); // Default tab value
 const route = useRoute();
 const client = ref(null);
 const loading = ref(true);
