@@ -3,20 +3,18 @@
     <div v-if="loading" class="text-center py-4">Loading client data...</div>
     <div v-else>
       <div class="border-b p-4">
-        <label for="tabs" class="block text-gray-700">Select a tab:</label>
-        <select
-          id="tabs"
-          v-model="currentTab"
-          class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-        >
-          <option 
+        <ul class="flex border-b">
+          <li 
             v-for="(tab, index) in availableTabs" 
             :key="index" 
-            :value="tab"
+            @click="currentTab = tab"
+            :class="{'-mb-px mr-1 last:mr-0 flex-1 cursor-pointer': true, 'border-l border-t border-r rounded-t': currentTab === tab}"
           >
-            {{ tab }}
-          </option>
-        </select>
+            <a :class="{'bg-white inline-block py-2 px-4 text-blue-700 font-semibold': currentTab === tab, 'inline-block py-2 px-4 text-gray-500 hover:text-blue-700': currentTab !== tab}">
+              {{ tab }}
+            </a>
+          </li>
+        </ul>
       </div>
       <div class="p-4">
         <div v-if="currentTab === 'Checklist of Requirements'"><ChecklistDisplay/></div>
@@ -30,11 +28,11 @@
         <div v-if="currentTab === 'Talambuhay'"><TalambuhayDisplay/></div>
         <div v-if="currentTab === 'Admission Contract'"><AdmissionContractDisplay/> </div>
         <div v-if="currentTab === 'INDICATORS OF SOCIAL FUNCTIONING'"> <IndicatorsDisplay/> </div>
-       
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
@@ -52,7 +50,6 @@ import TalambuhayDisplay from '../Display/SocialService/TalambuhayDisplay.vue';
 import AdmissionContractDisplay from '../Display/SocialService/AdmissionContractDisplay.vue';
 import IndicatorsDisplay from '../Display/SocialService/IndicatorsDisplay.vue';
 
-
 const tabs = ref([
   'Checklist of Requirements',
   'First Intervention Plan',
@@ -65,7 +62,6 @@ const tabs = ref([
   'Talambuhay',
   'Admission Contract',
   'INDICATORS OF SOCIAL FUNCTIONING',
-
 ]);
 
 const currentTab = ref('Checklist of Requirements'); // Default tab value
@@ -97,6 +93,7 @@ onMounted(async () => {
   }
 });
 </script>
+
 <style scoped>
 .border-b {
   border-bottom: 1px solid #ddd;
@@ -104,45 +101,47 @@ onMounted(async () => {
 .p-4 {
   padding: 1rem;
 }
-.block {
-  display: block;
+.flex {
+  display: flex;
 }
-.w-full {
-  width: 100%;
+.cursor-pointer {
+  cursor: pointer;
 }
-.mt-1 {
-  margin-top: 0.25rem;
+.inline-block {
+  display: inline-block;
 }
-.border-gray-300 {
-  border-color: #d1d5db;
+.mr-1 {
+  margin-right: 0.25rem;
 }
-.rounded-md {
-  border-radius: 0.375rem;
+.-mb-px {
+  margin-bottom: -1px;
 }
-.shadow-sm {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+.border-l {
+  border-left: 1px solid #ddd;
 }
-.focus\:border-blue-500 {
-  border-color: #3b82f6;
+.border-t {
+  border-top: 1px solid #ddd;
 }
-.focus\:ring {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+.border-r {
+  border-right: 1px solid #ddd;
 }
-.focus\:ring-blue-500 {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+.rounded-t {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
 }
-.focus\:ring-opacity-50 {
-  --tw-ring-opacity: 0.5;
+.bg-white {
+  background-color: #fff;
 }
-.text-center {
-  text-align: center;
+.text-blue-700 {
+  color: #3b82f6;
 }
-.py-4 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+.font-semibold {
+  font-weight: 600;
 }
-.text-gray-700 {
-  color: #4a5568;
+.text-gray-500 {
+  color: #6b7280;
+}
+.hover\:text-blue-700:hover {
+  color: #3b82f6;
 }
 </style>

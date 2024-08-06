@@ -9,7 +9,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // Import components for routes
 import CICL from '@/Pages/CICL.vue'; // Assuming you have a CICL component
-import Edit from '@/Pages/Edit.vue'; // Corrected import path for Edit component
+import MainTab from '@/Pages/MainTab.vue'; // Corrected import path for Edit component
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -20,9 +20,9 @@ const routes = [
         component: CICL
     },
     {
-        path: '/edit/:id',
-        name: 'edit',
-        component: Edit,
+        path: '/maintab/:id',
+        name: 'maintab',
+        component: MainTab,
     },
 ];
 

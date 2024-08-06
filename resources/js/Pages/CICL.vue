@@ -193,7 +193,7 @@ const activateClient = async (id) => {
 
 
 const navigateToEditPage = (id) => {
-  const resolvedRoute = router.resolve({ name: 'edit', params: { id: id } });
+  const resolvedRoute = router.resolve({ name: 'maintab', params: { id: id } });
   window.location.href = resolvedRoute.href;
 };
 

@@ -261,8 +261,8 @@
         <header class="w-full py-2 bg-white shadow-md px-24 sm:px-8 lg:px-16">
           <slot name="header" v-if="$slots.header"></slot>
           <h2 id="header" class="flex ">
-            <img id="header-image-left" src="images/headerlogo2.png" alt="Left Logo" class="h-12 -ml-4 sm:h-16 lg:h-15 w-auto mr-4" />
-            <img id="header-image-right" src="images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-15 w-auto" />
+            <img id="header-image-left" src="/images/headerlogo2.png" alt="Left Logo" class="h-12 -ml-4 sm:h-16 lg:h-15 w-auto mr-4" />
+            <img id="header-image-right" src="/images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-15 w-auto" />
           </h2>
         </header>
       </div>

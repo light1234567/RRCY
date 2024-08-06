@@ -22,6 +22,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 });
 
 // Route for the main edit page with an id parameter
-Route::get('/edit/{id}', function ($id) {
-    return Inertia::render('Edit', ['id' => $id]);
-})->name('edit');
+Route::get('/maintab/{id}', function ($id) {
+    return Inertia::render('MainTab', ['id' => $id]);
+})->name('maintab');
