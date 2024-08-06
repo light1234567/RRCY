@@ -17,12 +17,6 @@ class CreateIndicatorsOfSocialFunctioningTable extends Migration
             $table->integer('physical_score_per_area1')->nullable();
             $table->integer('physical_raw_score2')->nullable();
             $table->integer('physical_score_per_area2')->nullable();
-            $table->integer('physical_raw_score3')->nullable();
-            $table->integer('physical_score_per_area3')->nullable();
-            $table->integer('physical_raw_score4')->nullable();
-            $table->integer('physical_score_per_area4')->nullable();
-            $table->integer('physical_raw_score5')->nullable();
-            $table->integer('physical_score_per_area5')->nullable();
             $table->integer('emotional_raw_score1')->nullable();
             $table->integer('emotional_score_per_area1')->nullable();
             $table->integer('emotional_raw_score2')->nullable();
@@ -35,10 +29,6 @@ class CreateIndicatorsOfSocialFunctioningTable extends Migration
             $table->integer('emotional_score_per_area5')->nullable();
             $table->integer('emotional_raw_score6')->nullable();
             $table->integer('emotional_score_per_area6')->nullable();
-            $table->integer('emotional_raw_score7')->nullable();
-            $table->integer('emotional_score_per_area7')->nullable();
-            $table->integer('emotional_raw_score8')->nullable();
-            $table->integer('emotional_score_per_area8')->nullable();
             $table->integer('social_raw_score1')->nullable();
             $table->integer('social_score_per_area1')->nullable();
             $table->integer('social_raw_score2')->nullable();
