@@ -9,6 +9,11 @@ class RrcyForm extends Model
 {
     use HasFactory;
 
+    public $incrementing = false; // Disable auto-incrementing ID
+
+    protected $primaryKey = ['client_id', 'form']; // Define composite key
+    protected $keyType = 'string'; // Set key type if necessary
+
     protected $fillable = [
         'client_id',
         'form',

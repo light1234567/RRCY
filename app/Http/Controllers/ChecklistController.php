@@ -56,7 +56,7 @@ class ChecklistController extends Controller
         return response()->json(['message' => 'Data saved successfully'], 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $clientId, $document)
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
@@ -66,7 +66,7 @@ class ChecklistController extends Controller
             'remarks' => 'nullable|string',
         ]);
 
-        $checklist = Checklist::find($id);
+        $checklist = Checklist::where('client_id', $clientId)->where('document', $document)->first();
         if ($checklist) {
             $checklist->update($validatedData);
             return response()->json($checklist);
@@ -74,9 +74,9 @@ class ChecklistController extends Controller
         return response()->json(['message' => 'Not found'], 404);
     }
 
-    public function destroy($id)
+    public function destroy($clientId, $document)
     {
-        $checklist = Checklist::find($id);
+        $checklist = Checklist::where('client_id', $clientId)->where('document', $document)->first();
         if ($checklist) {
             $checklist->delete();
             return response()->json(['message' => 'Deleted successfully']);

@@ -13,6 +13,9 @@ class InterventionPlan extends Model
         'client_id',
         'period',
         'date_prepared',
+        'prepared_by',    // Added field
+        'conformed_by',   // Added field
+        'noted_by',       // Added field
     ];
 
     public function client()
