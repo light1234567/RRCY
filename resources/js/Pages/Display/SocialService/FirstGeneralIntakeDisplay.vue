@@ -1,74 +1,157 @@
 <template>
-  <div class="p-10 bg-gray-100">
-    <div class="bg-white p-8 rounded shadow-md">
-      <div class="text-center mb-8">
-        <img src="path/to/dswd-logo.png" alt="DSWD Logo" class="mx-auto mb-4" />
-        <h1 class="text-xl font-bold">GENERAL INTAKE SHEET</h1>
-        <p>Date: <input type="date" v-model="sheet.date" class="border w-1/8 px-2 py-1" :readonly="!editMode" /></p>
+   <!-- Tabs for Actions -->
+      <div class="flex absolute p-4 space-x-4 ">
+        <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>Back</span>
+        </button>
       </div>
-      <div class="flex justify-end">
-  <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md mt-4">
-    {{ editMode ? 'Save' : 'Edit' }}
-  </button>
-</div>
+
+      <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
+        <div class="w-full text-black ml-40 text-center text-md" v-if="!editMode">
+          VIEW MODE
+        </div>
+
+        <div v-if="editMode" class="w-full text-black ml-40 text-center text-md">
+          EDIT MODE
+        </div>
+
+        <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
+          </svg>
+          <span>Edit</span>
+        </button>
+
+        <button @click="downloadAction" class="flex items-center space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7m7 7V3" />
+          </svg>
+          <span>Download</span>
+        </button>
+
+        <button v-if="editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <span>Save</span>
+        </button>
+      </div>
+
+
+      <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+          <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+
+
+      <div class="p-8 bg-white shadow-xl rounded-lg max-w-4xl mx-auto my-8">
+        <div class="bg-white p-8 rounded shadow-md">
+          <div class="text-center mb-8">
+            <div class="relative flex justify-between items-center mb-2">
+          <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48 relative z-10">
+          <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        </div>
+        <h1 class="text-xl font-bold">GENERAL INTAKE SHEET</h1>
+        <div class="flex justify-end">
+          <p>Date: <input type="date" v-model="sheet.date" class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm  w-1/8 px-2 py-1" :readonly="!editMode" /></p>
+        </div>
+      </div>
+     
+
 
       <div v-if="message" :class="`p-4 mt-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
         {{ message }}
       </div>
-
       <div class="mb-8">
-        <h2 class="text-lg font-semibold">I. Identifying Information:</h2>
-        <div class="space-y-2">
-          <div>
-            <label>Name of client</label>
-            <input type="text" v-model="sheet.name" class="border w-full px-2 py-1" readonly />
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label>Age</label>
-              <input type="text" v-model="sheet.age" class="border w-full px-2 py-1" readonly />
-            </div>
-            <div>
-              <label>Sex</label>
-              <input type="text" v-model="sheet.sex" class="border w-full px-2 py-1" readonly />
-            </div>
-          </div>
-          <div>
-            <label>Address</label>
-            <input type="text" v-model="sheet.address" class="border w-full px-2 py-1" readonly />
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label>Date of Birth</label>
-              <input type="date" v-model="sheet.date_of_birth" class="border w-full px-2 py-1" readonly />
-            </div>
-            <div>
-              <label>Place of birth</label>
-              <input type="text" v-model="sheet.place_of_birth" class="border w-full px-2 py-1" readonly />
-            </div>
-          </div>
-          <div>
-            <label>Religion</label>
-            <input type="text" v-model="sheet.religion" class="border w-full px-2 py-1" readonly />
-          </div>
-          <div>
-            <label>Occupation</label>
-            <input type="text" v-model="sheet.occupation" class="border w-full px-2 py-1" :readonly="!editMode" />
-          </div>
-          <div>
-            <label>Highest Educ'l Att't</label>
-            <input type="text" v-model="sheet.highest_educ_att" class="border w-full px-2 py-1" :readonly="!editMode" />
-          </div>
-          <div>
-            <label>Name of School</label>
-            <input type="text" v-model="sheet.school_name" class="border w-full px-2 py-1" :readonly="!editMode" />
-          </div>
-          <div>
-            <label>Class Adviser</label>
-            <input type="text" v-model="sheet.class_adviser" class="border w-full px-2 py-1" :readonly="!editMode" />
-          </div>
+  <h2 class="text-lg font-semibold">I. Identifying Information:</h2>
+  <div class="space-y-2">
+    <div class="flex items-center mb-4">
+    
+  <label class="block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of client:</label>
+  <input type="text" v-model="sheet.name" class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+</div>
+   
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex items-center mb-4">
+        <div class="flex-grow flex items-center mr-4">
+          <label class="block text-base font-semibold text-gray-700 mr-4">Age:</label>
+          <input type="text" v-model="sheet.age" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
         </div>
       </div>
+      <div class="flex items-center mb-4">
+        <div class="flex-grow flex items-center mr-4">
+          <label class="block text-base font-semibold text-gray-700 mr-4">Sex:</label>
+          <input type="text" v-model="sheet.sex" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center mb-4">
+      <div class="flex-grow flex items-center mr-4">
+        <label class="block text-base font-semibold text-gray-700 mr-4">Address:</label>
+        <input type="text" v-model="sheet.address" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="flex items-center mb-4">
+        <div class="flex-grow flex items-center mr-4">
+          <label class="block text-base font-semibold text-gray-700 mr-4">Date of Birth:</label>
+          <input type="date" v-model="sheet.date_of_birth" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+        </div>
+      </div>
+      <div class="flex items-center mb-4">
+        <div class="flex-grow flex items-center mr-4">
+          <label class="block text-base font-semibold text-gray-700 mr-4">Place of birth:</label>
+          <input type="text" v-model="sheet.place_of_birth" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center mb-4">
+      <div class="flex-grow flex items-center mr-4">
+        <label class="block text-base font-semibold text-gray-700 mr-4">Religion:</label>
+        <input type="text" v-model="sheet.religion" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+      </div>
+    </div>
+    <div class="flex items-center mb-4">
+      <div class="flex-grow flex items-center mr-4">
+        <label class="block text-base font-semibold text-gray-700 mr-4">Occupation:</label>
+        <input type="text" v-model="sheet.occupation" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+      </div>
+    </div>
+    <div class="flex items-center mb-4">
+  <label class="block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Highest Educ'l Att't:</label>
+  <input type="text" v-model="sheet.highest_educ_att" class="flex-grow border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+</div>
+  
+    <div class="flex items-center mb-4">
+      <div class="flex-grow flex items-center mr-4">
+        <label class="block text-base font-semibold text-gray-700 mr-4">Name of School:</label>
+        <input type="text" v-model="sheet.school_name" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+      </div>
+    </div>
+    <div class="flex items-center mb-4">
+      <div class="flex-grow flex items-center mr-4">
+        <label class="block text-base font-semibold text-gray-700 mr-4">Class Adviser:</label>
+        <input type="text" v-model="sheet.class_adviser" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+      </div>
+    </div>
+  </div>
+</div>
+
 
       <div class="mb-8">
         <h2 class="text-lg font-semibold">II. Problem Presented:</h2>
@@ -293,14 +376,22 @@
           </div>
         </div>
         <div class="space-y-2">
-          <label>Earnings/ income</label>
-          <input type="text" v-model="sheet.earnings_income" class="border w-full px-2 py-1" :readonly="!editMode" />
-          <label>Hours of stay in the street</label>
-          <input type="text" v-model="sheet.hrs_stay_in_street" class="border w-full px-2 py-1" :readonly="!editMode" />
-          <label>Length of stay in the street</label>
-          <input type="text" v-model="sheet.length_stay_in_street" class="border w-full px-2 py-1" :readonly="!editMode" />
-          <label>Common Substance used</label>
-          <input type="text" v-model="sheet.common_substance_used" class="border w-full px-2 py-1" :readonly="!editMode" />
+          <div class="flex items-center mb-4">
+            <label class="block text-base font-semibold text-gray-700 mr-4">Earnings/ income:</label>
+            <input type="text" v-model="sheet.earnings_income" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+          </div>
+          <div class="flex items-center mb-4">
+            <label class="block text-base font-semibold text-gray-700 mr-4">Hours of stay in the street:</label>
+            <input type="text" v-model="sheet.hrs_stay_in_street" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+          </div>
+          <div class="flex items-center mb-4">
+            <label class="block text-base font-semibold text-gray-700 mr-4">Length of stay in the street:</label>
+            <input type="text" v-model="sheet.length_stay_in_street" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+          </div>
+          <div class="flex items-center mb-4">
+            <label class="block text-base font-semibold text-gray-700 mr-4">Common Substance used:</label>
+            <input type="text" v-model="sheet.common_substance_used" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+          </div>
         </div>
       </div>
 
@@ -314,22 +405,32 @@
         <textarea v-model="sheet.recommendations" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
       </div>
 
-      <div class="text-right mb-8">
-        <div>
-          <label>Prepared by:</label>
-          <input type="text" v-model="sheet.prepared_by" class="border w-1/4 px-2 py-1" :readonly="!editMode" />
+      <div class="flex justify-between mb-8">
+        <div class="flex flex-col items-start">
+          <label class="block text-base font-semibold text-gray-700 mb-1">Prepared by:</label>
+          <input type="text" v-model="sheet.prepared_by" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+          <p>SWO __/Case Manager</p>
         </div>
-        <div>
-          <label>Reviewed by:</label>
-          <input type="text" v-model="sheet.reviewed_by" class="border w-1/4 px-2 py-1" :readonly="!editMode" />
-        </div>
-        <div>
-          <p>ANGELIC B. PAÑA, RSW, MSSW</p>
-          <p>Center Head/SWO IV</p>
+        <div class="flex flex-col items-end">
+          <label class="block text-base font-semibold text-gray-700 mb-8">Reviewed by:</label>
+          <div class="text-right">
+            <p>ANGELIC B. PAÑA, RSW, MSSW</p>
+            <p>Center Head/SWO IV</p>
+          </div>
         </div>
       </div>
-
-
+      <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+      <div class="flex justify-between items-center">
+        <div class="flex flex-col">
+          <p class="ml-24 -mb-4 font-bold">PAGE 1 of 1</p>
+          <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+        </div>
+        <div class="ml-4">
+          <img src="images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+        </div>
+      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -347,7 +448,9 @@ export default {
     const message = ref('');
     const messageType = ref('');
     const clientId = ref(null);
+    const isModalOpen = ref(false);
     const sheet = reactive({
+      
       id: null,
       name: '',
       age: '',
@@ -548,10 +651,25 @@ export default {
 
     const toggleEdit = () => {
       if (editMode.value) {
-        saveData();
+        openModal();
+      } else {
+        editMode.value = !editMode.value;
       }
-      editMode.value = !editMode.value;
     };
+    const openModal = () => {
+      isModalOpen.value = true;
+    };
+
+    const closeModal = () => {
+      isModalOpen.value = false;
+    };
+    const confirmSave = () => {
+      saveData();
+      closeModal();
+      editMode.value = false;
+    };
+
+   
 
     const saveData = () => {
   if (!clientId.value) {
@@ -599,6 +717,10 @@ const clearNotification = () => {
       sheet,
       toggleEdit,
       saveData,
+      isModalOpen,
+      openModal,
+      closeModal,
+      confirmSave,
     };
   }
 };

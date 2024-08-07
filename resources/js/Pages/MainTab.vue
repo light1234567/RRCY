@@ -11,12 +11,12 @@
           v-for="(tab, index) in availableTabs" 
           :key="index" 
           @click="currentTab = tab" 
-          :class="['py-2 px-4 focus:outline-none', currentTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500']"
+          :class="['py-2 px-8 focus:outline-none', currentTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500']"
         >
           {{ tab }}
         </button>
       </div>
-      <div class="p-4">
+      <div class="p-4 ">
         <div v-if="currentTab === 'Social Service'"><SocialServiceTab/></div>
         <div v-if="currentTab === 'Psychological Reports'"><PsychologicalTab/></div>
         <div v-if="currentTab === 'Homelife Services'"><HomelifeTab/></div>
@@ -109,6 +109,7 @@ onMounted(() => {
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
+  text-align: center;
 }
 .focus\:outline-none {
   outline: none;

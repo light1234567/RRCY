@@ -1,22 +1,25 @@
 <template>
   <div>
-    <div class="border-b p-1 bg-gray-100">
-      <ul class="flex border-b overflow-x-auto whitespace-nowrap">
-        <li 
+      <h1 class="mt-1 text-customBlue mb-1">Select a Form:</h1>
+     </div>
+  <div>
+    <!-- Dropdown for selecting tabs -->
+    <div class="relative">
+      <select 
+        v-model="currentTab" 
+        class="block w-full px-3 py-2 text-md border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+      >
+        <option 
           v-for="(tab, index) in tabs" 
           :key="index" 
-          @click="currentTab = tab"
-          class="cursor-pointer"
+          :value="tab"
         >
-          <a :class="[
-            'inline-block py-1 px-2 text-xs font-semibold rounded-t-lg transition-colors duration-300',
-            currentTab === tab ? 'bg-white text-blue-700 border-t border-l border-r -mb-px' : 'text-gray-500 hover:text-blue-700'
-          ]">
-            {{ tab }}
-          </a>
-        </li>
-      </ul>
+          {{ tab }}
+        </option>
+      </select>
     </div>
+    <!-- Display content based on selected tab -->
+     
     <div class="p-4">
       <div v-if="currentTab === 'Admission Slip'"><AdmissionSlipDisplay/></div>
       <div v-if="currentTab === 'Checklist of Requirements'"><ChecklistDisplay/></div>
@@ -64,3 +67,7 @@ const tabs = ref([
 
 const currentTab = ref('Admission Slip'); // Default tab set to "Admission Slip"
 </script>
+
+<style scoped>
+/* Add any additional styles here */
+</style>

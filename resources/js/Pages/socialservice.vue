@@ -523,14 +523,82 @@
         Save
       </button>
     </form>
+    <!-- Notification Modal -->
+    <NotificationModal
+      :isVisible="showModal"
+      :modalType="modalType"
+      :message="modalMessage"
+      @close="showModal = false"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import NotificationModal from '@/Components/NotificationModal.vue';
 
 const form = ref({
+  client: {
+    first_name: '',
+    middle_name: '',
+    last_name: '',
+    sex: 'male',
+    date_of_birth: '',
+    place_of_birth: '',
+    province: '',
+    city: '',
+    barangay: '',
+    street: '',
+    religion: ''
+  },
+  distinguishing_marks: {
+    tattoo_scars: '',
+    height: '',
+    weight: '',
+    colour_of_eye: '',
+    skin_colour: ''
+  },
+  admission: {
+    committing_court: '',
+    crim_case_number: '',
+    offense_committed: '',
+    date_admitted: '',
+    days_in_jail: '',
+    days_in_detention_center: '',
+    action_taken: '',
+    general_impression: ''
+  },
+  documents_submitted: {
+    documents: [],
+    others: ''
+  }
+});
+
+const cities = ref([]);
+const barangays = ref([]);
+
+const showModal = ref(false);
+const modalType = ref('success');
+const modalMessage = ref('');
+
+const saveForm = async () => {
+  try {
+    const response = await axios.post('/api/save-admission', form.value);
+    modalType.value = 'success';
+    modalMessage.value = 'Form saved successfully!';
+    showModal.value = true;
+    resetForm(); // Reset the form after successful save
+  } catch (error) {
+    modalType.value = 'error';
+    modalMessage.value = 'Failed to save form. Please try again.';
+    showModal.value = true;
+    console.error(error);
+  }
+};
+
+const resetForm = () => {
+  form.value = {
     client: {
         first_name: '',
         middle_name: '',
@@ -565,10 +633,8 @@ const form = ref({
         documents: [],
         others: ''
     }
-});
-
-const cities = ref([]);
-const barangays = ref([]);
+  };
+};
 
 const updateCitiesAndBarangays = () => {
     const province = form.value.client.province;
@@ -641,67 +707,17 @@ const updateBarangays = () => {
     "Santa Maria": ["Barangay Basiawan", "Barangay Datu Danwata", "Barangay Demoloc", "Barangay Kialeg", "Barangay Kinanga", "Barangay Kiwanan", "Barangay Lacaron", "Barangay Lais", "Barangay Little Baguio", "Barangay Mana", "Barangay Nueva Villa", "Barangay Pinalpalan", "Barangay Poblacion", "Barangay San Antonio", "Barangay San Isidro", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Sugal", "Barangay Talogoy", "Barangay Tubalan", "Barangay Upper Tubalan"],
     "Sarangani": ["Barangay Anibongan", "Barangay Apo", "Barangay Balabac", "Barangay Calabcab", "Barangay Del Pilar", "Barangay Gubatan", "Barangay Igangon", "Barangay Linoan", "Barangay Lumbo", "Barangay Magangit", "Barangay Manat", "Barangay Masara", "Barangay New Barili", "Barangay Pangi", "Barangay Pindasan", "Barangay Poblacion", "Barangay San Isidro", "Barangay San Juan", "Barangay Santa Cruz", "Barangay Santo Niño", "Barangay Taglawig", "Barangay Teresa"]
 };;
-    barangays.value = cityBarangays[city] || [];
-    form.value.client.barangay = '';
+  barangays.value = cityBarangays[city] || [];
+  form.value.client.barangay = '';
 };
 
 const toggleOtherDocuments = () => {
-    if (!form.value.documents_submitted.documents.includes('Others')) {
-        form.value.documents_submitted.others = '';
-    }
-};
-
-
-const resetForm = () => {
-    form.value = {
-        client: {
-            first_name: '',
-            middle_name: '',
-            last_name: '',
-            sex: 'male',
-            date_of_birth: '',
-            place_of_birth: '',
-            province: '',
-            city: '',
-            barangay: '',
-            street: '',
-            religion: ''
-        },
-        distinguishing_marks: {
-            tattoo_scars: '',
-            height: '',
-            weight: '',
-            colour_of_eye: '',
-            skin_colour: ''
-        },
-        admission: {
-            committing_court: '',
-            crim_case_number: '',
-            offense_committed: '',
-            date_admitted: '',
-            days_in_jail: '',
-            days_in_detention_center: '',
-            action_taken: '',
-            general_impression: ''
-        },
-        documents_submitted: {
-            documents: [],
-            others: ''
-        }
-    };
-};
-
-const message = ref('');
-const success = ref(true);
-
-const saveForm = async () => {
-    try {
-        const response = await axios.post('/api/save-admission', form.value);
-        alert('Form saved successfully!');
-        resetForm(); // Reset the form after successful save
-    } catch (error) {
-        alert('Failed to save form. Please try again.');
-        console.error(error);
-    }
+  if (!form.value.documents_submitted.documents.includes('Others')) {
+    form.value.documents_submitted.others = '';
+  }
 };
 </script>
+
+<style scoped>
+/* Add your styles here */
+</style>
