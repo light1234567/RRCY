@@ -247,6 +247,10 @@ export default {
     const closeModal = () => {
       isModalOpen.value = false;
     };
+    const cancelEdit = () => {
+      editMode.value = false;
+    };
+
     const confirmSave = () => {
       saveData();
       closeModal();
@@ -303,7 +307,7 @@ export default {
       rrForms,
       toggleEdit,
       handleCheckboxChange,
-
+      cancelEdit,
       isModalOpen,
       openModal,
       closeModal,

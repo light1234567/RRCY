@@ -668,8 +668,9 @@ export default {
       closeModal();
       editMode.value = false;
     };
-
-   
+    const cancelEdit = () => {
+      editMode.value = false;
+    };
 
     const saveData = () => {
   if (!clientId.value) {
@@ -721,6 +722,7 @@ const clearNotification = () => {
       openModal,
       closeModal,
       confirmSave,
+      cancelEdit,
     };
   }
 };

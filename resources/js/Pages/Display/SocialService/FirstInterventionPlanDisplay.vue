@@ -147,7 +147,8 @@
       </div>
     </div>
   </div>
-  <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+       <!-- Modal for Save Confirmation -->
+    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
       <div class="fixed inset-0 bg-black opacity-50"></div>
       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
         <div class="bg-white p-6">
@@ -162,8 +163,31 @@
         </div>
       </div>
     </div>
-   
- 
+
+    <!-- Modal for Save Result -->
+    <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6 text-center">
+          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script>
@@ -180,6 +204,9 @@ export default {
     const clientId = ref(null);
     const isModalOpen = ref(false);
     const menuOpen = ref(false);
+    const isSaveResultModalOpen = ref(false);
+    const saveResultTitle = ref('');
+    const saveResultMessage = ref('');
 
     const plan = reactive({
       id: null,
@@ -270,6 +297,9 @@ export default {
     const cancelEdit = () => {
       editMode.value = false;
     };
+    const closeSaveResultModal = () => {
+      isSaveResultModalOpen.value = false;
+    };
 
     const editAction = () => {
       editMode.value = true;
@@ -309,21 +339,28 @@ export default {
           remarks: item.remarks,
         })),
       };
-
       const method = plan.id ? 'put' : 'post';
       const url = `/api/intervention-plans${plan.id ? '/' + plan.id : ''}`;
 
       axios[method](url, payload)
         .then(response => {
-          message.value = 'Data saved successfully.';
-          messageType.value = 'success';
+          saveResultTitle.value = 'Success';
+          saveResultMessage.value = 'Data saved successfully.';
           if (!plan.id) plan.id = response.data.id;
+          editMode.value = false;
         })
         .catch(error => {
-          message.value = error.response.data.message || 'Error saving data.';
+          
           messageType.value = 'error';
-          console.error('Error saving data:', error);
+          saveResultTitle.value = 'Error';
+          saveResultMessage.value = error.response.data.message || '';
+          console.error('', error);
+        })
+        .finally(() => {
+          isModalOpen.value = false;
+          isSaveResultModalOpen.value = true;
         });
+     
     };
 
     const addItem = () => {
@@ -359,6 +396,10 @@ export default {
       editAction,
       downloadAction,
       printAction,
+      isSaveResultModalOpen,
+      saveResultTitle,
+      saveResultMessage,
+      closeSaveResultModal,
     };
   }
 };
