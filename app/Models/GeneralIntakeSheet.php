@@ -34,14 +34,21 @@ class GeneralIntakeSheet extends Model
         'common_substance_used',
         'initial_assessment',
         'recommendations',
-        'vices',
-        'school_activities_achievement',
-        'occupation_of_mother',
-        'occupation_of_father',
-        'siblings',
-        'responsible_for_households_chores',
-        'water_source',
-        'house_made_of',
+        'prepared_by',
+        'reviewed_by',
+    ];
+
+    protected $casts = [
+        'major_life_event' => 'array',
+        'enduring_life_strain' => 'array',
+        'life_transition' => 'array',
+        'development_changes' => 'array',
+        'normalization' => 'array',
+        'behaviour_towards_incident' => 'array',
+        'attachments' => 'array',
+        'skills' => 'array',
+        'resources' => 'array',
+        'source_of_income_in_street' => 'array',
     ];
 
     public function client()
