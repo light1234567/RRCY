@@ -16,10 +16,10 @@ class KasabutanController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'client_resident' => 'required',
-            'parent_guardian' => 'required',
-            'case_manager' => 'required',
+            'client_id' => 'nullable|exists:clients,id',
+            'client_resident' => 'nullable|string',
+            'parent_guardian' => 'nullable|string',
+            'case_manager' => 'nullable|string',
         ]);
 
         $kasabutan = Kasabutan::create($validatedData);
@@ -40,10 +40,10 @@ class KasabutanController extends Controller
         $kasabutan = Kasabutan::find($id);
         if ($kasabutan) {
             $validatedData = $request->validate([
-                'client_id' => 'required|exists:clients,id',
-                'client_resident' => 'required',
-                'parent_guardian' => 'required',
-                'case_manager' => 'required',
+                'client_id' => 'nullable|exists:clients,id',
+                'client_resident' => 'nullable|string',
+                'parent_guardian' => 'nullable|string',
+                'case_manager' => 'nullable|string',
             ]);
 
             $kasabutan->update($validatedData);

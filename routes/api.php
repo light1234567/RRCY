@@ -9,6 +9,8 @@ use App\Http\Controllers\InterventionPlanController;
 use App\Http\Controllers\InterventionPlanItemController;
 use App\Http\Controllers\GeneralIntakeSheetController;
 use App\Http\Controllers\SecondIntakeSheetController;
+use App\Http\Controllers\KasabutanController;
+
 
 Route::get('/clients', [ClientController::class, 'index']);
 Route::get('/clients/{id}', [ClientController::class, 'show']);
@@ -42,5 +44,11 @@ Route::get('/second-intake-sheets/{id}', [SecondIntakeSheetController::class, 's
 Route::post('/second-intake-sheets', [SecondIntakeSheetController::class, 'store']);
 Route::put('/second-intake-sheets/{id}', [SecondIntakeSheetController::class, 'update']);
 Route::delete('/second-intake-sheets/{id}', [SecondIntakeSheetController::class, 'destroy']);
+
+Route::get('/kasabutan', [KasabutanController::class, 'index']);
+Route::get('/kasabutan/{id}', [KasabutanController::class, 'show']);
+Route::post('/kasabutan', [KasabutanController::class, 'store']);
+Route::put('/kasabutan/{id}', [KasabutanController::class, 'update']);
+Route::delete('/kasabutan/{id}', [KasabutanController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
