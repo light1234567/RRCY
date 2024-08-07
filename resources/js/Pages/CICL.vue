@@ -38,7 +38,7 @@
                   v-for="(client, index) in filteredClients"
                   :key="client.id"
                   class="cursor-pointer hover:bg-gray-100"
-                  @click="activateClient(client.id)"
+                  @click="navigateToEditPage(client.id)"
                 >
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center">
                     <div :style="getProfilePictureStyle(getInitials(client.first_name, client.last_name))" class="mr-3 rounded-full">
@@ -55,7 +55,6 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button @click.stop="showDeleteModal(client.id)" class="text-red-600 hover:text-red-900 ml-4">Delete</button>
-                    <button @click.stop="navigateToEditPage(client.id)" class="text-blue-600 hover:text-blue-900 ml-4">Navigate</button>
                   </td>
                 </tr>
                 <tr v-if="filteredClients.length === 0">
@@ -174,22 +173,6 @@ const getBoxStyles = (index) => {
 };
 
 // Function to activate client
-const activateClient = async (id) => {
-  try {
-    await axios.patch(`/api/clients/${id}`, { Status: 'active' });
-    const client = clients.value.find(client => client.id === id);
-    if (client) {
-      client.Status = 'active';
-    }
-    alert('Client status updated to active.');
-  } catch (error) {
-    console.error('Error updating client status:', error);
-    const errorMessage = error.response?.data?.message || 'An error occurred while updating the client status. Please try again.';
-    alert(errorMessage);
-  }
-};
-
-
 
 
 const navigateToEditPage = (id) => {

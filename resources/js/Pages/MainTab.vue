@@ -19,11 +19,11 @@
       <div class="p-4">
         <div v-if="currentTab === 'Social Service'"><SocialServiceTab/></div>
         <div v-if="currentTab === 'Psychological Reports'"><PsychologicalTab/></div>
-        <div v-if="currentTab === 'Court Order'"><CourtOrderTab/></div>
         <div v-if="currentTab === 'Homelife Services'"><HomelifeTab/></div>
         <div v-if="currentTab === 'Nursing Care'"><NursingcareTab/></div>
-        <div v-if="currentTab === 'Educational Services'"><EducationalTab/></div>
         <div v-if="currentTab === 'PSD Reports'"><PSDTab/></div>
+        <div v-if="currentTab === 'Educational Services'"><EducationalTab/></div>
+        <div v-if="currentTab === 'Court Order'"><CourtOrderTab/></div>
       </div>
     </div>
   </AppLayout>
@@ -47,16 +47,14 @@ import PSDTab from './Tabs/PSDTab.vue';
 const tabs = ref([
   'Social Service',
   'Psychological Reports',
-  'Court Order',
   'Homelife Services',
   'Nursing Care',
+  'PSD Reports',
   'Educational Services',
-  'PSD Reports'
+  'Court Order'
 ]);
 
 const currentTab = ref(''); // Set to an empty string initially
-
-const route = useRoute();
 const user = ref({ role: '' }); // Role will be set dynamically
 
 const availableTabs = computed(() => {
@@ -93,8 +91,6 @@ const roleToTab = {
 onMounted(() => {
   const { props } = usePage();
   user.value.role = props.auth.user.role; // Set user role from Inertia props
-
-  // Set currentTab based on user role
   currentTab.value = roleToTab[user.value.role] || tabs.value[0];
 });
 </script>
@@ -114,7 +110,7 @@ onMounted(() => {
   padding-left: 1rem;
   padding-right: 1rem;
 }
-.focus:outline-none {
+.focus\:outline-none {
   outline: none;
 }
 .border-blue-500 {

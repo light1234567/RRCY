@@ -1,43 +1,41 @@
 <template>
   <div>
-    <div v-if="loading" class="text-center py-4">Loading client data...</div>
-    <div v-else>
-      <div class="border-b p-4">
-        <ul class="flex border-b">
-          <li 
-            v-for="(tab, index) in availableTabs" 
-            :key="index" 
-            @click="currentTab = tab"
-            :class="{'-mb-px mr-1 last:mr-0 flex-1 cursor-pointer': true, 'border-l border-t border-r rounded-t': currentTab === tab}"
-          >
-            <a :class="{'bg-white inline-block py-2 px-4 text-blue-700 font-semibold': currentTab === tab, 'inline-block py-2 px-4 text-gray-500 hover:text-blue-700': currentTab !== tab}">
-              {{ tab }}
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="p-4">
-        <div v-if="currentTab === 'Checklist of Requirements'"><ChecklistDisplay/></div>
-        <div v-if="currentTab === 'First Intervention Plan'"><FirstInterventionPlanDisplay/></div>
-        <div v-if="currentTab === 'Admission Slip'"><AdmissionSlipDisplay/></div>
-        <div v-if="currentTab === 'General Intake 1'"><FirstGeneralIntakeDisplay/></div>
-        <div v-if="currentTab === 'General Intake 2'"><SecondGeneralIntakeDisplay/></div>
-        <div v-if="currentTab === 'Kasabutan1'"><FirstKasabutanDisplay/></div>
-        <div v-if="currentTab === 'Kasabutan2'"><SecondKasabutanDisplay/></div>
-        <div v-if="currentTab === 'Data Privacy Consent'"><DataPrivacyConsentDisplay/></div>
-        <div v-if="currentTab === 'Talambuhay'"><TalambuhayDisplay/></div>
-        <div v-if="currentTab === 'Admission Contract'"><AdmissionContractDisplay/> </div>
-        <div v-if="currentTab === 'INDICATORS OF SOCIAL FUNCTIONING'"> <IndicatorsDisplay/> </div>
-      </div>
+    <div class="border-b p-1 bg-gray-100">
+      <ul class="flex border-b overflow-x-auto whitespace-nowrap">
+        <li 
+          v-for="(tab, index) in tabs" 
+          :key="index" 
+          @click="currentTab = tab"
+          class="cursor-pointer"
+        >
+          <a :class="[
+            'inline-block py-1 px-2 text-xs font-semibold rounded-t-lg transition-colors duration-300',
+            currentTab === tab ? 'bg-white text-blue-700 border-t border-l border-r -mb-px' : 'text-gray-500 hover:text-blue-700'
+          ]">
+            {{ tab }}
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="p-4">
+      <div v-if="currentTab === 'Admission Slip'"><AdmissionSlipDisplay/></div>
+      <div v-if="currentTab === 'Checklist of Requirements'"><ChecklistDisplay/></div>
+      <div v-if="currentTab === 'First Intervention Plan'"><FirstInterventionPlanDisplay/></div>
+      <div v-if="currentTab === 'General Intake 1'"><FirstGeneralIntakeDisplay/></div>
+      <div v-if="currentTab === 'General Intake 2'"><SecondGeneralIntakeDisplay/></div>
+      <div v-if="currentTab === 'Kasabutan1'"><FirstKasabutanDisplay/></div>
+      <div v-if="currentTab === 'Kasabutan2'"><SecondKasabutanDisplay/></div>
+      <div v-if="currentTab === 'Data Privacy Consent'"><DataPrivacyConsentDisplay/></div>
+      <div v-if="currentTab === 'Talambuhay'"><TalambuhayDisplay/></div>
+      <div v-if="currentTab === 'Admission Contract'"><AdmissionContractDisplay/></div>
+      <div v-if="currentTab === 'INDICATORS OF SOCIAL FUNCTIONING'"><IndicatorsDisplay/></div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
-import { useRoute } from 'vue-router';
-import axios from 'axios';
+import { ref } from 'vue';
+
 import AdmissionSlipDisplay from '../Display/SocialService/AdmissionSlipDisplay.vue';
 import ChecklistDisplay from '../Display/SocialService/ChecklistDisplay.vue';
 import FirstInterventionPlanDisplay from '../Display/SocialService/FirstInterventionPlanDisplay.vue';
@@ -51,9 +49,9 @@ import AdmissionContractDisplay from '../Display/SocialService/AdmissionContract
 import IndicatorsDisplay from '../Display/SocialService/IndicatorsDisplay.vue';
 
 const tabs = ref([
+  'Admission Slip',
   'Checklist of Requirements',
   'First Intervention Plan',
-  'Admission Slip',
   'General Intake 1',
   'General Intake 2',
   'Kasabutan1',
@@ -64,84 +62,5 @@ const tabs = ref([
   'INDICATORS OF SOCIAL FUNCTIONING',
 ]);
 
-const currentTab = ref('Checklist of Requirements'); // Default tab value
-const route = useRoute();
-const client = ref(null);
-const loading = ref(true);
-const user = ref({ role: '' }); // Role will be set dynamically
-
-const availableTabs = computed(() => {
-  if (user.value.role === 'social services') {
-    return tabs.value;
-  }
-  // Define available tabs based on user role if needed
-  return []; // Return an empty array or modify as necessary
-});
-
-onMounted(async () => {
-  const { props } = usePage();
-  user.value.role = props.auth.user.role || ''; // Set user role from Inertia props
-
-  // Fetch client data based on the ID from the route
-  try {
-    const response = await axios.get(`/api/clients/${route.params.id}`);
-    client.value = response.data;
-    loading.value = false;
-  } catch (error) {
-    console.error('Error fetching client data:', error);
-    loading.value = false;
-  }
-});
+const currentTab = ref('Admission Slip'); // Default tab set to "Admission Slip"
 </script>
-
-<style scoped>
-.border-b {
-  border-bottom: 1px solid #ddd;
-}
-.p-4 {
-  padding: 1rem;
-}
-.flex {
-  display: flex;
-}
-.cursor-pointer {
-  cursor: pointer;
-}
-.inline-block {
-  display: inline-block;
-}
-.mr-1 {
-  margin-right: 0.25rem;
-}
-.-mb-px {
-  margin-bottom: -1px;
-}
-.border-l {
-  border-left: 1px solid #ddd;
-}
-.border-t {
-  border-top: 1px solid #ddd;
-}
-.border-r {
-  border-right: 1px solid #ddd;
-}
-.rounded-t {
-  border-top-left-radius: 0.375rem;
-  border-top-right-radius: 0.375rem;
-}
-.bg-white {
-  background-color: #fff;
-}
-.text-blue-700 {
-  color: #3b82f6;
-}
-.font-semibold {
-  font-weight: 600;
-}
-.text-gray-500 {
-  color: #6b7280;
-}
-.hover\:text-blue-700:hover {
-  color: #3b82f6;
-}
-</style>
