@@ -16,10 +16,10 @@ class DataPrivacyConsentController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'client_signature' => 'required|string|max:255',
-            'date' => 'required|date',
-            'guardian_signature' => 'required|string|max:255',
+            'client_id' => 'nullable|exists:clients,id',
+            'client_signature' => 'nullable|string|max:255',
+            'date' => 'nullable|date',
+            'guardian_signature' => 'nullable|string|max:255',
         ]);
 
         $consent = DataPrivacyConsent::create($validatedData);
@@ -40,10 +40,10 @@ class DataPrivacyConsentController extends Controller
         $consent = DataPrivacyConsent::find($id);
         if ($consent) {
             $validatedData = $request->validate([
-                'client_id' => 'required|exists:clients,id',
-                'client_signature' => 'required|string|max:255',
-                'date' => 'required|date',
-                'guardian_signature' => 'required|string|max:255',
+                'client_id' => 'nullable|exists:clients,id',
+                'client_signature' => 'nullable|string|max:255',
+                'date' => 'nullable|date',
+                'guardian_signature' => 'nullable|string|max:255',
             ]);
 
             $consent->update($validatedData);

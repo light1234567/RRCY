@@ -10,7 +10,8 @@ use App\Http\Controllers\InterventionPlanItemController;
 use App\Http\Controllers\GeneralIntakeSheetController;
 use App\Http\Controllers\SecondIntakeSheetController;
 use App\Http\Controllers\KasabutanController;
-
+use App\Http\Controllers\DataPrivacyConsentController;
+use App\Http\Controllers\TalambuhayController;
 
 Route::get('/clients', [ClientController::class, 'index']);
 Route::get('/clients/{id}', [ClientController::class, 'show']);
@@ -50,5 +51,12 @@ Route::get('/kasabutan/{id}', [KasabutanController::class, 'show']);
 Route::post('/kasabutan', [KasabutanController::class, 'store']);
 Route::put('/kasabutan/{id}', [KasabutanController::class, 'update']);
 Route::delete('/kasabutan/{id}', [KasabutanController::class, 'destroy']);
+
+Route::get('/data-privacy-consent', [DataPrivacyConsentController::class, 'index']);
+Route::get('/data-privacy-consent/{id}', [DataPrivacyConsentController::class, 'show']);
+Route::post('/data-privacy-consent', [DataPrivacyConsentController::class, 'store']);
+Route::put('/data-privacy-consent/{id}', [DataPrivacyConsentController::class, 'update']);
+Route::delete('/data-privacy-consent/{id}', [DataPrivacyConsentController::class, 'destroy']);
+
 
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
