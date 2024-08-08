@@ -16,13 +16,13 @@ class AdmissionContractController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'admission_id' => 'required|exists:admissions,id',
-            'client_id' => 'required|exists:clients,id',
-            'signed_date' => 'required|date',
-            'parent_custodian_signature' => 'required|string|max:255',
-            'lgu_worker_name' => 'required|string|max:255',
-            'rrcy_officer' => 'required|string|max:255',
-            'houseparent_on_duty' => 'required|string|max:255',
+            'client_id' => 'nullable|exists:clients,id',
+            'signed_day' => 'nullable|string|max:2',
+            'signed_month' => 'nullable|string|max:20',
+            'parent_custodian_name' => 'nullable|string|max:255',
+            'lgu_worker_name' => 'nullable|string|max:255',
+            'rrcy_officer' => 'nullable|string|max:255',
+            'houseparent_on_duty' => 'nullable|string|max:255',
         ]);
 
         $admissionContract = AdmissionContract::create($validatedData);
@@ -43,13 +43,13 @@ class AdmissionContractController extends Controller
         $admissionContract = AdmissionContract::find($id);
         if ($admissionContract) {
             $validatedData = $request->validate([
-                'admission_id' => 'required|exists:admissions,id',
-                'client_id' => 'required|exists:clients,id',
-                'signed_date' => 'required|date',
-                'parent_custodian_signature' => 'required|string|max:255',
-                'lgu_worker_name' => 'required|string|max:255',
-                'rrcy_officer' => 'required|string|max:255',
-                'houseparent_on_duty' => 'required|string|max:255',
+                'client_id' => 'nullable|exists:clients,id',
+                'signed_day' => 'nullable|string|max:2',
+                'signed_month' => 'nullable|string|max:20',
+                'parent_custodian_name' => 'nullable|string|max:255',
+                'lgu_worker_name' => 'nullable|string|max:255',
+                'rrcy_officer' => 'nullable|string|max:255',
+                'houseparent_on_duty' => 'nullable|string|max:255',
             ]);
 
             $admissionContract->update($validatedData);
@@ -68,3 +68,4 @@ class AdmissionContractController extends Controller
         return response()->json(['message' => 'Not found'], 404);
     }
 }
+?>

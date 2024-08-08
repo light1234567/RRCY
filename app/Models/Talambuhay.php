@@ -9,6 +9,8 @@ class Talambuhay extends Model
 {
     use HasFactory;
 
+    protected $table = 'talambuhays'; // Ensure this matches the table name in the migration
+
     protected $fillable = [
         'client_id',
         'about_my_family',
@@ -23,3 +25,4 @@ class Talambuhay extends Model
         return $this->belongsTo(Client::class);
     }
 }
+?>

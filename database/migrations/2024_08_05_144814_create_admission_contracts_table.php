@@ -10,16 +10,15 @@ class CreateAdmissionContractsTable extends Migration
     {
         Schema::create('admission_contracts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('admission_id');
-            $table->unsignedBigInteger('client_id');
-            $table->date('signed_date');
-            $table->string('parent_custodian_signature');
-            $table->string('lgu_worker_name');
-            $table->string('rrcy_officer');
-            $table->string('houseparent_on_duty');
+            $table->unsignedBigInteger('client_id')->nullable();
+            $table->string('signed_day')->nullable();
+            $table->string('signed_month')->nullable();
+            $table->string('parent_custodian_name')->nullable();
+            $table->string('lgu_worker_name')->nullable();
+            $table->string('rrcy_officer')->nullable();
+            $table->string('houseparent_on_duty')->nullable();
             $table->timestamps();
 
-            $table->foreign('admission_id')->references('id')->on('admissions')->onDelete('cascade');
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
@@ -29,3 +28,4 @@ class CreateAdmissionContractsTable extends Migration
         Schema::dropIfExists('admission_contracts');
     }
 }
+?>

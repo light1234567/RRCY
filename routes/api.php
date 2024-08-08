@@ -12,6 +12,7 @@ use App\Http\Controllers\SecondIntakeSheetController;
 use App\Http\Controllers\KasabutanController;
 use App\Http\Controllers\DataPrivacyConsentController;
 use App\Http\Controllers\TalambuhayController;
+use App\Http\Controllers\AdmissionContractController;
 
 Route::get('/clients', [ClientController::class, 'index']);
 Route::get('/clients/{id}', [ClientController::class, 'show']);
@@ -58,5 +59,17 @@ Route::post('/data-privacy-consent', [DataPrivacyConsentController::class, 'stor
 Route::put('/data-privacy-consent/{id}', [DataPrivacyConsentController::class, 'update']);
 Route::delete('/data-privacy-consent/{id}', [DataPrivacyConsentController::class, 'destroy']);
 
+Route::get('/talambuhay', [TalambuhayController::class, 'index']);
+Route::get('/talambuhay/{id}', [TalambuhayController::class, 'show']);
+Route::post('/talambuhay', [TalambuhayController::class, 'store']);
+Route::put('/talambuhay/{id}', [TalambuhayController::class, 'update']);
+Route::delete('/talambuhay/{id}', [TalambuhayController::class, 'destroy']);
+
+Route::get('/admission-contracts', [AdmissionContractController::class, 'index']);
+Route::get('/admission-contracts/{id}', [AdmissionContractController::class, 'show']);
+Route::post('/admission-contracts', [AdmissionContractController::class, 'store']);
+Route::put('/admission-contracts/{id}', [AdmissionContractController::class, 'update']);
+Route::delete('/admission-contracts/{id}', [AdmissionContractController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
+?>

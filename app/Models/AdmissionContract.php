@@ -10,22 +10,18 @@ class AdmissionContract extends Model
     use HasFactory;
 
     protected $fillable = [
-        'admission_id',
         'client_id',
-        'signed_date',
-        'parent_custodian_signature',
+        'signed_day',
+        'signed_month',
+        'parent_custodian_name',
         'lgu_worker_name',
         'rrcy_officer',
         'houseparent_on_duty',
     ];
-
-    public function admission()
-    {
-        return $this->belongsTo(Admission::class);
-    }
 
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
 }
+?>

@@ -16,12 +16,12 @@ class TalambuhayController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'about_my_family' => 'required|string',
-            'about_my_self' => 'required|string',
-            'about_my_case' => 'required|string',
-            'case_manager' => 'required|string|max:255',
-            'date' => 'required|date',
+            'client_id' => 'nullable|exists:clients,id',
+            'about_my_family' => 'nullable|string',
+            'about_my_self' => 'nullable|string',
+            'about_my_case' => 'nullable|string',
+            'case_manager' => 'nullable|string|max:255',
+            'date' => 'nullable|date',
         ]);
 
         $talambuhay = Talambuhay::create($validatedData);
@@ -42,12 +42,12 @@ class TalambuhayController extends Controller
         $talambuhay = Talambuhay::find($id);
         if ($talambuhay) {
             $validatedData = $request->validate([
-                'client_id' => 'required|exists:clients,id',
-                'about_my_family' => 'required|string',
-                'about_my_self' => 'required|string',
-                'about_my_case' => 'required|string',
-                'case_manager' => 'required|string|max:255',
-                'date' => 'required|date',
+                'client_id' => 'nullable|exists:clients,id',
+                'about_my_family' => 'nullable|string',
+                'about_my_self' => 'nullable|string',
+                'about_my_case' => 'nullable|string',
+                'case_manager' => 'nullable|string|max:255',
+                'date' => 'nullable|date',
             ]);
 
             $talambuhay->update($validatedData);
@@ -66,3 +66,4 @@ class TalambuhayController extends Controller
         return response()->json(['message' => 'Not found'], 404);
     }
 }
+?>
