@@ -34,5 +34,17 @@ class Kernel extends HttpKernel
         ],
     ];
 
+    /**
+     * The application's route middleware.
+     *
+     * These middleware may be assigned to groups or used individually.
+     *
+     * @var array
+     */
+    protected $routeMiddleware = [
+        // Other middleware
+        'check.admin' => \App\Http\Middleware\CheckAdminRole::class,
+    ];
+
     // Other configurations
 }

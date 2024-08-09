@@ -1,14 +1,23 @@
 <template>
  <!-- Tabs for Actions -->
- <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>Back</span>
-      </button>
-    </div>
+<div class="flex absolute p-4 space-x-4 ">
+  <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+    <span>Back</span>
+  </button>
+</div>
+
 <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
+  <div class="w-full text-black ml-40 text-center text-md" v-if="!editMode">
+    VIEW MODE
+  </div>
+
+  <div v-if="editMode" class="w-full text-black ml-40 text-center text-md">
+    EDIT MODE
+  </div>
+
   <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
@@ -22,6 +31,15 @@
     </svg>
     <span>Add Row</span>
   </button>
+
+  <button @click="downloadAction" class="flex items-center space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7m7 7V3" />
+    </svg>
+    <span>Download</span>
+  </button>
+
+ 
 
   <button v-if="editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -129,17 +147,12 @@
       </div>
     </div>
   </div>
-  <!-- Modal for Save Confirmation -->
-  <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+       <!-- Modal for Save Confirmation -->
+    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
       <div class="fixed inset-0 bg-black opacity-50"></div>
       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
         <div class="bg-white p-6">
-          <div class="flex items-center">
-            <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
-            </svg>
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
-          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
           <div class="mt-2">
             <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
           </div>
@@ -151,8 +164,8 @@
       </div>
     </div>
 
-     <!-- Modal for Save Result -->
-     <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+    <!-- Modal for Save Result -->
+    <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
       <div class="fixed inset-0 bg-black opacity-50"></div>
       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
         <div class="bg-white p-6 text-center">
@@ -160,13 +173,6 @@
             <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
               <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </div>
-          </div>
-          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
-            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </div>
           </div>
@@ -291,7 +297,6 @@ export default {
     const cancelEdit = () => {
       editMode.value = false;
     };
-
     const closeSaveResultModal = () => {
       isSaveResultModalOpen.value = false;
     };
@@ -345,15 +350,17 @@ export default {
           editMode.value = false;
         })
         .catch(error => {
+          
           messageType.value = 'error';
           saveResultTitle.value = 'Error';
-          saveResultMessage.value = error.response.data.message || 'An error occurred while saving data.';
-          console.error('Error saving data:', error);
+          saveResultMessage.value = error.response.data.message || '';
+          console.error('', error);
         })
         .finally(() => {
           isModalOpen.value = false;
           isSaveResultModalOpen.value = true;
         });
+     
     };
 
     const addItem = () => {

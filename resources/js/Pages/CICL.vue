@@ -28,14 +28,13 @@
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profile</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admitted | Discharged</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr
-                  v-for="(client, index) in filteredClients"
+                  v-for="(client, index) in paginatedClients"
                   :key="client.id"
                   class="cursor-pointer hover:bg-gray-100"
                   @click="navigateToEditPage(client.id)"
@@ -46,7 +45,6 @@
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ client.first_name }} {{ client.last_name }}</td>
-
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div class="flex space-x-4">
                       <button class="mr-12 ml-5" :class="getBoxStyles(index).leftBoxClass + ' p-3 rounded'"></button>
@@ -57,11 +55,29 @@
                     <button @click.stop="showDeleteModal(client.id)" class="text-red-600 hover:text-red-900 ml-4">Delete</button>
                   </td>
                 </tr>
-                <tr v-if="filteredClients.length === 0">
+                <tr v-if="paginatedClients.length === 0">
                   <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No clients found</td>
                 </tr>
               </tbody>
             </table>
+          </div>
+          <!-- Pagination -->
+          <div class="flex justify-end p-4">
+            <button
+              :disabled="currentPage === 1"
+              @click="previousPage"
+              class="mr-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Previous
+            </button>
+            <span class="px-4 py-2">{{ currentPage }} / {{ totalPages }}</span>
+            <button
+              :disabled="currentPage === totalPages"
+              @click="nextPage"
+              class="ml-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
@@ -94,6 +110,8 @@ const clients = ref([]);
 const searchQuery = ref('');
 const showModal = ref(false);
 const clientIdToDelete = ref(null);
+const currentPage = ref(1);
+const itemsPerPage = 9;
 
 // Fetch clients from the API
 const fetchClients = async () => {
@@ -107,7 +125,7 @@ const fetchClients = async () => {
 
 onMounted(fetchClients);
 
-// Computed property to filter clients based on search query
+// Computed property to filter and paginate clients
 const filteredClients = computed(() => {
   if (!searchQuery.value) {
     return clients.value;
@@ -116,6 +134,29 @@ const filteredClients = computed(() => {
     `${client.first_name} ${client.last_name}`.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
+
+const paginatedClients = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filteredClients.value.slice(start, end);
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredClients.value.length / itemsPerPage);
+});
+
+// Pagination controls
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
 
 // Function to show delete confirmation modal
 const showDeleteModal = (id) => {
@@ -172,31 +213,10 @@ const getBoxStyles = (index) => {
   return { leftBoxClass, rightBoxClass };
 };
 
-// Function to activate client
-
-
+// Function to navigate to edit page
 const navigateToEditPage = (id) => {
   const resolvedRoute = router.resolve({ name: 'maintab', params: { id: id } });
   window.location.href = resolvedRoute.href;
 };
 
-
 </script>
-
-
-<style>
-.p {
-  height: 35px;
-  width: 80px;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.bg-box-left {
-  background-color: rgb(239, 68, 68);
-}
-
-.bg-box-right {
-  background-color: rgb(59, 130, 246);
-}
-</style>
