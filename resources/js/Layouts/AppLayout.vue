@@ -67,10 +67,10 @@
             />
           </div>
 
-           <!-- Divider Line -->
-           <div>
-              <hr class="mt-8 ml-2 mr-2 border-gray-700" />
-            </div>
+          <!-- Divider Line -->
+          <div>
+            <hr class="mt-8 ml-2 mr-2 border-gray-700" />
+          </div>
 
           <!-- Navigation Links -->
           <div class="flex flex-col p-4 space-y-0 mt-8">
@@ -81,7 +81,6 @@
                 'w-full h-auto': !isSidebarCollapsed
               }"
               class="flex items-center justify-between max-w-lg p-2 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
-              @click="changeAllStatus"
             >
               <NavLink
                 :href="route('dashboard')"
@@ -124,7 +123,6 @@
                 'w-full h-auto': !isSidebarCollapsed
               }"
               class="flex items-center justify-between mb-20 max-w-lg p-2 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
-              @click="changeAllStatus"
             >
               <NavLink
                 :href="route('cicl')"
@@ -160,14 +158,14 @@
               </NavLink>
             </div>
 
-            <!-- New Client Link with Icon -->
+            <!-- New Client Link with Icon (conditionally rendered) -->
             <div
+              v-if="isSocialServices"
               :class="{
-             'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
+                'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
                 'w-full h-auto': !isSidebarCollapsed
               }"
               class="flex items-center justify-between max-w-lg p-2 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
-              @click="changeAllStatus"
             >
               <NavLink
                 :href="route('new')"
@@ -239,13 +237,9 @@
                 </span>
               </button>
             </div>
-
-           </div>
-           </div>
-        
+          </div>
+        </div>
       </nav>
-
-        
 
       <!-- Main Content -->
       <div
@@ -256,16 +250,15 @@
         class="flex-1 transition-all duration-300"
       >
         <!-- Page Heading -->
-     
-              <div class="w-full m-0 p-0">
-        <header class="w-full py-2 bg-white shadow-md px-24 sm:px-8 lg:px-16">
-          <slot name="header" v-if="$slots.header"></slot>
-          <h2 id="header" class="flex ">
-            <img id="header-image-left" src="/images/headerlogo2.png" alt="Left Logo" class="h-12 -ml-4 sm:h-16 lg:h-15 w-auto mr-4" />
-            <img id="header-image-right" src="/images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-15 w-auto" />
-          </h2>
-        </header>
-      </div>
+        <div class="w-full m-0 p-0">
+          <header class="w-full py-2 bg-white shadow-md px-24 sm:px-8 lg:px-16">
+            <slot name="header" v-if="$slots.header"></slot>
+            <h2 id="header" class="flex ">
+              <img id="header-image-left" src="/images/headerlogo2.png" alt="Left Logo" class="h-12 -ml-4 sm:h-16 lg:h-15 w-auto mr-4" />
+              <img id="header-image-right" src="/images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-15 w-auto" />
+            </h2>
+          </header>
+        </div>
 
         <!-- Page Content -->
         <main class="pt-24 mt-20"> <!-- Adjust padding to match header height -->
@@ -280,7 +273,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { Head, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
@@ -301,36 +294,6 @@ const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value;
 };
 
-const clients = ref([]);
-
-const fetchClients = () => {
-  axios.get('/api/clients')
-    .then(response => {
-      clients.value = response.data.filter(client => client.Status === 'active');
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-const changeAllStatus = () => {
-  console.log('changeAllStatus triggered');
-  const updateRequests = clients.value.map(client =>
-    axios.patch(`/api/clients/${client.id}`, { Status: 'inactive' })
-      .then(() => {
-        client.Status = 'inactive';
-      })
-      .catch(error => {
-        console.log(error);
-      })
-  );
-
-  Promise.all(updateRequests)
-    .then(() => {
-      clients.value = clients.value.filter(client => client.Status === 'active');
-    });
-};
-
 const logout = () => {
   axios.post('/logout')
     .then(() => {
@@ -342,9 +305,7 @@ const logout = () => {
     });
 };
 
-onMounted(() => {
-  fetchClients();
-});
+const isSocialServices = computed(() => userRole.value === 'social services');
 </script>
 
 <style scoped>

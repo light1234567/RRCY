@@ -10,12 +10,9 @@ export default {
   components: {
     AppLayout,
     socialservice,
-    
   },
   data() {
     return {
-
-      
       tabs: [
         'Social Service',
         'Psychological Reports',
@@ -26,8 +23,8 @@ export default {
         'PSD Reports',
       ],
       user: {
-        role: '' // Role will be set dynamically
-      }
+        role: '', // Role will be set dynamically
+      },
     };
   },
   computed: {
@@ -50,12 +47,12 @@ export default {
         default:
           return this.tabs;
       }
-    }
+    },
   },
   mounted() {
     const { props } = usePage();
     this.user.role = props.auth.user.role || '(User)'; // Set user role from Inertia props
-  }
+  },
 };
 </script>
 
@@ -112,22 +109,22 @@ export default {
 .tab-content {
   margin-top: 20px;
 }
+
+.centered-big-text {
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+}
 </style>
 
 <template>
   <AppLayout>
     <template #header>
-      
-     <!-- <div class="tabs">
-        <button
-          v-for="(tab, index) in availableTabs"
-          :key="index"
-          :class="{ active: currentTab === index }"
-          @click="currentTab = index"
-        >
-          {{ tab }}
-        </button> 
-      </div>-->
+      <!-- Header content -->
     </template>
     <div>
       <!-- Tabs Content -->
@@ -135,23 +132,23 @@ export default {
         <div v-if="user.role === 'social services'">
           <socialservice></socialservice>
         </div>
-        <div v-if="user.role === 'psychological'">
-          Psycho ni nga page
+        <div v-if="user.role === 'psychological'" class="centered-big-text">
+          Ulol hahahaha
         </div>
-        <div v-if="user.role === 'court order'">
-          court order ni
+        <div v-if="user.role === 'court order'" class="centered-big-text">
+          Ulol hahahaha
         </div>
-        <div v-if="user.role === 'homelife services'">
-          homelife ni
+        <div v-if="user.role === 'homelife services'" class="centered-big-text">
+          Ulol hahahaha
         </div>
-        <div v-if="user.role === 'nursing care'">
-          nursing ni
+        <div v-if="user.role === 'nursing care'" class="centered-big-text">
+          Ulol hahahaha
         </div>
-        <div v-if="user.role === 'educational services'">
-          educ ni
+        <div v-if="user.role === 'educational services'" class="centered-big-text">
+          Ulol hahahaha
         </div>
-        <div v-if="user.role === 'psd'">
-          psd ka
+        <div v-if="user.role === 'psd'" class="centered-big-text">
+          Ulol hahahaha
         </div>
       </div>
     </div>

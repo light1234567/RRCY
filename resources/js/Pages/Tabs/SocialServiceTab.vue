@@ -1,26 +1,24 @@
 <template>
-  <div>
-      <h1 class="mt-1 text-customBlue mb-1">Select a Form:</h1>
-     </div>
-  <div>
-    <!-- Dropdown for selecting tabs -->
-    <div class="relative">
-      <select 
-        v-model="currentTab" 
-        class="block w-full px-3 py-2 text-md border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
-      >
-        <option 
-          v-for="(tab, index) in tabs" 
-          :key="index" 
-          :value="tab"
+  <div class="flex flex-col justify-center items-center min-h-screen">
+    <div class="flex flex-col justify-center items-center w-full">
+      <h1 class="mt-8 text-customBlue mb-1 text-lg italic">Select a Form:</h1>
+      <div class="relative w-1/4">
+        <select 
+          v-model="currentTab" 
+          class="block w-full py-2 text-md border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
         >
-          {{ tab }}
-        </option>
-      </select>
+          <option 
+            v-for="(tab, index) in tabs" 
+            :key="index" 
+            :value="tab"
+          >
+            {{ tab }}
+          </option>
+        </select>
+      </div>
     </div>
     <!-- Display content based on selected tab -->
-     
-    <div class="p-4">
+    <div class="p-4 w-full">
       <div v-if="currentTab === 'Admission Slip'"><AdmissionSlipDisplay/></div>
       <div v-if="currentTab === 'Checklist of Requirements'"><ChecklistDisplay/></div>
       <div v-if="currentTab === 'First Intervention Plan'"><FirstInterventionPlanDisplay/></div>
@@ -31,7 +29,7 @@
       <div v-if="currentTab === 'Data Privacy Consent'"><DataPrivacyConsentDisplay/></div>
       <div v-if="currentTab === 'Talambuhay'"><TalambuhayDisplay/></div>
       <div v-if="currentTab === 'Admission Contract'"><AdmissionContractDisplay/></div>
-      <div v-if="currentTab === 'INDICATORS OF SOCIAL FUNCTIONING'"><IndicatorsDisplay/></div>
+      <div v-if="currentTab === 'Indicators of Social Functioning'"><IndicatorsDisplay/></div>
     </div>
   </div>
 </template>
@@ -62,7 +60,7 @@ const tabs = ref([
   'Data Privacy Consent',
   'Talambuhay',
   'Admission Contract',
-  'INDICATORS OF SOCIAL FUNCTIONING',
+  'Indicators of Social Functioning',
 ]);
 
 const currentTab = ref('Admission Slip'); // Default tab set to "Admission Slip"
@@ -70,4 +68,7 @@ const currentTab = ref('Admission Slip'); // Default tab set to "Admission Slip"
 
 <style scoped>
 /* Add any additional styles here */
+.text-customBlue {
+  color: #1c3d5a; /* Adjust this to your custom blue color */
+}
 </style>
