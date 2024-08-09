@@ -11,40 +11,27 @@ class IndicatorsOfSocialFunctioning extends Model
 
     protected $fillable = [
         'client_id',
-        'date_admission',
+        'admission_id',
         'date_administered',
         'physical_raw_score1',
         'physical_score_per_area1',
         'physical_raw_score2',
-        'physical_score_per_area2',
         'emotional_raw_score1',
         'emotional_score_per_area1',
         'emotional_raw_score2',
-        'emotional_score_per_area2',
         'emotional_raw_score3',
-        'emotional_score_per_area3',
         'emotional_raw_score4',
-        'emotional_score_per_area4',
         'emotional_raw_score5',
-        'emotional_score_per_area5',
         'emotional_raw_score6',
-        'emotional_score_per_area6',
         'social_raw_score1',
         'social_score_per_area1',
         'social_raw_score2',
-        'social_score_per_area2',
         'social_raw_score3',
-        'social_score_per_area3',
         'social_raw_score4',
-        'social_score_per_area4',
         'social_raw_score5',
-        'social_score_per_area5',
         'social_raw_score6',
-        'social_score_per_area6',
         'social_raw_score7',
-        'social_score_per_area7',
         'social_raw_score8',
-        'social_score_per_area8',
         'spiritual_raw_score1',
         'spiritual_score_per_area1',
         'educational_raw_score',
@@ -57,8 +44,14 @@ class IndicatorsOfSocialFunctioning extends Model
         'discussed_with',
     ];
 
+
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function admission()
+    {
+        return $this->belongsTo(Admission::class);
     }
 }

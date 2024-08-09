@@ -28,4 +28,9 @@ class Client extends Model
     {
         return $this->hasMany(Admission::class);
     }
+
+    public function indicators()
+    {
+        return $this->hasMany(IndicatorsOfSocialFunctioning::class);
+    }
 }

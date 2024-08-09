@@ -95,4 +95,15 @@ class AdmissionController extends Controller
         return response()->json($clients);
     }
     
+public function getAdmissionByClientId($client_id)
+{
+    $admission = Admission::where('client_id', $client_id)->first();
+
+    if (!$admission) {
+        return response()->json(['message' => 'Admission not found'], 404);
+    }
+
+    return response()->json($admission);
+}
+
 }
