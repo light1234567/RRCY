@@ -14,6 +14,7 @@ use App\Http\Controllers\DataPrivacyConsentController;
 use App\Http\Controllers\TalambuhayController;
 use App\Http\Controllers\AdmissionContractController;
 use App\Http\Controllers\IndicatorOfSocialFunctioningController;
+use App\Http\Controllers\PsychologicalInterventionPlanController;
 
 // Existing Routes
 
@@ -94,7 +95,11 @@ Route::get('indicators-of-social-functioning/check/{client_id}/{admission_id}', 
 Route::get('/indicators-of-social-functioning/check/{client_id}/{admission_id}', [IndicatorOfSocialFunctioningController::class, 'checkExisting']);
 Route::apiResource('indicators-of-social-functioning', IndicatorOfSocialFunctioningController::class);
 
-    
+
+Route::post('/psychological-intervention-plans', [PsychologicalInterventionPlanController::class, 'store']);
+Route::get('/psychological-intervention-plans/{id}', [PsychologicalInterventionPlanController::class, 'show']);
+Route::put('/psychological-intervention-plans/{id}', [PsychologicalInterventionPlanController::class, 'update']);
+
 // User Role Routes
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
 ?>
