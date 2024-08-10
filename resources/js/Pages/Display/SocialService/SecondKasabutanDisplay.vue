@@ -17,7 +17,9 @@
 
       <div class="mb-8">
         <p>
-          Ako si <span class="font-bold underline">{{ clientName }}</span> nagapanumpa ug naga saad na unsa man ang mahitabo sa akoan bahin niini PAGAPATAOD UG BOLITAS SA AKONG KINATAWO/OTIN, walay tulubagon ang DSWD-RRCY tungod kini maoy akong kabubut-on.
+          Ako si <span class="font-bold underline">{{ clientName }}</span> usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili “COLOR RED” and akong Performance equivalent to “OUTSTANDING”</p>
+          <p>
+Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.
         </p>
       </div>
 
