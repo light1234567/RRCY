@@ -1,23 +1,23 @@
 <template>
   <div class="relative">
     <!-- User Name and Role Section -->
-    <div v-if="!isSidebarCollapsed" class="text-center truncate -mt-4">
+    <div v-if="!isSidebarCollapsed" class="text-center ml-2 truncate">
       <div
         :class="{
-          'text-xs': isSidebarCollapsed,
-          'text-lg': !isSidebarCollapsed,
+          'text-[4px]': isSidebarCollapsed,
+          'text-[16px]': !isSidebarCollapsed,
           'text-blue-500': isSidebarCollapsed,
-          'text-white': !isSidebarCollapsed
+          'text-gray-600': !isSidebarCollapsed
         }"
-        class="font-medium cursor-pointer"
+        class="font-medium cursor-pointer -mb-1.5"
         @click="toggleDropdown"
       >
         {{ userName }}
       </div>
       <div
         :class="{
-          'text-xs': isSidebarCollapsed,
-          'text-sm': !isSidebarCollapsed,
+          'text-[4px]': isSidebarCollapsed,
+          'text-[12px]': !isSidebarCollapsed,
           'text-blue-400': isSidebarCollapsed,
           'text-gray-400': !isSidebarCollapsed
         }"

@@ -1,10 +1,11 @@
 <template>
   <AppLayout title="Dashboard">
-      <template #header>
+    <template #header>
+        <h1 class="text-xl font-bold -ml-4 text-customBlue">Admission Form/New Client</h1>
       </template>
     <div>
       <h1 class="text-lg p-1 text-customBlue ml-10 -mt-40 font-bold mb-4">
-        Admission Form
+      
       </h1>
       <form @submit.prevent="saveForm">
         <!-- Client Information -->

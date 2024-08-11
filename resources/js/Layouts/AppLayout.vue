@@ -4,11 +4,11 @@
 
     <Banner />
 
-    <div class="min-h-screen bg-gradient-to-tr from-slate-50 via-gray-50 to-zinc-50 to-teal-50 flex ">
+    <div class="min-h-screen bg-gradient-to-tr from-slate-50 via-gray-50 to-zinc-50  flex ">
       <!-- Sidebar -->
       <nav
         :class="{
-          '': !isSidebarCollapsed,
+          'w-48': !isSidebarCollapsed,
           'w-20': isSidebarCollapsed
         }"
         class="fixed bg-customBlue border-r border-gray-100 h-full z-40 transition-all duration-300"
@@ -49,15 +49,15 @@
             </svg>
           </button>
 
-          <!-- UserProfileImage -->
+          <!-- UserProfileImage 
           <div class="flex flex-col items-center p-4 mt-4">
             <UserProfileImage
               :userImage="userImage"
               :userName="userName"
             />
-          </div>
+          </div>-->
 
-          <!-- Application Mark and User Menu -->
+          <!-- Application Mark and User Menu 
           <div class="flex flex-col items-center p-4">
             <ApplicationMark
               :isSidebarCollapsed="isSidebarCollapsed"
@@ -65,7 +65,9 @@
               :userRole="userRole"
               :userImage="userImage"
             />
-          </div>
+          </div> -->
+          <!-- LOGO DSWD -->
+          <img src="/images/transparent.png" alt="Logo" class="mt-12 mb-4 h-20 w-48 relative z-10">
 
           <!-- Divider Line -->
           <div>
@@ -251,15 +253,35 @@
       >
         <!-- Page Heading -->
         <div class="w-full m-0 p-0">
-          <header class="w-full py-2 bg-white shadow-md px-24 sm:px-8 lg:px-16">
-            <slot name="header" v-if="$slots.header"></slot>
-            <h2 id="header" class="flex ">
-              <img id="header-image-left" src="/images/headerlogo2.png" alt="Left Logo" class="h-12 -ml-4 sm:h-16 lg:h-15 w-auto mr-4" />
-              <img id="header-image-right" src="/images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-15 w-auto" />
-            </h2>
-          </header>
-        </div>
+  <header class="w-full py-2 bg-white border border-gray-500 px-24 sm:px-8 lg:px-16 flex items-center">
+    <slot name="header" v-if="$slots.header"></slot>
 
+    <div class="ml-auto h-10 w-10">
+      <div class="h-full w-full bg-white rounded-full overflow-hidden">
+        <UserProfileImage
+          :userImage="userImage"
+          :userName="userName"
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center ml-2">
+      <ApplicationMark
+        :isSidebarCollapsed="isSidebarCollapsed"
+        :userName="userName"
+        :userRole="userRole"
+        :userImage="userImage"
+      />
+    </div>
+
+    <!-- Add the small dropdown icon to the right using SVG -->
+    <div class="ml-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </header>
+</div>
         <!-- Page Content -->
         <main class="pt-24 mt-20"> <!-- Adjust padding to match header height -->
           <slot />

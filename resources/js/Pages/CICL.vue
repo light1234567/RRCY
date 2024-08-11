@@ -1,12 +1,14 @@
 <template>
   <AppLayout title="CICL">
-    <template #header></template>
+    <template #header>
+        <h1 class="text-xl font-bold -ml-4 text-customBlue">CICL</h1>
+      </template>
     <div class="">
-      <div class="max-w-6x1 mx-auto sm:px-6 lg:px-8 -mt-32">
+      <div class="max-w-6x1 mx-auto sm:px-6 lg:px-8 -mt-40">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
           <!-- Search input and Details button -->
           <div class="p-2 flex justify-between items-center">
-            <span class="ml-4 text-red-600 text-lg font-bold">CICL LIST</span>
+            <span class="ml-4 text-red-600 text-lg font-bold"></span>
             <div class="relative w-80">
               <input
                 v-model="searchQuery"

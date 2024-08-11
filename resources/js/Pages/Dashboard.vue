@@ -12,7 +12,8 @@ html, body {
 <template>
     <AppLayout title="Dashboard">
         <template #header>
-        </template>
+        <h1 class="text-xl font-bold -ml-4 text-customBlue">Dashboard</h1>
+      </template>
         <div class="flex flex-col items-start -mt-40 justify-start min-h-screen p-4 bg-gradient-to-r from-yellow-400 via-red-400 to-pink-500 text-gray-800">
             <!-- Header -->
             <div class="w-full text-center mb-4">

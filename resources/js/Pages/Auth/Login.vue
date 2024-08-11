@@ -4,19 +4,18 @@
   </Head>
 
   <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat;">
-    <header id="header" class="w-full py-2 bg-white shadow-md flex items-center justify-between px-4 sm:px-8 lg:px-16">
-      <img id="header-image-left" src="images/headerlogo2.png" alt="Left Logo" class="h-12 sm:h-16 lg:h-20 w-auto" />
-      <img id="header-image-right" src="images/headerlogo.png" alt="Right Logo" class="h-12 sm:h-16 lg:h-20 w-auto" />
-    </header>
+    
     <main class="flex-grow flex flex-col md:flex-row items-center justify-center p-4 md:p-6 lg:p-8 overflow-hidden">
       <div class="flex w-full max-w-5xl flex-col md:flex-row">
         <!-- Login Form -->
         <div class="w-full md:w-1/2 p-4 md:p-6 shadow-lg border-2 border-gray-300 bg-white flex-grow relative">
           <div class="w-full space-y-4">
             <div class="text-center">
-              <h2 class="mt-0 text-center font-bold text-xl md:text-2xl text-gray-900">
-                RRCY LOGIN
-              </h2>
+              <h2 class="mt-0 text-center font-bold text-lg md:text-xl text-gray-900 flex items-center justify-center">
+                  <!-- Image placed before the text -->
+                  <img src="images/g.png" alt="RRCY Logo" class="h-14 w-22 mt-1 -mr-2 -ml-10" />
+                  RRCY LOGIN
+                </h2>
             </div>
             <form class="mt-4 space-y-4" @submit.prevent="submit">
               <div class="shadow-sm space-y-4">
