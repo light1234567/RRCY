@@ -94,8 +94,7 @@
       <!-- Page 2 -->
       
          
-          <p class="text-xs justify-right">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
-
+   
        
           <h2 class="text-lg font-semibold">For the LSWDO:</h2>
           <ol class="list-decimal ml-6 space-y-2 text-justify">
