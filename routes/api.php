@@ -16,7 +16,8 @@ use App\Http\Controllers\AdmissionContractController;
 use App\Http\Controllers\IndicatorOfSocialFunctioningController;
 use App\Http\Controllers\PsychologicalInterventionPlanController;
 use App\Http\Controllers\InitialPsychologicalAssessmentController;
-
+use App\Http\Controllers\CiclProgressNoteController;
+use App\Http\Controllers\AnecdotalReportController;
 
 // Existing Routes
 
@@ -112,6 +113,20 @@ Route::put('/initial-psychological-assessments/{id}', [InitialPsychologicalAsses
 Route::delete('/initial-psychological-assessments/{id}', [InitialPsychologicalAssessmentController::class, 'destroy']);
 
 
+// Cicl Progress Notes Routes
+Route::get('/cicl-progress-notes', [CiclProgressNoteController::class, 'index']);
+Route::get('/cicl-progress-notes/{client_id}', [CiclProgressNoteController::class, 'show']);
+Route::post('/cicl-progress-notes', [CiclProgressNoteController::class, 'store']);
+Route::put('/cicl-progress-notes/{client_id}', [CiclProgressNoteController::class, 'update']);
+Route::delete('/cicl-progress-notes/{id}', [CiclProgressNoteController::class, 'destroy']);
+
+
+// Anecdotal Report Routes
+Route::get('/anecdotal-reports', [AnecdotalReportController::class, 'index']);
+Route::get('/anecdotal-reports/{client_id}', [AnecdotalReportController::class, 'show']);
+Route::post('/anecdotal-reports', [AnecdotalReportController::class, 'store']);
+Route::put('/anecdotal-reports/{client_id}', [AnecdotalReportController::class, 'update']);
+Route::delete('/anecdotal-reports/{id}', [AnecdotalReportController::class, 'destroy']);
 
 
 // User Role Routes
