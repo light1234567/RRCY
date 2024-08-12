@@ -20,6 +20,8 @@ use App\Http\Controllers\CiclProgressNoteController;
 use App\Http\Controllers\AnecdotalReportController;
 use App\Http\Controllers\IncidentReportController;
 use App\Http\Controllers\MonthlyInventoryController;
+use App\Http\Controllers\CiclSessionController;
+use App\Http\Controllers\SwappingFormController;
 
 // Existing Routes
 
@@ -144,6 +146,19 @@ Route::post('/monthly-inventories', [MonthlyInventoryController::class, 'store']
 Route::put('/monthly-inventories/{client_id}', [MonthlyInventoryController::class, 'update']);
 Route::delete('/monthly-inventories/{id}', [MonthlyInventoryController::class, 'destroy']);
 
+
+Route::get('/cicl-sessions', [CiclSessionController::class, 'index']);
+Route::get('/cicl-sessions/{client_id}', [CiclSessionController::class, 'show']);
+Route::post('/cicl-sessions', [CiclSessionController::class, 'store']);
+Route::put('/cicl-sessions/{client_id}', [CiclSessionController::class, 'update']);
+Route::delete('/cicl-sessions/{id}', [CiclSessionController::class, 'destroy']);
+Route::put('/cicl-sessions/{id}', [CiclSessionController::class, 'update']);
+
+Route::get('/swapping-forms', [SwappingFormController::class, 'index']);
+Route::get('/swapping-forms/{client_id}', [SwappingFormController::class, 'show']);
+Route::post('/swapping-forms', [SwappingFormController::class, 'store']);
+Route::put('/swapping-forms/{client_id}', [SwappingFormController::class, 'update']);
+Route::delete('/swapping-forms/{id}', [SwappingFormController::class, 'destroy']);
 
 
 // User Role Routes
