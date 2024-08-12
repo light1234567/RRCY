@@ -209,13 +209,13 @@ export default {
       axios.put(url, form.value)
         .then(response => {
           editMode.value = false;
-          message.value = 'Data updated successfully!';
+          message.value = 'Data saved successfully!';
           messageType.value = 'success';
           clearMessage();
           fetchData(); // Re-fetch data to update the form with the latest saved data
         })
         .catch(error => {
-          message.value = 'Failed to update data';
+          message.value = 'Failed to save data';
           messageType.value = 'error';
           clearMessage();
         });

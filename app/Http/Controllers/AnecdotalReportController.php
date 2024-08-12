@@ -146,6 +146,7 @@ class AnecdotalReportController extends Controller
             return response()->json(['message' => 'Failed to update report', 'error' => $e->getMessage()], 500);
         }
     }
+    
 
     public function destroy($id)
     {

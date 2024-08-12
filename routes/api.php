@@ -18,6 +18,8 @@ use App\Http\Controllers\PsychologicalInterventionPlanController;
 use App\Http\Controllers\InitialPsychologicalAssessmentController;
 use App\Http\Controllers\CiclProgressNoteController;
 use App\Http\Controllers\AnecdotalReportController;
+use App\Http\Controllers\IncidentReportController;
+use App\Http\Controllers\MonthlyInventoryController;
 
 // Existing Routes
 
@@ -127,6 +129,21 @@ Route::get('/anecdotal-reports/{client_id}', [AnecdotalReportController::class, 
 Route::post('/anecdotal-reports', [AnecdotalReportController::class, 'store']);
 Route::put('/anecdotal-reports/{client_id}', [AnecdotalReportController::class, 'update']);
 Route::delete('/anecdotal-reports/{id}', [AnecdotalReportController::class, 'destroy']);
+
+
+// Incident Report Routes
+Route::get('/incident-reports', [IncidentReportController::class, 'index']);
+Route::get('/incident-reports/{client_id}', [IncidentReportController::class, 'show']);
+Route::post('/incident-reports', [IncidentReportController::class, 'store']);
+Route::put('/incident-reports/{client_id}', [IncidentReportController::class, 'update']);
+Route::delete('/incident-reports/{id}', [IncidentReportController::class, 'destroy']);
+
+Route::get('/monthly-inventories', [MonthlyInventoryController::class, 'index']);
+Route::get('/monthly-inventories/{client_id}', [MonthlyInventoryController::class, 'show']);
+Route::post('/monthly-inventories', [MonthlyInventoryController::class, 'store']);
+Route::put('/monthly-inventories/{client_id}', [MonthlyInventoryController::class, 'update']);
+Route::delete('/monthly-inventories/{id}', [MonthlyInventoryController::class, 'destroy']);
+
 
 
 // User Role Routes

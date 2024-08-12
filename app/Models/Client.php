@@ -33,4 +33,9 @@ class Client extends Model
     {
         return $this->hasMany(IndicatorsOfSocialFunctioning::class);
     }
+    
+    public function monthlyInventories()
+    {
+        return $this->hasMany(MonthlyInventory::class);
+    }
 }
