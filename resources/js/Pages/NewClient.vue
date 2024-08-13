@@ -1,16 +1,16 @@
 <template>
   <AppLayout title="Dashboard">
     <template #header>
-        <h1 class="text-xl font-bold -ml-4 text-customBlue">Admission Form/New Client</h1>
+        <h1 class="ml-0 text-lg font-bold  text-red-800">ADMISSION FORM/NEW CLIENT</h1>
       </template>
-    <div>
-      <h1 class="text-lg p-1 text-customBlue ml-10 -mt-40 font-bold mb-4">
+      <div style="background-image: url(''); background-size: cover; background-position: center;">
+      <h1 class="text-lg p-1 text-customBlue ml-10 -mt-44 font-bold mb-4">
       
       </h1>
       <form @submit.prevent="saveForm">
         <!-- Client Information -->
-        <fieldset class="border border-gray-300 p-4 mb-2 mr-4 ml-10 rounded-lg">
-          <legend class="text-base font-bold">CLIENT INFORMATION</legend>
+        <fieldset class="border border-blue-900 p-4 mb-2 mr-8 ml-16 rounded-sm">
+          <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold">CLIENT INFORMATION</legend>
           <div class="grid grid-cols-1">
             <!-- Name, Sex, and Date of Birth -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
@@ -205,8 +205,8 @@
         </fieldset>
   
        <!-- Distinguishing Marks -->
-        <fieldset class="border border-gray-300 p-4 mb-2 mr-4 ml-10 rounded-lg">
-          <legend class="text-base font-bold mb-2">
+        <fieldset class="border border-blue-900  p-4 mb-2 mr-8 ml-16 mt-8  rounded-sm">
+          <legend class="text-base  bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">
             DISTINGUISHING MARKS
           </legend>
           <div class="grid grid-cols-1 md:grid-cols-5 gap-2 mb-2">
@@ -277,8 +277,8 @@
         </fieldset>
   
         <!-- Admission Details -->
-        <fieldset class="border border-gray-300 p-4 mr-4 mb-2 ml-10 rounded-lg">
-          <legend class="text-base font-bold mb-2">ADMISSION DETAILS</legend>
+        <fieldset class="border border-blue-900  p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
+          <legend class="text-base  bg-blue-900  text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">ADMISSION DETAILS</legend>
           <div class="grid grid-cols-1 gap-2">
             <div class="mb-2 col-span-1">
               <label for="committingCourt" class="block mb-1 text-sm">
@@ -408,8 +408,8 @@
       </fieldset>
 
       <!-- Documents Submitted -->
-      <fieldset class="border border-gray-300 p-4 mb-2 ml-10 mr-4 rounded-lg">
-        <legend class="text-base font-bold mb-2">DOCUMENTS SUBMITTED</legend>
+      <fieldset class="border border-blue-900  p-4 mb-2 mt-8  mr-8 ml-16 rounded-sm">
+        <legend class="text-base  bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">DOCUMENTS SUBMITTED</legend>
         <div class="grid grid-cols-1 gap-2">
           <div class="mb-2">
             <label class="block mb-1 text-sm font-semibold">Documents Submitted:</label>
@@ -522,7 +522,7 @@
       <!-- Submit Button -->
       <button
         type="submit"
-        class="bg-blue-900 text-white mb-2 px-8 py-1 ml-10 rounded-md text-sm"
+        class="bg-blue-900  text-gray-300 mb-2 mt-4 px-8 py-1 mr-8 ml-16 rounded-md text-sm"
       >
         Save
       </button>
@@ -544,6 +544,8 @@ import { ref } from 'vue';
 import axios from 'axios';
 import NotificationModal from '@/Components/NotificationModal.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
+
+
 
 const form = ref({
   client: {

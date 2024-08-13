@@ -1,12 +1,12 @@
 <template>
   <AppLayout>
     <template #header>
-      <!-- Add your header content here if needed -->
+      <h1 class="text-lg font-bold text-red-800">CICL Information</h1>
     </template>
 
     <div v-if="loading" class="text-center py-4">Loading client data...</div>
     <div v-else>
-      <div class="flex -mt-40 border-b">
+      <div class="flex -mt-40 ml-10 border-b">
         <button 
           v-for="(tab, index) in availableTabs" 
           :key="index" 

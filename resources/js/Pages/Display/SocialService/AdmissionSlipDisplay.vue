@@ -181,7 +181,7 @@
           <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
         </div>
         <div class="ml-4">
-          <img src="images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+          <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@
       <!-- Sidebar -->
       <nav
         :class="{
-          'w-48': !isSidebarCollapsed,
+          'w-52': !isSidebarCollapsed,
           'w-20': isSidebarCollapsed
         }"
         class="fixed bg-customBlue border-r border-gray-100 h-full z-40 transition-all duration-300"
@@ -67,15 +67,19 @@
             />
           </div> -->
           <!-- LOGO DSWD -->
-          <img src="/images/transparent.png" alt="Logo" class="mt-12 mb-4 h-20 w-48 relative z-10">
+          <img
+          :class="['p-6 mt-4 mb-4 relative z-10 transition-all duration-300', isSidebarCollapsed ? 'h-24 w-20' : 'h-28 w-60']"
+          src="/images/rrcy_dswd.png"
+          alt="Logo"
+        />
 
           <!-- Divider Line -->
           <div>
-            <hr class="mt-8 ml-2 mr-2 border-gray-700" />
+            <hr class="-mt-1 ml-2 mr-2 border-gray-700" />
           </div>
 
           <!-- Navigation Links -->
-          <div class="flex flex-col p-4 space-y-0 mt-8">
+          <div class="flex flex-col p-4 space-y-0 mt-2">
             <!-- Dashboard Link with Icon -->
             <div
               :class="{
@@ -256,7 +260,7 @@
   <header class="w-full py-2 bg-white border border-gray-500 px-24 sm:px-8 lg:px-16 flex items-center">
     <slot name="header" v-if="$slots.header"></slot>
 
-    <div class="ml-auto h-10 w-10">
+    <div class="ml-auto -mr-2 h-10 w-10">
       <div class="h-full w-full bg-white rounded-full overflow-hidden">
         <UserProfileImage
           :userImage="userImage"
@@ -265,17 +269,17 @@
       </div>
     </div>
 
-    <div class="flex flex-col items-center ml-2">
+    <div class="flex flex-col items-center -mr-2 mt-1/2 ml-2">
       <ApplicationMark
         :isSidebarCollapsed="isSidebarCollapsed"
         :userName="userName"
-        :userRole="userRole"
+        
         :userImage="userImage"
       />
     </div>
 
     <!-- Add the small dropdown icon to the right using SVG -->
-    <div class="ml-4">
+    <div class="ml-4 -mr-8 mt-1">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>

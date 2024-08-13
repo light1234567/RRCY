@@ -40,7 +40,7 @@
         </div>
 
         <div class="text-center mb-8">
-        <h1 class="text-[35px] font-bold">ADMISSION CONTRACT</h1>
+        <h1 class="text-2xl font-bold">ADMISSION CONTRACT</h1>
       </div>
 
         <div class="mb-8 text-justify">
@@ -230,11 +230,7 @@
           </div>
         </div>
       </div>
-   
-
-  
     
-
 </template>
 
 <script>

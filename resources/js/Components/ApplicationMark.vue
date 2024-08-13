@@ -1,15 +1,15 @@
 <template>
   <div class="relative">
     <!-- User Name and Role Section -->
-    <div v-if="!isSidebarCollapsed" class="text-center ml-2 truncate">
+    <div v-if="!isSidebarCollapsed" class="text-center ml-2 text-bold truncate">
       <div
         :class="{
           'text-[4px]': isSidebarCollapsed,
-          'text-[16px]': !isSidebarCollapsed,
+          'text-[14px]': !isSidebarCollapsed,
           'text-blue-500': isSidebarCollapsed,
           'text-gray-600': !isSidebarCollapsed
         }"
-        class="font-medium cursor-pointer -mb-1.5"
+        class="font-bold cursor-pointer -mb-1.5"
         @click="toggleDropdown"
       >
         {{ userName }}
