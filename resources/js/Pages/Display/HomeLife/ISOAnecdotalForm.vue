@@ -1,128 +1,191 @@
 <template>
-  <div class="mx-auto p-8 bg-gray-100 rounded-lg max-w-full">
-    <form @submit.prevent="submitForm" class="space-y-8 w-full">
-      <!-- Header -->
-      <div class="border border-gray-300 p-6 rounded-md bg-white">
-        <h1 class="font-bold text-lg mb-4">Anecdotal Report Form</h1>
-
-        <!-- Edit/Save Button -->
-        <div class="flex justify-end mb-4 mt-6">
-          <button
-            v-if="!editMode"
-            @click="toggleEdit"
-            type="button"
-            class="px-4 py-2 bg-blue-500 text-white rounded-md"
-          >
-            Edit
-          </button>
-          <button
-            v-else
-            @click="submitForm"
-            type="button"
-            class="px-4 py-2 bg-green-500 text-white rounded-md"
-          >
-            Save
-          </button>
-        </div>
-
-        <!-- Message -->
-        <div v-if="message" :class="`p-4 mt-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
-          {{ message }}
-        </div>
-
-        <!-- General Information -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-2">
-            <label for="name" class="block font-medium">Pangalan:</label>
-            <input type="text" id="name" v-model="form.name" readonly class="block w-full p-2 border border-gray-300 rounded-md">
-          </div>
-          <div class="space-y-2">
-            <label for="date" class="block font-medium">Date:</label>
-            <input 
-              type="date" 
-              id="date" 
-              v-model="form.date" 
-              class="block w-full p-2 border border-gray-300 rounded-md" 
-              :readonly="!editMode" 
-              ref="dateField"
-            >
-          </div>
-          <div class="space-y-2">
-            <label for="drn" class="block font-medium">DRN:</label>
-            <input type="text" id="drn" v-model="form.drn" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode">
-          </div>
-          <div class="space-y-2">
-            <label for="color" class="block font-medium">Color:</label>
-            <input type="text" id="color" v-model="form.color" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode">
-          </div>
-        </div>
-
-        <!-- Report Sections -->
-        <div class="space-y-4 mt-6">
-          <div class="space-y-2">
-            <label for="physical" class="block font-medium">I. Physical:</label>
-            <textarea id="physical" v-model="form.physical" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
-          </div>
-          <div class="space-y-2">
-            <label for="emotional" class="block font-medium">II. Emotional:</label>
-            <textarea id="emotional" v-model="form.emotional" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
-          </div>
-          <div class="space-y-2">
-            <label for="behavioral" class="block font-medium">III. Social/Behavioral:</label>
-            <textarea id="behavioral" v-model="form.behavioral" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
-          </div>
-          <div class="space-y-2">
-            <label for="spiritual" class="block font-medium">IV. Spiritual:</label>
-            <textarea id="spiritual" v-model="form.spiritual" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
-          </div>
-          <div class="space-y-2">
-            <label for="recommendation" class="block font-medium">V. Recommendation:</label>
-            <textarea id="recommendation" v-model="form.recommendation" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
-          </div>
-        </div>
- <!-- Signatures -->
- <div class="space-y-4 mt-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-2">
-              <label for="notedBy" class="block font-medium">Noted by:</label>
-              <input type="text" id="notedBy" v-model="form.noted_by" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode">
-            </div>
-            <div class="space-y-2">
-              <label for="approvedBy" class="block font-medium">Approved by:</label>
-              <input type="text" id="approvedBy" v-model="form.approved_by" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode">
-            </div>
-          </div>
-          <div class="space-y-2">
-            <label for="preparedBy" class="block font-medium">Prepared by:</label>
-            <input type="text" id="preparedBy" v-model="form.prepared_by" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode">
-          </div>
-        </div>
-        
-        <!-- Signature Fields -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          
-          <!-- House Parents Signature -->
-          <div class="space-y-2">
-            <div v-if="form.house_parents_signature" class="mb-2">
-              <!-- <img :src="form.house_parents_signature" alt="House Parents Signature" class="w-32 h-32 object-cover mx-auto"> -->
-            </div>
-            <!-- <input type="file" @change="onFileChange('house_parents_signature', $event)" :disabled="!editMode"> -->
-            <input type="text" id="houseParents" v-model="form.house_parents" class="block w-full p-2 border border-gray-300 rounded-md mt-2" :readonly="!editMode">
-            <p class="text-center">House Parents</p>
-          </div>
-
-          <!-- Residents Signature -->
-          <div class="space-y-2">
-            <div v-if="form.residents_signature" class="mb-2">
-              <!-- <img :src="form.residents_signature" alt="Residents Signature" class="w-32 h-32 object-cover mx-auto"> -->
-            </div>
-            <!-- <input type="file" @change="onFileChange('residents_signature', $event)" :disabled="!editMode"> -->
-            <input type="text" id="residents" v-model="form.residents" class="block w-full p-2 border border-gray-300 rounded-md mt-2" :readonly="!editMode">
-            <p class="text-center">Residents</p>
-          </div>
+  <div class="max-w-4xl mx-auto p-8 bg-white border border-gray-300 rounded-lg shadow-lg">
+    <!-- Header Section -->
+    <div class="text-center mb-8">
+      <div class="flex justify-between items-center mb-4">
+        <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-16" />
+        <div class="text-right">
+          <p class="font-semibold">PROTECTIVE SERVICES DIVISION</p>
+          <p>Regional Rehabilitation Center for Youth</p>
+          <p>Youth/RFO XI</p>
+          <p>DRN: ______________________</p>
         </div>
       </div>
-    </form>
+      <h1 class="font-bold text-xl">ANECDOTAL REPORT</h1>
+      <p>FOR THE MONTH OF ____________________</p>
+    </div>
+
+    <!-- General Information -->
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <div>
+        <label for="pangalan" class="block font-medium">Pangalan:</label>
+        <input
+          type="text"
+          id="pangalan"
+          v-model="form.name"
+          readonly
+          class="border border-gray-400 p-2 rounded-md w-full"
+        >
+      </div>
+      <div>
+        <label for="date" class="block font-medium">Date:</label>
+        <input
+          type="date"
+          id="date"
+          v-model="form.date"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          :readonly="!editMode"
+        >
+      </div>
+    </div>
+
+    <!-- Report Sections -->
+    <div class="space-y-4 mb-6">
+      <div>
+        <label for="physical" class="block font-medium">I. PHYSICAL:</label>
+        <textarea
+          id="physical"
+          v-model="form.physical"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          rows="3"
+          :readonly="!editMode"
+        ></textarea>
+        <p class="text-xs italic mt-2">Management of personal hygiene and improvement of self-care habits.</p>
+      </div>
+
+      <div>
+        <label for="emotional" class="block font-medium">II. EMOTIONAL:</label>
+        <textarea
+          id="emotional"
+          v-model="form.emotional"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          rows="3"
+          :readonly="!editMode"
+        ></textarea>
+        <p class="text-xs italic mt-2">The degree to which the resident displayed his coping capacity towards ill/guilty feelings and feelings of helplessness.</p>
+      </div>
+
+      <div>
+        <label for="behavioral" class="block font-medium">III. SOCIAL/BEHAVIORAL:</label>
+        <textarea
+          id="behavioral"
+          v-model="form.behavioral"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          rows="3"
+          :readonly="!editMode"
+        ></textarea>
+        <p class="text-xs italic mt-2">The level to which the resident demonstrated honesty, self-control, and a sense of responsibility.</p>
+      </div>
+
+      <div>
+        <label for="spiritual" class="block font-medium">IV. SPIRITUAL:</label>
+        <textarea
+          id="spiritual"
+          v-model="form.spiritual"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          rows="3"
+          :readonly="!editMode"
+        ></textarea>
+        <p class="text-xs italic mt-2">Attitude displayed towards the acceptance of the present situation.</p>
+      </div>
+
+      <div>
+        <label for="recommendation" class="block font-medium">V. RECOMMENDATION:</label>
+        <textarea
+          id="recommendation"
+          v-model="form.recommendation"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          rows="3"
+          :readonly="!editMode"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Signatures Section -->
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <div>
+        <label for="notedBy" class="block font-medium">Noted by:</label>
+        <input
+          type="text"
+          id="notedBy"
+          v-model="form.noted_by"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          :readonly="!editMode"
+        >
+        <p class="text-sm mt-1">VAN M. DE LEON</p>
+        <p class="text-sm">HP III/SHP</p>
+      </div>
+      <div>
+        <label for="approvedBy" class="block font-medium">Approved by:</label>
+        <input
+          type="text"
+          id="approvedBy"
+          v-model="form.approved_by"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          readonly
+        >
+        <p class="text-sm mt-1">ANGELIC B. PAÑA</p>
+        <p class="text-sm">SWO IV / Center Head</p>
+      </div>
+    </div>
+
+    <!-- Additional Signatures -->
+    <div class="grid grid-cols-2 gap-6 mb-6">
+      <div>
+        <label for="preparedBy" class="block font-medium">Prepared by:</label>
+        <input
+          type="text"
+          id="preparedBy"
+          v-model="form.prepared_by"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          :readonly="!editMode"
+        >
+      </div>
+      <div>
+        <label for="color" class="block font-medium">Color:</label>
+        <input
+          type="text"
+          id="color"
+          v-model="form.color"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          :readonly="!editMode"
+        >
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="text-center mt-8">
+      <p>PAGE 1 of 1</p>
+      <p class="text-xs">
+        DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000<br>
+        Website: <a href="https://www.dswd.gov.ph" class="text-blue-500 underline">https://www.dswd.gov.ph</a> | Tel No.: (082) 254-0230-08
+      </p>
+    </div>
+
+    <!-- Edit/Save Button -->
+    <div class="flex justify-end mt-8">
+      <button
+        v-if="!editMode"
+        @click="toggleEdit"
+        type="button"
+        class="px-4 py-2 bg-blue-500 text-white rounded-md"
+      >
+        Edit
+      </button>
+      <button
+        v-else
+        @click="submitForm"
+        type="button"
+        class="px-4 py-2 bg-green-500 text-white rounded-md"
+      >
+        Save
+      </button>
+    </div>
+
+    <!-- Message -->
+    <div v-if="message" :class="`p-4 mt-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
+      {{ message }}
+    </div>
   </div>
 </template>
 
@@ -136,6 +199,7 @@ export default {
   setup() {
     const form = ref({
       client_id: null,
+      name: '',
       date: '',
       drn: '',
       color: '',
@@ -144,13 +208,9 @@ export default {
       behavioral: '',
       spiritual: '',
       recommendation: '',
-      noted_by: '',
-      approved_by: '',
+      noted_by: 'VAN M. DE LEON',
+      approved_by: 'ANGELIC B. PAÑA',
       prepared_by: '',
-      house_parents: '',
-      house_parents_signature: null, // Signature image for House Parents
-      residents: '',
-      residents_signature: null, // Signature image for Residents
     });
 
     const editMode = ref(false);
@@ -165,9 +225,6 @@ export default {
           if (response.data.report) {
             Object.assign(form.value, response.data.report);
             form.value.client_id = clientId;
-            // Assign additional fields from client
-            const client = response.data.client;
-            form.value.name = `${client.first_name} ${client.last_name}`;
           } else {
             const { client } = response.data;
             form.value.client_id = client.id;
@@ -185,37 +242,19 @@ export default {
       editMode.value = true;
     };
 
-    const onFileChange = (field, event) => {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          form.value[field] = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-
     const submitForm = () => {
-      // Check if date is filled, if not, focus on date field
-      if (!form.value.date) {
-        document.getElementById('date').scrollIntoView({ behavior: 'smooth' });
-        document.getElementById('date').focus();
-        return;
-      }
-
       const url = `/api/anecdotal-reports/${form.value.client_id}`;
 
       axios.put(url, form.value)
         .then(response => {
           editMode.value = false;
-          message.value = 'Data saved successfully!';
+          message.value = 'Data updated successfully!';
           messageType.value = 'success';
           clearMessage();
           fetchData(); // Re-fetch data to update the form with the latest saved data
         })
         .catch(error => {
-          message.value = 'Failed to save data';
+          message.value = 'Failed to update data';
           messageType.value = 'error';
           clearMessage();
         });
@@ -234,9 +273,7 @@ export default {
       message,
       messageType,
       toggleEdit,
-      onFileChange,
       submitForm,
-      clearMessage,
     };
   },
 };
