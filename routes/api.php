@@ -22,6 +22,7 @@ use App\Http\Controllers\IncidentReportController;
 use App\Http\Controllers\MonthlyInventoryController;
 use App\Http\Controllers\CiclSessionController;
 use App\Http\Controllers\SwappingFormController;
+use App\Http\Controllers\RegisterController;
 
 // Existing Routes
 
@@ -163,4 +164,10 @@ Route::delete('/swapping-forms/{id}', [SwappingFormController::class, 'destroy']
 
 // User Role Routes
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
+
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [RegisterController::class, 'register']);
+
 ?>
+
+

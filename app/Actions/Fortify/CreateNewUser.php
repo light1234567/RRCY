@@ -23,7 +23,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
-            'role' => ['required', 'string', 'in:social services,psychological,court order,homelife services,nursing care,educational services,psd'],
+            'role' => ['required', 'string', 'in:social services,psychological,court order,homelife services,nursing care,educational services,psd,admin'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 

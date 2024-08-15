@@ -29,7 +29,7 @@
             <div class="text-center">
               <h2 class="mt-0 text-center font-bold text-lg md:text-xl text-gray-900 flex items-center justify-center">
                   <!-- Image placed before the text -->
-                  <img src="images/g.png" alt="RRCY Logo" class="h-14 w-22 mt-1 -mr-2 ml-2 -ml-10" />
+                  <img src="/images/g.png" alt="RRCY Logo" class="h-14 w-22 mt-1 -mr-2 ml-2 -ml-10" />
                   RRCY REGISTER
                 </h2>
             </div>
@@ -176,10 +176,10 @@ const submit = () => {
 }
 
 const images = [
-  'images/4.png',
-  'images/5.png',
-  'images/6.png',
-  'images/8.png',
+  '/images/4.png',
+  '/images/5.png',
+  '/images/6.png',
+  '/images/8.png',
 ];
 
 const currentImage1 = ref(images[0]);
