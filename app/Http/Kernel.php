@@ -44,6 +44,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         // Other middleware
         'check.admin' => \App\Http\Middleware\CheckAdminRole::class,
+        'send.email.otp' => \App\Http\Middleware\SendEmailOtpMiddleware::class,
     ];
 
     // Other configurations
