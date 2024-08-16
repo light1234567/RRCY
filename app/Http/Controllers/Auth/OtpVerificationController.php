@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use App\Mail\SendLoginOtp;
@@ -14,57 +14,43 @@ class OtpVerificationController extends Controller
 {
     public function showVerifyForm()
     {
-        // Render the OTP verification form using Inertia and Vue component
         return inertia('Auth/VerifyOtp');
     }
 
     public function verifyOtp(Request $request)
     {
         $request->validate(['otp' => 'required']);
-    
-        // Retrieve the OTP creation time from the session
+
         $otpCreatedAt = Session::get('login_otp_created_at');
-        $currentTime = now()->setTimezone('Asia/Manila');  // Ensure current time is in the correct timezone
+        $currentTime = now()->setTimezone('Asia/Manila');  
     
-        // Ensure the OTP creation time is in the correct timezone and format
         if ($otpCreatedAt) {
             $otpCreatedAt = \DateTime::createFromFormat('Y-m-d H:i:s', $otpCreatedAt, new \DateTimeZone('Asia/Manila'));
+        } else {
+            return response()->json(['message' => 'OTP creation time not found'], 400);
         }
     
-        // Calculate the difference in seconds between now and the OTP creation time
         $timeDifferenceInSeconds = $currentTime->getTimestamp() - $otpCreatedAt->getTimestamp();
         $timeDifferenceInMinutes = $timeDifferenceInSeconds / 60;
     
-        // Debugging output
-        \Log::info("OTP created at: " . $otpCreatedAt->format('Y-m-d H:i:s'));
-        \Log::info("Current time: " . $currentTime->format('Y-m-d H:i:s'));
-        \Log::info("Time difference in minutes: " . $timeDifferenceInMinutes);
-    
-        // Check if the OTP has expired
-        if (!$otpCreatedAt || $timeDifferenceInMinutes > 1) {
-            \Log::warning("OTP expired. Time difference: " . $timeDifferenceInMinutes);
-            return back()->withErrors(['otp' => 'The OTP has expired. Please request a new one.']);
+        if ($request->otp != Session::get('login_otp')) {
+            Log::warning('Invalid OTP entered', ['user_id' => Session::get('login_user_id'), 'entered_otp' => $request->otp]);
+            return response()->json(['message' => 'Invalid OTP'], 400);
         }
-    
-        // Check if the provided OTP matches the one stored in the session
-        if ($request->otp == Session::get('login_otp')) {
-            Auth::loginUsingId(Session::get('login_user_id'));
-    
-            // Clear the session data after successful login
-            Session::forget('login_otp');
-            Session::forget('login_otp_created_at');
-            Session::forget('login_user_id');
-    
-            \Log::info("OTP verified successfully. User logged in.");
-            return redirect()->intended('/dashboard');
-        }
-    
-        // If OTP is wrong, return an error
-        \Log::warning("Invalid OTP entered.");
-        return back()->withErrors(['otp' => 'Invalid OTP.']);
-    }
-    
 
+        if ($timeDifferenceInMinutes > 5) {  // Changed from 1 to 5
+            Log::warning('OTP expired', ['user_id' => Session::get('login_user_id'), 'time_difference' => $timeDifferenceInMinutes]);
+            return response()->json(['message' => 'OTP expired'], 400);
+        }
+
+        Auth::loginUsingId(Session::get('login_user_id'));
+
+        Session::forget('login_otp');
+        Session::forget('login_otp_created_at');
+        Session::forget('login_user_id');
+
+        return response()->json(['message' => 'OTP verified successfully'], 200);
+    }
     
     public function resendOtp(Request $request)
     {
@@ -72,20 +58,18 @@ class OtpVerificationController extends Controller
         $user = User::find($userId);
 
         if ($user) {
-            // Generate a new OTP and set new expiration time
             $otp = rand(100000, 999999);
-            $otpCreatedAt = now()->setTimezone('Asia/Manila');  // Store the time with the correct timezone
+            $otpCreatedAt = now()->setTimezone('Asia/Manila');
 
-            // Update the OTP and creation time in the session
             Session::put('login_otp', $otp);
             Session::put('login_otp_created_at', $otpCreatedAt);
 
-            // Send the OTP via email
             Mail::to($user->email)->send(new SendLoginOtp($otp));
+            Log::info('OTP resent', ['user_id' => $userId, 'otp' => $otp]);
 
-            return response()->json(['message' => 'OTP resent successfully!']);
+            return response()->json(['message' => 'OTP resent successfully'], 200);
         }
 
-        return response()->json(['message' => 'User not found.'], 404);
+        return response()->json(['message' => 'User not found'], 400);
     }
 }
