@@ -77,3 +77,6 @@ Route::post('/login', function (Request $request) {
         'email' => 'The provided credentials do not match our records.',
     ])->onlyInput('email');
 })->middleware(['guest'])->name('login');
+use App\Http\Controllers\RegisterController;
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [RegisterController::class, 'register']);

@@ -3,102 +3,111 @@
     <link rel="stylesheet" href="https://fonts.bunny.net/css?family=albert-sans:400">
   </Head>
   <div class="background-container">
-  <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat;">
-    <div class="flex items-center -mb-12 justify-center">
-  <img src="images/logo.png" class="h-44 w-70">
-</div>
-    <main class="flex-grow flex items-center justify-center p-4 md:p-6 lg:p-8">
-      <div class="w-full max-w-md p-6 mb-16 shadow-2xl rounded-md border-2 border-gray-300 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg flex flex-col items-center transform hover:translate-y-0 transition-transform duration-300">
-        <!-- Login Form -->
-        <div class="w-full space-y-4">
-          <div class="text-center">
-            <h2 class="mt-0 text-center font-bold text-lg md:text-xl text-white">
-             RRCY LOGIN
-            </h2>
-          </div>
-          <form class="mt-4 space-y-4" @submit.prevent="submit">
-            <div class="shadow-sm space-y-4">
-              <div>
-                <InputLabel for="email" value="Email" class="" />
-                <TextInput
-                  id="email"
-                  v-model="form.email"
-                  type="email"
-                  class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"               
-                  required
-                  autofocus
-                  autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-              </div>
-              <div>
-                <InputLabel for="password" value="Password" />
-                <TextInput
-                  id="password"
-                  v-model="form.password"
-                  type="password"
-                  class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                  autocomplete="current-password"
-                />
-                <InputError class="mt-2" :message="form.errors.password" />
-              </div>
-            </div>
-            <div class="flex items-center justify-between mt-2">
-              <div class="flex items-center justify-start mt-2">
-              <Link :href="route('register')" class="underline text-[12px] text-gray-200 hover:text-white focus:outline-none focus:ring-2 mb-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Don't have an account yet?
-              </Link>
-            </div>
-              <Link v-if="canResetPassword" :href="route('password.request')" class="ml-auto underline text-[12px]  text-gray-200 hover:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Forgot your password?
-              </Link>
-            </div>
-            <div class="flex items-center justify-end mt-2 pt-8">
-              <PrimaryButton type="submit" class="w-full flex justify-center -mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-customBlue hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Log in
-              </PrimaryButton>
-            </div>
-            
-          </form>
-        </div>
+    <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat;">
+      <div class="flex items-center -mb-12 justify-center">
+        <img src="images/logo.png" class="h-44 w-70">
       </div>
-    </main>
+      <main class="flex-grow flex items-center justify-center p-4 md:p-6 lg:p-8">
+        <div class="w-full max-w-md p-6 mb-16 shadow-2xl rounded-md border-2 border-gray-300 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg flex flex-col items-center transform hover:translate-y-0 transition-transform duration-300">
+          <!-- Login Form -->
+          <div class="w-full space-y-4">
+            <div class="text-center">
+              <h2 class="mt-0 text-center font-bold text-lg md:text-xl text-white">
+                RRCY LOGIN
+              </h2>
+            </div>
+            <form class="mt-4 space-y-4" @submit.prevent="submit">
+              <div class="shadow-sm space-y-4">
+                <div>
+                  <InputLabel for="email" value="Email" class="" />
+                  <TextInput
+                    id="email"
+                    v-model="form.email"
+                    type="email"
+                    class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"               
+                    required
+                    autofocus
+                    autocomplete="username"
+                  />
+                  <InputError class="mt-2" :message="form.errors.email" />
+                </div>
+                <div>
+                  <InputLabel for="password" value="Password" />
+                  <div class="relative">
+                    <TextInput
+                      id="password"
+                      v-model="form.password"
+                      :type="showPassword ? 'text' : 'password'"
+                      class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      required
+                      autocomplete="current-password"
+                    />
+                    <button type="button" @click="togglePasswordVisibility" class="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5">
+                      <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 4.5a7.5 7.5 0 00-7.92 6.49c.53.97 2.17 3.26 7.92 3.26 5.75 0 7.39-2.29 7.92-3.26a7.5 7.5 0 00-7.92-6.49zm0 8.5a3 3 0 110-6 3 3 0 010 6zm0-1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                      </svg>
+                      <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 3.5a7.5 7.5 0 00-7.92 6.49.5.5 0 000 .12.5.5 0 00.04.13.5.5 0 00.06.1c.05.08.11.16.18.23 1.48 1.72 4.37 3.26 7.92 3.26 3.55 0 6.44-1.54 7.92-3.26a5.32 5.32 0 00.18-.23.5.5 0 00.06-.1.5.5 0 00.04-.13.5.5 0 000-.12A7.5 7.5 0 0010 3.5zm0 1a6.5 6.5 0 016.42 5.55c-.53.97-2.17 3.26-7.92 3.26-5.75 0-7.39-2.29-7.92-3.26A6.5 6.5 0 0110 4.5zm0 7a2.5 2.5 0 110-5 2.5 2.5 0 010 5zm-3 2a3 3 0 00-3 3h12a3 3 0 00-3-3h-6z" clip-rule="evenodd"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <InputError class="mt-2" :message="form.errors.password" />
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-2">
+                <div class="flex items-center justify-start mt-2">
+                  <Link :href="route('register')" class="underline text-[12px] text-gray-200 hover:text-white focus:outline-none focus:ring-2 mb-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Don't have an account yet?
+                  </Link>
+                </div>
+                <Link v-if="canResetPassword" :href="route('password.request')" class="ml-auto underline text-[12px]  text-gray-200 hover:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  Forgot your password?
+                </Link>
+              </div>
+              <div class="flex items-center justify-end mt-2 pt-8">
+                <PrimaryButton type="submit" class="w-full flex justify-center -mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-customBlue hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                  Log in
+                </PrimaryButton>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
 
-    <div class="bg-gray-800 py-">
-      <div class="flex flex-wrap justify-between items-center mt-4 px-4 pb-1">
-        <!-- Facebook Link -->
-        <a href="#" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
-          <span class="sr-only">Facebook</span>
-          <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
-          </svg>
-          <span class="text-gray-300 hover:text-white text-xs">Regional Rehabilitation Center for Youth</span>
-        </a>
-        <!-- Copyright Text -->
-        <p class="text-base leading-6 text-gray-300 hover:text-white text-xs mb-2">
-          © All rights reserved.
-        </p>
-        <!-- Website Link -->
-        <a href="https://www.dswd.gov.ph/" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
-          <span class="sr-only">Website</span>
-          <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z" clip-rule="evenodd"></path>
-          </svg>
-          <span class="text-gray-300 hover:text-white text-xs ml-2">dswd.gov.ph</span>
-        </a>
-        <!-- Location Link -->
-        <a href="#" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
-          <span class="sr-only">Location</span>
-          <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm0 14.2c-1.58 0-2.88-1.29-2.88-2.88s1.29-2.88 2.88-2.88 2.88 1.29 2.88 2.88-1.29 2.88-2.88 2.88zM12 4.5c-3.92 0-7.1 3.18-7.1 7.1 0 3.35 3.3 7.88 7.1 11.4 3.79-3.52 7.1-8.05 7.1-11.4 0-3.92-3.18-7.1-7.1-7.1z" clip-rule="evenodd"></path>
-          </svg>
-          <span class="text-gray-300 hover:text-white text-xs">Purok 7, Bago Oshiro, Tugbok District, Davao City</span>
-        </a>
+      <div class="bg-gray-800 py-">
+        <div class="flex flex-wrap justify-between items-center mt-4 px-4 pb-1">
+          <!-- Facebook Link -->
+          <a href="#" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
+            <span class="sr-only">Facebook</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-gray-300 hover:text-white text-xs">Regional Rehabilitation Center for Youth</span>
+          </a>
+          <!-- Copyright Text -->
+          <p class="text-base leading-6 text-gray-300 hover:text-white text-xs mb-2">
+            © All rights reserved.
+          </p>
+          <!-- Website Link -->
+          <a href="https://www.dswd.gov.ph/" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
+            <span class="sr-only">Website</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-gray-300 hover:text-white text-xs ml-2">dswd.gov.ph</span>
+          </a>
+          <!-- Location Link -->
+          <a href="#" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
+            <span class="sr-only">Location</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm0 14.2c-1.58 0-2.88-1.29-2.88-2.88s1.29-2.88 2.88-2.88 2.88 1.29 2.88 2.88-1.29 2.88-2.88 2.88zM12 4.5c-3.92 0-7.1 3.18-7.1 7.1 0 3.35 3.3 7.88 7.1 11.4 3.79-3.52 7.1-8.05 7.1-11.4 0-3.92-3.18-7.1-7.1-7.1z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-gray-300 hover:text-white text-xs">Purok 7, Bago Oshiro, Tugbok District, Davao City</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script setup>
@@ -120,6 +129,12 @@ const form = useForm({
   password: '',
   remember: false,
 });
+
+const showPassword = ref(false);
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
 
 const submit = () => {
   form.post(route('login'), {
@@ -193,7 +208,5 @@ body, html {
   height: calc(100% - 100px); /* Adjust the height by the size of header and footer */
   box-sizing: border-box;
 }
-
-
 
 </style>
