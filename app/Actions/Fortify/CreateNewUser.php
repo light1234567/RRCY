@@ -20,7 +20,9 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'fname' => ['required', 'string', 'max:255'],
+            'lname' => ['required', 'string', 'max:255'],
+            'middlename' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
             'role' => ['required', 'string', 'in:social services,psychological,court order,homelife services,nursing care,educational services,psd,admin'],
@@ -28,10 +30,13 @@ class CreateNewUser implements CreatesNewUsers
         ])->validate();
 
         return User::create([
-            'name' => $input['name'],
+            'fname' => $input['fname'],
+            'lname' => $input['lname'],
+            'middlename' => $input['middlename'] ?? null,
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'role' => $input['role'], // Save the role to the database
+            'status' => 'unverified', // Set the default status as 'unverified'
         ]);
     }
 }

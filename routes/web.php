@@ -11,6 +11,7 @@ use App\Mail\SendLoginOtp;
 use App\Http\Controllers\Auth\OtpVerificationController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
+// Redirect root to login
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -53,6 +54,17 @@ Route::post('/login', function (Request $request) {
     if (Auth::attempt($credentials)) {
         $user = Auth::user();
 
+        // Check if the user's status is 'unverified'
+        if ($user->status === 'unverified') {
+            // Log out the user
+            Auth::logout();
+
+            // Redirect back with an error message
+            return back()->withErrors([
+                'email' => 'Your account is not verified. Please wait or contact your head for verification of your account.',
+            ])->onlyInput('email');
+        }
+
         // Generate a random OTP
         $otp = rand(100000, 999999);
         $otpCreatedAt = now(); // Get the current time
@@ -77,6 +89,8 @@ Route::post('/login', function (Request $request) {
         'email' => 'The provided credentials do not match our records.',
     ])->onlyInput('email');
 })->middleware(['guest'])->name('login');
+
+// Registration Routes
 use App\Http\Controllers\RegisterController;
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
