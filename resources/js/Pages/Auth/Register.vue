@@ -114,7 +114,7 @@
           </a>
           <!-- Copyright Text -->
           <p class="text-base leading-6 text-gray-300 hover:text-white text-xs mb-2">
-            © All rights reserved.
+            Â© All rights reserved.
           </p>
           <!-- Website Link -->
           <a href="https://www.dswd.gov.ph/" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
