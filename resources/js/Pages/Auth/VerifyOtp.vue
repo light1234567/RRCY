@@ -135,12 +135,16 @@ export default {
         this.modalMessage = response.data.message;
 
         if (response.status === 200) {
-          this.successModal = true; // Show success modal
-          // Wait for 2 seconds before redirecting to the dashboard
-          setTimeout(() => {
-            this.$inertia.visit('/dashboard'); // Redirect to the dashboard
-          }, 2000);
-        }
+        this.successModal = true; // Show success modal
+        // Wait for 2 seconds before redirecting to the dashboard
+        setTimeout(() => {
+          this.$inertia.visit('/dashboard', {
+            onFinish: () => {
+              window.location.reload(); // Refresh the page after redirection
+            },
+          }); 
+        }, 2000);
+      }
       } catch (error) {
         // Handle invalid or expired OTP errors
         if (error.response && (error.response.status === 400 || error.response.status === 422)) {

@@ -2,90 +2,70 @@
   <Head title="Log in">
     <link rel="stylesheet" href="https://fonts.bunny.net/css?family=albert-sans:400">
   </Head>
-
+  <div class="background-container">
   <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat;">
-    
-    <main class="flex-grow flex flex-col md:flex-row items-center justify-center p-4 md:p-6 lg:p-8 overflow-hidden">
-      <div class="flex w-full max-w-5xl flex-col md:flex-row">
+    <div class="flex items-center -mb-12 justify-center">
+  <img src="images/logo.png" class="h-44 w-70">
+</div>
+    <main class="flex-grow flex items-center justify-center p-4 md:p-6 lg:p-8">
+      <div class="w-full max-w-md p-6 mb-16 shadow-2xl rounded-md border-2 border-gray-300 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg flex flex-col items-center transform hover:translate-y-0 transition-transform duration-300">
         <!-- Login Form -->
-        <div class="w-full md:w-1/2 p-4 md:p-6 shadow-lg border-2 border-gray-300 bg-white flex-grow relative">
-          <div class="w-full space-y-4">
-            <div class="text-center">
-              <h2 class="mt-0 text-center font-bold text-lg md:text-xl text-gray-900 flex items-center justify-center">
-                  <!-- Image placed before the text -->
-                  <img src="images/g.png" alt="RRCY Logo" class="h-14 w-22 mt-1 -mr-2 -ml-10" />
-                  RRCY LOGIN
-                </h2>
+        <div class="w-full space-y-4">
+          <div class="text-center">
+            <h2 class="mt-0 text-center font-bold text-lg md:text-xl text-white">
+             RRCY LOGIN
+            </h2>
+          </div>
+          <form class="mt-4 space-y-4" @submit.prevent="submit">
+            <div class="shadow-sm space-y-4">
+              <div>
+                <InputLabel for="email" value="Email" class="" />
+                <TextInput
+                  id="email"
+                  v-model="form.email"
+                  type="email"
+                  class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"               
+                  required
+                  autofocus
+                  autocomplete="username"
+                />
+                <InputError class="mt-2" :message="form.errors.email" />
+              </div>
+              <div>
+                <InputLabel for="password" value="Password" />
+                <TextInput
+                  id="password"
+                  v-model="form.password"
+                  type="password"
+                  class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  required
+                  autocomplete="current-password"
+                />
+                <InputError class="mt-2" :message="form.errors.password" />
+              </div>
             </div>
-            <form class="mt-4 space-y-4" @submit.prevent="submit">
-              <div class="shadow-sm space-y-4">
-                <div>
-                  <InputLabel for="email" value="Email" />
-                  <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                  />
-                  <InputError class="mt-2" :message="form.errors.email" />
-                </div>
-                <div>
-                  <InputLabel for="password" value="Password" />
-                  <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="current-password"
-                  />
-                  <InputError class="mt-2" :message="form.errors.password" />
-                </div>
-              </div>
-              <div class="flex items-center justify-between mt-2">
-                <label class="flex items-center">
-                  <Checkbox v-model:checked="form.remember" name="remember" />
-                  <span class="ml-2 text-sm text-gray-600">Remember me</span>
-                </label>
-                <Link v-if="canResetPassword" :href="route('password.request')" class="ml-auto underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  Forgot your password?
-                </Link>
-              </div>
-              <div class="flex items-center justify-end mt-2 pt-8">
-                <PrimaryButton type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-customBlue hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                  Log in
-                </PrimaryButton>
-              </div>
+            <div class="flex items-center justify-between mt-2">
               <div class="flex items-center justify-start mt-2">
-                <Link :href="route('register')" class="underline text-xs text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  Don't have an account yet?
-                </Link>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- Image Box -->
-        <div class="w-full md:w-1/2 p-4 md:p-6 flex-grow relative">
-        <!-- Blue Overlay -->
-        <div class="absolute inset- z-10"></div>
-
-        <!-- Image Container -->
-        <div class="w-full h-full space-y-4 flex flex-col justify-between relative z-20">
-          <div class="w-full h-1/2 flex items-center justify-center custom-shadow border border-black">
-            <img :src="currentImage1" alt="Image 1" class="w-full h-full object-cover" />
-          </div>
-          <div class="w-full h-1/2 flex items-center justify-center custom-shadow border border-black">
-            <img :src="currentImage2" alt="Image 2" class="w-full h-full object-cover" />
-          </div>
+              <Link :href="route('register')" class="underline text-[12px] text-gray-200 hover:text-white focus:outline-none focus:ring-2 mb-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Don't have an account yet?
+              </Link>
+            </div>
+              <Link v-if="canResetPassword" :href="route('password.request')" class="ml-auto underline text-[12px]  text-gray-200 hover:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Forgot your password?
+              </Link>
+            </div>
+            <div class="flex items-center justify-end mt-2 pt-8">
+              <PrimaryButton type="submit" class="w-full flex justify-center -mt-4 py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-customBlue hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                Log in
+              </PrimaryButton>
+            </div>
+            
+          </form>
         </div>
       </div>
-    </div>
     </main>
-    <div class="bg-customBlue py-">
+
+    <div class="bg-gray-800 py-">
       <div class="flex flex-wrap justify-between items-center mt-4 px-4 pb-1">
         <!-- Facebook Link -->
         <a href="#" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
@@ -118,6 +98,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>
@@ -195,6 +176,24 @@ html, body {
   margin: 0;
 }
 .custom-shadow {
-  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5); /* Adjust the values to get the desired shadow effect */
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.5); 
 }
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.background-container {
+  background-image: url('/images/bg.png'); /* Replace with the path to your image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: calc(100% - 100px); /* Adjust the height by the size of header and footer */
+  box-sizing: border-box;
+}
+
+
+
 </style>
