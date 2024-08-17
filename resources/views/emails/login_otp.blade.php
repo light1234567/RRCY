@@ -6,8 +6,8 @@
 <body>
 
     <div style="text-align: left;">
-        <img src="https://logos-world.net/wp-content/uploads/2022/07/DSWD-Logo.png" alt="DSWD Logo" style="width: 250px; height: auto; display: inline-block; vertical-align: middle;">
-        <img src="https://labforall.bagongpilipinas.ph/wp-content/uploads/2023/06/Bagong-Pilipinas-Logo-e1717212149320-1920x1488.png" alt="Bagong Pilipinas Logo" style="width: 150px; height: auto; display: inline-block; vertical-align: middle;">
+    <img src='https://i.imgur.com/YVsL4gX.jpeg' alt='Logo' style='max-width: 300px; margin-bottom: 20px;' />
+
     </div>
 
     <h1>Your One-Time Password (OTP)</h1>
