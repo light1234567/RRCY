@@ -29,6 +29,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/new', function () {
         return Inertia::render('NewClient');
     })->name('new')->middleware(\App\Http\Middleware\CheckAdminRole::class);
+
+    Route::get('/user', function () {
+        return Inertia::render('User');
+    })->name('user');
     
     // Route for the main edit page with an id parameter
     Route::get('/maintab/{id}', function ($id) {

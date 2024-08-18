@@ -1,39 +1,39 @@
 <template>
-  <div class="max-w-4xl mx-auto p-8 bg-white border border-gray-300 rounded-lg shadow-lg">
+  <div class="max-w-3xl mx-auto p-16 bg-white border border-gray-300 rounded-lg shadow-lg">
     <!-- Header Section -->
     <div class="text-center mb-8">
       <div class="flex justify-between items-center mb-4">
-        <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-16" />
+        <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-24 w-48 -mt-16 relative z-10" />
         <div class="text-right">
-          <p class="font-semibold">PROTECTIVE SERVICES DIVISION</p>
-          <p>Regional Rehabilitation Center for Youth</p>
-          <p>Youth/RFO XI</p>
-          <p>DRN: ______________________</p>
+          <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
+          <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
+          <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
+          <p class="pt-12">DRN: ______________________</p>
         </div>
       </div>
-      <h1 class="font-bold text-xl">ANECDOTAL REPORT</h1>
-      <p>FOR THE MONTH OF ____________________</p>
+      <h1 class="font-bold text-md">ANECDOTAL REPORT</h1>
+      <p class="text-sm">FOR THE MONTH OF ____________________</p>
     </div>
 
     <!-- General Information -->
     <div class="grid grid-cols-2 gap-6 mb-6">
-      <div>
-        <label for="pangalan" class="block font-medium">Pangalan:</label>
+      <div class="flex items-center">
+        <label for="pangalan" class="block font-medium w-1/3">Pangalan:</label>
         <input
           type="text"
           id="pangalan"
           v-model="form.name"
           readonly
-          class="border border-gray-400 p-2 rounded-md w-full"
+          class="border-transparent -ml-4 p-2 rounded-md w-2/3"
         >
       </div>
-      <div>
-        <label for="date" class="block font-medium">Date:</label>
+      <div class="flex items-center">
+        <label for="date" class="block ml-16 font-medium w-1/3">Petsa:</label>
         <input
           type="date"
           id="date"
           v-model="form.date"
-          class="border border-gray-400 p-2 rounded-md w-full"
+          class="border-transparent -ml-8 p-2 rounded-md w-2/3"
           :readonly="!editMode"
         >
       </div>
@@ -42,7 +42,10 @@
     <!-- Report Sections -->
     <div class="space-y-4 mb-6">
       <div>
-        <label for="physical" class="block font-medium">I. PHYSICAL:</label>
+        <label for="physical" class="block font-medium">
+          <span class="font-bold text-sm">I. PHYSICAL :</span> 
+          <span class="font-normal text-sm"> Management of personal hygiene and improvement of self-care habits.</span>
+        </label>
         <textarea
           id="physical"
           v-model="form.physical"
@@ -50,11 +53,14 @@
           rows="3"
           :readonly="!editMode"
         ></textarea>
-        <p class="text-xs italic mt-2">Management of personal hygiene and improvement of self-care habits.</p>
       </div>
 
       <div>
-        <label for="emotional" class="block font-medium">II. EMOTIONAL:</label>
+        <label for="emotional" class="block font-medium">
+          <span class="font-bold text-sm">II. EMOTIONAL :</span> 
+          <span class="font-normal text-sm justify-text"> The degree to which the resident displayed his coping capacity towards ill/guilty feelings and feelings of helplessness.</span>
+        </label>
+       
         <textarea
           id="emotional"
           v-model="form.emotional"
@@ -62,11 +68,13 @@
           rows="3"
           :readonly="!editMode"
         ></textarea>
-        <p class="text-xs italic mt-2">The degree to which the resident displayed his coping capacity towards ill/guilty feelings and feelings of helplessness.</p>
       </div>
 
       <div>
-        <label for="behavioral" class="block font-medium">III. SOCIAL/BEHAVIORAL:</label>
+        <label for="behavioral" class="block font-medium">
+          <span class="font-bold text-sm">III. SOCIAL/BEHAVIORAL :</span> 
+          <span class="font-normal text-sm justify-text"> The level to which the resident demonstrated honesty, self-control, and a sense of responsibility.</span>
+        </label>
         <textarea
           id="behavioral"
           v-model="form.behavioral"
@@ -74,11 +82,13 @@
           rows="3"
           :readonly="!editMode"
         ></textarea>
-        <p class="text-xs italic mt-2">The level to which the resident demonstrated honesty, self-control, and a sense of responsibility.</p>
       </div>
 
       <div>
-        <label for="spiritual" class="block font-medium">IV. SPIRITUAL:</label>
+        <label for="spiritual" class="block font-medium">
+          <span class="font-bold text-sm">IV. SPIRITUAL :</span> 
+          <span class="font-normal text-sm justify-text"> Attitude displayed towards the acceptance of the present situation.</span>
+        </label>
         <textarea
           id="spiritual"
           v-model="form.spiritual"
@@ -86,7 +96,6 @@
           rows="3"
           :readonly="!editMode"
         ></textarea>
-        <p class="text-xs italic mt-2">Attitude displayed towards the acceptance of the present situation.</p>
       </div>
 
       <div>

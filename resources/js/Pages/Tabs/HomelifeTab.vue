@@ -2,23 +2,26 @@
   <div>
     <div v-if="loading" class="text-center py-4">Loading client data...</div>
     <div v-else>
-      <div class="border-b p-4 bg-gray-100">
-        <ul class="flex border-b overflow-x-auto whitespace-nowrap">
-          <li 
-            v-for="(tab, index) in tabs" 
-            :key="index" 
-            @click="currentTab = tab"
-            class="cursor-pointer"
+      <!-- Dropdown for selecting a form -->
+      <div class="flex flex-col justify-center items-center w-full mb-4">
+        <h1 class="mt-8 text-customBlue mb-1 text-lg italic">Select a Form:</h1>
+        <div class="relative w-1/4">
+          <select 
+            v-model="currentTab" 
+            class="block w-full py-2 text-md border rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
-            <a :class="[
-              'inline-block py-1 px-2 text-xs font-semibold rounded-t-lg transition-colors duration-300',
-              currentTab === tab ? 'bg-white text-blue-700 border-t border-l border-r -mb-px' : 'text-gray-500 hover:text-blue-700'
-            ]">
+            <option 
+              v-for="(tab, index) in tabs" 
+              :key="index" 
+              :value="tab"
+            >
               {{ tab }}
-            </a>
-          </li>
-        </ul>
+            </option>
+          </select>
+        </div>
       </div>
+
+      <!-- Display content based on selected tab -->
       <div class="p-4">
         <div v-if="currentTab === 'ISO Anecdotal Form'"><ISOAnecdotalForm/></div>
         <div v-if="currentTab === 'ISO Incident Form'"><ISOIncidentForm/></div>
@@ -47,5 +50,11 @@ const tabs = ref([
 ]);
 
 const currentTab = ref('ISO Anecdotal Form'); // Default tab value
-const loading = ref(false); // Set default to false as loading is not used
+const loading = ref(false);
 </script>
+
+<style scoped>
+.text-customBlue {
+  color: #1c3d5a; /* Adjust this to your custom blue color */
+}
+</style>

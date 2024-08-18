@@ -207,6 +207,48 @@
               </NavLink>
             </div>
 
+            <!-- User Link with Icon -->
+              <div
+                :class="{
+                  'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
+                  'w-full h-auto': !isSidebarCollapsed
+                }"
+                class="flex items-center justify-between mb-20 max-w-lg p-2 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
+              >
+                <NavLink
+                  :href="route('user')"
+                  :active="route().current('user')"
+                  class="flex items-center space-x-4 w-full transition duration-150 ease-in-out"
+                >
+                  <!-- User Icon -->
+                  <svg
+                    :class="{
+                      'w-6 h-6': !isSidebarCollapsed,
+                      'w-5 h-5': isSidebarCollapsed
+                    }"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4.5a4.5 4.5 0 100 9 4.5 4.5 0 100-9zm0 12a9 9 0 00-9 9h18a9 9 0 00-9-9z"
+                    />
+                  </svg>
+                  <span
+                    :class="{
+                      'hidden': isSidebarCollapsed,
+                      'block': !isSidebarCollapsed
+                    }"
+                    class="transition-opacity duration-300 text-white"
+                  >
+                    User
+                  </span>
+                </NavLink>
+              </div>
+
             <!-- Divider Line -->
             <div>
               <hr class="mt-8 ml-2 mr-2 border-gray-700" />
