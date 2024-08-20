@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col justify-center items-center min-h-screen">
     <div class="flex flex-col justify-center items-center w-full">
-      <h1 class="mt-8 text-customBlue mb-1 text-lg italic">Select a Form:</h1>
+      <h1 class="mt-2 text-customBlue mb-1 text-lg italic">Select a Form:</h1>
       <div class="relative w-1/4">
         <select 
           v-model="currentTab" 

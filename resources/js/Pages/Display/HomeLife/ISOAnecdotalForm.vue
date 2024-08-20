@@ -1,5 +1,38 @@
 <template>
-  <div class="max-w-3xl mx-auto p-16 bg-white border border-gray-300 rounded-lg shadow-lg">
+
+   <!-- Tabs for Actions -->
+    <div v-if="editMode" class="flex absolute p-6 -mt-2 space-x-4">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span class="">Back</span>
+      </button>
+      </div>
+
+    <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-2">
+        <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
+        </svg>
+        <span>Edit</span>
+      </button>
+
+      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Save</span>
+      </button>
+    </div>
+
+  <div class="max-w-3xl mx-auto mt-12 p-16 bg-white border border-gray-300 rounded-lg shadow-lg">
     <!-- Header Section -->
     <div class="text-center mb-8">
       <div class="flex justify-between items-center mb-4">
@@ -110,101 +143,166 @@
       </div>
     </div>
 
-    <!-- Signatures Section -->
-    <div class="grid grid-cols-2 gap-6 mb-6">
-      <div>
-        <label for="notedBy" class="block font-medium">Noted by:</label>
-        <input
-          type="text"
-          id="notedBy"
-          v-model="form.noted_by"
-          class="border border-gray-400 p-2 rounded-md w-full"
-          :readonly="!editMode"
-        >
-        <p class="text-sm mt-1">VAN M. DE LEON</p>
-        <p class="text-sm">HP III/SHP</p>
-      </div>
-      <div>
-        <label for="approvedBy" class="block font-medium">Approved by:</label>
-        <input
-          type="text"
-          id="approvedBy"
-          v-model="form.approved_by"
-          class="border border-gray-400 p-2 rounded-md w-full"
-          readonly
-        >
-        <p class="text-sm mt-1">ANGELIC B. PAÑA</p>
-        <p class="text-sm">SWO IV / Center Head</p>
-      </div>
-    </div>
-
-    <!-- Additional Signatures -->
-    <div class="grid grid-cols-2 gap-6 mb-6">
-      <div>
-        <label for="preparedBy" class="block font-medium">Prepared by:</label>
-        <input
-          type="text"
-          id="preparedBy"
-          v-model="form.prepared_by"
-          class="border border-gray-400 p-2 rounded-md w-full"
-          :readonly="!editMode"
-        >
-      </div>
-      <div>
-        <label for="color" class="block font-medium">Color:</label>
+    <!-- Color and Prepared by -->
+    <div class="mb-6 ">
+      <!-- Color Field -->
+      <div class="flex items-center mb-4">
+        <label for="color" class="block text-sm font-medium mr-4">Color:</label>
         <input
           type="text"
           id="color"
           v-model="form.color"
-          class="border border-gray-400 p-2 rounded-md w-full"
+          class=" w-1/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none p-0 shadow-sm"
           :readonly="!editMode"
         >
+      </div>
+      </div>
+      <!-- Prepared by Field -->
+     <!-- Name and Signature of Houseparent -->
+     <div class="mb-6 flex justify-between items-center">
+      <div class="w-1/2 mr-12">
+        <label for="preparedBy" class="block text-sm font-medium">Prepared by:</label>
+        <div class="flex items-center">
+          <input
+            type="text"
+            id="preparedBy"
+            v-model="form.prepared_by"
+            class="mt-1 w-3/4 border-b-2  border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+            :readonly="!editMode"
+          >
+        </div>
+        <p class="text-sm mt-2">Name and Signature of Houseparent</p>
+      </div>
+
+      <!-- Name and Signature of Residents -->
+      <div class="w-1/2">
+        <label for="signatureResidents" class="block font-medium invisible">Prepared by:</label>
+        <div class="flex items-center">
+          <input
+            type="text"
+            id="signatureResidents"
+            v-model="form.signature_residents"
+            class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+            :readonly="!editMode"
+          >
+        </div>
+        <p class="text-sm mt-2">Name & Signature of Residents</p>
+      </div>
+    </div>
+
+      <!-- Noted by and Approved by -->
+    <div class="mb-6 flex justify-between items-start">
+      <!-- Noted by Section -->
+      <div class="w-1/2 mr-12">
+        <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
+        <input
+          type="text"
+          id="notedBy"
+          v-model="form.noted_by"
+          class="mt-1 w-3/4 border-b-2 text-sm border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+          :readonly="!editMode"
+        >
+        <p class="text-sm">HP III/SHP</p>
+      </div>
+
+      <!-- Approved by Section -->
+      <div class="w-1/2">
+        <label for="approvedBy" class="block text-sm font-medium">Approved by:</label>
+        <input
+          type="text"
+          id="approvedBy"
+          v-model="form.approved_by"
+          class="mt-1 w-3/4 border-b-2 border-black text-sm border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+          readonly
+        >
+        <p class="text-sm">SWO IV / Center Head</p>
       </div>
     </div>
 
     <!-- Footer Section -->
-    <div class="text-center mt-8">
-      <p>PAGE 1 of 1</p>
-      <p class="text-xs">
-        DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000<br>
-        Website: <a href="https://www.dswd.gov.ph" class="text-blue-500 underline">https://www.dswd.gov.ph</a> | Tel No.: (082) 254-0230-08
-      </p>
+    <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+      <div class="flex justify-between items-center">
+        <div class="flex flex-col">
+          <p class="ml-24 -mb-4 font-bold">PAGE 1 of 1</p>
+          <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+        </div>
+        <div class="ml-4">
+          <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+        </div>
+      </div>
     </div>
 
-    <!-- Edit/Save Button -->
-    <div class="flex justify-end mt-8">
-      <button
-        v-if="!editMode"
-        @click="toggleEdit"
-        type="button"
-        class="px-4 py-2 bg-blue-500 text-white rounded-md"
-      >
-        Edit
-      </button>
-      <button
-        v-else
-        @click="submitForm"
-        type="button"
-        class="px-4 py-2 bg-green-500 text-white rounded-md"
-      >
-        Save
-      </button>
+  
+    <!-- Modal for Save Confirmation -->
+    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6">
+          <div class="flex items-center">
+            <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+            </svg>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+          </div>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+          <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+        </div>
+      </div>
     </div>
 
-    <!-- Message -->
-    <div v-if="message" :class="`p-4 mt-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
-      {{ message }}
+    <!-- Modal for Save Result -->
+    <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6 text-center">
+          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </div>
+          </div>
+          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+            OK
+          </button>
+        </div>
+      </div>
     </div>
+    
+
+
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import Pagination from '@/Components/Pagination.vue';
 
 export default {
   name: 'AnecdotalReportForm',
+  components: {
+    Pagination,
+  },
   setup() {
     const form = ref({
       client_id: null,
@@ -222,10 +320,18 @@ export default {
       prepared_by: '',
     });
 
+    const originalForm = ref(null); // To store the original form data
     const editMode = ref(false);
     const message = ref('');
     const messageType = ref(''); // 'success' or 'error'
+    const isModalOpen = ref(false);
+    const isSaveResultModalOpen = ref(false);
+    const saveResultTitle = ref('');
+    const saveResultMessage = ref('');
     const route = useRoute();
+
+    const currentPage = ref(1);
+    const totalPages = ref(1);
 
     const fetchData = () => {
       const clientId = route.params.id;
@@ -234,10 +340,12 @@ export default {
           if (response.data.report) {
             Object.assign(form.value, response.data.report);
             form.value.client_id = clientId;
+            originalForm.value = JSON.parse(JSON.stringify(form.value)); // Store the original form data
           } else {
             const { client } = response.data;
             form.value.client_id = client.id;
             form.value.name = `${client.first_name} ${client.last_name}`;
+            originalForm.value = JSON.parse(JSON.stringify(form.value)); // Store the original form data
           }
         }).catch(error => {
           console.error('Error fetching data:', error);
@@ -248,7 +356,33 @@ export default {
     onMounted(fetchData);
 
     const toggleEdit = () => {
-      editMode.value = true;
+      if (editMode.value) {
+        openModal();
+      } else {
+        editMode.value = true;
+        originalForm.value = JSON.parse(JSON.stringify(form.value)); // Store the original form data before editing
+      }
+    };
+
+    const openModal = () => {
+      isModalOpen.value = true;
+    };
+
+    const closeModal = () => {
+      isModalOpen.value = false;
+    };
+
+    const confirmSave = () => {
+      submitForm();
+      closeModal();
+    };
+
+    const cancelEdit = () => {
+      if (originalForm.value) {
+        // Revert to the original data
+        form.value = JSON.parse(JSON.stringify(originalForm.value));
+      }
+      editMode.value = false; // Exit edit mode
     };
 
     const submitForm = () => {
@@ -259,12 +393,18 @@ export default {
           editMode.value = false;
           message.value = 'Data updated successfully!';
           messageType.value = 'success';
+          saveResultTitle.value = 'Success';
+          saveResultMessage.value = 'Data saved successfully.';
+          isSaveResultModalOpen.value = true;
           clearMessage();
           fetchData(); // Re-fetch data to update the form with the latest saved data
         })
         .catch(error => {
           message.value = 'Failed to update data';
           messageType.value = 'error';
+          saveResultTitle.value = 'Error';
+          saveResultMessage.value = error.response?.data?.message || 'Error saving data.';
+          isSaveResultModalOpen.value = true;
           clearMessage();
         });
     };
@@ -276,6 +416,17 @@ export default {
       }, 3000);
     };
 
+    const closeSaveResultModal = () => {
+      isSaveResultModalOpen.value = false;
+      saveResultTitle.value = '';
+      saveResultMessage.value = '';
+    };
+
+    const updatePage = (newPage) => {
+      currentPage.value = newPage;
+      // Add logic to fetch data or change content based on the page
+    };
+
     return {
       form,
       editMode,
@@ -283,11 +434,19 @@ export default {
       messageType,
       toggleEdit,
       submitForm,
+      isModalOpen,
+      openModal,
+      closeModal,
+      confirmSave,
+      currentPage,
+      totalPages,
+      isSaveResultModalOpen,
+      saveResultTitle,
+      saveResultMessage,
+      closeSaveResultModal,
+      cancelEdit,
+      updatePage,
     };
   },
 };
 </script>
-
-<style scoped>
-/* Add your custom styles here */
-</style>
