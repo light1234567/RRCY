@@ -58,7 +58,7 @@ const currentTab = ref(''); // Set to an empty string initially
 const user = ref({ role: '' }); // Role will be set dynamically
 
 const availableTabs = computed(() => {
-  if (user.value.role === 'social services') {
+  if (user.value.role === 'social services' || user.value.role === 'admin') {
     return tabs.value;
   }
   switch (user.value.role) {
@@ -78,8 +78,10 @@ const availableTabs = computed(() => {
       return [];
   }
 });
+
 const roleToTab = {
   'social services': 'Social Service',
+  'admin': 'Social Service',
   'psychological': 'Psychological Reports',
   'court order': 'Court Order',
   'homelife services': 'Homelife Services',

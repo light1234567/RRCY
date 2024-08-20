@@ -21,12 +21,27 @@ class CreateAdmissionsTable extends Migration
             $table->string('general_impression');
             $table->timestamps();
 
-            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            // Foreign key definition
+            $table->foreign('client_id')
+                  ->references('id')
+                  ->on('clients')
+                  ->onDelete('cascade');
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('admissions');
+        // Check if the 'admissions' table exists before trying to drop the foreign key
+        if (Schema::hasTable('admissions')) {
+            Schema::table('admissions', function (Blueprint $table) {
+                // Drop the foreign key constraint if it exists
+                if (Schema::hasColumn('admissions', 'client_id')) {
+                    $table->dropForeign(['client_id']);
+                }
+            });
+
+            // Then drop the 'admissions' table
+            Schema::dropIfExists('admissions');
+        }
     }
 }

@@ -165,7 +165,12 @@ Route::delete('/swapping-forms/{id}', [SwappingFormController::class, 'destroy']
 // User Role Routes
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
 
+use App\Http\Controllers\AdminController;
 
+Route::get('/users', [AdminController::class, 'index']);
+Route::get('/users/{id}', [AdminController::class, 'show']);
+Route::delete('/users/{id}', [AdminController::class, 'destroy']);
+Route::patch('/users/{id}/verify', [AdminController::class, 'verify']);
 
 ?>
 
