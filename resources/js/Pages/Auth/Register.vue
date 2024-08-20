@@ -16,191 +16,143 @@
               </h2>
             </div>
             <form class="mt-4 space-y-4" @submit.prevent="submit">
-      <div class="shadow-sm space-y-4">
-        <div class="flex flex-col md:flex-row md:space-x-4">
-          <div class="flex-1">
-            <InputLabel for="fname" value="First Name" />
-            <TextInput
-              id="fname"
-              v-model="form.fname"
-              type="text"
-              class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              required
-              autofocus
-              autocomplete="given-name"
-            />
-            <InputError class="mt-1" :message="form.errors.fname" />
-          </div>
-          <div class="flex-1">
-            <InputLabel for="lname" value="Last Name" />
-            <TextInput
-              id="lname"
-              v-model="form.lname"
-              type="text"
-              class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              required
-              autocomplete="family-name"
-            />
-            <InputError class="mt-1" :message="form.errors.lname" />
-          </div>
-          <div class="w-1/6">
-            <InputLabel for="middlename" value="(M. I.)" />
-            <TextInput
-              id="middlename"
-              v-model="form.middlename"
-              type="text"
-              class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              maxlength="1"
-              autocomplete="additional-name"
-            />
-            <InputError class="mt-1" :message="form.errors.middlename" />
-          </div>
-        </div>
+              <div class="shadow-sm space-y-4">
+                <div class="flex flex-col md:flex-row md:space-x-4">
+                  <div class="flex-1">
+                    <InputLabel for="fname" value="First Name" />
+                    <TextInput
+                      id="fname"
+                      v-model="form.fname"
+                      type="text"
+                      class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      required
+                      autofocus
+                      autocomplete="given-name"
+                    />
+                    <InputError class="mt-1" :message="form.errors.fname" />
+                  </div>
+                  <div class="flex-1">
+                    <InputLabel for="lname" value="Last Name" />
+                    <TextInput
+                      id="lname"
+                      v-model="form.lname"
+                      type="text"
+                      class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      required
+                      autocomplete="family-name"
+                    />
+                    <InputError class="mt-1" :message="form.errors.lname" />
+                  </div>
+                  <div class="w-1/6">
+                    <InputLabel for="middlename" value="(M. I.)" />
+                    <TextInput
+                      id="middlename"
+                      v-model="form.middlename"
+                      type="text"
+                      class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      maxlength="1"
+                      autocomplete="additional-name"
+                    />
+                    <InputError class="mt-1" :message="form.errors.middlename" />
+                  </div>
+                </div>
 
-        <div>
-          <InputLabel for="email" value="Email" />
-          <TextInput
-            id="email"
-            v-model="form.email"
-            type="email"
-            class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            required
-            autocomplete="username"
-          />
-          <InputError class="mt-1" :message="form.errors.email" />
-        </div>
-        <div>
-          <InputLabel for="password" value="Password" />
-          <div class="relative">
-            <TextInput
-              id="password"
-              v-model="form.password"
-              :type="showPassword ? 'text' : 'password'"
-              class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              required
-              autocomplete="new-password"
-            />
-            <button
-  type="button"
-  @click="togglePasswordVisibility('password')"
-  class="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5"
->
-  <!-- New Show Password Icon -->
-  <svg
-    v-if="showPassword === 'password'"
-    xmlns="http://www.w3.org/2000/svg"
-    class="h-5 w-5 text-gray-500"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
-    <path
-      d="M1 10C1 10 4 4 10 4s9 6 9 6-3 6-9 6-9-6-9-6Zm9 4a4 4 0 100-8 4 4 0 000 8Z"
-    />
-  </svg>
-  
-  <!-- Hide Password Icon -->
-  <svg
-    v-else
-    xmlns="http://www.w3.org/2000/svg"
-    class="h-5 w-5 text-gray-500"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M13.875 18.825A10.05 10.05 0 0110 19.5c-5.216 0-9.362-3.95-9.87-4.465a1.998 1.998 0 010-2.83C.638 11.45 4.784 7.5 10 7.5c1.4 0 2.727.266 3.875.75M15 13a3 3 0 11-6 0 3 3 0 016 0zm4.13 8.49l-4.27-4.27M4.03 4.03l16.97 16.97"
-    />
-  </svg>
-</button>
-          </div>
-          <InputError class="mt-1" :message="form.errors.password" />
-        </div>
-        <div>
-      <InputLabel for="password_confirmation" value="Confirm Password" />
-      <div class="relative">
-        <TextInput
-          id="password_confirmation"
-          v-model="form.password_confirmation"
-          :type="showPasswordConfirmation ? 'text' : 'password'"
-          class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          required
-          autocomplete="new-password"
-        />
-        <button
-          type="button"
-          @click="togglePasswordVisibility('password_confirmation')"
-          class="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5"
-        >
-          <svg
-            v-if="showPasswordConfirmation === 'password_confirmation'"
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-gray-500"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              d="M10 4.5a7.5 7.5 0 00-7.92 6.49c.53.97 2.17 3.26 7.92 3.26 5.75 0 7.39-2.29 7.92-3.26a7.5 7.5 0 00-7.92-6.49zm0 8.5a3 3 0 110-6 3 3 0 010 6zm0-1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"
-            />
-          </svg>
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-gray-500"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M10 3.5a7.5 7.5 0 00-7.92 6.49.5.5 0 000 .12.5.5 0 00.04.13.5.5 0 00.06.1c.05.08.11.16.18.23 1.48 1.72 4.37 3.26 7.92 3.26 3.55 0 6.44-1.54 7.92-3.26a5.32 5.32 0 00.18-.23.5.5 0 00.06-.1.5.5 0 00.04-.13.5.5 0 000-.12A7.5 7.5 0 0010 3.5zm0 1a6.5 6.5 0 016.42 5.55c-.53.97-2.17 3.26-7.92 3.26-5.75 0-7.39-2.29-7.92-3.26A6.5 6.5 0 0110 4.5zm0 7a2.5 2.5 0 110-5 2.5 2.5 0 010 5zm-3 2a3 3 0 00-3 3h12a3 3 0 00-3-3h-6z"
-              clip-rule="evenodd"
-            />
-          </svg>
-        </button>
-      </div>
-      <InputError class="mt-1" :message="form.errors.password_confirmation" />
-    </div>
-    <div>
-      <InputLabel for="role" value="Role" />
-      <select
-        id="role"
-        v-model="form.role"
-        class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white bg-opacity-50 backdrop-filter backdrop-blur-md"
-        required
-      >
-        <option value=""></option>
-        <option value="social services">Social Services</option>
-        <option value="psychological">Psychological</option>
-        <option value="court order">Court Order</option>
-        <option value="homelife services">Homelife Services</option>
-        <option value="nursing care">Nursing Care</option>
-        <option value="educational services">Educational Services</option>
-        <option value="psd">PSD</option>
-      </select>
-      <InputError class="mt-1" :message="form.errors.role" />
-    </div>
-  </div>
-  <div class="flex items-center justify-end mt-2">
-    <PrimaryButton
-      class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-customBlue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      :class="{ 'opacity-25': form.processing }"
-      :disabled="form.processing"
-    >
-      Register
-    </PrimaryButton>
-  </div>
-  <div class="flex items-center justify-start mt-2">
-    <Link
-      :href="route('login')"
-      class="underline text-xs text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-    >
-      Already have an account?
-    </Link>
-  </div>
-</form>
-
+                <div>
+                  <InputLabel for="email" value="Email" />
+                  <TextInput
+                    id="email"
+                    v-model="form.email"
+                    type="email"
+                    class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                    autocomplete="username"
+                  />
+                  <InputError class="mt-1" :message="form.errors.email" />
+                </div>
+                <div>
+                  <InputLabel for="password" value="Password" />
+                  <div class="relative">
+                    <TextInput
+                      id="password"
+                      v-model="form.password"
+                      :type="showPassword ? 'text' : 'password'"
+                      class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      required
+                      autocomplete="new-password"
+                    />
+                    <button type="button" @click="togglePasswordVisibility('password')" class="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5">
+                      <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 4.5a7.5 7.5 0 00-7.92 6.49c.53.97 2.17 3.26 7.92 3.26 5.75 0 7.39-2.29 7.92-3.26a7.5 7.5 0 00-7.92-6.49zm0 8.5a3 3 0 110-6 3 3 0 010 6zm0-1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <InputError class="mt-1" :message="form.errors.password" />
+                </div>
+                <div>
+                  <InputLabel for="password_confirmation" value="Confirm Password" />
+                  <div class="relative">
+                    <TextInput
+                      id="password_confirmation"
+                      v-model="form.password_confirmation"
+                      :type="showPasswordConfirmation ? 'text' : 'password'"
+                      class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      required
+                      autocomplete="new-password"
+                    />
+                    <button type="button" @click="togglePasswordVisibility('password_confirmation')" class="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5">
+                      <svg v-if="showPasswordConfirmation" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.522 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.478 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                      <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 4.5a7.5 7.5 0 00-7.92 6.49c.53.97 2.17 3.26 7.92 3.26 5.75 0 7.39-2.29 7.92-3.26a7.5 7.5 0 00-7.92-6.49zm0 8.5a3 3 0 110-6 3 3 0 010 6zm0-1.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <InputError class="mt-1" :message="form.errors.password_confirmation" />
+                </div>
+                <div>
+                  <InputLabel for="role" value="Role" />
+                  <select
+                    id="role"
+                    v-model="form.role"
+                    class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white bg-opacity-50 backdrop-filter backdrop-blur-md"
+                    required
+                  >
+                    <option value=""></option>
+                    <option value="social services">Social Services</option>
+                    <option value="psychological">Psychological</option>
+                    <option value="court order">Court Order</option>
+                    <option value="homelife services">Homelife Services</option>
+                    <option value="nursing care">Nursing Care</option>
+                    <option value="educational services">Educational Services</option>
+                    <option value="psd">PSD</option>
+                  </select>
+                  <InputError class="mt-1" :message="form.errors.role" />
+                </div>
+              </div>
+              <div class="flex items-center justify-end mt-2">
+                <PrimaryButton
+                  class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-customBlue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  :class="{ 'opacity-25': form.processing }"
+                  :disabled="form.processing"
+                >
+                  Register
+                </PrimaryButton>
+              </div>
+              <div class="flex items-center justify-start mt-2">
+                <Link
+                  :href="route('login')"
+                  class="underline text-xs text-gray-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Already have an account?
+                </Link>
+              </div>
+            </form>
           </div>
         </div>
       </main>
@@ -217,7 +169,7 @@
           </a>
           <!-- Copyright Text -->
           <p class="text-base leading-6 text-gray-300 hover:text-white text-xs mb-2">
-            Â© All rights reserved.
+            © All rights reserved.
           </p>
           <!-- Website Link -->
           <a href="https://www.dswd.gov.ph/" class="flex items-center text-gray-300 hover:text-white space-x-2 mb-2">
@@ -259,6 +211,8 @@ const form = useForm({
   role: '', 
 });
 
+const submit = () => { form.post(route('register')); }
+
 const showPassword = ref(false);
 const showPasswordConfirmation = ref(false);
 
@@ -269,32 +223,6 @@ const togglePasswordVisibility = (field) => {
     showPasswordConfirmation.value = !showPasswordConfirmation.value;
   }
 };
-
-const submit = () => {
-  form.post(route('register'));
-}
-
-const images = [
-  '/images/4.png',
-  '/images/5.png',
-  '/images/6.png',
-  '/images/8.png',
-];
-
-const currentImage1 = ref(images[0]);
-const currentImage2 = ref(images[1]);
-
-const changeImage = () => {
-  const index1 = (images.indexOf(currentImage1.value) + 1) % images.length;
-  const index2 = (images.indexOf(currentImage2.value) + 1) % images.length;
-
-  currentImage1.value = images[index1];
-  currentImage2.value = images[index2];
-};
-
-onMounted(() => {
-  setInterval(changeImage, 5000); // Change image every 5 seconds
-});
 </script>
 
 <style>
