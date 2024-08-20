@@ -1,5 +1,5 @@
 <template>
-  <div class="p-8 bg-white shadow-xl rounded-lg max-w-3xl mx-auto my-8 border border-gray-200">
+  <div class="p-16 bg-white shadow-xl rounded-lg max-w-3xl mx-auto my-8 border border-gray-200">
     <div class="relative flex justify-between items-center mb-2">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
       <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p> <!-- Applied text-xs class -->

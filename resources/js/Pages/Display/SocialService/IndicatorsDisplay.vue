@@ -82,7 +82,7 @@
     <!-- Page 1 -->
     <div v-if="currentPage === 1" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
       <div class="relative flex justify-between items-center mb-2">
-        <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48 relative z-10">
+        <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
         <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
       </div>
 

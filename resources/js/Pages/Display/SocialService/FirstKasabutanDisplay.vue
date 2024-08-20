@@ -1,40 +1,40 @@
 <template>
-    <!-- Pagination, Edit, Save, Back Buttons -->
-    <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-        <!-- Pagination Component -->
-        <Pagination 
-          :totalPages="totalPages" 
-          :currentPage="currentPage" 
-          @update:currentPage="currentPage = $event" 
-        />
-        
-        <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
-          </svg>
-          <span>{{ editMode ? 'Save' : 'Edit' }}</span>
-        </button>
-        
-        <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-          <span>Save</span>
-        </button>
+  <!-- Tabs for Actions -->
+  <div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Back</span>
+    </button>
+  </div>
 
-        <button v-if="editMode" @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-gray-500 text-white rounded-md text-xs">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-          <span>Back</span>
-        </button>
-      </div>
+  <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
+    <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+    <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
+      </svg>
+      <span>Edit</span>
+    </button>
 
+    <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      <span>Save</span>
+    </button>
+  </div>
       
   <div>
     <div class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
       <div class="relative flex justify-between items-center mb-2">
-        <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48 relative z-10">
+        <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
         <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
       </div>
       <div class="text-center mb-8">
@@ -97,12 +97,11 @@
       </div>
 
       <div class="mb-8 text-justify">
-    <p class="mb-4">
-      <span class="ml-8 inline-block">Ako</span> si <span class="font-bold underline">{{ clientName }}</span> usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili <strong>“COLOR RED”</strong> and akong Performance equivalent to <strong>“OUTSTANDING”</strong>
-    </p>
- 
-    <p><span class="ml-8 inline-block">Ug</span> kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.</p>
-    </div>
+        <p class="mb-4">
+          <span class="ml-8 inline-block">Ako</span> si <span class="font-bold underline">{{ clientName }}</span> usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili <strong>“COLOR RED”</strong> and akong Performance equivalent to <strong>“OUTSTANDING”</strong>
+        </p>
+        <p><span class="ml-8 inline-block">Ug</span> kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.</p>
+      </div>
 
       <div class="mb-8">
         <div class="space-y-12">
@@ -215,10 +214,19 @@ export default {
       isModalOpen.value = false;
     };
 
-    const confirmSave = () => {
-      saveData();
-      closeModal();
-      editMode.value = false;
+    const confirmSave = async () => {
+      try {
+        await saveData();
+        saveResultTitle.value = 'Success';
+        saveResultMessage.value = 'Data saved successfully!';
+      } catch (error) {
+        saveResultTitle.value = 'Error';
+        saveResultMessage.value = 'Failed to save data.';
+      } finally {
+        closeModal();
+        editMode.value = false;
+        isSaveResultModalOpen.value = true;
+      }
     };
 
     const cancelEdit = () => {
@@ -227,27 +235,16 @@ export default {
 
     const saveData = async () => {
       if (!form.value.client_id) {
-        message.value = 'Client ID is missing.';
-        messageType.value = 'error';
-        return;
+        throw new Error('Client ID is missing.');
       }
 
       try {
         const response = await axios[form.value.id ? 'put' : 'post'](`/api/kasabutan${form.value.id ? '/' + form.value.id : ''}`, form.value);
-        message.value = 'Data saved successfully!';
-        messageType.value = 'success';
-
         if (!form.value.id) {
           form.value.id = response.data.id;
         }
-
-        setTimeout(() => {
-          message.value = '';
-        }, 3000);
       } catch (error) {
-        message.value = 'Error saving data.';
-        messageType.value = 'error';
-        console.error('Error saving data:', error);
+        throw new Error('Error saving data.');
       }
     };
 

@@ -33,7 +33,7 @@
   <div class="max-w-3xl mx-auto mt-12 p-16 bg-white border border-gray-300 rounded-lg shadow-lg">
     <div class="text-center mb-8">
       <div class="flex justify-between items-center mb-4">
-        <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-24 w-48 -mt-16 relative z-10" />
+        <img src="/images/headerlogo2.png" alt="DSWD Logo"  class="h-32 w-64 -mt-16 relative z-10" />
         <div class="text-right">
           <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
           <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>

@@ -90,7 +90,7 @@
     <!-- Page 1 -->
     <div v-if="currentPage === 1" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
       <div class="flex items-center justify-between mb-4">
-        <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-24 w-48 relative z-10">
+        <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-32 w-64 relative z-10">
         <div class="text-right">
           <p class="text-xs">DSPTD-QF-01-A | REV 01 | 12 SEP 2023</p>
         </div>

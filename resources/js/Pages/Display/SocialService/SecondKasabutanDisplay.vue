@@ -90,7 +90,7 @@
   <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
     <div class=" p-8 rounded">
       <div class="relative flex justify-between items-center mb-2">
-        <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48 relative z-10">
+        <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
         <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
       </div>
 
