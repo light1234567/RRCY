@@ -1,52 +1,80 @@
 <template>
   <AppLayout title="Users">
-    <div v-if="loading">Loading...</div>
+    <template #header>
+      <h1 class="ml-0 text-lg font-bold text-gray-800">User Verification</h1>
+    </template>
+    <div v-if="loading" class="flex justify-center items-center py-10">Loading...</div>
     <div v-else>
-      <table>
-        <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Role</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in filteredUsers" :key="user.id">
-            <td>{{ user.full_name }}</td>
-            <td>{{ user.role }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.status }}</td>
-            <td>
-              <button @click="openDeleteModal(user)">Delete</button>
-              <button @click="openVerifyModal(user)" v-if="user.status !== 'verified'">Accept</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="overflow-x-auto ml-12 px-0">
+        <table class="max-w-full w-11/12 mt-8 bg-gray-50 shadow rounded-lg">
+          <thead class="bg-white text-customBlue">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Full Name</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="user in filteredUsers" :key="user.id" class="border-t hover:bg-gray-100">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.full_name }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ user.role }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ user.email }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <span :class="user.status === 'verified' ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
+                  {{ user.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm">
+                <button
+                  @click="openDeleteModal(user)"
+                  class="text-red-700 hover:text-red-900 font-semibold"
+                >
+                  Delete
+                </button>
+                <button
+                  @click="openVerifyModal(user)"
+                  v-if="user.status !== 'verified'"
+                  class="ml-4 text-green-700 hover:text-green-900 font-semibold"
+                >
+                  Accept
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Verify Modal -->
-    <div v-if="showVerifyModal" class="modal-overlay">
-      <div class="modal-content">
-        <h3>Confirm Verification</h3>
+    <div v-if="showVerifyModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h3 class="text-lg font-semibold mb-4">Confirm Verification</h3>
         <p>Are you sure you want to verify <strong>{{ selectedUser.full_name }}</strong>?</p>
-        <div class="modal-actions">
-          <button @click="confirmVerify" class="btn btn-success">Yes, Verify</button>
-          <button @click="closeVerifyModal" class="btn btn-secondary">Cancel</button>
+        <div class="mt-6 flex justify-end space-x-4">
+          <button @click="confirmVerify" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+            Yes, Verify
+          </button>
+          <button @click="closeVerifyModal" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+            Cancel
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Delete Modal -->
-    <div v-if="showDeleteModal" class="modal-overlay">
-      <div class="modal-content">
-        <h3>Confirm Deletion</h3>
+    <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h3 class="text-lg font-semibold mb-4">Confirm Deletion</h3>
         <p>Are you sure you want to delete <strong>{{ selectedUser.full_name }}</strong>?</p>
-        <div class="modal-actions">
-          <button @click="confirmDelete" class="btn btn-danger">Yes, Delete</button>
-          <button @click="closeDeleteModal" class="btn btn-secondary">Cancel</button>
+        <div class="mt-6 flex justify-end space-x-4">
+          <button @click="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+            Yes, Delete
+          </button>
+          <button @click="closeDeleteModal" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+            Cancel
+          </button>
         </div>
       </div>
     </div>
@@ -64,7 +92,6 @@ const showVerifyModal = ref(false);
 const showDeleteModal = ref(false);
 const selectedUser = ref(null);
 
-// Fetch all users from the API
 const fetchUsers = async () => {
   try {
     const response = await axios.get('/api/users');
@@ -76,24 +103,20 @@ const fetchUsers = async () => {
   }
 };
 
-// Computed property to filter out admin users
 const filteredUsers = computed(() => {
   return users.value.filter(user => user.role !== 'admin');
 });
 
-// Function to open the verify modal
 const openVerifyModal = (user) => {
   selectedUser.value = user;
   showVerifyModal.value = true;
 };
 
-// Function to close the verify modal
 const closeVerifyModal = () => {
   showVerifyModal.value = false;
   selectedUser.value = null;
 };
 
-// Function to verify user (change status to "verified")
 const confirmVerify = async () => {
   if (selectedUser.value) {
     try {
@@ -106,19 +129,16 @@ const confirmVerify = async () => {
   }
 };
 
-// Function to open the delete modal
 const openDeleteModal = (user) => {
   selectedUser.value = user;
   showDeleteModal.value = true;
 };
 
-// Function to close the delete modal
 const closeDeleteModal = () => {
   showDeleteModal.value = false;
   selectedUser.value = null;
 };
 
-// Function to delete user
 const confirmDelete = async () => {
   if (selectedUser.value) {
     try {
@@ -133,52 +153,9 @@ const confirmDelete = async () => {
 
 onMounted(fetchUsers);
 </script>
-
 <style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-th {
-  background-color: #f2f2f2;
-  text-align: left;
-}
-
-button {
-  padding: 5px 10px;
-  background-color: #e3342f;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #cc1f1a;
-}
-
-button + button {
-  margin-left: 10px;
-  background-color: #38c172;
-}
-
-button + button:hover {
-  background-color: #1f9d55;
-}
-
-/* Modal styles */
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,7 +164,7 @@ button + button:hover {
 
 .modal-content {
   background: white;
-  padding: 20px;
+  padding: 24px;
   border-radius: 8px;
   max-width: 500px;
   width: 100%;
@@ -197,28 +174,5 @@ button + button:hover {
   margin-top: 20px;
   display: flex;
   justify-content: flex-end;
-}
-
-.btn {
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.btn-success {
-  background-color: #38c172;
-  color: white;
-}
-
-.btn-danger {
-  background-color: #e3342f;
-  color: white;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  margin-left: 10px;
 }
 </style>

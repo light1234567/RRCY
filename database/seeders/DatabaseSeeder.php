@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             'fname' => 'Rowel ',
             'lname' => 'Borden',
             'middlename' => 'Antonio',
-            'email' => 'raborden02372@usep.edu.ph',
+            'email' => 'jasperellaga12345@gmail.com',
             'role' => 'admin',
             'status' => 'verified',
             'password' => Hash::make('12345678'),

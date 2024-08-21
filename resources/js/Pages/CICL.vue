@@ -4,7 +4,7 @@
       <h1 class="text-lg font-bold text-red-800">CICL</h1>
     </template>
     <div class="">
-      <div class="ml-6 max-w-6x1 mx-auto sm:px-6 lg:px-8 -mt-40">
+      <div class="ml-6 max-w-6x1 mx-auto sm:px-6 lg:px-8 mt-8">
         <div class="p-2 flex justify-between items-center">
           <div class="relative w-80">
             <span class="absolute -mt-2 inset-y-0 left-0 flex items-center pl-3">

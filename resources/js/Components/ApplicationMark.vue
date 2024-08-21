@@ -68,9 +68,6 @@ const handleClickOutside = (event) => {
   }
 };
 
-const logout = () => {
-  router.post(route('logout'));
-};
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside);
