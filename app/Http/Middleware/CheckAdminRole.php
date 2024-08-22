@@ -9,7 +9,7 @@ class CheckAdminRole
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!in_array($request->user()->role, ['social services', 'superadmin'])) {
+        if (!in_array($request->user()->role, ['social services', 'admin'])) {
             return redirect()->route('dashboard');
         }
 

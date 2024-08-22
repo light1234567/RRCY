@@ -4,7 +4,7 @@
 
     <Banner />
 
-    <div class="min-h-screen bg-gradient-to-tr from-slate-50 via-gray-50 to-zinc-50  flex ">
+    <div class="min-h-screen bg-gradient-to-r from-stone-50 via-gray-50 to-slate-100  flex ">
       <!-- Sidebar -->
       <nav
         :class="{
@@ -207,47 +207,48 @@
               </NavLink>
             </div>
 
-            <!-- User Link with Icon -->
-              <div
-                :class="{
-                   'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
-                   'w-full h-auto': !isSidebarCollapsed
-                }"
-                class="flex items-center justify-between mb-20 max-w-lg p-2 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
-              >
-                <NavLink
-                  :href="route('user')"
-                  :active="route().current('user')"
-                  class="flex items-center space-x-4 w-full transition duration-150 ease-in-out"
-                >
-                  <!-- User Icon -->
-                  <svg
-                    :class="{
-                      'w-6 h-6': !isSidebarCollapsed,
-                      'w-5 h-5': isSidebarCollapsed
-                    }"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 4.5a4.5 4.5 0 100 9 4.5 4.5 0 100-9zm0 12a9 9 0 00-9 9h18a9 9 0 00-9-9z"
-                    />
-                  </svg>
-                  <span
-                    :class="{
-                      'hidden': isSidebarCollapsed,
-                      'block': !isSidebarCollapsed
-                    }"
-                    class="transition-opacity duration-300 text-white"
-                  >
-                    User
-                  </span>
-                </NavLink>
-              </div>
+          <!-- User Link with Icon -->
+<div
+  v-if="isAdmin"
+  :class="{
+    'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
+    'w-full h-auto': !isSidebarCollapsed
+  }"
+  class="flex items-center justify-between mb-20 max-w-lg p-2 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
+>
+  <NavLink
+    :href="route('user')"
+    :active="route().current('user')"
+    class="flex items-center space-x-4 w-full transition duration-150 ease-in-out"
+  >
+    <!-- User Icon -->
+    <svg
+      :class="{
+        'w-6 h-6': !isSidebarCollapsed,
+        'w-5 h-5': isSidebarCollapsed
+      }"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 4.5a4.5 4.5 0 100 9 4.5 4.5 0 100-9zm0 12a9 9 0 00-9 9h18a9 9 0 00-9-9z"
+      />
+    </svg>
+    <span
+      :class="{
+        'hidden': isSidebarCollapsed,
+        'block': !isSidebarCollapsed
+      }"
+      class="transition-opacity duration-300 text-white"
+    >
+      User
+    </span>
+  </NavLink>
+</div>
 
             <!-- Divider Line -->
             <div>
@@ -299,7 +300,7 @@
       >
         <!-- Page Heading -->
         <div class="w-full m-0 p-0">
-  <header class="w-full py-2 bg-white border border-gray-500 px-24 sm:px-8 lg:px-16 flex items-center">
+  <header class="w-full py-2 bg-white border border-gray-300  px-24 sm:px-8 lg:px-16 flex items-center">
     <slot name="header" v-if="$slots.header"></slot>
 
     <div class="ml-auto -mr-2 h-10 w-10">
@@ -374,7 +375,9 @@ const logout = () => {
 };
 
 const isSocialServices = computed(() => userRole.value === 'social services');
+const isAdmin = computed(() => userRole.value === 'admin');
 </script>
+
 
 <style scoped>
 /* Ensure the sidebar toggle button is always clickable */

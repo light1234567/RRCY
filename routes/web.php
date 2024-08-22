@@ -32,7 +32,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('/user', function () {
         return Inertia::render('User');
-    })->name('user');
+      })->name('user')->middleware(\App\Http\Middleware\CheckAdminRole::class);
     
     // Route for the main edit page with an id parameter
     Route::get('/maintab/{id}', function ($id) {

@@ -6,17 +6,19 @@
 
     <div v-if="loading" class="text-center py-4">Loading client data...</div>
     <div v-else>
-      <div class="flex -mt-40 ml-10 border-b">
-        <button 
-          v-for="(tab, index) in availableTabs" 
-          :key="index" 
-          @click="currentTab = tab" 
-          :class="['py-2 px-8 focus:outline-none', currentTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500']"
-        >
-          {{ tab }}
-        </button>
+      <div v-if="showTabs" class="flex mt-2 ml-10 border-b">
+        <div class="tabs">
+          <button
+            v-for="(tab, index) in availableTabs"
+            :key="index"
+            @click="setTab(tab)"
+            :class="['py-2 px-8 focus:outline-none', currentTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500']"
+          >
+            {{ tab }}
+          </button>
+        </div>
       </div>
-      <div class="p-4 ">
+      <div class="p-4 tab-content">
         <div v-if="currentTab === 'Social Service'"><SocialServiceTab/></div>
         <div v-if="currentTab === 'Psychological Reports'"><PsychologicalTab/></div>
         <div v-if="currentTab === 'Homelife Services'"><HomelifeTab/></div>
@@ -31,7 +33,6 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import { usePage } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
@@ -90,10 +91,26 @@ const roleToTab = {
   'psd': 'PSD Reports'
 };
 
+const showTabs = computed(() => user.value.role === 'social services' || user.value.role === 'admin');
+
+const setTab = (tab) => {
+  currentTab.value = tab;
+  localStorage.setItem('currentTab', tab); // Save tab to localStorage
+};
+
 onMounted(() => {
   const { props } = usePage();
   user.value.role = props.auth.user.role; // Set user role from Inertia props
-  currentTab.value = roleToTab[user.value.role] || tabs.value[0];
+  
+  // Retrieve tab from localStorage
+  const storedTab = localStorage.getItem('currentTab');
+  
+  // Set the default tab based on the user role or localStorage value
+  const defaultTab = storedTab && availableTabs.value.includes(storedTab)
+    ? storedTab
+    : roleToTab[user.value.role] || 'Psychological Reports';
+  
+  currentTab.value = defaultTab;
 });
 </script>
 
@@ -108,9 +125,9 @@ onMounted(() => {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
+.px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
   text-align: center;
 }
 .focus\:outline-none {
@@ -127,5 +144,10 @@ onMounted(() => {
 }
 .p-4 {
   padding: 1rem;
+}
+.tab-content {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-top: none;
 }
 </style>

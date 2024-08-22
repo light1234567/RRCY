@@ -19,12 +19,7 @@
               class="mb-2 p-2 pl-10 border border-gray-300 rounded w-full text-sm"
             />
           </div>
-          <button @click="navigateToNewClientPage" class="bg-blue-900 text-white px-4 py-2 rounded text-sm flex items-center">
-            <svg class="h-5 w-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Add
-          </button>
+   
         </div>
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
           <!-- Search input and Add button -->
