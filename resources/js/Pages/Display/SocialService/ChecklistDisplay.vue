@@ -1,7 +1,7 @@
 <template>
 
   <!-- Tabs for Actions -->
-  <div v-if="editMode" class="flex fixed p-6 -mt-2 space-x-4">
+  <div v-if="editMode" class="flex  absolute p-6 -mt-2 space-x-4">
     <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />

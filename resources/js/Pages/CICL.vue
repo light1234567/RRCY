@@ -31,8 +31,8 @@
                 <tr>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profile</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admitted | Discharged</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  
+                 
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
@@ -48,15 +48,8 @@
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">{{ client.first_name }} {{ client.last_name }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-xs font-medium">
-                    <div class="flex space-x-4">
-                      <button class="mr-12 ml-5" :class="getBoxStyles(index).leftBoxClass + ' p-2 rounded'"></button>
-                      <button :class="getBoxStyles(index).rightBoxClass + ' p-2 rounded'"></button>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-xs font-medium">
-                    <button @click.stop="showDeleteModal(client.id)" class="text-red-600 hover:text-red-900 ml-4">Delete</button>
-                  </td>
+               
+                 
                 </tr>
                 <tr v-if="paginatedClients.length === 0">
                   <td colspan="4" class="px-6 py-4 text-center text-xs text-gray-500">No clients found</td>
@@ -65,39 +58,53 @@
             </table>
           </div>
           <!-- Pagination -->
-          <div class="flex justify-end p-4">
+          <div class="flex justify-center items-center p-4">
             <button
               :disabled="currentPage === 1"
               @click="previousPage"
-              class="mr-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-xs"
+              class="mr-2 p-2 rounded hover:bg-gray-400 text-xs flex items-center"
             >
-              Previous
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
             </button>
             <span class="px-4 py-2 text-xs">{{ currentPage }} / {{ totalPages }}</span>
             <button
               :disabled="currentPage === totalPages"
               @click="nextPage"
-              class="ml-2 px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-xs"
+              class="ml-2 p-2  rounded hover:bg-gray-400 text-xs flex items-center"
             >
-              Next
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50">
-      <div class="absolute inset-0 bg-black opacity-50"></div>
-      <div class="bg-white p-6 rounded-lg shadow-lg z-10">
-        <h2 class="text-lg font-semibold mb-4">Delete Client</h2>
-        <p class="text-sm">Are you sure you want to delete this client?</p>
-        <div class="flex justify-end mt-4">
-          <button @click="hideDeleteModal" class="bg-gray-500 text-white px-4 py-2 rounded mr-2 text-sm">Cancel</button>
-          <button @click="confirmDelete" class="bg-red-600 text-white px-4 py-2 rounded text-sm">Delete</button>
-        </div>
-      </div>
-    </div>
   </AppLayout>
 </template>
 
@@ -166,32 +173,7 @@ const nextPage = () => {
   }
 };
 
-// Function to show delete confirmation modal
-const showDeleteModal = (id) => {
-  clientIdToDelete.value = id;
-  showModal.value = true;
-};
 
-// Function to hide delete confirmation modal
-const hideDeleteModal = () => {
-  showModal.value = false;
-  clientIdToDelete.value = null;
-};
-
-// Function to confirm delete
-const confirmDelete = async () => {
-  try {
-    await axios.delete(`/api/clients/${clientIdToDelete.value}`);
-    clients.value = clients.value.filter(client => client.id !== clientIdToDelete.value);
-    alert('Client deleted successfully.');
-    hideDeleteModal();
-  } catch (error) {
-    const errorMessage = error.response?.data?.message || 'An error occurred while deleting the client. Please try again.';
-    console.error('Error deleting client:', error);
-    alert(errorMessage);
-    hideDeleteModal();
-  }
-};
 
 // Function to get initials from name
 const getInitials = (firstName, lastName) => {
