@@ -23,7 +23,20 @@ class CreateDistinguishingMarksTable extends Migration
     }
 
     public function down()
-    {
-        Schema::dropIfExists('distinguishing_marks');
-    }
+{
+    Schema::disableForeignKeyConstraints();
+
+    // Drop foreign key constraints first
+    Schema::table('distinguishing_marks', function (Blueprint $table) {
+        if (Schema::hasColumn('distinguishing_marks', 'admission_id')) {
+            $table->dropForeign(['admission_id']);
+        }
+    });
+
+    // Then drop the table
+    Schema::dropIfExists('distinguishing_marks');
+
+    Schema::enableForeignKeyConstraints();
+}
+
 }

@@ -30,18 +30,18 @@ class CreateAdmissionsTable extends Migration
     }
 
     public function down()
-    {
-        // Check if the 'admissions' table exists before trying to drop the foreign key
-        if (Schema::hasTable('admissions')) {
-            Schema::table('admissions', function (Blueprint $table) {
-                // Drop the foreign key constraint if it exists
-                if (Schema::hasColumn('admissions', 'client_id')) {
-                    $table->dropForeign(['client_id']);
-                }
-            });
+{
+    Schema::disableForeignKeyConstraints();
 
-            // Then drop the 'admissions' table
-            Schema::dropIfExists('admissions');
-        }
-    }
+    Schema::table('admissions', function (Blueprint $table) {
+        $table->dropForeign(['client_id']);
+    });
+
+    Schema::dropIfExists('admissions');
+
+    Schema::enableForeignKeyConstraints();
+}
+
+
+
 }

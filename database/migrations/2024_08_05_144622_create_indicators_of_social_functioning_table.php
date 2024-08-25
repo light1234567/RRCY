@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Schema;
 class CreateIndicatorsOfSocialFunctioningTable extends Migration
 {
     public function up()
-    {
+    { 
+        Schema::dropIfExists('indicators_of_social_functionings');
+
         Schema::create('indicators_of_social_functionings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id');
