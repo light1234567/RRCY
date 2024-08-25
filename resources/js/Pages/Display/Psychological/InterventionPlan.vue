@@ -211,195 +211,175 @@
  </template>
  
  <script>
- import axios from 'axios';
- import { ref, onMounted } from 'vue';
- import { useRoute } from 'vue-router';
- import Pagination from '@/Components/Pagination.vue';
- 
- export default {
-   components: {
-     Pagination,
-   },
-   setup() {
-     const route = useRoute();
-     const editMode = ref(false);
-     const message = ref('');
-     const messageType = ref('');
-     const isModalOpen = ref(false);
-     const form = ref({
-       id: null,
-       as_of_date: '',
-       objectives: '',
-       activities: '',
-       responsible_person: '',
-       time_frame: '',
-       expected_output: '',
-       progress: '',
-       progress_notes: '',
-       prepared_by: '',
-       noted_by: '',
-     });
-     const clientName = ref('');
-     const age = ref('');
-     const dateAdmitted = ref('');
-     const totalPages = ref(1);
-     const currentPage = ref(1);
-     const isSaveResultModalOpen = ref(false);
-     const saveResultTitle = ref('');
-     const saveResultMessage = ref('');
- 
-     const fetchPlanData = async (clientId) => {
-       try {
-         const response = await axios.get(`/api/psychological-intervention-plans/${clientId}`);
-         return response.data;
-       } catch (error) {
-         console.error('Error fetching intervention plan:', error);
-         return null;
-       }
-     };
- 
-     const fetchData = async (clientId) => {
-       try {
-         const clientResponse = await axios.get(`/api/clients/${clientId}`);
-         const client = clientResponse.data;
- 
-         clientName.value = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
-         age.value = calculateAge(client.date_of_birth);
-         dateAdmitted.value = client.admissions[0].date_admitted;
- 
-         form.value.client_id = client.id;
- 
-         const planData = await fetchPlanData(clientId);
-         if (planData) {
-           form.value = { ...planData.plan };
-         } else {
-           form.value = {
-             id: null,
-             client_id: client.id,
-             as_of_date: '',
-             objectives: '',
-             activities: '',
-             responsible_person: '',
-             time_frame: '',
-             expected_output: '',
-             progress: '',
-             progress_notes: '',
-             prepared_by: '',
-             noted_by: '',
-           };
-         }
-       } catch (error) {
-         message.value = 'Error fetching data.';
-         messageType.value = 'error';
-       }
-     };
- 
-     const calculateAge = (dob) => {
-       const birthDate = new Date(dob);
-       const ageDiff = Date.now() - birthDate.getTime();
-       const ageDate = new Date(ageDiff);
-       return Math.abs(ageDate.getUTCFullYear() - 1970);
-     };
- 
-     const toggleEdit = () => {
-       if (editMode.value) {
-         openModal();
-       } else {
-         editMode.value = !editMode.value;
-       }
-     };
- 
-     const openModal = () => {
-       isModalOpen.value = true;
-     };
- 
-     const closeModal = () => {
-       isModalOpen.value = false;
-     };
- 
-     const confirmSave = () => {
-       saveData();
-       closeModal();
-     };
- 
-     const cancelEdit = () => {
-       editMode.value = false;
-     };
- 
-     const saveData = async () => {
-       try {
-         let url, method;
- 
-         if (!form.value.client_id) {
-           form.value.client_id = route.params.id;
-         }
- 
-         if (form.value.id) {
-           url = `/api/psychological-intervention-plans/${form.value.client_id}`;
-           method = 'put';
-         } else {
-           url = `/api/psychological-intervention-plans`;
-           method = 'post';
-         }
- 
-         const response = await axios[method](url, form.value);
- 
-         if (!form.value.id) {
-           form.value.id = response.data.id;
-         }
- 
-         saveResultTitle.value = 'Success';
-         saveResultMessage.value = 'Data saved successfully!';
-       } catch (error) {
-         if (error.response) {
-           saveResultMessage.value = `Error saving data: ${error.response.data.message || 'An unexpected error occurred.'}`;
-         } else if (error.request) {
-           saveResultMessage.value = 'Error saving data: No response from server.';
-         } else {
-           saveResultMessage.value = `Error saving data: ${error.message}`;
-         }
-         saveResultTitle.value = 'Error';
-       } finally {
-         isSaveResultModalOpen.value = true;
-         editMode.value = false;
-       }
-     };
- 
-     const closeSaveResultModal = () => {
-       isSaveResultModalOpen.value = false;
-       saveResultTitle.value = '';
-       saveResultMessage.value = '';
-     };
- 
-     onMounted(() => {
-       fetchData(route.params.id);
-     });
- 
-     return {
-       form,
-       clientName,
-       age,
-       dateAdmitted,
-       editMode,
-       message,
-       messageType,
-       toggleEdit,
-       currentPage,
-       totalPages,
-       isSaveResultModalOpen,
-       saveResultTitle,
-       saveResultMessage,
-       closeSaveResultModal,
-       openModal,
-       closeModal,
-       confirmSave,
-       isModalOpen,
-       cancelEdit,
-     };
-   },
- };
- </script>
- 
+import axios from 'axios';
+
+export default {
+  name: 'InterventionPlan',
+  data() {
+    return {
+      form: {
+        id: null,
+        as_of_date: '',
+        objectives: '',
+        activities: '',
+        responsible_person: '',
+        time_frame: '',
+        expected_output: '',
+        progress: '',
+        progress_notes: '',
+        prepared_by: '',
+        noted_by: '',
+      },
+      clientName: '',
+      age: '',
+      dateAdmitted: '',
+      editMode: false,
+      message: '',
+      messageType: '',
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      totalPages: 1,
+      currentPage: 1,
+    };
+  },
+  created() {
+    this.fetchData(this.$route.params.id);
+  },
+  watch: {
+    '$route.params.id'(newId) {
+      console.log('Route changed, new client ID:', newId);
+      this.fetchData(newId);
+    }
+  },
+  methods: {
+    fetchData(clientId) {
+      console.log('Calling API to fetch client data for ID:', clientId);  //
+      if (!clientId) {
+        console.error('Client ID is missing!');
+        return;
+      }
+
+      axios.get(`/api/clients/${clientId}`)
+        .then(response => {
+          const client = response.data;
+
+          this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
+          this.age = this.calculateAge(client.date_of_birth);
+          this.dateAdmitted = client.admissions[0]?.date_admitted;
+
+          this.form.client_id = client.id;
+
+          this.fetchPlanData(clientId);
+        })
+        .catch(error => {
+          this.message = 'Error fetching data.';
+          this.messageType = 'error';
+          console.error('Error fetching client data:', error);
+        });
+    },
+    fetchPlanData(clientId) {
+      axios.get(`/api/psychological-intervention-plans/${clientId}`)
+        .then(response => {
+          if (response.data) {
+            this.form = { ...response.data.plan };
+          } else {
+            this.resetForm(clientId);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching intervention plan:', error);
+        });
+    },
+    resetForm(clientId) {
+      this.form = {
+        id: null,
+        client_id: clientId,
+        as_of_date: '',
+        objectives: '',
+        activities: '',
+        responsible_person: '',
+        time_frame: '',
+        expected_output: '',
+        progress: '',
+        progress_notes: '',
+        prepared_by: '',
+        noted_by: '',
+      };
+    },
+    calculateAge(dob) {
+      const birthDate = new Date(dob);
+      const ageDiff = Date.now() - birthDate.getTime();
+      const ageDate = new Date(ageDiff);
+      return Math.abs(ageDate.getUTCFullYear() - 1970);
+    },
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
+      } else {
+        this.editMode = !this.editMode;
+      }
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    confirmSave() {
+      this.saveData();
+      this.closeModal();
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    saveData() {
+      let url, method;
+
+      if (!this.form.client_id) {
+        this.form.client_id = this.$route.params.id;
+      }
+
+      if (this.form.id) {
+        url = `/api/psychological-intervention-plans/${this.form.client_id}`;
+        method = 'put';
+      } else {
+        url = `/api/psychological-intervention-plans`;
+        method = 'post';
+      }
+
+      axios[method](url, this.form)
+        .then(response => {
+          if (!this.form.id) {
+            this.form.id = response.data.id;
+          }
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully!';
+        })
+        .catch(error => {
+          if (error.response) {
+            this.saveResultMessage = `Error saving data: ${error.response.data.message || 'An unexpected error occurred.'}`;
+          } else if (error.request) {
+            this.saveResultMessage = 'Error saving data: No response from server.';
+          } else {
+            this.saveResultMessage = `Error saving data: ${error.message}`;
+          }
+          this.saveResultTitle = 'Error';
+        })
+        .finally(() => {
+          this.isSaveResultModalOpen = true;
+          this.editMode = false;
+        });
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    }
+  }
+};
+</script>
  
  
  <style scoped>

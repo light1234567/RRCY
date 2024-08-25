@@ -150,137 +150,118 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
+  name: 'KasabutanSheet',
   components: {
-    Pagination,
+    Pagination
   },
-  setup() {
-    const route = useRoute();
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref('');
-    const form = ref({
-      client_id: null,
-      client_resident: '',
-      parent_guardian: '',
-      case_manager: '',
-      id: null
-    });
-    const clientName = ref('');
-    const errorMessage = ref('');
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-    const totalPages = ref(1);
-    const currentPage = ref(1);
-
-    const fetchClientData = async (clientId) => {
+  data() {
+    return {
+      editMode: false,
+      message: '',
+      messageType: '',
+      form: {
+        client_id: null,
+        client_resident: '',
+        parent_guardian: '',
+        case_manager: '',
+        id: null
+      },
+      clientName: '',
+      errorMessage: '',
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      totalPages: 1,
+      currentPage: 1
+    };
+  },
+  mounted() {
+    const clientId = this.$route.params.id;
+    console.log('Client ID fetched:', clientId); // Console log showing client ID
+    if (clientId) {
+      this.fetchClientData(clientId);
+    }
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      console.log('Client ID changed:', newId); // Console log showing updated client ID
+      if (newId) {
+        this.fetchClientData(newId);
+      }
+    }
+  },
+  methods: {
+    async fetchClientData(clientId) {
       try {
         const clientResponse = await axios.get(`/api/clients/${clientId}`);
         const client = clientResponse.data;
-        clientName.value = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
-        form.value.client_id = client.id;
+        this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
+        this.form.client_id = client.id;
 
         const kasabutanResponse = await axios.get(`/api/kasabutan/${clientId}`);
         const kasabutan = kasabutanResponse.data;
-        form.value.client_resident = kasabutan.client_resident || '';
-        form.value.parent_guardian = kasabutan.parent_guardian || '';
-        form.value.case_manager = kasabutan.case_manager || '';
-        form.value.id = kasabutan.id;
+        this.form.client_resident = kasabutan.client_resident || '';
+        this.form.parent_guardian = kasabutan.parent_guardian || '';
+        this.form.case_manager = kasabutan.case_manager || '';
+        this.form.id = kasabutan.id;
       } catch (error) {
-        errorMessage.value = 'Error fetching client data.';
+        this.errorMessage = 'Error fetching client data.';
         console.error('Error fetching client data:', error);
       }
-    };
-
-    const toggleEdit = () => {
-      if (editMode.value) {
-        openModal();
+    },
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
       } else {
-        editMode.value = !editMode.value;
+        this.editMode = !this.editMode;
       }
-    };
-
-    const openModal = () => {
-      isModalOpen.value = true;
-    };
-
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
-
-    const confirmSave = async () => {
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    async confirmSave() {
       try {
-        await saveData();
-        saveResultTitle.value = 'Success';
-        saveResultMessage.value = 'Data saved successfully!';
+        await this.saveData();
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data saved successfully!';
       } catch (error) {
-        saveResultTitle.value = 'Error';
-        saveResultMessage.value = 'Failed to save data.';
+        this.saveResultTitle = 'Error';
+        this.saveResultMessage = 'Failed to save data.';
       } finally {
-        closeModal();
-        editMode.value = false;
-        isSaveResultModalOpen.value = true;
+        this.closeModal();
+        this.editMode = false;
+        this.isSaveResultModalOpen = true;
       }
-    };
-
-    const cancelEdit = () => {
-      editMode.value = false;
-    };
-
-    const saveData = async () => {
-      if (!form.value.client_id) {
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    async saveData() {
+      if (!this.form.client_id) {
         throw new Error('Client ID is missing.');
       }
 
       try {
-        const response = await axios[form.value.id ? 'put' : 'post'](`/api/kasabutan${form.value.id ? '/' + form.value.id : ''}`, form.value);
-        if (!form.value.id) {
-          form.value.id = response.data.id;
+        const response = await axios[this.form.id ? 'put' : 'post'](`/api/kasabutan${this.form.id ? '/' + this.form.id : ''}`, this.form);
+        if (!this.form.id) {
+          this.form.id = response.data.id;
         }
       } catch (error) {
         throw new Error('Error saving data.');
       }
-    };
-
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-      saveResultTitle.value = '';
-      saveResultMessage.value = '';
-    };
-
-    onMounted(() => {
-      const id = route.params.id;
-      if (id) {
-        fetchClientData(id);
-      }
-    });
-
-    return {
-      editMode,
-      form,
-      clientName,
-      errorMessage,
-      message,
-      messageType,
-      toggleEdit,
-      isModalOpen,
-      openModal,
-      closeModal,
-      confirmSave,
-      cancelEdit,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      closeSaveResultModal,
-      totalPages,
-      currentPage,
-    };
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    }
   }
 };
 </script>

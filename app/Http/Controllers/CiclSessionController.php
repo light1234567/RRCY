@@ -27,6 +27,7 @@ class CiclSessionController extends Controller
         'methodology' => 'nullable|string',
         'highlight' => 'nullable|string',
         'outcome' => 'nullable|string',
+        'prepared_by' => 'nullable|string|max:255',
         'noted_by' => 'nullable|string|max:255',
         'approved_by' => 'nullable|string|max:255',
     ]);
@@ -83,6 +84,8 @@ class CiclSessionController extends Controller
         'methodology' => 'nullable|string',
         'highlight' => 'nullable|string',
         'outcome' => 'nullable|string',
+        'outcome' => 'nullable|string',
+        'prepared_by' => 'nullable|string|max:255',
         'noted_by' => 'nullable|string|max:255',
         'approved_by' => 'nullable|string|max:255',
     ]);

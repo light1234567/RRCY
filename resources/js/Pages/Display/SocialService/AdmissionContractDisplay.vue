@@ -235,147 +235,141 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
+  name: 'AdmissionContract',
   components: {
     Pagination,
   },
-  setup() {
-    const route = useRoute();
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref('');
-    const form = ref({
-      client_id: null,
-      signed_day: '',
-      signed_month: '',
-      parent_custodian_name: '',
-      lgu_worker_name: '',
-      rrcy_officer: '',
-      houseparent_on_duty: '',
-      id: null, // Add id to track existing record
-    });
-    const clientName = ref('');
-    const errorMessage = ref('');
-    const currentPage = ref(1);
-    const totalPages = ref(2);
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-
-    const fetchClientData = async (clientId) => {
-      try {
-        const clientResponse = await axios.get(`/api/clients/${clientId}`);
-        const client = clientResponse.data;
-        clientName.value = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
-        form.value.client_id = client.id;
-
-        const admissionContractResponse = await axios.get(`/api/admission-contracts/${clientId}`);
-        const admissionContract = admissionContractResponse.data;
-        form.value.signed_day = admissionContract.signed_day || '';
-        form.value.signed_month = admissionContract.signed_month || '';
-        form.value.parent_custodian_name = admissionContract.parent_custodian_name || '';
-        form.value.lgu_worker_name = admissionContract.lgu_worker_name || '';
-        form.value.rrcy_officer = admissionContract.rrcy_officer || '';
-        form.value.houseparent_on_duty = admissionContract.houseparent_on_duty || '';
-        form.value.id = admissionContract.id;
-      } catch (error) {
-        errorMessage.value = 'Error fetching client data: ' + (error.response?.data?.message || error.message);
-        console.error('Error fetching client data:', error);
-      }
+  data() {
+    return {
+      editMode: false,
+      message: '',
+      messageType: '',
+      form: {
+        client_id: null,
+        signed_day: '',
+        signed_month: '',
+        parent_custodian_name: '',
+        lgu_worker_name: '',
+        rrcy_officer: '',
+        houseparent_on_duty: '',
+        id: null, // Add id to track existing record
+      },
+      clientName: '',
+      errorMessage: '',
+      currentPage: 1,
+      totalPages: 2,
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
     };
+  },
+  mounted() {
+    this.fetchData();
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      this.fetchData();
+    }
+  },
+  methods: {
+    fetchData() {
+      const id = this.$route.params.id;
+      if (id) {
+        axios.get(`/api/clients/${id}`)
+          .then((response) => {
+            const client = response.data;
+            this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
+            this.form.client_id = client.id;
+            console.log('Client ID fetched:', client.id); // Console log for client ID
 
-    const toggleEdit = () => {
-      if (editMode.value) {
-        openModal();
+            return axios.get(`/api/admission-contracts/${id}`);
+          })
+          .then((response) => {
+            const admissionContract = response.data;
+            this.form.signed_day = admissionContract.signed_day || '';
+            this.form.signed_month = admissionContract.signed_month || '';
+            this.form.parent_custodian_name = admissionContract.parent_custodian_name || '';
+            this.form.lgu_worker_name = admissionContract.lgu_worker_name || '';
+            this.form.rrcy_officer = admissionContract.rrcy_officer || '';
+            this.form.houseparent_on_duty = admissionContract.houseparent_on_duty || '';
+            this.form.id = admissionContract.id;
+          })
+          .catch((error) => {
+            this.errorMessage = 'Error fetching data: ' + (error.response?.data?.message || error.message);
+            console.error('Error fetching data:', error);
+          });
+      }
+    },
+
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
       } else {
-        editMode.value = !editMode.value;
+        this.editMode = !this.editMode;
       }
-    };
+    },
 
-    const openModal = () => {
-      isModalOpen.value = true;
-    };
+    openModal() {
+      this.isModalOpen = true;
+    },
 
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
+    closeModal() {
+      this.isModalOpen = false;
+    },
 
-    const confirmSave = () => {
-      saveData();
-      closeModal();
-      editMode.value = false;
-    };
+    confirmSave() {
+      this.saveData();
+      this.closeModal();
+      this.editMode = false;
+    },
 
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-    };
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+    },
 
-    const saveData = async () => {
-      if (!form.value.client_id) {
-        message.value = 'Client ID is missing.';
-        messageType.value = 'error';
+    saveData() {
+      if (!this.form.client_id) {
+        this.message = 'Client ID is missing.';
+        this.messageType = 'error';
         return;
       }
 
-      try {
-        const response = await axios[form.value.id ? 'put' : 'post'](`/api/admission-contracts${form.value.id ? '/' + form.value.id : ''}`, form.value);
-        saveResultTitle.value = 'Success';
-        saveResultMessage.value = 'Data saved successfully!';
-        errorMessage.value = '';
+      const method = this.form.id ? 'put' : 'post';
+      const url = `/api/admission-contracts${this.form.id ? '/' + this.form.id : ''}`;
 
-        if (!form.value.id) {
-          form.value.id = response.data.id;
-        }
+      axios[method](url, this.form)
+        .then((response) => {
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully!';
+          this.errorMessage = '';
 
-        setTimeout(() => {
-          message.value = '';
-        }, 3000);
-      } catch (error) {
-        saveResultTitle.value = 'Error';
-        saveResultMessage.value = 'Error saving data: ' + (error.response?.data?.message || error.message);
-        console.error('Error saving data:', error);
-      } finally {
-        isSaveResultModalOpen.value = true;
-      }
-    };
+          if (!this.form.id) {
+            this.form.id = response.data.id;
+          }
 
-    const updatePage = (page) => {
-      currentPage.value = page;
-    };
+          setTimeout(() => {
+            this.message = '';
+          }, 3000);
+        })
+        .catch((error) => {
+          this.saveResultTitle = 'Error';
+          this.saveResultMessage = 'Error saving data: ' + (error.response?.data?.message || error.message);
+          console.error('Error saving data:', error);
+        })
+        .finally(() => {
+          this.isSaveResultModalOpen = true;
+        });
+    },
 
-    onMounted(() => {
-      const id = route.params.id;
-      if (id) {
-        fetchClientData(id);
-      }
-    });
-
-    return {
-      editMode,
-      form,
-      clientName,
-      errorMessage,
-      message,
-      messageType,
-      currentPage,
-      totalPages,
-      isModalOpen,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      toggleEdit,
-      openModal,
-      closeModal,
-      confirmSave,
-      closeSaveResultModal,
-      updatePage,
-    };
-  },
+    updatePage(page) {
+      this.currentPage = page;
+    }
+  }
 };
 </script>
 

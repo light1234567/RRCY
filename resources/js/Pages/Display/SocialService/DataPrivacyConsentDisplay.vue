@@ -179,149 +179,127 @@
  
   </template>
  <script>
-import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import Pagination from '@/Components/Pagination.vue'; 
-
-export default {
-  components: {
-    Pagination,
-  },
-  setup() {
-    const route = useRoute();
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref('');
-    const form = ref({
-      client_id: null,
-      client_signature: '',
-      date: '',
-      guardian_signature: '',
-      id: null,
-    });
-    const clientName = ref('');
-    const errorMessage = ref('');
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-    const totalPages = ref(2);
-    const currentPage = ref(1);
-
-    const fetchClientData = async (clientId) => {
-      try {
-        const clientResponse = await axios.get(`/api/clients/${clientId}`);
-        const client = clientResponse.data;
-        clientName.value = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
-        form.value.client_id = client.id;
-
-        const consentResponse = await axios.get(`/api/data-privacy-consent/${clientId}`);
-        const consent = consentResponse.data;
-        form.value.client_signature = consent.client_signature || '';
-        form.value.date = consent.date || '';
-        form.value.guardian_signature = consent.guardian_signature || '';
-        form.value.id = consent.id;
-      } catch (error) {
-        errorMessage.value = 'Error fetching client data.';
-        console.error('Error fetching client data:', error);
-      }
-    };
-
-    const toggleEdit = () => {
-      if (editMode.value) {
-        openModal();
-      } else {
-        editMode.value = true;
-      }
-    };
-
-    const saveData = async () => {
-      if (!form.value.client_id) {
-        message.value = 'Client ID is missing.';
-        messageType.value = 'error';
-        setTimeout(() => {
-          message.value = '';
-        }, 3000);
-        return;
-      }
-
-      try {
-        const response = await axios({
-          method: form.value.id ? 'put' : 'post',
-          url: `/api/data-privacy-consent${form.value.id ? '/' + form.value.id : ''}`,
-          data: form.value,
-        });
-        saveResultTitle.value = 'Success';
-        saveResultMessage.value = 'Data saved successfully!';
-        if (!form.value.id) {
-          form.value.id = response.data.id;
-        }
-        editMode.value = false;
-      } catch (error) {
-        saveResultTitle.value = 'Error';
-        saveResultMessage.value = 'Error saving data.';
-        console.error('Error saving data:', error);
-      } finally {
-        closeModal();
-        isSaveResultModalOpen.value = true;
-      }
-    };
-
-    const openModal = () => {
-      isModalOpen.value = true;
-    };
-
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
-
-    const confirmSave = () => {
-      saveData();
-    };
-
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-      saveResultTitle.value = '';
-      saveResultMessage.value = '';
-    };
-
-    const cancelEdit = () => {
-      editMode.value = false;
-    };
-
-    const updatePage = (page) => {
-      currentPage.value = page;
-    };
-
-    onMounted(() => {
-      const id = route.params.id;
-      if (id) {
-        fetchClientData(id);
-      }
-    });
-
-    return {
-      editMode,
-      form,
-      clientName,
-      errorMessage,
-      message,
-      messageType,
-      toggleEdit,
-      isModalOpen,
-      openModal,
-      closeModal,
-      confirmSave,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      closeSaveResultModal,
-      cancelEdit,
-      totalPages,
-      currentPage,
-      updatePage,
-    };
-  },
-};
-</script>
+ import axios from 'axios';
+ import Pagination from '@/Components/Pagination.vue'; 
+ 
+ export default {
+   components: {
+     Pagination,
+   },
+   data() {
+     return {
+       editMode: false,
+       message: '',
+       messageType: '',
+       form: {
+         client_id: null,
+         client_signature: '',
+         date: '',
+         guardian_signature: '',
+         id: null,
+       },
+       clientName: '',
+       errorMessage: '',
+       isModalOpen: false,
+       isSaveResultModalOpen: false,
+       saveResultTitle: '',
+       saveResultMessage: '',
+       totalPages: 2,
+       currentPage: 1,
+     };
+   },
+   mounted() {
+     const id = this.$route.params.id;
+     console.log('Client ID fetched:', id); // Console log showing client ID
+     if (id) {
+       this.fetchClientData(id);
+     }
+   },
+   watch: {
+     '$route.params.id': function(newId) {
+       console.log('Client ID changed:', newId); // Console log showing updated client ID
+       if (newId) {
+         this.fetchClientData(newId);
+       }
+     }
+   },
+   methods: {
+     async fetchClientData(clientId) {
+       try {
+         const clientResponse = await axios.get(`/api/clients/${clientId}`);
+         const client = clientResponse.data;
+         this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
+         this.form.client_id = client.id;
+ 
+         const consentResponse = await axios.get(`/api/data-privacy-consent/${clientId}`);
+         const consent = consentResponse.data;
+         this.form.client_signature = consent.client_signature || '';
+         this.form.date = consent.date || '';
+         this.form.guardian_signature = consent.guardian_signature || '';
+         this.form.id = consent.id;
+       } catch (error) {
+         this.errorMessage = 'Error fetching client data.';
+         console.error('Error fetching client data:', error);
+       }
+     },
+     toggleEdit() {
+       if (this.editMode) {
+         this.openModal();
+       } else {
+         this.editMode = true;
+       }
+     },
+     async saveData() {
+       if (!this.form.client_id) {
+         this.message = 'Client ID is missing.';
+         this.messageType = 'error';
+         setTimeout(() => {
+           this.message = '';
+         }, 3000);
+         return;
+       }
+ 
+       try {
+         const response = await axios({
+           method: this.form.id ? 'put' : 'post',
+           url: `/api/data-privacy-consent${this.form.id ? '/' + this.form.id : ''}`,
+           data: this.form,
+         });
+         this.saveResultTitle = 'Success';
+         this.saveResultMessage = 'Data saved successfully!';
+         if (!this.form.id) {
+           this.form.id = response.data.id;
+         }
+         this.editMode = false;
+       } catch (error) {
+         this.saveResultTitle = 'Error';
+         this.saveResultMessage = 'Error saving data.';
+         console.error('Error saving data:', error);
+       } finally {
+         this.closeModal();
+         this.isSaveResultModalOpen = true;
+       }
+     },
+     openModal() {
+       this.isModalOpen = true;
+     },
+     closeModal() {
+       this.isModalOpen = false;
+     },
+     confirmSave() {
+       this.saveData();
+     },
+     closeSaveResultModal() {
+       this.isSaveResultModalOpen = false;
+       this.saveResultTitle = '';
+       this.saveResultMessage = '';
+     },
+     cancelEdit() {
+       this.editMode = false;
+     },
+     updatePage(page) {
+       this.currentPage = page;
+     }
+   }
+ };
+ </script>

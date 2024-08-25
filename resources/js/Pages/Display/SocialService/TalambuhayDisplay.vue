@@ -190,143 +190,125 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
   components: {
-    Pagination,
+    Pagination
   },
-  setup() {
-    const route = useRoute();
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref('');
-    const form = ref({
-      client_id: null,
-      about_my_family: '',
-      about_my_self: '',
-      about_my_case: '',
-      case_manager: '',
-      date: ''
-    });
-    const clientName = ref('');
-    const errorMessage = ref('');
-    const currentPage = ref(1);
-    const totalPages = ref(2);
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-
-    const fetchClientData = async (clientId) => {
+  data() {
+    return {
+      editMode: false,
+      message: '',
+      messageType: '',
+      form: {
+        client_id: null,
+        about_my_family: '',
+        about_my_self: '',
+        about_my_case: '',
+        case_manager: '',
+        date: ''
+      },
+      clientName: '',
+      errorMessage: '',
+      currentPage: 1,
+      totalPages: 2,
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: ''
+    };
+  },
+  mounted() {
+    const id = this.$route.params.id;
+    console.log('Client ID fetched:', id); // Console log showing client ID
+    if (id) {
+      this.fetchClientData(id);
+    }
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      console.log('Client ID changed:', newId); // Console log showing updated client ID
+      if (newId) {
+        this.fetchClientData(newId);
+      }
+    }
+  },
+  methods: {
+    async fetchClientData(clientId) {
       try {
         const clientResponse = await axios.get(`/api/clients/${clientId}`);
         const client = clientResponse.data;
-        clientName.value = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
-        form.value.client_id = client.id;
+        this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
+        this.form.client_id = client.id;
 
         const talambuhayResponse = await axios.get(`/api/talambuhay/${clientId}`);
         const talambuhay = talambuhayResponse.data;
-        form.value.about_my_family = talambuhay.about_my_family || '';
-        form.value.about_my_self = talambuhay.about_my_self || '';
-        form.value.about_my_case = talambuhay.about_my_case || '';
-        form.value.case_manager = talambuhay.case_manager || '';
-        form.value.date = talambuhay.date || '';
+        this.form.about_my_family = talambuhay.about_my_family || '';
+        this.form.about_my_self = talambuhay.about_my_self || '';
+        this.form.about_my_case = talambuhay.about_my_case || '';
+        this.form.case_manager = talambuhay.case_manager || '';
+        this.form.date = talambuhay.date || '';
       } catch (error) {
-        errorMessage.value = 'Error fetching client data.';
+        this.errorMessage = 'Error fetching client data.';
         console.error('Error fetching client data:', error);
       }
-    };
-
-    const toggleEdit = () => {
-      if (editMode.value) {
-        openModal();
+    },
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
       } else {
-        editMode.value = !editMode.value;
+        this.editMode = !this.editMode;
       }
-    };
-
-    const openModal = () => {
-      isModalOpen.value = true;
-    };
-
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
-
-    const confirmSave = () => {
-      saveData();
-      closeModal();
-      editMode.value = false;
-    };
-
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-    };
-
-    const saveData = async () => {
-      if (!form.value.client_id) {
-        message.value = 'Client ID is missing.';
-        messageType.value = 'error';
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    async confirmSave() {
+      await this.saveData();
+      this.closeModal();
+      this.editMode = false;
+    },
+    async saveData() {
+      if (!this.form.client_id) {
+        this.message = 'Client ID is missing.';
+        this.messageType = 'error';
         return;
       }
 
       try {
-        const response = await axios[form.value.id ? 'put' : 'post'](`/api/talambuhay${form.value.id ? '/' + form.value.id : ''}`, form.value);
-        saveResultTitle.value = 'Success';
-        saveResultMessage.value = 'Data saved successfully!';
-        errorMessage.value = '';
+        const response = await axios[this.form.id ? 'put' : 'post'](`/api/talambuhay${this.form.id ? '/' + this.form.id : ''}`, this.form);
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data saved successfully!';
+        this.errorMessage = '';
 
-        if (!form.value.id) {
-          form.value.id = response.data.id;
+        if (!this.form.id) {
+          this.form.id = response.data.id;
         }
 
         setTimeout(() => {
-          message.value = '';
+          this.message = '';
         }, 3000);
       } catch (error) {
-        saveResultTitle.value = 'Error';
-        saveResultMessage.value = 'Error saving data.';
+        this.saveResultTitle = 'Error';
+        this.saveResultMessage = 'Error saving data.';
         console.error('Error saving data:', error);
       } finally {
-        isSaveResultModalOpen.value = true;
+        this.isSaveResultModalOpen = true;
       }
-    };
-
-    const updatePage = (page) => {
-      currentPage.value = page;
-    };
-
-    onMounted(() => {
-      const id = route.params.id;
-      if (id) {
-        fetchClientData(id);
-      }
-    });
-
-    return {
-      editMode,
-      form,
-      clientName,
-      errorMessage,
-      message,
-      messageType,
-      currentPage,
-      totalPages,
-      isModalOpen,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      toggleEdit,
-      openModal,
-      closeModal,
-      confirmSave,
-      closeSaveResultModal,
-      updatePage,
-    };
-  },
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    },
+    updatePage(page) {
+      this.currentPage = page;
+    }
+  }
 };
 </script>
 

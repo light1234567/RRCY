@@ -243,8 +243,6 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
@@ -252,152 +250,140 @@ export default {
   components: {
     Pagination,
   },
-  setup() {
-    const form = ref({
-      client_id: null,
-      drn: '',
-      date_of_filing: '',
-      requesting_party_name: '',
-      requesting_party_position: '',
-      date_of_duty: '',
-      time_of_duty: '',
-      sod_name: '',
-      sod_date_of_duty: '',
-      sod_position: '',
-      sod_shift_time: '',
-      purpose: '',
-      requested_by: '',
-      accepted_by: '',
-      noted_by: 'VAN M. DE LEON',
-      approved_by: 'ANGELIC B. PAÑA',
-    });
-
-    const originalForm = ref(null);
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref('');
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-    const route = useRoute();
-
-    const currentPage = ref(1);
-    const totalPages = ref(1);
-
-    const fetchData = () => {
-      const clientId = route.params.id;
+  data() {
+    return {
+      form: {
+        client_id: null,
+        drn: '',
+        date_of_filing: '',
+        requesting_party_name: '',
+        requesting_party_position: '',
+        date_of_duty: '',
+        time_of_duty: '',
+        sod_name: '',
+        sod_date_of_duty: '',
+        sod_position: '',
+        sod_shift_time: '',
+        purpose: '',
+        requested_by: '',
+        accepted_by: '',
+        noted_by: 'VAN M. DE LEON',
+        approved_by: 'ANGELIC B. PAÑA',
+      },
+      originalForm: null,
+      editMode: false,
+      message: '',
+      messageType: '', // 'success' or 'error'
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      currentPage: 1,
+      totalPages: 1,
+    };
+  },
+  mounted() {
+    this.fetchData();
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      this.fetchData();
+    }
+  },
+  methods: {
+    fetchData() {
+      const clientId = this.$route.params.id;
+      console.log('Fetching data for client ID:', clientId);
       if (clientId) {
         axios.get(`/api/swapping-forms/${clientId}`).then(response => {
           if (response.data.form) {
-            form.value = response.data.form;
-            form.value.client_id = clientId;
-            originalForm.value = JSON.parse(JSON.stringify(form.value));
+            this.form = response.data.form;
+            this.form.client_id = clientId;
+            this.originalForm = JSON.parse(JSON.stringify(this.form));
           } else {
-            form.value.client_id = clientId;
+            this.form.client_id = clientId;
           }
         }).catch(error => {
           console.error('Error fetching data:', error);
         });
       }
-    };
+    },
 
-    onMounted(fetchData);
-
-    const toggleEdit = () => {
-      if (editMode.value) {
-        openModal();
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
       } else {
-        originalForm.value = JSON.parse(JSON.stringify(form.value));
-        editMode.value = true;
+        this.originalForm = JSON.parse(JSON.stringify(this.form));
+        this.editMode = true;
       }
-    };
+    },
 
-    const openModal = () => {
-      isModalOpen.value = true;
-    };
+    openModal() {
+      this.isModalOpen = true;
+    },
 
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
+    closeModal() {
+      this.isModalOpen = false;
+    },
 
-    const confirmSave = () => {
-      submitForm();
-      closeModal();
-    };
+    confirmSave() {
+      this.submitForm();
+      this.closeModal();
+    },
 
-    const cancelEdit = () => {
-      if (originalForm.value) {
-        form.value = JSON.parse(JSON.stringify(originalForm.value));
+    cancelEdit() {
+      if (this.originalForm) {
+        this.form = JSON.parse(JSON.stringify(this.originalForm));
       }
-      editMode.value = false;
-    };
+      this.editMode = false;
+    },
 
-    const submitForm = () => {
-      if (!form.value.client_id) {
-        message.value = 'Client ID is required.';
-        messageType.value = 'error';
+    submitForm() {
+      if (!this.form.client_id) {
+        this.message = 'Client ID is required.';
+        this.messageType = 'error';
         return;
       }
 
-      const url = `/api/swapping-forms/${form.value.client_id}`;
+      const url = `/api/swapping-forms/${this.form.client_id}`;
 
-      axios.put(url, form.value)
+      axios.put(url, this.form)
         .then(response => {
-          editMode.value = false;
-          message.value = 'Data updated successfully!';
-          messageType.value = 'success';
-          saveResultTitle.value = 'Success';
-          saveResultMessage.value = 'Data saved successfully.';
-          isSaveResultModalOpen.value = true;
-          clearMessage();
-          fetchData();
+          this.editMode = false;
+          this.message = 'Data updated successfully!';
+          this.messageType = 'success';
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully.';
+          this.isSaveResultModalOpen = true;
+          this.clearMessage();
+          this.fetchData();
         })
         .catch(error => {
-          message.value = 'Failed to update data';
-          messageType.value = 'error';
-          saveResultTitle.value = 'Error';
-          saveResultMessage.value = error.response?.data?.message || 'Error saving data.';
-          isSaveResultModalOpen.value = true;
-          clearMessage();
+          this.message = 'Failed to update data';
+          this.messageType = 'error';
+          this.saveResultTitle = 'Error';
+          this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
+          this.isSaveResultModalOpen = true;
+          this.clearMessage();
         });
-    };
+    },
 
-    const clearMessage = () => {
+    clearMessage() {
       setTimeout(() => {
-        message.value = '';
-        messageType.value = '';
+        this.message = '';
+        this.messageType = '';
       }, 3000);
-    };
+    },
 
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-      saveResultTitle.value = '';
-      saveResultMessage.value = '';
-    };
-
-    return {
-      form,
-      editMode,
-      message,
-      messageType,
-      toggleEdit,
-      submitForm,
-      isModalOpen,
-      openModal,
-      closeModal,
-      confirmSave,
-      currentPage,
-      totalPages,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      closeSaveResultModal,
-      cancelEdit,
-    };
-  },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    }
+  }
 };
 </script>
+
 
 <style scoped>
 /* Add custom styles here */

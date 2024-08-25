@@ -268,8 +268,6 @@
 </template>
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
@@ -277,168 +275,155 @@ export default {
   components: {
     Pagination,
   },
-  setup() {
-    const form = ref({
-      client_id: null,
-      drn: '',
-      incident: '',
-      date_of_incident: '',
-      time_of_incident: '',
-      involved: '',
-      location: '',
-      action_taken: '',
-      agreements: '',
-      corrective_measure: '',
-      prepared_by: '',
-      prepared_by_position: '',
-      reviewed_by: 'VAN M. DE LEON',
-      approved_by: 'ANGELIC B. PAÑA',
-    });
-
-    const originalForm = ref(null); // To store the original form data
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref(''); // 'success' or 'error'
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-    const route = useRoute();
-
-    const currentPage = ref(1);
-    const totalPages = ref(1);
-
-    const fetchData = () => {
-      const clientId = route.params.id;
+  data() {
+    return {
+      form: {
+        client_id: null,
+        drn: '',
+        incident: '',
+        date_of_incident: '',
+        time_of_incident: '',
+        involved: '',
+        location: '',
+        action_taken: '',
+        agreements: '',
+        corrective_measure: '',
+        prepared_by: '',
+        prepared_by_position: '',
+        reviewed_by: 'VAN M. DE LEON',
+        approved_by: 'ANGELIC B. PAÑA',
+      },
+      originalForm: null, // To store the original form data
+      editMode: false,
+      message: '',
+      messageType: '', // 'success' or 'error'
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      currentPage: 1,
+      totalPages: 1,
+    };
+  },
+  mounted() {
+    this.fetchData();
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      this.fetchData();
+    }
+  },
+  methods: {
+    fetchData() {
+      const clientId = this.$route.params.id;
+      console.log('Fetching data for client ID:', clientId);
       if (clientId) {
         axios.get(`/api/incident-reports/${clientId}`).then(response => {
           if (response.data.report) {
             if (response.data.report.time_of_incident) {
-              form.value.time_of_incident = response.data.report.time_of_incident.slice(0, 5);
+              this.form.time_of_incident = response.data.report.time_of_incident.slice(0, 5);
             }
-            Object.assign(form.value, response.data.report);
-            form.value.client_id = clientId;
-            originalForm.value = JSON.parse(JSON.stringify(form.value)); // Store the original form data
+            Object.assign(this.form, response.data.report);
+            this.form.client_id = clientId;
+            this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store the original form data
           } else {
             const { client } = response.data;
-            form.value.client_id = client.id;
-            originalForm.value = JSON.parse(JSON.stringify(form.value)); // Store the original form data
+            this.form.client_id = client.id;
+            this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store the original form data
           }
         }).catch(error => {
           console.error('Error fetching data:', error);
         });
       }
-    };
+    },
 
-    onMounted(fetchData);
-
-    const toggleEdit = () => {
-      if (editMode.value) {
-        openSaveModal();
+    toggleEdit() {
+      if (this.editMode) {
+        this.openSaveModal();
       } else {
-        editMode.value = true;
-        originalForm.value = JSON.parse(JSON.stringify(form.value)); // Store the original form data before editing
+        this.editMode = true;
+        this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store the original form data before editing
       }
-    };
+    },
 
-    const openSaveModal = () => {
-      isModalOpen.value = true;
-    };
+    openSaveModal() {
+      this.isModalOpen = true;
+    },
 
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
+    closeModal() {
+      this.isModalOpen = false;
+    },
 
-    const confirmSave = () => {
-      submitForm();
-      closeModal();
-    };
+    confirmSave() {
+      this.submitForm();
+      this.closeModal();
+    },
 
-    const cancelEdit = () => {
-      if (originalForm.value) {
+    cancelEdit() {
+      if (this.originalForm) {
         // Revert to the original data
-        form.value = JSON.parse(JSON.stringify(originalForm.value));
+        this.form = JSON.parse(JSON.stringify(this.originalForm));
       }
-      editMode.value = false; // Exit edit mode
-    };
+      this.editMode = false; // Exit edit mode
+    },
 
-    const submitForm = () => {
-      if (!form.value.client_id) {
-        message.value = 'Client ID is required.';
-        messageType.value = 'error';
-        clearMessage();
+    submitForm() {
+      if (!this.form.client_id) {
+        this.message = 'Client ID is required.';
+        this.messageType = 'error';
+        this.clearMessage();
         return;
       }
 
-      if (form.value.time_of_incident) {
-        form.value.time_of_incident = form.value.time_of_incident.slice(0, 5);
+      if (this.form.time_of_incident) {
+        this.form.time_of_incident = this.form.time_of_incident.slice(0, 5);
       }
 
-      const url = `/api/incident-reports/${form.value.client_id}`;
+      const url = `/api/incident-reports/${this.form.client_id}`;
 
-      axios.put(url, form.value)
+      axios.put(url, this.form)
         .then(response => {
-          editMode.value = false;
-          message.value = 'Data updated successfully!';
-          messageType.value = 'success';
-          saveResultTitle.value = 'Success';
-          saveResultMessage.value = 'Data saved successfully.';
-          isSaveResultModalOpen.value = true;
-          clearMessage();
-          fetchData(); // Re-fetch data to update the form with the latest saved data
+          this.editMode = false;
+          this.message = 'Data updated successfully!';
+          this.messageType = 'success';
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully.';
+          this.isSaveResultModalOpen = true;
+          this.clearMessage();
+          this.fetchData(); // Re-fetch data to update the form with the latest saved data
         })
         .catch(error => {
           if (error.response && error.response.status === 422) {
-            message.value = 'Validation error: ' + JSON.stringify(error.response.data.errors);
+            this.message = 'Validation error: ' + JSON.stringify(error.response.data.errors);
           } else {
-            message.value = 'Failed to update data';
+            this.message = 'Failed to update data';
           }
-          messageType.value = 'error';
-          saveResultTitle.value = 'Error';
-          saveResultMessage.value = error.response?.data?.message || 'Error saving data.';
-          isSaveResultModalOpen.value = true;
-          clearMessage();
+          this.messageType = 'error';
+          this.saveResultTitle = 'Error';
+          this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
+          this.isSaveResultModalOpen = true;
+          this.clearMessage();
         });
-    };
+    },
 
-    const clearMessage = () => {
+    clearMessage() {
       setTimeout(() => {
-        message.value = '';
-        messageType.value = '';
+        this.message = '';
+        this.messageType = '';
       }, 3000);
-    };
+    },
 
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-      saveResultTitle.value = '';
-      saveResultMessage.value = '';
-    };
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    },
 
-    const updatePage = (newPage) => {
-      currentPage.value = newPage;
+    updatePage(newPage) {
+      this.currentPage = newPage;
       // Add logic to fetch data or change content based on the page
-    };
-
-    return {
-      form,
-      editMode,
-      message,
-      messageType,
-      toggleEdit,
-      submitForm,
-      isModalOpen,
-      openSaveModal,
-      closeModal,
-      confirmSave,
-      currentPage,
-      totalPages,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      closeSaveResultModal,
-      cancelEdit,
-      updatePage,
-    };
-  },
+    }
+  }
 };
 </script>
+

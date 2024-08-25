@@ -48,47 +48,63 @@
 
     <!-- Inventory Table -->
     <div class="overflow-x-auto mb-6">
-      <table class="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="border border-gray-300 p-2 text-left">Item</th>
-            <th class="border border-gray-300 p-2 text-left">Qty</th>
-            <th class="border border-gray-300 p-2 text-left">Brand</th>
-            <th class="border border-gray-300 p-2 text-left">Size</th>
-            <th class="border border-gray-300 p-2 text-left">Color</th>
-            <th class="border border-gray-300 p-2 text-left">Old</th>
-            <th class="border border-gray-300 p-2 text-left">New</th>
-            <th class="border border-gray-300 p-2 text-left">Remarks</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in form.items" :key="index">
-            <td class="border border-gray-300 p-2">{{ item.name }}</td>
-            <td class="border border-gray-300 p-2">
-              <input type="number" v-model.number="item.qty" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
-            </td>
-            <td class="border border-gray-300 p-2">
-              <input type="text" v-model="item.brand" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
-            </td>
-            <td class="border border-gray-300 p-2">
-              <input type="text" v-model="item.size" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
-            </td>
-            <td class="border border-gray-300 p-2">
-              <input type="text" v-model="item.color" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
-            </td>
-            <td class="border border-gray-300 p-2">
-              <input type="text" v-model="item.old" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
-            </td>
-            <td class="border border-gray-300 p-2">
-              <input type="text" v-model="item.new" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
-            </td>
-            <td class="border border-gray-300 p-2">
-              <input type="text" v-model="item.remarks" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <table class="w-full border-collapse border border-gray-300">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border border-gray-300 p-2 text-left">Item</th>
+          <th class="border border-gray-300 p-2 text-left">Qty</th>
+          <th class="border border-gray-300 p-2 text-left">Brand</th>
+          <th class="border border-gray-300 p-2 text-left">Size</th>
+          <th class="border border-gray-300 p-2 text-left">Color</th>
+          <th class="border border-gray-300 p-2 text-left">Old</th>
+          <th class="border border-gray-300 p-2 text-left">New</th>
+          <th class="border border-gray-300 p-2 text-left">Remarks</th>
+          <th v-if="editMode" class="border border-gray-300 p-2 text-left">Action</th> <!-- Conditionally Visible Action Column -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in form.items" :key="index">
+          <td class="border border-gray-300 p-2">
+            <input type="text" v-model="item.name" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input type="number" v-model.number="item.qty" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input type="text" v-model="item.brand" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input type="text" v-model="item.size" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input type="text" v-model="item.color" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input type="text" v-model="item.old" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input type="text" v-model="item.new" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+          </td>
+          <td class="border border-gray-300 p-2">
+            <input type="text" v-model="item.remarks" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+          </td>
+          <td v-if="editMode" class="border border-gray-300 p-2">
+            <!-- Remove Button -->
+            <button @click="removeItem(index)" class="px-2 py-1 bg-red-500 text-white rounded-md text-xs">
+              Remove
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Button to Add New Row -->
+    <div v-if="editMode" class="mt-4 text-right">
+      <button @click="addNewRow" class="px-4 py-2 bg-green-500 text-white rounded-md text-xs">
+        Add New Row
+      </button>
     </div>
+  </div>
+
 
     <!-- Name and Signature of Houseparent -->
     <div class="mb-6 flex justify-between items-center">
@@ -211,8 +227,6 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
@@ -220,147 +234,168 @@ export default {
   components: {
     Pagination,
   },
-  setup() {
-    const form = ref({
-      id: null,
-      client_id: null,
-      month: '',
-      drn: '',
-      resident_name: '',
-      houseparent_name: '',
-      items: [
-        { name: 'T shirt', description: '', qty: '', brand: '', size: '', color: '', old: '', new: '', remarks: '' },
-        // add other items as necessary
-      ]
-    });
-
-    const originalForm = ref(null);  // To store the original form data
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref(''); // 'success' or 'error'
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-    const route = useRoute();
-
-    const currentPage = ref(1);
-    const totalPages = ref(1);
-
-    const fetchData = () => {
-      const clientId = route.params.id;
-      if (clientId) {
-        axios.get(`/api/monthly-inventories/${clientId}`).then(response => {
-          if (response.data.inventory) {
-            form.value = response.data.inventory;
-            form.value.client_id = clientId;
-            originalForm.value = JSON.parse(JSON.stringify(form.value));  // Capture the original state
-          } else {
-            const { client } = response.data;
-            form.value.client_id = client.id;
-          }
-        }).catch(error => {
-          console.error('Error fetching data:', error);
-        });
-      }
-    };
-
-    onMounted(fetchData);
-
-    const toggleEdit = () => {
-      if (editMode.value) {
-        openModal();
-      } else {
-        originalForm.value = JSON.parse(JSON.stringify(form.value)); // Capture the current form state
-        editMode.value = true;
-      }
-    };
-
-    const openModal = () => {
-      isModalOpen.value = true;
-    };
-
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
-
-    const confirmSave = () => {
-      submitForm();
-      closeModal();
-    };
-
-    const cancelEdit = () => {
-      if (originalForm.value) {
-        form.value = JSON.parse(JSON.stringify(originalForm.value)); // Revert to the original form state
-      }
-      editMode.value = false; // Exit edit mode
-    };
-
-    const submitForm = () => {
-      if (!form.value.client_id) {
-        message.value = 'Client ID is required.';
-        messageType.value = 'error';
-        return;
-      }
-
-      const url = `/api/monthly-inventories/${form.value.client_id}`;
-
-      axios.put(url, form.value)
-        .then(response => {
-          editMode.value = false;
-          message.value = 'Data updated successfully!';
-          messageType.value = 'success';
-          saveResultTitle.value = 'Success';
-          saveResultMessage.value = 'Data saved successfully.';
-          isSaveResultModalOpen.value = true;
-          clearMessage();
-          fetchData(); // Re-fetch data to update the form with the latest saved data
-        })
-        .catch(error => {
-          message.value = 'Failed to update data';
-          messageType.value = 'error';
-          saveResultTitle.value = 'Error';
-          saveResultMessage.value = error.response?.data?.message || 'Error saving data.';
-          isSaveResultModalOpen.value = true;
-          clearMessage();
-        });
-    };
-
-    const clearMessage = () => {
-      setTimeout(() => {
-        message.value = '';
-        messageType.value = '';
-      }, 3000);
-    };
-
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-      saveResultTitle.value = '';
-      saveResultMessage.value = '';
-    };
-
+  data() {
     return {
-      form,
-      editMode,
-      message,
-      messageType,
-      toggleEdit,
-      submitForm,
-      isModalOpen,
-      openModal,
-      closeModal,
-      confirmSave,
-      currentPage,
-      totalPages,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      closeSaveResultModal,
-      cancelEdit,
+      form: {
+        id: null,
+        client_id: null,
+        month: '',
+        drn: '',
+        resident_name: '',
+        houseparent_name: '',
+        items: [
+          { name: '', description: '', qty: '', brand: '', size: '', color: '', old: '', new: '', remarks: '' },
+          // add other items as necessary
+        ]
+      },
+      originalForm: null, // To store the original form data
+      editMode: false,
+      message: '',
+      messageType: '', // 'success' or 'error'
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      currentPage: 1,
+      totalPages: 1,
     };
   },
+  mounted() {
+    this.fetchData();
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      this.fetchData();
+    }
+  },
+  methods: {
+    addNewRow() {
+      this.form.items.push({
+        name: '',
+        description: '',
+        qty: '',
+        brand: '',
+        size: '',
+        color: '',
+        old: '',
+        new: '',
+        remarks: ''
+      });
+    },
+
+    fetchData() {
+      const clientId = this.$route.params.id;
+      console.log('Fetching data for client ID:', clientId); // Debugging
+      if (clientId) {
+        axios.get(`/api/monthly-inventories/${clientId}`)
+          .then(response => {
+            console.log('Fetch data response:', response.data); // Debugging
+            if (response.data.inventory) {
+              this.form = response.data.inventory;
+              this.form.client_id = clientId;
+              this.originalForm = JSON.parse(JSON.stringify(this.form)); // Capture the original state
+            } else {
+              const { client } = response.data;
+              this.form.client_id = client.id;
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error); // Debugging
+            console.error('Error response data:', error.response?.data); // More detailed logging
+          });
+      }
+    },
+
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
+      } else {
+        this.originalForm = JSON.parse(JSON.stringify(this.form)); // Capture the current form state
+        this.editMode = true;
+      }
+    },
+
+    openModal() {
+      this.isModalOpen = true;
+    },
+
+    closeModal() {
+      this.isModalOpen = false;
+    },
+
+    confirmSave() {
+      this.submitForm();
+      this.closeModal();
+    },
+
+    cancelEdit() {
+      if (this.originalForm) {
+        this.form = JSON.parse(JSON.stringify(this.originalForm)); // Revert to the original form state
+      }
+      this.editMode = false; // Exit edit mode
+    },
+
+    submitForm() {
+  if (!this.form.client_id) {
+    this.message = 'Client ID is required.';
+    this.messageType = 'error';
+    return;
+  }
+
+  const isUpdate = this.form.id !== null;
+  const url = isUpdate
+    ? `/api/monthly-inventories` // Update URL
+    : `/api/monthly-inventories`; // Create URL (same as update URL but different HTTP method)
+
+  const method = isUpdate ? 'put' : 'post'; // Decide HTTP method
+
+  console.log(`Submitting form with method ${method} to URL:`, url); // Debugging
+  console.log('Form data being submitted:', this.form); // Debugging
+
+  axios({ method, url, data: this.form })
+    .then(response => {
+      console.log('Form submission successful:', response.data); // Debugging
+      this.editMode = false;
+      this.message = isUpdate ? 'Data updated successfully!' : 'Data created successfully!';
+      this.messageType = 'success';
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = isUpdate ? 'Data updated successfully.' : 'Data created successfully.';
+      this.isSaveResultModalOpen = true;
+      this.clearMessage();
+      this.fetchData(); // Re-fetch data to update the form with the latest saved data
+    })
+    .catch(error => {
+      console.error('Form submission failed:', error); // Debugging
+      console.error('Error response data:', error.response?.data); // More detailed logging
+      console.error('Error response status:', error.response?.status); // Status code
+      console.error('Error response headers:', error.response?.headers); // Response headers
+      this.message = 'Failed to save data';
+      this.messageType = 'error';
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
+      this.isSaveResultModalOpen = true;
+      this.clearMessage();
+    });
+}
+,
+
+    clearMessage() {
+      setTimeout(() => {
+        this.message = '';
+        this.messageType = '';
+      }, 3000);
+    },
+
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    }
+  }
 };
 </script>
+
+
 
 <style scoped>
 /* Add custom styles here */

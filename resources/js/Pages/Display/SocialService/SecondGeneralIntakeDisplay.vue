@@ -255,8 +255,6 @@
 
 <script>
 import axios from 'axios';
-import { ref, reactive, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
@@ -264,87 +262,99 @@ export default {
   components: {
     Pagination
   },
-  setup() {
-    const route = useRoute();
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref('');
-    const clientId = ref(null);
-    const totalPages = ref(2);
-    const currentPage = ref(1);
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-
-    const sheet = reactive({
-      id: null,
-      name: '',
-      age: '',
-      sex: '',
-      address: '',
-      date_of_birth: '',
-      place_of_birth: '',
-      religion: '',
-      occupation: '',
-      highest_educ_att: '',
-      school_name: '',
-      class_adviser: '',
-      date: '',
-      vices: {
-        gambling: false,
-        drugs: false,
-        cigarette: false,
-        liquor: false,
-        computer_games: false,
-      },
-      school_activities_achievement: '',
-      occupation_of_mother: '',
-      occupation_of_father: '',
-      siblings: ['', '', ''],
-      responsible_for_households_chores: '',
-      detention_days: '',
-      community: {
-        water_source: false,
-        light: false,
-        barangay_facility: false,
-        health_center: false,
-        internet: false,
-      },
-      house_made_of: '',
-    });
-
-    const fetchClientData = async (id) => {
+  data() {
+    return {
+      editMode: false,
+      message: '',
+      messageType: '',
+      clientId: null,
+      totalPages: 2,
+      currentPage: 1,
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      sheet: {
+        id: null,
+        name: '',
+        age: '',
+        sex: '',
+        address: '',
+        date_of_birth: '',
+        place_of_birth: '',
+        religion: '',
+        occupation: '',
+        highest_educ_att: '',
+        school_name: '',
+        class_adviser: '',
+        date: '',
+        vices: {
+          gambling: false,
+          drugs: false,
+          cigarette: false,
+          liquor: false,
+          computer_games: false,
+        },
+        school_activities_achievement: '',
+        occupation_of_mother: '',
+        occupation_of_father: '',
+        siblings: ['', '', ''],
+        responsible_for_households_chores: '',
+        detention_days: '',
+        community: {
+          water_source: false,
+          light: false,
+          barangay_facility: false,
+          health_center: false,
+          internet: false,
+        },
+        house_made_of: '',
+      }
+    };
+  },
+  mounted() {
+    this.clientId = this.$route.params.id;
+    console.log('Client ID fetched:', this.clientId); // Console log showing client ID
+    this.fetchClientData(this.clientId);
+  },
+  watch: {
+    '$route.params.id'(newId) {
+      this.clientId = newId;
+      console.log('Client ID changed:', this.clientId); // Console log showing updated client ID
+      this.fetchClientData(this.clientId);
+    }
+  },
+  methods: {
+    async fetchClientData(id) {
       try {
         const response = await axios.get(`/api/clients/${id}`);
         const client = response.data;
 
-        sheet.name = `${client.first_name} ${client.last_name}`;
-        sheet.age = calculateAge(client.date_of_birth);
-        sheet.sex = client.sex;
-        sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
-        sheet.date_of_birth = client.date_of_birth;
-        sheet.place_of_birth = client.place_of_birth;
-        sheet.religion = client.religion;
+        this.sheet.name = `${client.first_name} ${client.last_name}`;
+        this.sheet.age = this.calculateAge(client.date_of_birth);
+        this.sheet.sex = client.sex;
+        this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
+        this.sheet.date_of_birth = client.date_of_birth;
+        this.sheet.place_of_birth = client.place_of_birth;
+        this.sheet.religion = client.religion;
 
         const firstIntakeResponse = await axios.get(`/api/general-intake-sheets/${id}?intake=first`);
         const firstIntake = firstIntakeResponse.data;
 
-        sheet.occupation = firstIntake.occupation;
-        sheet.highest_educ_att = firstIntake.highest_educ_att;
-        sheet.school_name = firstIntake.school_name;
-        sheet.class_adviser = firstIntake.class_adviser;
+        this.sheet.occupation = firstIntake.occupation;
+        this.sheet.highest_educ_att = firstIntake.highest_educ_att;
+        this.sheet.school_name = firstIntake.school_name;
+        this.sheet.class_adviser = firstIntake.class_adviser;
 
         const secondIntakeResponse = await axios.get(`/api/second-intake-sheets/${id}`);
         const secondIntake = secondIntakeResponse.data;
 
-        Object.assign(sheet, secondIntake);
+        Object.assign(this.sheet, secondIntake);
       } catch (error) {
         console.error('Error fetching client data:', error);
       }
-    };
-
-    const calculateAge = (birthDate) => {
+    },
+    calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);
       let age = today.getFullYear() - birthDateObj.getFullYear();
@@ -353,106 +363,72 @@ export default {
         age--;
       }
       return age;
-    };
-
-    onMounted(() => {
-      clientId.value = route.params.id;
-      fetchClientData(clientId.value);
-    });
-
-    const toggleEdit = () => {
-      if (editMode.value) {
-        openModal();
+    },
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
       } else {
-        editMode.value = !editMode.value;
+        this.editMode = !this.editMode;
       }
-    };
-
-    const openModal = () => {
-      isModalOpen.value = true;
-    };
-
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
-
-    const confirmSave = () => {
-      saveData();
-      closeModal();
-      editMode.value = false;
-    };
-
-    const cancelEdit = () => {
-      editMode.value = false;
-    };
-
-    const saveData = () => {
-      if (!clientId.value) {
-        message.value = 'No client selected.';
-        messageType.value = 'error';
-        clearNotification();
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    confirmSave() {
+      this.saveData();
+      this.closeModal();
+      this.editMode = false;
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    saveData() {
+      if (!this.clientId) {
+        this.message = 'No client selected.';
+        this.messageType = 'error';
+        this.clearNotification();
         return;
       }
 
       const payload = {
-        client_id: clientId.value,
-        ...sheet,
+        client_id: this.clientId,
+        ...this.sheet
       };
 
-      const method = sheet.id ? 'put' : 'post';
-      const url = `/api/second-intake-sheets${sheet.id ? '/' + sheet.id : ''}`;
+      const method = this.sheet.id ? 'put' : 'post';
+      const url = `/api/second-intake-sheets${this.sheet.id ? '/' + this.sheet.id : ''}`;
 
       axios[method](url, payload)
         .then(response => {
-          saveResultTitle.value = 'Success';
-          saveResultMessage.value = 'Data saved successfully.';
-          if (!sheet.id) sheet.id = response.data.id;
-          editMode.value = false;
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully.';
+          if (!this.sheet.id) this.sheet.id = response.data.id;
+          this.editMode = false;
         })
         .catch(error => {
-          saveResultTitle.value = 'Error';
-          saveResultMessage.value = error.response.data.message || 'Error saving data.';
+          this.saveResultTitle = 'Error';
+          this.saveResultMessage = error.response.data.message || 'Error saving data.';
           console.error('Error saving data:', error);
         })
         .finally(() => {
-          isModalOpen.value = false;
-          isSaveResultModalOpen.value = true;
+          this.isModalOpen = false;
+          this.isSaveResultModalOpen = true;
         });
-    };
-
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-      saveResultTitle.value = '';
-      saveResultMessage.value = '';
-    };
-
-    const clearNotification = () => {
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    },
+    clearNotification() {
       setTimeout(() => {
-        message.value = '';
-        messageType.value = '';
+        this.message = '';
+        this.messageType = '';
       }, 3000);
-    };
-
-    return {
-      editMode,
-      message,
-      messageType,
-      sheet,
-      toggleEdit,
-      saveData,
-      isModalOpen,
-      openModal,
-      closeModal,
-      confirmSave,
-      cancelEdit,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      closeSaveResultModal,
-      currentPage,
-      totalPages,
-      Pagination,
-    };
+    }
   }
 };
 </script>

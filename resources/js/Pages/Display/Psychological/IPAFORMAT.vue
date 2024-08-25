@@ -395,195 +395,176 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
- name: 'InitialPsychologicalAssessmentForm',
- components: {
-   Pagination,
- },
- setup() {
-   const form = ref({
-     id: null,
-     client_id: null,
-     nickname: '',
-     name: '',
-     birth_date: '',
-     age: '',
-     gender: '',
-     address: '',
-     religion: '',
-     educational_attainment: '',
-     offense_committed: '',
-     admission_date: '',
-     report_date: '',
-     reason_for_referral: '',
-     family_history: '',
-     sexual_development: '',
-     medical_history: '',
-     school_history: '',
-     social_history: '',
-     personal_characteristics: '',
-     review_systems: '',
-     mental_status: '',
-     assessment_interview: '',
-     test_result: '',
-     clinical_impression: '',
-     plan_of_action: '',
-     prepared_by: '',
-     noted_by: '',
-   });
+  name: 'InitialPsychologicalAssessmentForm',
+  components: {
+    Pagination,
+  },
+  data() {
+    return {
+      form: {
+        id: null,
+        client_id: null,
+        nickname: '',
+        name: '',
+        birth_date: '',
+        age: '',
+        gender: '',
+        address: '',
+        religion: '',
+        educational_attainment: '',
+        offense_committed: '',
+        admission_date: '',
+        report_date: '',
+        reason_for_referral: '',
+        family_history: '',
+        sexual_development: '',
+        medical_history: '',
+        school_history: '',
+        social_history: '',
+        personal_characteristics: '',
+        review_systems: '',
+        mental_status: '',
+        assessment_interview: '',
+        test_result: '',
+        clinical_impression: '',
+        plan_of_action: '',
+        prepared_by: '',
+        noted_by: '',
+      },
+      editMode: false,
+      message: '',
+      messageType: '', // 'success' or 'error'
+      totalPages: 3,
+      currentPage: 1,
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+    };
+  },
+  mounted() {
+    this.fetchData();
+  },
+  watch: {
+    '$route.params.id': 'fetchData',
+  },
+  methods: {
+    fetchData() {
+      const clientId = this.$route.params.id;
+      console.log('Client ID:', clientId); // Log the client ID to the console
 
-   const editMode = ref(false);
-   const message = ref('');
-   const messageType = ref(''); // 'success' or 'error'
-   const route = useRoute();
-   const totalPages = ref(3);
-   const currentPage = ref(1);
-   const isModalOpen = ref(false);
-   const isSaveResultModalOpen = ref(false);
-   const saveResultTitle = ref('');
-   const saveResultMessage = ref('');
+      if (clientId) {
+        axios.get(`/api/initial-psychological-assessments/${clientId}`)
+          .then(response => {
+            if (response.data.assessment) {
+              Object.assign(this.form, response.data.assessment);
+              this.form.client_id = clientId;
+              this.form.admission_id = response.data.admission.id;
+              
+              // Assign additional fields from client and admission, making them non-editable
+              const client = response.data.client;
+              const admission = response.data.admission;
+              this.form.name = `${client.first_name} ${client.last_name}`;
+              this.form.birth_date = client.date_of_birth;
+              this.form.age = this.calculateAge(client.date_of_birth);
+              this.form.gender = client.sex;
+              this.form.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
+              this.form.religion = client.religion;
+              this.form.offense_committed = admission.offense_committed;
+              this.form.admission_date = admission.date_admitted;
+            } else {
+              const { client, admission, highest_educ_att } = response.data;
+              this.form.client_id = client.id;
+              this.form.admission_id = admission.id;
+              this.form.name = `${client.first_name} ${client.last_name}`;
+              this.form.birth_date = client.date_of_birth;
+              this.form.age = this.calculateAge(client.date_of_birth);
+              this.form.gender = client.sex;
+              this.form.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
+              this.form.religion = client.religion;
+              this.form.offense_committed = admission.offense_committed;
+              this.form.educational_attainment = highest_educ_att;
+              this.form.admission_date = admission.date_admitted;
+              this.form.report_date = new Date().toISOString().split('T')[0];
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
+      }
+    },
+    toggleEdit() {
+      this.editMode = !this.editMode;
+    },
+    cancelEdit() {
+      this.editMode = false;
+      this.fetchData(); // Reset the form with the latest data
+    },
+    saveData() {
+      this.isModalOpen = true;
+    },
+    confirmSave() {
+      this.isModalOpen = false;
+      this.submitForm();
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    },
+    submitForm() {
+      if (!this.form.client_id || !this.form.admission_id) {
+        this.message = 'Client ID and Admission ID are required.';
+        this.messageType = 'error';
+        return;
+      }
 
-   const fetchData = () => {
-     const clientId = route.params.id;
-     if (clientId) {
-       axios.get(`/api/initial-psychological-assessments/${clientId}`).then(response => {
-         if (response.data.assessment) {
-           Object.assign(form.value, response.data.assessment);
-           form.value.client_id = clientId;
-           form.value.admission_id = response.data.admission.id;
-           // Assign additional fields from client and admission, making them non-editable
-           const client = response.data.client;
-           const admission = response.data.admission;
-           form.value.name = `${client.first_name} ${client.last_name}`;
-           form.value.birth_date = client.date_of_birth;
-           form.value.age = calculateAge(client.date_of_birth);
-           form.value.gender = client.sex;
-           form.value.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
-           form.value.religion = client.religion;
-           form.value.offense_committed = admission.offense_committed;
-           form.value.admission_date = admission.date_admitted;
-         } else {
-           const { client, admission, highest_educ_att } = response.data;
-           form.value.client_id = client.id;
-           form.value.admission_id = admission.id;
-           form.value.name = `${client.first_name} ${client.last_name}`;
-           form.value.birth_date = client.date_of_birth;
-           form.value.age = calculateAge(client.date_of_birth);
-           form.value.gender = client.sex;
-           form.value.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
-           form.value.religion = client.religion;
-           form.value.offense_committed = admission.offense_committed;
-           form.value.educational_attainment = highest_educ_att;
-           form.value.admission_date = admission.date_admitted;
-           form.value.report_date = new Date().toISOString().split('T')[0];
-         }
-       }).catch(error => {
-         console.error('Error fetching data:', error);
-       });
-     }
-   };
+      const url = this.form.id 
+        ? `/api/initial-psychological-assessments/${this.form.id}` 
+        : `/api/initial-psychological-assessments`;
 
-   onMounted(fetchData);
+      const method = this.form.id ? 'put' : 'post';
 
-   const toggleEdit = () => {
-     editMode.value = !editMode.value;
-   };
-
-   const cancelEdit = () => {
-     editMode.value = false;
-     fetchData(); // Reset the form with the latest data
-   };
-
-   const saveData = () => {
-     isModalOpen.value = true;
-   };
-
-   const confirmSave = () => {
-     isModalOpen.value = false;
-     submitForm();
-   };
-
-   const closeModal = () => {
-     isModalOpen.value = false;
-   };
-
-   const closeSaveResultModal = () => {
-     isSaveResultModalOpen.value = false;
-     saveResultTitle.value = '';
-     saveResultMessage.value = '';
-   };
-
-   const submitForm = () => {
-     if (!form.value.client_id || !form.value.admission_id) {
-       message.value = 'Client ID and Admission ID are required.';
-       messageType.value = 'error';
-       return;
-     }
-
-     const url = form.value.id ? `/api/initial-psychological-assessments/${form.value.id}` : `/api/initial-psychological-assessments`;
-
-     const method = form.value.id ? 'put' : 'post';
-
-     axios[method](url, form.value)
-       .then(response => {
-         editMode.value = false;
-         saveResultTitle.value = 'Success';
-         saveResultMessage.value = 'Data saved successfully!';
-         isSaveResultModalOpen.value = true;
-         fetchData(); // Re-fetch data to update the form with the latest saved data
-       })
-       .catch(error => {
-         if (error.response && error.response.status === 422) {
-           const errors = error.response.data.errors;
-           message.value = 'Validation error: ' + Object.values(errors).flat().join(', ');
-         } else {
-           message.value = 'Failed to save data';
-         }
-         saveResultTitle.value = 'Error';
-         saveResultMessage.value = message.value;
-         isSaveResultModalOpen.value = true;
-       });
-   };
-
-   const calculateAge = (birthDate) => {
-     const today = new Date();
-     const birthDateObj = new Date(birthDate);
-     let age = today.getFullYear() - birthDateObj.getFullYear();
-     const monthDiff = today.getMonth() - birthDateObj.getMonth();
-     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-       age--;
-     }
-     return age;
-   };
-
-   const updatePage = (page) => {
-     currentPage.value = page;
-   };
-
-   return {
-     form,
-     editMode,
-     message,
-     messageType,
-     toggleEdit,
-     cancelEdit,
-     saveData,
-     confirmSave,
-     closeModal,
-     closeSaveResultModal,
-     currentPage,
-     totalPages,
-     isModalOpen,
-     isSaveResultModalOpen,
-     saveResultTitle,
-     saveResultMessage,
-     updatePage,
-   };
- },
+      axios[method](url, this.form)
+        .then(response => {
+          this.editMode = false;
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully!';
+          this.isSaveResultModalOpen = true;
+          this.fetchData(); // Re-fetch data to update the form with the latest saved data
+        })
+        .catch(error => {
+          if (error.response && error.response.status === 422) {
+            const errors = error.response.data.errors;
+            this.message = 'Validation error: ' + Object.values(errors).flat().join(', ');
+          } else {
+            this.message = 'Failed to save data';
+          }
+          this.saveResultTitle = 'Error';
+          this.saveResultMessage = this.message;
+          this.isSaveResultModalOpen = true;
+        });
+    },
+    calculateAge(birthDate) {
+      const today = new Date();
+      const birthDateObj = new Date(birthDate);
+      let age = today.getFullYear() - birthDateObj.getFullYear();
+      const monthDiff = today.getMonth() - birthDateObj.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+        age--;
+      }
+      return age;
+    },
+    updatePage(page) {
+      this.currentPage = page;
+    },
+  },
 };
 </script>
 

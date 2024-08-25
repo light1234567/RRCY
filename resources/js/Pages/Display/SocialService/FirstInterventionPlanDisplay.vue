@@ -192,217 +192,190 @@
  </template>
  
  <script>
- import axios from 'axios';
- import { ref, onMounted, reactive } from 'vue';
- import { useRoute } from 'vue-router';
- import Pagination from '@/Components/Pagination.vue';
- 
- export default {
-   components: {
-     Pagination
-   },
-   setup() {
-     const route = useRoute();
-     const editMode = ref(false);
-     const message = ref('');
-     const messageType = ref('');
-     const clientId = ref(null);
-     const isModalOpen = ref(false);
-     const totalPages = ref(1);
-     const currentPage = ref(1);
-     const isSaveResultModalOpen = ref(false);
-     const saveResultTitle = ref('');
-     const saveResultMessage = ref('');
-     const emptyRows = ref(5); // Number of empty rows to display
- 
-     const plan = reactive({
-       id: null,
-       name: '',
-       age: '',
-       period: '',
-       date_prepared: '',
-       prepared_by: '',
-       conformed_by: '',
-       noted_by: '',
-       items: [
-         { objectives: '', activities: '', time_frame: '', responsible_person: '', expected_outcome: '', remarks: '' },
-       ],
-     });
- 
-     const fetchClientData = async (id) => {
-       try {
-         const response = await axios.get(`/api/clients/${id}`);
-         const client = response.data;
- 
-         plan.name = `${client.first_name} ${client.last_name}`;
-         plan.age = calculateAge(client.date_of_birth);
- 
-         const planResponse = await axios.get(`/api/intervention-plans/${id}`);
-         const clientPlan = planResponse.data;
- 
-         plan.id = clientPlan.id;
-         plan.period = clientPlan.period;
-         plan.date_prepared = clientPlan.date_prepared;
-         plan.prepared_by = clientPlan.prepared_by || '';
-         plan.conformed_by = clientPlan.conformed_by || '';
-         plan.noted_by = clientPlan.noted_by || '';
-         plan.items = clientPlan.items.map(item => ({
-           objectives: item.objectives,
-           activities: item.activities,
-           time_frame: item.time_frame,
-           responsible_person: item.responsible_person,
-           expected_outcome: item.expected_outcome,
-           remarks: item.remarks,
-         }));
-         updateTotalPages();
-       } catch (error) {
-         console.error('Error fetching client data:', error);
-       }
-     };
- 
-     const calculateAge = (birthDate) => {
-       const today = new Date();
-       const birthDateObj = new Date(birthDate);
-       let age = today.getFullYear() - birthDateObj.getFullYear();
-       const monthDiff = today.getMonth() - birthDateObj.getMonth();
-       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-         age--;
-       }
-       return age;
-     };
- 
-     const updateTotalPages = () => {
-       // Assuming each page can show up to 10 items
-       const itemsPerPage = 10;
-       totalPages.value = Math.ceil(plan.items.length / itemsPerPage);
-     };
- 
-     const updatePage = (page) => {
-       currentPage.value = page;
-     };
- 
-     onMounted(() => {
-       clientId.value = route.params.id;
-       fetchClientData(clientId.value);
-     });
- 
-     const toggleEdit = () => {
-       if (editMode.value) {
-         openModal();
-       } else {
-         editMode.value = !editMode.value;
-       }
-     };
- 
-     const openModal = () => {
-       isModalOpen.value = true;
-     };
- 
-     const closeModal = () => {
-       isModalOpen.value = false;
-     };
- 
-     const confirmSave = () => {
-       saveData();
-       closeModal();
-       editMode.value = false;
-     };
- 
-     const cancelEdit = () => {
-       editMode.value = false;
-     };
- 
-     const closeSaveResultModal = () => {
-       isSaveResultModalOpen.value = false;
-     };
- 
-     const saveData = () => {
-       if (!clientId.value) {
-         message.value = 'No client selected.';
-         messageType.value = 'error';
-         return;
-       }
- 
-       const payload = {
-         client_id: clientId.value,
-         period: plan.period,
-         date_prepared: plan.date_prepared,
-         prepared_by: plan.prepared_by,
-         conformed_by: plan.conformed_by,
-         noted_by: plan.noted_by,
-         items: plan.items.map(item => ({
-           objectives: item.objectives,
-           activities: item.activities,
-           time_frame: item.time_frame,
-           responsible_person: item.responsible_person,
-           expected_outcome: item.expected_outcome,
-           remarks: item.remarks,
-         })),
-       };
-       const method = plan.id ? 'put' : 'post';
-       const url = `/api/intervention-plans${plan.id ? '/' + plan.id : ''}`;
- 
-       axios[method](url, payload)
-         .then(response => {
-           saveResultTitle.value = 'Success';
-           saveResultMessage.value = 'Data saved successfully.';
-           if (!plan.id) plan.id = response.data.id;
-           editMode.value = false;
-         })
-         .catch(error => {
-           messageType.value = 'error';
-           saveResultTitle.value = 'Error';
-           saveResultMessage.value = error.response.data.message || 'An error occurred while saving data.';
-           console.error('Error saving data:', error);
-         })
-         .finally(() => {
-           isModalOpen.value = false;
-           isSaveResultModalOpen.value = true;
-         });
-     };
- 
-     const addItem = () => {
-       plan.items.push({
-         objectives: '',
-         activities: '',
-         time_frame: '',
-         responsible_person: '',
-         expected_outcome: '',
-         remarks: '',
-       });
-       updateTotalPages(); // Update the total pages after adding a new item
-     };
- 
-     const openCalendar = () => {
-       document.querySelector('input[type="date"]').showPicker();
-     };
- 
-     return {
-       editMode,
-       message,
-       messageType,
-       plan,
-       toggleEdit,
-       cancelEdit,
-       addItem,
-       openCalendar,
-       isModalOpen,
-       openModal,
-       closeModal,
-       confirmSave,
-       isSaveResultModalOpen,
-       saveResultTitle,
-       saveResultMessage,
-       closeSaveResultModal,
-       Pagination,
-       totalPages,
-       currentPage,
-       emptyRows,
-       updatePage,
-     };
-   }
- };
- </script>
+import axios from 'axios';
+import Pagination from '@/Components/Pagination.vue';
+
+export default {
+  components: {
+    Pagination
+  },
+  data() {
+    return {
+      editMode: false,
+      message: '',
+      messageType: '',
+      clientId: null,
+      isModalOpen: false,
+      totalPages: 1,
+      currentPage: 1,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      emptyRows: 5, // Number of empty rows to display
+      plan: {
+        id: null,
+        name: '',
+        age: '',
+        period: '',
+        date_prepared: '',
+        prepared_by: '',
+        conformed_by: '',
+        noted_by: '',
+        items: [
+          { objectives: '', activities: '', time_frame: '', responsible_person: '', expected_outcome: '', remarks: '' },
+        ],
+      },
+    };
+  },
+  methods: {
+    fetchClientData() {
+      axios.get(`/api/clients/${this.clientId}`)
+        .then(response => {
+          const client = response.data;
+          this.plan.name = `${client.first_name} ${client.last_name}`;
+          this.plan.age = this.calculateAge(client.date_of_birth);
+
+          return axios.get(`/api/intervention-plans/${this.clientId}`);
+        })
+        .then(response => {
+          const clientPlan = response.data;
+
+          this.plan.id = clientPlan.id;
+          this.plan.period = clientPlan.period;
+          this.plan.date_prepared = clientPlan.date_prepared;
+          this.plan.prepared_by = clientPlan.prepared_by || '';
+          this.plan.conformed_by = clientPlan.conformed_by || '';
+          this.plan.noted_by = clientPlan.noted_by || '';
+          this.plan.items = clientPlan.items.map(item => ({
+            objectives: item.objectives,
+            activities: item.activities,
+            time_frame: item.time_frame,
+            responsible_person: item.responsible_person,
+            expected_outcome: item.expected_outcome,
+            remarks: item.remarks,
+          }));
+          this.updateTotalPages();
+        })
+        .catch(error => {
+          console.error('Error fetching client data:', error);
+        });
+
+      console.log('Fetched client ID:', this.clientId);
+    },
+    calculateAge(birthDate) {
+      const today = new Date();
+      const birthDateObj = new Date(birthDate);
+      let age = today.getFullYear() - birthDateObj.getFullYear();
+      const monthDiff = today.getMonth() - birthDateObj.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+        age--;
+      }
+      return age;
+    },
+    updateTotalPages() {
+      const itemsPerPage = 10; // Assuming each page can show up to 10 items
+      this.totalPages = Math.ceil(this.plan.items.length / itemsPerPage);
+    },
+    updatePage(page) {
+      this.currentPage = page;
+    },
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
+      } else {
+        this.editMode = !this.editMode;
+      }
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    confirmSave() {
+      this.saveData();
+      this.closeModal();
+      this.editMode = false;
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+    },
+    saveData() {
+      if (!this.clientId) {
+        this.message = 'No client selected.';
+        this.messageType = 'error';
+        return;
+      }
+
+      const payload = {
+        client_id: this.clientId,
+        period: this.plan.period,
+        date_prepared: this.plan.date_prepared,
+        prepared_by: this.plan.prepared_by,
+        conformed_by: this.plan.conformed_by,
+        noted_by: this.plan.noted_by,
+        items: this.plan.items.map(item => ({
+          objectives: item.objectives,
+          activities: item.activities,
+          time_frame: item.time_frame,
+          responsible_person: item.responsible_person,
+          expected_outcome: item.expected_outcome,
+          remarks: item.remarks,
+        })),
+      };
+
+      const method = this.plan.id ? 'put' : 'post';
+      const url = `/api/intervention-plans${this.plan.id ? '/' + this.plan.id : ''}`;
+
+      axios[method](url, payload)
+        .then(response => {
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully.';
+          if (!this.plan.id) this.plan.id = response.data.id;
+          this.editMode = false;
+        })
+        .catch(error => {
+          this.messageType = 'error';
+          this.saveResultTitle = 'Error';
+          this.saveResultMessage = error.response.data.message || 'An error occurred while saving data.';
+          console.error('Error saving data:', error);
+        })
+        .finally(() => {
+          this.isModalOpen = false;
+          this.isSaveResultModalOpen = true;
+        });
+    },
+    addItem() {
+      this.plan.items.push({
+        objectives: '',
+        activities: '',
+        time_frame: '',
+        responsible_person: '',
+        expected_outcome: '',
+        remarks: '',
+      });
+      this.updateTotalPages(); // Update the total pages after adding a new item
+    },
+    openCalendar() {
+      document.querySelector('input[type="date"]').showPicker();
+    }
+  },
+  mounted() {
+    this.clientId = this.$route.params.id;
+    this.fetchClientData();
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      this.clientId = newId;
+      this.fetchClientData();
+    }
+  }
+};
+</script>
+
  
  <style scoped>
  button {

@@ -782,345 +782,279 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import {  watch } from 'vue';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
   components: {
-    Pagination,
+    Pagination
   },
-  setup() {
-    const route = useRoute();
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref('');
-    const form = ref({
-      client_id: null,
-      admission_id: null,
-      date_administered: '',
-      physical_raw_score1: '',
-      physical_score_per_area1: '',
-      physical_raw_score2: '',
-      emotional_raw_score1: '',
-      emotional_score_per_area1: '',
-      emotional_raw_score2: '',
-      emotional_raw_score3: '',
-      emotional_raw_score4: '',
-      emotional_raw_score5: '',
-      emotional_raw_score6: '',
-      social_raw_score1: '',
-      social_score_per_area1: '',
-      social_raw_score2: '',
-      social_raw_score3: '',
-      social_raw_score4: '',
-      social_raw_score5: '',
-      social_raw_score6: '',
-      social_raw_score7: '',
-      social_raw_score8: '',
-      spiritual_raw_score1: '',
-      spiritual_score_per_area1: '',
-      educational_raw_score: '',
-      educational_score_per_area: '',
-      economic_raw_score: '',
-      economic_score_per_area: '',
-      general_score: '',
-      interpretation: '',
-      prepared_by: '',
-      discussed_with: ''
-    });
-
-    const clientName = ref('');
-    const errorMessage = ref('');
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-    const totalPages = ref(7);
-    const currentPage = ref(1);
-
-    const fetchData = async (client_id) => {
-  try {
-    const clientResponse = await axios.get(`/api/clients/${client_id}`);
-    const clientData = clientResponse.data;
-
-    const admissionResponse = await axios.get(`/api/admissions/client/${clientData.id}`);
-    const admissionData = admissionResponse.data;
-
-    const indicatorResponse = await axios.get(`/api/indicators-of-social-functioning/check/${clientData.id}/${admissionData.id}`);
-    const indicatorData = indicatorResponse.data;
-
-    if (!indicatorData) {
-      // No indicator found for this client and admission, handle accordingly
-      message.value = 'No indicator data found for this client.';
-      messageType.value = 'error';
-      return;
+  data() {
+    return {
+      editMode: false,
+      message: '',
+      messageType: '',
+      form: {
+        client_id: null,
+        admission_id: null,
+        date_administered: '',
+        physical_raw_score1: '',
+        physical_score_per_area1: '',
+        physical_raw_score2: '',
+        emotional_raw_score1: '',
+        emotional_score_per_area1: '',
+        emotional_raw_score2: '',
+        emotional_raw_score3: '',
+        emotional_raw_score4: '',
+        emotional_raw_score5: '',
+        emotional_raw_score6: '',
+        social_raw_score1: '',
+        social_score_per_area1: '',
+        social_raw_score2: '',
+        social_raw_score3: '',
+        social_raw_score4: '',
+        social_raw_score5: '',
+        social_raw_score6: '',
+        social_raw_score7: '',
+        social_raw_score8: '',
+        spiritual_raw_score1: '',
+        spiritual_score_per_area1: '',
+        educational_raw_score: '',
+        educational_score_per_area: '',
+        economic_raw_score: '',
+        economic_score_per_area: '',
+        general_score: '',
+        interpretation: '',
+        prepared_by: '',
+        discussed_with: ''
+      },
+      clientName: '',
+      errorMessage: '',
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      totalPages: 7,
+      currentPage: 1
+    };
+  },
+  mounted() {
+    const id = this.$route.params.id; // Assuming id is the indicators_id
+    if (id) {
+      this.fetchData(id);
     }
-
-    clientName.value = `${clientData.first_name} ${clientData.middle_name ? clientData.middle_name + ' ' : ''}${clientData.last_name}`;
-    form.value.client_id = clientData.id;
-    form.value.admission_id = admissionData.id;
-    form.value.dateAdmission = admissionData.date_admitted;
-    form.value.date_administered = indicatorData.date_administered || admissionData.date_administered;
-
-    form.value.physical_raw_score1 = indicatorData.physical_raw_score1 || '';
-    form.value.physical_score_per_area1 = indicatorData.physical_score_per_area1 || '';
-    form.value.physical_raw_score2 = indicatorData.physical_raw_score2 || '';
-
-    form.value.emotional_raw_score1 = indicatorData.emotional_raw_score1 || '';
-    form.value.emotional_score_per_area1 = indicatorData.emotional_score_per_area1 || '';
-    form.value.emotional_raw_score2 = indicatorData.emotional_raw_score2 || '';
-    form.value.emotional_raw_score3 = indicatorData.emotional_raw_score3 || '';
-    form.value.emotional_raw_score4 = indicatorData.emotional_raw_score4 || '';
-    form.value.emotional_raw_score5 = indicatorData.emotional_raw_score5 || '';
-    form.value.emotional_raw_score6 = indicatorData.emotional_raw_score6 || '';
-
-    form.value.social_raw_score1 = indicatorData.social_raw_score1 || '';
-    form.value.social_score_per_area1 = indicatorData.social_score_per_area1 || '';
-    form.value.social_raw_score2 = indicatorData.social_raw_score2 || '';
-    form.value.social_raw_score3 = indicatorData.social_raw_score3 || '';
-    form.value.social_raw_score4 = indicatorData.social_raw_score4 || '';
-    form.value.social_raw_score5 = indicatorData.social_raw_score5 || '';
-    form.value.social_raw_score6 = indicatorData.social_raw_score6 || '';
-    form.value.social_raw_score7 = indicatorData.social_raw_score7 || '';
-    form.value.social_raw_score8 = indicatorData.social_raw_score8 || '';
-
-    form.value.spiritual_raw_score1 = indicatorData.spiritual_raw_score1 || '';
-    form.value.spiritual_score_per_area1 = indicatorData.spiritual_score_per_area1 || '';
-
-    form.value.educational_raw_score = indicatorData.educational_raw_score || '';
-    form.value.educational_score_per_area = indicatorData.educational_score_per_area || '';
-
-    form.value.economic_raw_score = indicatorData.economic_raw_score || '';
-    form.value.economic_score_per_area = indicatorData.economic_score_per_area || '';
-
-    form.value.general_score = indicatorData.general_score || '';
-    form.value.interpretation = indicatorData.interpretation || '';
-
-    form.value.prepared_by = indicatorData.prepared_by || '';
-    form.value.discussed_with = indicatorData.discussed_with || '';
-
-    errorMessage.value = '';
-
-  } catch (error) {
-    handleAxiosError(error);
-  }
-};
-
-
-
-    const toggleEdit = () => {
-      if (editMode.value) {
-        saveData();
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      if (newId) {
+        this.fetchData(newId);
       }
-      editMode.value = !editMode.value;
-    };
+    },
+    'form.physical_raw_score1': 'validateRawScore',
+    'form.physical_raw_score2': 'validateRawScore',
+    'form.emotional_raw_score1': 'validateRawScore',
+    'form.emotional_raw_score2': 'validateRawScore',
+    'form.emotional_raw_score3': 'validateRawScore',
+    'form.emotional_raw_score4': 'validateRawScore',
+    'form.emotional_raw_score5': 'validateRawScore',
+    'form.emotional_raw_score6': 'validateRawScore',
+    'form.social_raw_score1': 'validateRawScore',
+    'form.social_raw_score2': 'validateRawScore',
+    'form.social_raw_score3': 'validateRawScore',
+    'form.social_raw_score4': 'validateRawScore',
+    'form.social_raw_score5': 'validateRawScore',
+    'form.social_raw_score6': 'validateRawScore',
+    'form.social_raw_score7': 'validateRawScore',
+    'form.social_raw_score8': 'validateRawScore',
+    'form.spiritual_raw_score1': 'validateRawScore',
+    'form.educational_raw_score': 'validateRawScore',
+    'form.economic_raw_score': 'validateRawScore'
+  },
+  methods: {
+  async fetchData(client_id) {
+    console.log(`Fetching data for client_id: ${client_id}`); // Added console log for debugging
 
-    const validateRawScore = (field) => {
-    if (form.value[field] < 0) {
-        form.value[field] = 0;
-    } else if (form.value[field] > 100) {
-        form.value[field] = 100;
-    }
-    // Convert to integer explicitly
-    form.value[field] = parseInt(form.value[field], 10) || 0;
-    calculateScores();
-};
-
-const calculateScores = () => {
-      // Calculate physical score per area
-      form.value.physical_score_per_area1 = 
-        form.value.physical_raw_score1 && form.value.physical_raw_score2 
-        ? (parseFloat(form.value.physical_raw_score1) + parseFloat(form.value.physical_raw_score2)) / 2 
-        : '';
-
-      // Calculate emotional score per area
-      form.value.emotional_score_per_area1 = [
-        form.value.emotional_raw_score1,
-        form.value.emotional_raw_score2,
-        form.value.emotional_raw_score3,
-        form.value.emotional_raw_score4,
-        form.value.emotional_raw_score5,
-        form.value.emotional_raw_score6,
-      ].reduce((sum, score) => sum + (parseFloat(score) || 0), 0) / 6 || '';
-
-      // Calculate social score per area
-      form.value.social_score_per_area1 = [
-        form.value.social_raw_score1,
-        form.value.social_raw_score2,
-        form.value.social_raw_score3,
-        form.value.social_raw_score4,
-        form.value.social_raw_score5,
-        form.value.social_raw_score6,
-        form.value.social_raw_score7,
-        form.value.social_raw_score8,
-      ].reduce((sum, score) => sum + (parseFloat(score) || 0), 0) / 8 || '';
-
-      // Calculate spiritual score per area
-      form.value.spiritual_score_per_area1 = form.value.spiritual_raw_score1 
-        ? parseFloat(form.value.spiritual_raw_score1) 
-        : '';
-
-      // Calculate educational score per area
-      form.value.educational_score_per_area = form.value.educational_raw_score 
-        ? parseFloat(form.value.educational_raw_score) 
-        : '';
-
-      // Calculate economic score per area
-      form.value.economic_score_per_area = form.value.economic_raw_score 
-        ? parseFloat(form.value.economic_raw_score) 
-        : '';
-
-      // Calculate the general score
-      const scores = [
-        form.value.physical_score_per_area1,
-        form.value.emotional_score_per_area1,
-        form.value.social_score_per_area1,
-        form.value.spiritual_score_per_area1,
-        form.value.educational_score_per_area,
-        form.value.economic_score_per_area,
-      ].filter(score => score !== '');
-      
-      form.value.general_score = scores.length > 0 
-        ? (scores.reduce((sum, score) => sum + parseFloat(score), 0) / scores.length).toFixed(2) 
-        : '';
-    };
-
-    // Watch for changes in any of the raw scores to trigger recalculation
-    watch(
-      () => [
-        form.value.physical_raw_score1,
-        form.value.physical_raw_score2,
-        form.value.emotional_raw_score1,
-        form.value.emotional_raw_score2,
-        form.value.emotional_raw_score3,
-        form.value.emotional_raw_score4,
-        form.value.emotional_raw_score5,
-        form.value.emotional_raw_score6,
-        form.value.social_raw_score1,
-        form.value.social_raw_score2,
-        form.value.social_raw_score3,
-        form.value.social_raw_score4,
-        form.value.social_raw_score5,
-        form.value.social_raw_score6,
-        form.value.social_raw_score7,
-        form.value.social_raw_score8,
-        form.value.spiritual_raw_score1,
-        form.value.educational_raw_score,
-        form.value.economic_raw_score,
-      ],
-      calculateScores
-    );
-
-
-
-
-
-const saveData = async () => {
-    if (!form.value.client_id || !form.value.admission_id) {
-        message.value = 'Client or Admission ID is missing.';
-        messageType.value = 'error';
-        return;
-    }
-
-   
     try {
-        const response = await axios({
-          method: form.value.id ? 'put' : 'post',
-          url: `/api/data-privacy-consent${form.value.id ? '/' + form.value.id : ''}`,
-          data: form.value,
-        });
-        saveResultTitle.value = 'Success';
-        saveResultMessage.value = 'Data saved successfully!';
-        if (!form.value.id) {
-          form.value.id = response.data.id;
+      const clientResponse = await axios.get(`/api/clients/${client_id}`);
+      const clientData = clientResponse.data;
+
+      const admissionResponse = await axios.get(`/api/admissions/client/${clientData.id}`);
+      const admissionData = admissionResponse.data;
+
+      const indicatorResponse = await axios.get(`/api/indicators-of-social-functioning/check/${clientData.id}/${admissionData.id}`);
+      const indicatorData = indicatorResponse.data;
+
+      if (!indicatorData) {
+        this.message = 'No indicator data found for this client.';
+        this.messageType = 'error';
+        return;
+      }
+
+      this.clientName = `${clientData.first_name} ${clientData.middle_name ? clientData.middle_name + ' ' : ''}${clientData.last_name}`;
+      this.form.client_id = clientData.id;
+      this.form.admission_id = admissionData.id;
+      this.form.date_administered = indicatorData.date_administered || '';
+      this.form.dateAdmission = admissionData.date_admitted || '';
+
+      // Assign values from indicatorData to form
+      Object.keys(this.form).forEach(key => {
+        if (indicatorData[key] !== undefined) {
+          this.form[key] = indicatorData[key];
         }
-        editMode.value = false;
+      });
+
+      this.errorMessage = '';
+    } catch (error) {
+      this.handleAxiosError(error);
+    }
+  },
+
+
+    toggleEdit() {
+      if (this.editMode) {
+        this.saveData();
+      }
+      this.editMode = !this.editMode;
+    },
+
+    validateRawScore(field) {
+      if (this.form[field] < 0) {
+        this.form[field] = 0;
+      } else if (this.form[field] > 100) {
+        this.form[field] = 100;
+      }
+      this.form[field] = parseInt(this.form[field], 10) || 0;
+      this.calculateScores();
+    },
+
+    calculateScores() {
+      this.form.physical_score_per_area1 =
+        this.form.physical_raw_score1 && this.form.physical_raw_score2
+          ? (parseFloat(this.form.physical_raw_score1) + parseFloat(this.form.physical_raw_score2)) / 2
+          : '';
+
+      this.form.emotional_score_per_area1 =
+        [
+          this.form.emotional_raw_score1,
+          this.form.emotional_raw_score2,
+          this.form.emotional_raw_score3,
+          this.form.emotional_raw_score4,
+          this.form.emotional_raw_score5,
+          this.form.emotional_raw_score6
+        ].reduce((sum, score) => sum + (parseFloat(score) || 0), 0) / 6 || '';
+
+      this.form.social_score_per_area1 =
+        [
+          this.form.social_raw_score1,
+          this.form.social_raw_score2,
+          this.form.social_raw_score3,
+          this.form.social_raw_score4,
+          this.form.social_raw_score5,
+          this.form.social_raw_score6,
+          this.form.social_raw_score7,
+          this.form.social_raw_score8
+        ].reduce((sum, score) => sum + (parseFloat(score) || 0), 0) / 8 || '';
+
+      this.form.spiritual_score_per_area1 = this.form.spiritual_raw_score1
+        ? parseFloat(this.form.spiritual_raw_score1)
+        : '';
+
+      this.form.educational_score_per_area = this.form.educational_raw_score
+        ? parseFloat(this.form.educational_raw_score)
+        : '';
+
+      this.form.economic_score_per_area = this.form.economic_raw_score
+        ? parseFloat(this.form.economic_raw_score)
+        : '';
+
+      const scores = [
+        this.form.physical_score_per_area1,
+        this.form.emotional_score_per_area1,
+        this.form.social_score_per_area1,
+        this.form.spiritual_score_per_area1,
+        this.form.educational_score_per_area,
+        this.form.economic_score_per_area
+      ].filter(score => score !== '');
+
+      this.form.general_score = scores.length > 0
+        ? (scores.reduce((sum, score) => sum + parseFloat(score), 0) / scores.length).toFixed(2)
+        : '';
+    },
+
+    async saveData() {
+      if (!this.form.client_id || !this.form.admission_id) {
+        this.message = 'Client or Admission ID is missing.';
+        this.messageType = 'error';
+        return;
+      }
+
+      try {
+        const response = await axios({
+          method: this.form.id ? 'put' : 'post',
+          url: `/api/indicators-of-social-functioning${this.form.id ? '/' + this.form.id : ''}`,
+          data: this.form
+        });
+
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data saved successfully!';
+
+        if (!this.form.id) {
+          this.form.id = response.data.id;
+        }
+
+        // Refetch data to ensure it's updated
+        this.fetchData(this.form.client_id);
+
+        this.editMode = false;
       } catch (error) {
-        saveResultTitle.value = 'Error';
-        saveResultMessage.value = 'Error saving data.';
+        this.saveResultTitle = 'Error';
+        this.saveResultMessage = 'Error saving data.';
         console.error('Error saving data:', error);
       } finally {
-        closeModal();
-        isSaveResultModalOpen.value = true;
+        this.closeModal();
+        this.isSaveResultModalOpen = true;
       }
-    };
+    },
 
-    const openModal = () => {
-      isModalOpen.value = true;
-    };
+    openModal() {
+      this.isModalOpen = true;
+    },
 
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
+    closeModal() {
+      this.isModalOpen = false;
+    },
 
-    const confirmSave = () => {
-      saveData();
-    };
+    confirmSave() {
+      this.saveData();
+    },
 
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-      saveResultTitle.value = '';
-      saveResultMessage.value = '';
-    };
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    },
 
-    const cancelEdit = () => {
-      editMode.value = false;
-    };
+    cancelEdit() {
+      this.editMode = false;
+    },
 
-    const updatePage = (page) => {
-      currentPage.value = page;
-    };
+    updatePage(page) {
+      this.currentPage = page;
+    },
 
-
-
-
-    const handleAxiosError = (error) => {
+    handleAxiosError(error) {
       if (error.response) {
         console.error('Server Error:', error.response.data);
-        message.value = `Error saving data: ${error.response.status} ${error.response.statusText}. ${error.response.data.message || ''}`;
+        this.message = `Error saving data: ${error.response.status} ${error.response.statusText}. ${error.response.data.message || ''}`;
       } else if (error.request) {
         console.error('No Response:', error.request);
-        message.value = 'Error saving data: No response received from the server. Please check your network connection or try again later.';
+        this.message = 'Error saving data: No response received from the server. Please check your network connection or try again later.';
       } else {
         console.error('Unexpected Error:', error.message);
-        message.value = `Error saving data: ${error.message}`;
+        this.message = `Error saving data: ${error.message}`;
       }
 
-      messageType.value = 'error';
-    };
-
-    onMounted(() => {
-  const id = route.params.id; // Assuming id is the indicators_id
-  if (id) {
-    fetchData(id);
-  }
-});
-
-
-    return {
-      editMode,
-      form,
-      clientName,
-      errorMessage,
-      message,
-      messageType,
-      toggleEdit,
-      isModalOpen,
-      openModal,
-      closeModal,
-      confirmSave,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      closeSaveResultModal,
-      cancelEdit,
-      totalPages,
-      currentPage,
-      updatePage,
-      validateRawScore,
-    };
+      this.messageType = 'error';
+    }
   }
 };
 </script>

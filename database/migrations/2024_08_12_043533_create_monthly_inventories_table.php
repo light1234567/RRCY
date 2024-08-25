@@ -11,7 +11,7 @@ class CreateMonthlyInventoriesTable extends Migration
         Schema::create('monthly_inventories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->string('month');
+            $table->string('month')->nullable();
             $table->string('drn')->nullable();
             $table->string('resident_name')->nullable();
             $table->string('houseparent_name')->nullable();

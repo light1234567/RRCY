@@ -19,9 +19,9 @@ class InterventionPlanController extends Controller
             'client_id' => 'required|exists:clients,id',
             'period' => 'required|string|max:255',
             'date_prepared' => 'required|date',
-            'prepared_by' => 'nullable|string|max:255',  // Validate new field
-            'conformed_by' => 'nullable|string|max:255', // Validate new field
-            'noted_by' => 'nullable|string|max:255',     // Validate new field
+            'prepared_by' => 'nullable|string|max:255',
+            'conformed_by' => 'nullable|string|max:255',
+            'noted_by' => 'nullable|string|max:255',
             'items' => 'required|array',
             'items.*.objectives' => 'required|string|max:255',
             'items.*.activities' => 'required|string|max:255',
@@ -56,9 +56,9 @@ class InterventionPlanController extends Controller
                 'client_id' => 'required|exists:clients,id',
                 'period' => 'required|string|max:255',
                 'date_prepared' => 'required|date',
-                'prepared_by' => 'nullable|string|max:255',  // Validate new field
-                'conformed_by' => 'nullable|string|max:255', // Validate new field
-                'noted_by' => 'nullable|string|max:255',     // Validate new field
+                'prepared_by' => 'nullable|string|max:255',
+                'conformed_by' => 'nullable|string|max:255',
+                'noted_by' => 'nullable|string|max:255',
                 'items' => 'required|array',
                 'items.*.objectives' => 'required|string|max:255',
                 'items.*.activities' => 'required|string|max:255',
@@ -89,3 +89,4 @@ class InterventionPlanController extends Controller
         return response()->json(['message' => 'Not found'], 404);
     }
 }
+

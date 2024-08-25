@@ -520,320 +520,299 @@
 
 <script>
 import axios from 'axios';
-import { ref, reactive, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
- name: 'GeneralIntakeSheet',
- components: {
-   Pagination
- },
- setup() {
-   const route = useRoute();
-   const editMode = ref(false);
-   const message = ref('');
-   const messageType = ref('');
-   const totalPages = ref(4);
-   const clientId = ref(null);
-   const currentPage = ref(1);
-   const isModalOpen = ref(false);
-   const isSaveResultModalOpen = ref(false);
-   const saveResultTitle = ref('');
-   const saveResultMessage = ref('');
+  name: 'GeneralIntakeSheet',
+  components: {
+    Pagination
+  },
+  data() {
+    return {
+      editMode: false,
+      message: '',
+      messageType: '',
+      totalPages: 4,
+      clientId: null,
+      currentPage: 1,
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      sheet: {
+        id: null,
+        name: '',
+        age: '',
+        sex: '',
+        address: '',
+        date_of_birth: '',
+        place_of_birth: '',
+        religion: '',
+        occupation: '',
+        highest_educ_att: '',
+        school_name: '',
+        class_adviser: '',
+        date: '',  // New date field
+        problem_presented: '',
+        brief_physical_description: '',
+        major_life_event: {
+          death_of_parents: false,
+          separation_from_family: false,
+          natural_disaster: false,
+          apprehension: false,
+          physical_abuse: false,
+          suicidal_tendencies: false,
+          mistaken_identity: false,
+          abandonment: false,
+          serious_accident: false,
+          demolition: false,
+          sexual_abuse: false,
+          verbal_abuse: false,
+          disability: false,
+          others: false,
+        },
+        enduring_life_strain: {
+          poverty: false,
+          physical_illness: false,
+          lack_recreational_facilities: false,
+          exclusion_from_peers: false,
+          other: false,
+          constant_need_to_earn: false,
+          lack_education_opportunity: false,
+          exclusion_from_school: false,
+          disability: false,
+        },
+        life_transition: {
+          moving_neighbour: false,
+          changing_peer_group: false,
+          moving_due_to_demolition: false,
+          moving_due_to_disaster: false,
+          kinship_foster_placement: false,
+          beginning_romantic_relationship: false,
+          beginning_parents_romantic_relationship: false,
+          others: false,
+        },
+        development_changes: {
+          early_childhood: false,
+          school_age: false,
+          adolescence: false,
+        },
+        normalization: {
+          legality_law_enforcement: false,
+          commercial_sex: false,
+          substance_illegal_drugs: false,
+          pornography_materials: false,
+          red_houses: false,
+          price_least_expensive: false,
+          advertisement_media: false,
+          advertisement_promoting_liquors: false,
+          television_shows: false,
+          movies: false,
+          printed_materials: false,
+          community_acceptance: false,
+          source_of_income: false,
+          involve_in_trade: false,
+          role_of_culture: false,
+          smoking: false,
+          abuse: false,
+          illicit_relationship: false,
+          incest_relationship: false,
+          begging: false,
+          rugby_sniffing: false,
+        },
+        behaviour_towards_incident: {
+          stow_away: false,
+          irritable: false,
+          delinquent_behaviour: false,
+          stealing: false,
+          begging: false,
+          others: false,
+          withdrawal: false,
+          unresponsive_passive: false,
+          indulge_in_illegal_substance: false,
+          snatching: false,
+          staying_in_street: false,
+        },
+        attachments: {
+          mother: false,
+          grandmother: false,
+          aunt: false,
+          neighbour: false,
+          cousin: false,
+          father: false,
+          grandfather: false,
+          uncle: false,
+          peer: false,
+          schoolmate: false,
+          classmate: false,
+        },
+        skills: {
+          problem_solving: false,
+          interpersonal_relationship: false,
+          communication_skills: false,
+          vocational_skills: false,
+          critical_thinking: false,
+          others: false,
+          coping_skills: false,
+          survival_skills: false,
+          decision_making_skills: false,
+          comprehension: false,
+          self_awareness: false,
+        },
+        resources: {
+          internal: false,
+          intelligence: false,
+          spirituality: false,
+          resourceful: false,
+          obedient: false,
+          others: false,
+          external: false,
+          family: false,
+          peers: false,
+          health_services: false,
+          recreational_services: false,
+          ngos: false,
+          civic_organization: false,
+          others: false,
+        },
+        source_of_income_in_street: {
+          vending: false,
+          car_wash_boy: false,
+          rugby_user: false,
+          porter: false,
+          barker: false,
+        },
+        earnings_income: '',
+        hrs_stay_in_street: '',
+        length_stay_in_street: '',
+        common_substance_used: '',
+        initial_assessment: '',
+        recommendations: '',
+        vices: '',
+        school_activities_achievement: '',
+        occupation_of_mother: '',
+        occupation_of_father: '',
+        siblings: '',
+        responsible_for_households_chores: '',
+        water_source: '',
+        house_made_of: '',
+        prepared_by: '',  // New field
+        reviewed_by: '',  // New field
+      }
+    };
+  },
+  mounted() {
+    this.clientId = this.$route.params.id;
+    console.log('Client ID fetched:', this.clientId); // Console log showing client ID
+    this.fetchClientData(this.clientId);
+  },
+  watch: {
+    '$route.params.id'(newId) {
+      this.clientId = newId;
+      this.fetchClientData(this.clientId);
+    }
+  },
+  methods: {
+    async fetchClientData(id) {
+      try {
+        const response = await axios.get(`/api/clients/${id}`);
+        const client = response.data;
 
-   const sheet = reactive({
-     id: null,
-     name: '',
-     age: '',
-     sex: '',
-     address: '',
-     date_of_birth: '',
-     place_of_birth: '',
-     religion: '',
-     occupation: '',
-     highest_educ_att: '',
-     school_name: '',
-     class_adviser: '',
-     date: '',  // New date field
-     problem_presented: '',
-     brief_physical_description: '',
-     major_life_event: {
-       death_of_parents: false,
-       separation_from_family: false,
-       natural_disaster: false,
-       apprehension: false,
-       physical_abuse: false,
-       suicidal_tendencies: false,
-       mistaken_identity: false,
-       abandonment: false,
-       serious_accident: false,
-       demolition: false,
-       sexual_abuse: false,
-       verbal_abuse: false,
-       disability: false,
-       others: false,
-     },
-     enduring_life_strain: {
-       poverty: false,
-       physical_illness: false,
-       lack_recreational_facilities: false,
-       exclusion_from_peers: false,
-       other: false,
-       constant_need_to_earn: false,
-       lack_education_opportunity: false,
-       exclusion_from_school: false,
-       disability: false,
-     },
-     life_transition: {
-       moving_neighbour: false,
-       changing_peer_group: false,
-       moving_due_to_demolition: false,
-       moving_due_to_disaster: false,
-       kinship_foster_placement: false,
-       beginning_romantic_relationship: false,
-       beginning_parents_romantic_relationship: false,
-       others: false,
-     },
-     development_changes: {
-       early_childhood: false,
-       school_age: false,
-       adolescence: false,
-     },
-     normalization: {
-       legality_law_enforcement: false,
-       commercial_sex: false,
-       substance_illegal_drugs: false,
-       pornography_materials: false,
-       red_houses: false,
-       price_least_expensive: false,
-       advertisement_media: false,
-       advertisement_promoting_liquors: false,
-       television_shows: false,
-       movies: false,
-       printed_materials: false,
-       community_acceptance: false,
-       source_of_income: false,
-       involve_in_trade: false,
-       role_of_culture: false,
-       smoking: false,
-       abuse: false,
-       illicit_relationship: false,
-       incest_relationship: false,
-       begging: false,
-       rugby_sniffing: false,
-     },
-     behaviour_towards_incident: {
-       stow_away: false,
-       irritable: false,
-       delinquent_behaviour: false,
-       stealing: false,
-       begging: false,
-       others: false,
-       withdrawal: false,
-       unresponsive_passive: false,
-       indulge_in_illegal_substance: false,
-       snatching: false,
-       staying_in_street: false,
-     },
-     attachments: {
-       mother: false,
-       grandmother: false,
-       aunt: false,
-       neighbour: false,
-       cousin: false,
-       father: false,
-       grandfather: false,
-       uncle: false,
-       peer: false,
-       schoolmate: false,
-       classmate: false,
-     },
-     skills: {
-       problem_solving: false,
-       interpersonal_relationship: false,
-       communication_skills: false,
-       vocational_skills: false,
-       critical_thinking: false,
-       others: false,
-       coping_skills: false,
-       survival_skills: false,
-       decision_making_skills: false,
-       comprehension: false,
-       self_awareness: false,
-     },
-     resources: {
-       internal: false,
-       intelligence: false,
-       spirituality: false,
-       resourceful: false,
-       obedient: false,
-       others: false,
-       external: false,
-       family: false,
-       peers: false,
-       health_services: false,
-       recreational_services: false,
-       ngos: false,
-       civic_organization: false,
-       others: false,
-     },
-     source_of_income_in_street: {
-       vending: false,
-       car_wash_boy: false,
-       rugby_user: false,
-       porter: false,
-       barker: false,
-     },
-     earnings_income: '',
-     hrs_stay_in_street: '',
-     length_stay_in_street: '',
-     common_substance_used: '',
-     initial_assessment: '',
-     recommendations: '',
-     vices: '',
-     school_activities_achievement: '',
-     occupation_of_mother: '',
-     occupation_of_father: '',
-     siblings: '',
-     responsible_for_households_chores: '',
-     water_source: '',
-     house_made_of: '',
-     prepared_by: '',  // New field
-     reviewed_by: '',  // New field
-   });
+        this.sheet.name = `${client.first_name} ${client.last_name}`;
+        this.sheet.age = this.calculateAge(client.date_of_birth);
+        this.sheet.sex = client.sex;
+        this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
+        this.sheet.date_of_birth = client.date_of_birth;
+        this.sheet.place_of_birth = client.place_of_birth;
+        this.sheet.religion = client.religion;
 
-   const fetchClientData = async (id) => {
-     try {
-       const response = await axios.get(`/api/clients/${id}`);
-       const client = response.data;
+        const sheetResponse = await axios.get(`/api/general-intake-sheets/${id}`);
+        const clientSheet = sheetResponse.data;
 
-       sheet.name = `${client.first_name} ${client.last_name}`;
-       sheet.age = calculateAge(client.date_of_birth);
-       sheet.sex = client.sex;
-       sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
-       sheet.date_of_birth = client.date_of_birth;
-       sheet.place_of_birth = client.place_of_birth;
-       sheet.religion = client.religion;
+        Object.assign(this.sheet, clientSheet);
+      } catch (error) {
+        console.error('Error fetching client data:', error);
+      }
+    },
+    calculateAge(birthDate) {
+      const today = new Date();
+      const birthDateObj = new Date(birthDate);
+      let age = today.getFullYear() - birthDateObj.getFullYear();
+      const monthDiff = today.getMonth() - birthDateObj.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+        age--;
+      }
+      return age;
+    },
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
+      } else {
+        this.editMode = !this.editMode;
+      }
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    confirmSave() {
+      this.saveData();
+      this.closeModal();
+      this.editMode = false;
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    saveData() {
+      if (!this.clientId) {
+        this.message = 'No client selected.';
+        this.messageType = 'error';
+        this.clearNotification();
+        return;
+      }
 
-       const sheetResponse = await axios.get(`/api/general-intake-sheets/${id}`);
-       const clientSheet = sheetResponse.data;
+      const payload = {
+        client_id: this.clientId,
+        ...this.sheet
+      };
 
-       Object.assign(sheet, clientSheet);
-     } catch (error) {
-       console.error('Error fetching client data:', error);
-     }
-   };
+      const method = this.sheet.id ? 'put' : 'post';
+      const url = `/api/general-intake-sheets${this.sheet.id ? '/' + this.sheet.id : ''}`;
 
-   const calculateAge = (birthDate) => {
-     const today = new Date();
-     const birthDateObj = new Date(birthDate);
-     let age = today.getFullYear() - birthDateObj.getFullYear();
-     const monthDiff = today.getMonth() - birthDateObj.getMonth();
-     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-       age--;
-     }
-     return age;
-   };
-
-   onMounted(() => {
-     clientId.value = route.params.id;
-     fetchClientData(clientId.value);
-   });
-
-   const toggleEdit = () => {
-     if (editMode.value) {
-       openModal();
-     } else {
-       editMode.value = !editMode.value;
-     }
-   };
-   const openModal = () => {
-     isModalOpen.value = true;
-   };
-
-   const closeModal = () => {
-     isModalOpen.value = false;
-   };
-   const confirmSave = () => {
-     saveData();
-     closeModal();
-     editMode.value = false;
-   };
-   const cancelEdit = () => {
-     editMode.value = false;
-   };
-
-   const saveData = () => {
-     if (!clientId.value) {
-       message.value = 'No client selected.';
-       messageType.value = 'error';
-       clearNotification();
-       return;
-     }
-
-     const payload = {
-       client_id: clientId.value,
-       ...sheet,
-     };
-
-     const method = sheet.id ? 'put' : 'post';
-     const url = `/api/general-intake-sheets${sheet.id ? '/' + sheet.id : ''}`;
-
-     axios[method](url, payload)
-       .then(response => {
-         saveResultTitle.value = 'Success';
-         saveResultMessage.value = 'Data saved successfully.';
-         if (!sheet.id) sheet.id = response.data.id;
-         editMode.value = false;
-       })
-       .catch(error => {
-         saveResultTitle.value = 'Error';
-         saveResultMessage.value = error.response.data.message || 'Error saving data.';
-         console.error('Error saving data:', error);
-       })
-       .finally(() => {
-         isModalOpen.value = false;
-         isSaveResultModalOpen.value = true;
-       });
-   };
-
-   const closeSaveResultModal = () => {
-     isSaveResultModalOpen.value = false;
-     saveResultTitle.value = '';
-     saveResultMessage.value = '';
-   };
-
-   const clearNotification = () => {
-     setTimeout(() => {
-       message.value = '';
-       messageType.value = '';
-     }, 3000);
-   };
-
-   return {
-     editMode,
-     message,
-     messageType,
-     sheet,
-     toggleEdit,
-     saveData,
-     isModalOpen,
-     openModal,
-     closeModal,
-     confirmSave,
-     cancelEdit,
-     isSaveResultModalOpen,
-     saveResultTitle,
-     saveResultMessage,
-     closeSaveResultModal,
-     currentPage,
-     totalPages,
-     Pagination,
-   };
- }
+      axios[method](url, payload)
+        .then(response => {
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully.';
+          if (!this.sheet.id) this.sheet.id = response.data.id;
+          this.editMode = false;
+        })
+        .catch(error => {
+          this.saveResultTitle = 'Error';
+          this.saveResultMessage = error.response.data.message || 'Error saving data.';
+          console.error('Error saving data:', error);
+        })
+        .finally(() => {
+          this.isModalOpen = false;
+          this.isSaveResultModalOpen = true;
+        });
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    },
+    clearNotification() {
+      setTimeout(() => {
+        this.message = '';
+        this.messageType = '';
+      }, 3000);
+    }
+  }
 };
 </script>
+
 
 <style scoped>
 button {

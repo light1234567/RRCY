@@ -22,18 +22,23 @@ use App\Http\Controllers\IncidentReportController;
 use App\Http\Controllers\MonthlyInventoryController;
 use App\Http\Controllers\CiclSessionController;
 use App\Http\Controllers\SwappingFormController;
+use App\Http\Controllers\AdminController;
 
 
 // Existing Routes
 
+// Client Routes
 Route::get('/clients', [ClientController::class, 'index']);
 Route::get('/clients/{id}', [ClientController::class, 'show']);
 Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
+
+// Admission Routes
 Route::post('/admission', [AdmissionController::class, 'store']);
 Route::get('/admissions/client/{client_id}', [AdmissionController::class, 'getAdmissionByClientId']);
-
 Route::post('/save-admission', [AdmissionController::class, 'saveForm']);
 Route::get('/clients-data/{id}', [AdmissionController::class, 'getAllData']);
+
+// Checklist Routes
 Route::get('/checklist/{id}', [ChecklistController::class, 'index']);
 Route::post('/save-checklist', [ChecklistController::class, 'store']);
 
@@ -103,20 +108,19 @@ Route::get('indicators-of-social-functioning/check/{client_id}/{admission_id}', 
 Route::get('/indicators-of-social-functioning/check/{client_id}/{admission_id}', [IndicatorOfSocialFunctioningController::class, 'checkExisting']);
 Route::apiResource('indicators-of-social-functioning', IndicatorOfSocialFunctioningController::class);
 
-
+//Psychological Intervention Plan Routes
 Route::post('/psychological-intervention-plans', [PsychologicalInterventionPlanController::class, 'store']);
 Route::get('/psychological-intervention-plans/{id}', [PsychologicalInterventionPlanController::class, 'show']);
 Route::put('/psychological-intervention-plans/{id}', [PsychologicalInterventionPlanController::class, 'update']);
 
 
-
+//Initial Psychological Assessment Routes
 Route::get('/initial-psychological-assessments', [InitialPsychologicalAssessmentController::class, 'index']);
 Route::get('/initial-psychological-assessments/{client_id}/{admission_id}', [InitialPsychologicalAssessmentController::class, 'show']);
 Route::get('/initial-psychological-assessments/{client_id}', [InitialPsychologicalAssessmentController::class, 'show']);
 Route::post('/initial-psychological-assessments', [InitialPsychologicalAssessmentController::class, 'store']);
 Route::put('/initial-psychological-assessments/{id}', [InitialPsychologicalAssessmentController::class, 'update']);
 Route::delete('/initial-psychological-assessments/{id}', [InitialPsychologicalAssessmentController::class, 'destroy']);
-
 
 // Cicl Progress Notes Routes
 Route::get('/cicl-progress-notes', [CiclProgressNoteController::class, 'index']);
@@ -125,14 +129,12 @@ Route::post('/cicl-progress-notes', [CiclProgressNoteController::class, 'store']
 Route::put('/cicl-progress-notes/{client_id}', [CiclProgressNoteController::class, 'update']);
 Route::delete('/cicl-progress-notes/{id}', [CiclProgressNoteController::class, 'destroy']);
 
-
 // Anecdotal Report Routes
 Route::get('/anecdotal-reports', [AnecdotalReportController::class, 'index']);
 Route::get('/anecdotal-reports/{client_id}', [AnecdotalReportController::class, 'show']);
 Route::post('/anecdotal-reports', [AnecdotalReportController::class, 'store']);
 Route::put('/anecdotal-reports/{client_id}', [AnecdotalReportController::class, 'update']);
 Route::delete('/anecdotal-reports/{id}', [AnecdotalReportController::class, 'destroy']);
-
 
 // Incident Report Routes
 Route::get('/incident-reports', [IncidentReportController::class, 'index']);
@@ -141,13 +143,13 @@ Route::post('/incident-reports', [IncidentReportController::class, 'store']);
 Route::put('/incident-reports/{client_id}', [IncidentReportController::class, 'update']);
 Route::delete('/incident-reports/{id}', [IncidentReportController::class, 'destroy']);
 
-Route::get('/monthly-inventories', [MonthlyInventoryController::class, 'index']);
-Route::get('/monthly-inventories/{client_id}', [MonthlyInventoryController::class, 'show']);
-Route::post('/monthly-inventories', [MonthlyInventoryController::class, 'store']);
-Route::put('/monthly-inventories/{client_id}', [MonthlyInventoryController::class, 'update']);
-Route::delete('/monthly-inventories/{id}', [MonthlyInventoryController::class, 'destroy']);
+//Monthly Inventory Routes
+Route::get('monthly-inventories/{client_id}', [MonthlyInventoryController::class, 'show']);
+Route::post('monthly-inventories', [MonthlyInventoryController::class, 'store']); // For creating
+Route::put('monthly-inventories', [MonthlyInventoryController::class, 'store']); // For updating
+Route::delete('monthly-inventories/{id}', [MonthlyInventoryController::class, 'destroy']);
 
-
+//Cicl Session Routes
 Route::get('/cicl-sessions', [CiclSessionController::class, 'index']);
 Route::get('/cicl-sessions/{client_id}', [CiclSessionController::class, 'show']);
 Route::post('/cicl-sessions', [CiclSessionController::class, 'store']);
@@ -155,18 +157,17 @@ Route::put('/cicl-sessions/{client_id}', [CiclSessionController::class, 'update'
 Route::delete('/cicl-sessions/{id}', [CiclSessionController::class, 'destroy']);
 Route::put('/cicl-sessions/{id}', [CiclSessionController::class, 'update']);
 
+//Swapping Form Routes
 Route::get('/swapping-forms', [SwappingFormController::class, 'index']);
 Route::get('/swapping-forms/{client_id}', [SwappingFormController::class, 'show']);
 Route::post('/swapping-forms', [SwappingFormController::class, 'store']);
 Route::put('/swapping-forms/{client_id}', [SwappingFormController::class, 'update']);
 Route::delete('/swapping-forms/{id}', [SwappingFormController::class, 'destroy']);
 
-
 // User Role Routes
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
 
-use App\Http\Controllers\AdminController;
-
+// Admin Routes
 Route::get('/users', [AdminController::class, 'index']);
 Route::get('/users/{id}', [AdminController::class, 'show']);
 Route::delete('/users/{id}', [AdminController::class, 'destroy']);

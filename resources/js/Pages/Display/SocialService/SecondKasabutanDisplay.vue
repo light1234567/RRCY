@@ -155,128 +155,107 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
   components: {
-     Pagination
-   },
-  setup() {
-    const route = useRoute();
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref('');
-    const form = ref({
-      client_id: null,
-      client_resident: '',
-      parent_guardian: '',
-      case_manager: '',
-      id: null // Add id to track existing record
-    });
-    const clientName = ref('');
-    const errorMessage = ref('');
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-    const totalPages = ref(1);
-    const currentPage = ref(1);
-
-    const fetchClientData = async (clientId) => {
+    Pagination
+  },
+  data() {
+    return {
+      editMode: false,
+      message: '',
+      messageType: '',
+      form: {
+        client_id: null,
+        client_resident: '',
+        parent_guardian: '',
+        case_manager: '',
+        id: null
+      },
+      clientName: '',
+      errorMessage: '',
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      totalPages: 1,
+      currentPage: 1
+    };
+  },
+  mounted() {
+    const clientId = this.$route.params.id;
+    console.log('Client ID fetched:', clientId); // Console log showing client ID
+    if (clientId) {
+      this.fetchClientData(clientId);
+    }
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      console.log('Client ID changed:', newId); // Console log showing updated client ID
+      if (newId) {
+        this.fetchClientData(newId);
+      }
+    }
+  },
+  methods: {
+    async fetchClientData(clientId) {
       try {
         const clientResponse = await axios.get(`/api/clients/${clientId}`);
         const client = clientResponse.data;
-        clientName.value = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
-        form.value.client_id = client.id; // Set the client ID in the form
+        this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
+        this.form.client_id = client.id; // Set the client ID in the form
 
         const kasabutanResponse = await axios.get(`/api/kasabutan/${clientId}`);
         const kasabutan = kasabutanResponse.data;
-        form.value.client_resident = kasabutan.client_resident || '';
-        form.value.parent_guardian = kasabutan.parent_guardian || '';
-        form.value.case_manager = kasabutan.case_manager || '';
-        form.value.id = kasabutan.id; // Capture the kasabutan id if it exists
+        this.form.client_resident = kasabutan.client_resident || '';
+        this.form.parent_guardian = kasabutan.parent_guardian || '';
+        this.form.case_manager = kasabutan.case_manager || '';
+        this.form.id = kasabutan.id; // Capture the kasabutan id if it exists
       } catch (error) {
-        errorMessage.value = 'Error fetching client data.';
+        this.errorMessage = 'Error fetching client data.';
         console.error('Error fetching client data:', error);
       }
-    };
-
-    const toggleEdit = () => {
-      editMode.value = !editMode.value;
-    };
-
-    const openModal = () => {
-      isModalOpen.value = true;
-    };
-
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
-
-    const confirmSave = async () => {
+    },
+    toggleEdit() {
+      this.editMode = !this.editMode;
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    async confirmSave() {
       try {
-        const response = await axios[form.value.id ? 'put' : 'post'](`/api/kasabutan${form.value.id ? '/' + form.value.id : ''}`, form.value);
-        saveResultTitle.value = 'Success';
-        saveResultMessage.value = 'Data saved successfully.';
-        isSaveResultModalOpen.value = true;
+        const response = await axios[this.form.id ? 'put' : 'post'](`/api/kasabutan${this.form.id ? '/' + this.form.id : ''}`, this.form);
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data saved successfully.';
+        this.isSaveResultModalOpen = true;
 
-        if (!form.value.id) {
-          form.value.id = response.data.id; // Update id if new record created
+        if (!this.form.id) {
+          this.form.id = response.data.id; // Update id if new record created
         }
 
-        errorMessage.value = ''; // Clear any previous error messages
-
-        // Switch back to view mode after saving
-        editMode.value = false;
+        this.errorMessage = ''; // Clear any previous error messages
+        this.editMode = false; // Switch back to view mode after saving
       } catch (error) {
-        saveResultTitle.value = 'Error';
-        saveResultMessage.value = error.response?.data?.message || 'Error saving data.';
-        isSaveResultModalOpen.value = true;
+        this.saveResultTitle = 'Error';
+        this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
+        this.isSaveResultModalOpen = true;
         console.error('Error saving data:', error);
       } finally {
-        closeModal();
+        this.closeModal();
       }
-    };
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-      saveResultTitle.value = '';
-      saveResultMessage.value = '';
-    };
-
-    const cancelEdit = () => {
-      editMode.value = false;
-    };
-
-    onMounted(() => {
-      const id = route.params.id;
-      if (id) {
-        fetchClientData(id);
-      }
-    });
-
-    return {
-      editMode,
-      form,
-      clientName,
-      errorMessage,
-      message,
-      messageType,
-      toggleEdit,
-      isModalOpen,
-      openModal,
-      closeModal,
-      confirmSave,
-      cancelEdit,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      closeSaveResultModal,
-      Pagination,
-      totalPages,
-      currentPage,
-    };
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    },
+    cancelEdit() {
+      this.editMode = false;
+    }
   }
 };
 </script>

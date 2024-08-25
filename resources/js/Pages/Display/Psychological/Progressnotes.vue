@@ -185,8 +185,6 @@
 
 <script>
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
@@ -194,122 +192,135 @@ export default {
   components: {
     Pagination,
   },
-  setup() {
-    const form = ref({
-      client_id: null,
-      admission_id: null,
-      name: '',
-      age: '',
-      date_admitted: '',
-      intervention_period: '',
-      problem_behavior_log: '',
-      interventions_conducted: '',
-      progress_notes: '',
-      prepared_by: 'BRYAN V. GALANG, MPsy, RPsy',
-      noted_by: 'ANGELIC B. PAÑA, RSW, MSSW',
-    });
-
-    const editMode = ref(false);
-    const message = ref('');
-    const messageType = ref(''); // 'success' or 'error'
-    const route = useRoute();
-    const totalPages = ref(1);
-    const currentPage = ref(1);
-    const isModalOpen = ref(false);
-    const isSaveResultModalOpen = ref(false);
-    const saveResultTitle = ref('');
-    const saveResultMessage = ref('');
-
-    const fetchData = () => {
-      const clientId = route.params.id;
+  data() {
+    return {
+      form: {
+        client_id: null,
+        admission_id: null,
+        name: '',
+        age: '',
+        date_admitted: '',
+        intervention_period: '',
+        problem_behavior_log: '',
+        interventions_conducted: '',
+        progress_notes: '',
+        prepared_by: 'BRYAN V. GALANG, MPsy, RPsy',
+        noted_by: 'ANGELIC B. PAÑA, RSW, MSSW',
+      },
+      editMode: false,
+      message: '',
+      messageType: '', // 'success' or 'error'
+      totalPages: 1,
+      currentPage: 1,
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
+      id: null,
+    };
+  },
+  mounted() {
+    this.id = this.$route.params.id;
+    this.fetchData();
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      this.id = newId;
+      this.fetchData();
+    }
+  },
+  methods: {
+    fetchData() {
+      const clientId = this.id;
+      console.log('Fetching data for client ID:', clientId);
       if (clientId) {
-        axios.get(`/api/cicl-progress-notes/${clientId}`).then(response => {
-          if (response.data.note) {
-            Object.assign(form.value, response.data.note);
-            form.value.client_id = clientId;
-            form.value.admission_id = response.data.admission.id;
-            // Assign additional fields from client and admission, making them non-editable
-            const client = response.data.client;
-            const admission = response.data.admission;
-            form.value.name = `${client.first_name} ${client.last_name}`;
-            form.value.age = calculateAge(client.date_of_birth);
-            form.value.date_admitted = admission.date_admitted;
-          } else {
-            const { client, admission } = response.data;
-            form.value.client_id = client.id;
-            form.value.admission_id = admission.id;
-            form.value.name = `${client.first_name} ${client.last_name}`;
-            form.value.age = calculateAge(client.date_of_birth);
-            form.value.date_admitted = admission.date_admitted;
-          }
-        }).catch(error => {
-          console.error('Error fetching data:', error);
-        });
+        axios.get(`/api/cicl-progress-notes/${clientId}`)
+          .then(response => {
+            if (response.data.note) {
+              Object.assign(this.form, response.data.note);
+              this.form.client_id = clientId;
+              this.form.admission_id = response.data.admission.id;
+              // Assign additional fields from client and admission, making them non-editable
+              const client = response.data.client;
+              const admission = response.data.admission;
+              this.form.name = `${client.first_name} ${client.last_name}`;
+              this.form.age = this.calculateAge(client.date_of_birth);
+              this.form.date_admitted = admission.date_admitted;
+            } else {
+              const { client, admission } = response.data;
+              this.form.client_id = client.id;
+              this.form.admission_id = admission.id;
+              this.form.name = `${client.first_name} ${client.last_name}`;
+              this.form.age = this.calculateAge(client.date_of_birth);
+              this.form.date_admitted = admission.date_admitted;
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+          });
       }
-    };
+    },
 
-    onMounted(fetchData);
+    toggleEdit() {
+      this.editMode = !this.editMode;
+    },
 
-    const toggleEdit = () => {
-      editMode.value = !editMode.value;
-    };
+    cancelEdit() {
+      this.editMode = false;
+      this.fetchData(); // Reset the form with the latest data
+    },
 
-    const cancelEdit = () => {
-      editMode.value = false;
-      fetchData(); // Reset the form with the latest data
-    };
+    saveData() {
+      this.isModalOpen = true;
+    },
 
-    const saveData = () => {
-      isModalOpen.value = true;
-    };
+    confirmSave() {
+      this.isModalOpen = false;
+      this.submitForm();
+    },
 
-    const confirmSave = () => {
-      isModalOpen.value = false;
-      submitForm();
-    };
+    closeModal() {
+      this.isModalOpen = false;
+    },
 
-    const closeModal = () => {
-      isModalOpen.value = false;
-    };
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    },
 
-    const closeSaveResultModal = () => {
-      isSaveResultModalOpen.value = false;
-      saveResultTitle.value = '';
-      saveResultMessage.value = '';
-    };
-
-    const submitForm = () => {
-      if (!form.value.client_id || !form.value.admission_id) {
-        message.value = 'Client ID and Admission ID are required.';
-        messageType.value = 'error';
-        clearMessage();
+    submitForm() {
+      if (!this.form.client_id || !this.form.admission_id) {
+        this.message = 'Client ID and Admission ID are required.';
+        this.messageType = 'error';
+        this.clearMessage();
         return;
       }
 
-      const url = `/api/cicl-progress-notes/${form.value.client_id}`;
+      const url = `/api/cicl-progress-notes/${this.form.client_id}`;
 
-      axios.put(url, form.value)
+      axios.put(url, this.form)
         .then(response => {
-          editMode.value = false;
-          saveResultTitle.value = 'Success';
-          saveResultMessage.value = 'Data saved successfully!';
-          isSaveResultModalOpen.value = true;
-          fetchData(); // Re-fetch data to update the form with the latest saved data
+          this.editMode = false;
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully!';
+          this.isSaveResultModalOpen = true;
+          this.fetchData(); // Re-fetch data to update the form with the latest saved data
         })
         .catch(error => {
           if (error.response && error.response.status === 422) {
             const errors = error.response.data.errors;
-            message.value = 'Validation error: ' + Object.values(errors).flat().join(', ');
+            this.message = 'Validation error: ' + Object.values(errors).flat().join(', ');
           } else {
-            message.value = 'Failed to save data';
+            this.message = 'Failed to save data';
           }
-          saveResultTitle.value = 'Error';
-          saveResultMessage.value = message.value;
-          isSaveResultModalOpen.value = true;
+          this.saveResultTitle = 'Error';
+          this.saveResultMessage = this.message;
+          this.isSaveResultModalOpen = true;
         });
-    };
+    },
 
-    const calculateAge = (birthDate) => {
+    calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);
       let age = today.getFullYear() - birthDateObj.getFullYear();
@@ -318,44 +329,22 @@ export default {
         age--;
       }
       return age;
-    };
+    },
 
-    const clearMessage = () => {
+    clearMessage() {
       setTimeout(() => {
-        message.value = '';
-        messageType.value = '';
+        this.message = '';
+        this.messageType = '';
       }, 3000);
-    };
+    },
 
-    const updatePage = (page) => {
-      currentPage.value = page;
-    };
-
-    return {
-      form,
-      editMode,
-      message,
-      messageType,
-      toggleEdit,
-      cancelEdit,
-      saveData,
-      confirmSave,
-      closeModal,
-      closeSaveResultModal,
-      currentPage,
-      totalPages,
-      isModalOpen,
-      isSaveResultModalOpen,
-      saveResultTitle,
-      saveResultMessage,
-      submitForm,
-      calculateAge,
-      clearMessage,
-      updatePage,
-    };
-  },
+    updatePage(page) {
+      this.currentPage = page;
+    }
+  }
 };
 </script>
+
 
 <style scoped>
 button {

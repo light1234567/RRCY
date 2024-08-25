@@ -191,200 +191,173 @@
 
 <script>
 import axios from 'axios';
-import { ref, reactive, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
 import Pagination from '@/Components/Pagination.vue';
 
 export default {
-components: {
-  Pagination
-},
-setup() {
-  const route = useRoute();
-  const editMode = ref(false);
-  const message = ref('');
-  const messageType = ref('');
-  const currentPage = ref(1);
-  const totalPages = ref(2);
-  const clientId = ref(null);
-  const checklist = reactive([]);
-  const rrForms = reactive([]);
-  const isModalOpen = ref(false);
-  const isSaveResultModalOpen = ref(false);
-  const saveResultTitle = ref('');
-  const saveResultMessage = ref('');
-
-  const initializeForm = () => {
-    checklist.length = 0;
-    rrForms.length = 0;
-
-    checklist.push(
-      { document: 'Commitment/Court Order', yes: false, no: false, remarks: '' },
-      { document: 'Referral Letter', yes: false, no: false, remarks: '' },
-      { document: 'Social Case Study Report', yes: false, no: false, remarks: '' },
-      { document: 'Medical Certificate', yes: false, no: false, remarks: '' },
-      { document: 'Negative RT-PCR COVID-19 Test Result', yes: false, no: false, remarks: '' },
-      { document: 'Laboratory Examination Result', yes: false, no: false, remarks: '' },
-      { document: 'Psychological Assessment and Evaluation', yes: false, no: false, remarks: '' },
-      { document: 'Birth Certificate/Baptismal Cert', yes: false, no: false, remarks: '' },
-      { document: 'School Documents (Form 137) if applicable', yes: false, no: false, remarks: '' },
-      { document: 'List of Belongings', yes: false, no: false, remarks: '' },
-    );
-
-    rrForms.push(
-      { form: 'Admission Slip', yes: false, no: false, remarks: '' },
-      { form: 'General Intake Form', yes: false, no: false, remarks: '' },
-      { form: 'Admission Contract', yes: false, no: false, remarks: '' },
-      { form: 'Parent\'s Consent', yes: false, no: false, remarks: '' },
-      { form: 'Inventory of Client\'s belongings', yes: false, no: false, remarks: '' },
-      { form: 'Kasabutan "Good Performance"', yes: false, no: false, remarks: '' },
-      { form: 'Kasabutan (Bulitas)', yes: false, no: false, remarks: '' },
-      { form: 'Data Privacy Consent Form', yes: false, no: false, remarks: '' },
-      { form: 'Talambuhay', yes: false, no: false, remarks: '' },
-      { form: 'SFI', yes: false, no: false, remarks: '' },
-      { form: 'Daily Journal', yes: false, no: false, remarks: '' },
-    );
-  };
-
-  const fetchClientData = async (id) => {
-    try {
-      const response = await axios.get(`/api/checklist/${id}`);
-      const clientData = response.data;
-
-      initializeForm();
-
-      clientData.checklist.forEach((item) => {
-        const checklistItem = checklist.find(ch => ch.document === item.document);
-        if (checklistItem) {
-          checklistItem.yes = item.yes === 1;
-          checklistItem.no = item.no === 1;
-          checklistItem.remarks = item.remarks;
-        } else {
-          checklist.push({ document: item.document, yes: item.yes === 1, no: item.no === 1, remarks: item.remarks });
-        }
-      });
-
-      clientData.rrForms.forEach((item) => {
-        const rrFormItem = rrForms.find(rr => rr.form === item.form);
-        if (rrFormItem) {
-          rrFormItem.yes = item.yes === 1;
-          rrFormItem.no = item.no === 1;
-          rrFormItem.remarks = item.remarks;
-        } else {
-          rrForms.push({ form: item.form, yes: item.yes === 1, no: item.no === 1, remarks: item.remarks });
-        }
-      });
-    } catch (error) {
-      console.error('Error fetching client data:', error);
-    }
-  };
-
-  onMounted(() => {
-    clientId.value = route.params.id;
-    fetchClientData(clientId.value);
-  });
-
-  const toggleEdit = () => {
-    if (editMode.value) {
-      openModal();
-    } else {
-      editMode.value = !editMode.value;
-    }
-  };
-
-  const openModal = () => {
-    isModalOpen.value = true;
-  };
-
-  const closeModal = () => {
-    isModalOpen.value = false;
-  };
-
-  const cancelEdit = () => {
-    editMode.value = false;
-  };
-
-  const confirmSave = () => {
-    saveData();
-    closeModal();
-    editMode.value = false;
-  };
-
-  const closeSaveResultModal = () => {
-    isSaveResultModalOpen.value = false;
-  };
-
-  const saveData = () => {
-    if (!clientId.value) {
-      message.value = 'No client selected.';
-      messageType.value = 'error';
-      return;
-    }
-
-    const checklistWithClientId = checklist.map(item => ({
-      ...item,
-      client_id: clientId.value,
-    }));
-
-    const rrFormsWithClientId = rrForms.map(item => ({
-      ...item,
-      client_id: clientId.value,
-    }));
-
-    const payload = {
-      checklist: checklistWithClientId,
-      rrForms: rrFormsWithClientId,
+  components: {
+    Pagination
+  },
+  data() {
+    return {
+      editMode: false,
+      message: '',
+      messageType: '',
+      currentPage: 1,
+      totalPages: 2,
+      clientId: null,
+      checklist: [],
+      rrForms: [],
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
     };
+  },
+  methods: {
+    initializeForm() {
+      this.checklist = [
+        { document: 'Commitment/Court Order', yes: false, no: false, remarks: '' },
+        { document: 'Referral Letter', yes: false, no: false, remarks: '' },
+        { document: 'Social Case Study Report', yes: false, no: false, remarks: '' },
+        { document: 'Medical Certificate', yes: false, no: false, remarks: '' },
+        { document: 'Negative RT-PCR COVID-19 Test Result', yes: false, no: false, remarks: '' },
+        { document: 'Laboratory Examination Result', yes: false, no: false, remarks: '' },
+        { document: 'Psychological Assessment and Evaluation', yes: false, no: false, remarks: '' },
+        { document: 'Birth Certificate/Baptismal Cert', yes: false, no: false, remarks: '' },
+        { document: 'School Documents (Form 137) if applicable', yes: false, no: false, remarks: '' },
+        { document: 'List of Belongings', yes: false, no: false, remarks: '' },
+      ];
 
-    axios.post('/api/save-checklist', payload)
-      .then(response => {
-        showSaveResultModal('Success', 'Data saved successfully.');
-      })
-      .catch(error => {
-        message.value = error.response.data.message || 'Error saving data.';
-        messageType.value = 'error';
-        showSaveResultModal('Error', error.response.data.message || 'Error saving data.');
-        console.error('Error saving data:', error);
-      });
-  };
+      this.rrForms = [
+        { form: 'Admission Slip', yes: false, no: false, remarks: '' },
+        { form: 'General Intake Form', yes: false, no: false, remarks: '' },
+        { form: 'Admission Contract', yes: false, no: false, remarks: '' },
+        { form: 'Parent\'s Consent', yes: false, no: false, remarks: '' },
+        { form: 'Inventory of Client\'s belongings', yes: false, no: false, remarks: '' },
+        { form: 'Kasabutan "Good Performance"', yes: false, no: false, remarks: '' },
+        { form: 'Kasabutan (Bulitas)', yes: false, no: false, remarks: '' },
+        { form: 'Data Privacy Consent Form', yes: false, no: false, remarks: '' },
+        { form: 'Talambuhay', yes: false, no: false, remarks: '' },
+        { form: 'SFI', yes: false, no: false, remarks: '' },
+        { form: 'Daily Journal', yes: false, no: false, remarks: '' },
+      ];
+    },
+    async fetchData() {
+      try {
+        const response = await axios.get(`/api/checklist/${this.clientId}`);
+        const clientData = response.data;
 
-  const showSaveResultModal = (title, message) => {
-    saveResultTitle.value = title;
-    saveResultMessage.value = message;
-    isSaveResultModalOpen.value = true;
-  };
+        this.initializeForm();
 
-  const handleCheckboxChange = (item, field) => {
-    if (field === 'yes' && item.yes) {
-      item.no = false;
-    } else if (field === 'no' && item.no) {
-      item.yes = false;
+        clientData.checklist.forEach(item => {
+          const checklistItem = this.checklist.find(ch => ch.document === item.document);
+          if (checklistItem) {
+            checklistItem.yes = item.yes === 1;
+            checklistItem.no = item.no === 1;
+            checklistItem.remarks = item.remarks;
+          } else {
+            this.checklist.push({ document: item.document, yes: item.yes === 1, no: item.no === 1, remarks: item.remarks });
+          }
+        });
+
+        clientData.rrForms.forEach(item => {
+          const rrFormItem = this.rrForms.find(rr => rr.form === item.form);
+          if (rrFormItem) {
+            rrFormItem.yes = item.yes === 1;
+            rrFormItem.no = item.no === 1;
+            rrFormItem.remarks = item.remarks;
+          } else {
+            this.rrForms.push({ form: item.form, yes: item.yes === 1, no: item.no === 1, remarks: item.remarks });
+          }
+        });
+
+        console.log('Fetched client ID:', this.clientId);
+      } catch (error) {
+        console.error('Error fetching client data:', error);
+      }
+    },
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
+      } else {
+        this.editMode = !this.editMode;
+      }
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    confirmSave() {
+      this.saveData();
+      this.closeModal();
+      this.editMode = false;
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+    },
+    saveData() {
+      if (!this.clientId) {
+        this.message = 'No client selected.';
+        this.messageType = 'error';
+        return;
+      }
+
+      const checklistWithClientId = this.checklist.map(item => ({
+        ...item,
+        client_id: this.clientId,
+      }));
+
+      const rrFormsWithClientId = this.rrForms.map(item => ({
+        ...item,
+        client_id: this.clientId,
+      }));
+
+      const payload = {
+        checklist: checklistWithClientId,
+        rrForms: rrFormsWithClientId,
+      };
+
+      axios.post('/api/save-checklist', payload)
+        .then(response => {
+          this.showSaveResultModal('Success', 'Data saved successfully.');
+        })
+        .catch(error => {
+          this.message = error.response.data.message || 'Error saving data.';
+          this.messageType = 'error';
+          this.showSaveResultModal('Error', error.response.data.message || 'Error saving data.');
+          console.error('Error saving data:', error);
+        });
+    },
+    showSaveResultModal(title, message) {
+      this.saveResultTitle = title;
+      this.saveResultMessage = message;
+      this.isSaveResultModalOpen = true;
+    },
+    handleCheckboxChange(item, field) {
+      if (field === 'yes' && item.yes) {
+        item.no = false;
+      } else if (field === 'no' && item.no) {
+        item.yes = false;
+      }
     }
-  };
-
-  return {
-    editMode,
-    message,
-    messageType,
-    checklist,
-    rrForms,
-    toggleEdit,
-    handleCheckboxChange,
-    cancelEdit,
-    isModalOpen,
-    openModal,
-    closeModal,
-    confirmSave,
-    isSaveResultModalOpen,
-    saveResultTitle,
-    saveResultMessage,
-    closeSaveResultModal,
-    currentPage,
-    totalPages,
-    Pagination,
-  };
-},
+  },
+  mounted() {
+    this.clientId = this.$route.params.id;
+    this.fetchData();
+  },
+  watch: {
+    '$route.params.id': function(newId) {
+      this.clientId = newId;
+      this.fetchData();
+    }
+  }
 };
+
 </script>
 
 <style scoped>

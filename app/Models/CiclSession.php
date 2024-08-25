@@ -19,6 +19,7 @@ class CiclSession extends Model
         'methodology',
         'highlight',
         'outcome',
+        'prepared_by',
         'noted_by',
         'approved_by',
     ];
