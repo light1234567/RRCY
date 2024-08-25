@@ -38,7 +38,7 @@ class OtpVerificationController extends Controller
             return response()->json(['message' => 'Invalid OTP'], 400);
         }
 
-        if ($timeDifferenceInMinutes > .5) {  // Changed from 1 to 5
+        if ($timeDifferenceInMinutes > 5) {  // Changed from 1 to 5
             Log::warning('OTP expired', ['user_id' => Session::get('login_user_id'), 'time_difference' => $timeDifferenceInMinutes]);
             return response()->json(['message' => 'OTP expired'], 400);
         }

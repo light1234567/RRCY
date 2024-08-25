@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 // Import components
 import AdmissionSlipDisplay from '../Display/SocialService/AdmissionSlipDisplay.vue';
@@ -84,7 +84,8 @@ const tabs = ref([
   'Indicators of Social Functioning',
 ]);
 
-const currentTab = ref('Admission Slip'); // Default tab set to "Admission Slip"
+const defaultTab = 'Admission Slip';
+const currentTab = ref(localStorage.getItem('currentTab') || defaultTab); // Set to defaultTab if nothing in localStorage
 const isDropdownOpen = ref(false);
 
 const toggleDropdown = () => {
@@ -93,9 +94,21 @@ const toggleDropdown = () => {
 
 const selectTab = (tab) => {
   currentTab.value = tab;
+  localStorage.setItem('currentTab', tab); // Save the selected tab to localStorage
   isDropdownOpen.value = false;
 };
+
+// Ensure the correct tab is loaded on page refresh
+onMounted(() => {
+  const savedTab = localStorage.getItem('currentTab');
+  if (!savedTab || !tabs.value.includes(savedTab)) {
+    // If there's no saved tab or the saved tab is invalid, set to default
+    currentTab.value = defaultTab;
+    localStorage.setItem('currentTab', defaultTab); // Save defaultTab to localStorage
+  }
+});
 </script>
+
 <style scoped>
 /* More pronounced shimmering effect */
 @keyframes intenseShimmer {
