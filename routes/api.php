@@ -23,9 +23,18 @@ use App\Http\Controllers\MonthlyInventoryController;
 use App\Http\Controllers\CiclSessionController;
 use App\Http\Controllers\SwappingFormController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NursingCareServiceController;
 
 
 // Existing Routes
+// User Role Routes
+Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
+
+// Admin Routes
+Route::get('/users', [AdminController::class, 'index']);
+Route::get('/users/{id}', [AdminController::class, 'show']);
+Route::delete('/users/{id}', [AdminController::class, 'destroy']);
+Route::patch('/users/{id}/verify', [AdminController::class, 'verify']);
 
 // Client Routes
 Route::get('/clients', [ClientController::class, 'index']);
@@ -164,14 +173,12 @@ Route::post('/swapping-forms', [SwappingFormController::class, 'store']);
 Route::put('/swapping-forms/{client_id}', [SwappingFormController::class, 'update']);
 Route::delete('/swapping-forms/{id}', [SwappingFormController::class, 'destroy']);
 
-// User Role Routes
-Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
-
-// Admin Routes
-Route::get('/users', [AdminController::class, 'index']);
-Route::get('/users/{id}', [AdminController::class, 'show']);
-Route::delete('/users/{id}', [AdminController::class, 'destroy']);
-Route::patch('/users/{id}/verify', [AdminController::class, 'verify']);
+// Nursing Care Service Routes
+Route::get('/nursing-care-services', [NursingCareServiceController::class, 'index']);
+Route::get('/nursing-care-services/{id}', [NursingCareServiceController::class, 'show']);
+Route::post('/nursing-care-services', [NursingCareServiceController::class, 'store']);
+Route::put('/nursing-care-services/{id}', [NursingCareServiceController::class, 'update']);
+Route::delete('/nursing-care-services/{id}', [NursingCareServiceController::class, 'destroy']);
 
 ?>
 
