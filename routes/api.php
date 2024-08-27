@@ -24,6 +24,7 @@ use App\Http\Controllers\CiclSessionController;
 use App\Http\Controllers\SwappingFormController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NursingCareServiceController;
+use App\Http\Controllers\PerformanceObservationReportController;
 
 
 // Existing Routes
@@ -113,7 +114,6 @@ Route::get('/indicators-of-social-functioning/{id}', [IndicatorOfSocialFunctioni
 Route::post('/indicators-of-social-functioning', [IndicatorOfSocialFunctioningController::class, 'store']);
 Route::put('/indicators-of-social-functioning/{id}', [IndicatorOfSocialFunctioningController::class, 'update']);
 Route::delete('/indicators-of-social-functioning/{id}', [IndicatorOfSocialFunctioningController::class, 'destroy']);
-Route::get('indicators-of-social-functioning/check/{client_id}/{admission_id}', [IndicatorOfSocialFunctioningController::class, 'checkExisting']);
 Route::get('/indicators-of-social-functioning/check/{client_id}/{admission_id}', [IndicatorOfSocialFunctioningController::class, 'checkExisting']);
 Route::apiResource('indicators-of-social-functioning', IndicatorOfSocialFunctioningController::class);
 
@@ -180,6 +180,10 @@ Route::post('/nursing-care-services', [NursingCareServiceController::class, 'sto
 Route::put('/nursing-care-services/{id}', [NursingCareServiceController::class, 'update']);
 Route::delete('/nursing-care-services/{id}', [NursingCareServiceController::class, 'destroy']);
 
-?>
+
+Route::get('/performance-observation-reports', [PerformanceObservationReportController::class, 'index']);
+Route::delete('/performance-observation-reports/{id}', [PerformanceObservationReportController::class, 'destroy']);
+Route::get('/performance-observation-reports/{client_id}', [PerformanceObservationReportController::class, 'show']);
+Route::post('/performance-observation-reports/{client_id}', [PerformanceObservationReportController::class, 'storeOrUpdate']);
 
 
