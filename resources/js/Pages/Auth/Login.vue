@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="https://fonts.bunny.net/css?family=albert-sans:400">
   </Head>
   <div class="background-container">
-    <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat;">
+    <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden">
       <div class="flex items-center -mb-12 justify-center">
         <img src="images/logo.png" class="h-44 w-70">
       </div>
@@ -16,9 +16,9 @@
                 RRCY LOGIN
               </h2>
             </div>
-            <form class="mt-4 space-y-4" @submit.prevent="submit">
-              <div class="shadow-sm space-y-4">
-                <div>
+            <form class="mt-4 space-y-4" @submit.prevent="submit" novalidate>
+              <div class="relative shadow-sm space-y-4">
+                <div class="relative">
                   <InputLabel for="email" value="Email" class="" />
                   <TextInput
                     id="email"
@@ -28,10 +28,15 @@
                     required
                     autofocus
                     autocomplete="username"
+                    @input="clearError('email')"
                   />
-                  <InputError class="mt-2" :message="form.errors.email" />
+                  <!-- Custom Error Design -->
+                  <div v-if="form.errors.email" class="error-message absolute z-10 mt-1">
+                    <span class="error-icon">⚠️</span>
+                    <span class="error-text">{{ form.errors.email }}</span>
+                  </div>
                 </div>
-                <div>
+                <div class="relative">
                   <InputLabel for="password" value="Password" />
                   <div class="relative">
                     <TextInput
@@ -41,10 +46,20 @@
                       class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                       required
                       autocomplete="current-password"
+                      @input="clearError('password')"
+                     
                     />
-                 
                   </div>
-                  <InputError class="mt-2" :message="form.errors.password" />
+                  <!-- Custom Error Design -->
+                  <div v-if="!form.errors.email && form.errors.password" class="error-message absolute z-10 mt-1">
+                    <span class="error-icon">⚠️</span>
+                    <span class="error-text">{{ form.errors.password }}</span>
+                  </div>
+                  <!-- Show a specific error message if the password is incorrect -->
+                  <div v-if="!form.errors.email && form.errors.incorrectPassword" class="error-message absolute z-10 mt-1">
+                    <span class="error-icon">⚠️</span>
+                    <span class="error-text">The password is incorrect. Please try again.</span>
+                  </div>
                 </div>
               </div>
               <div class="flex items-center justify-between mt-2">
@@ -53,7 +68,7 @@
                     Don't have an account yet?
                   </Link>
                 </div>
-                <Link v-if="canResetPassword" :href="route('password.request')" class="ml-auto underline text-[12px]  text-gray-200 hover:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <Link v-if="canResetPassword" :href="route('password.request')" class="ml-auto underline text-[12px] text-gray-200 hover:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Forgot your password?
                 </Link>
               </div>
@@ -66,7 +81,7 @@
           </div>
         </div>
       </main>
-
+      
       <!-- Modal for unverified users -->
       <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-lg shadow-lg">
@@ -113,12 +128,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import axios from 'axios';
 
 const props = defineProps({
   canResetPassword: Boolean,
@@ -134,28 +149,105 @@ const form = useForm({
 const showPassword = ref(false);
 const showModal = ref(false);
 const modalMessage = ref('');
+const emailExists = ref(false);
 
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
 
-const submit = () => {
-  form.post(route('login'), {
-    onSuccess: (response) => {
-      if (response.data.status === 'unverified') {
-        // Show the modal if the user is not verified
-        showModal.value = true;
-        modalMessage.value = 'You are not a verified user. Please verify your account.';
-      } else {
-        console.log('Login successful');
-        // Redirect or update as necessary
-      }
-    },
-    onError: () => {
-      console.error('Login failed');
+const submit = async () => {
+    if (!validateEmail()) return;
+
+    try {
+        const emailResponse = await axios.post('/api/check-email', { email: form.email });
+        if (emailResponse.data.exists) {
+            emailExists.value = true;
+            await validatePasswordAndSubmit(); // Ensure this function is called only once
+        } else {
+            form.errors.email = "The email is incorrect. Please register and try again.";
+        }
+    } catch (error) {
+        console.error('Error checking email:', error);
+        if (error.response && error.response.status === 500) {
+            form.errors.email = "Server error. Please try again later.";
+        }
     }
-  });
 };
+
+
+const validateEmail = () => {
+  let isValid = true;
+
+  if (!form.email) {
+    form.errors.email = 'Email is required.';
+    isValid = false;
+  } else if (!form.email.includes('@')) {
+    form.errors.email = "Please include an '@' in the email address. '" + form.email + "' is missing an '@'.";
+    isValid = false;
+  } else if (!isValidEmail(form.email)) {
+    form.errors.email = "The email is incorrect. Please register and try again.";
+    isValid = false;
+  }
+
+  return isValid;
+};
+
+const validatePasswordAndSubmit = async () => {
+    // Check if the password is empty
+    if (!form.password) {
+        form.errors.password = 'Password is required.';
+        return; // Exit the function early to prevent further processing
+    }
+
+    try {
+        const passwordResponse = await axios.post('/api/validate-password', {
+            email: form.email,
+            password: form.password,
+        });
+
+        if (passwordResponse.data.valid) {
+            // Password is correct, proceed with the login
+            form.post(route('login'), {
+                onSuccess: () => {
+                    console.log('Login successful');
+                },
+                onError: () => {
+                    console.error('Login failed');
+                }
+            });
+        } else {
+            form.errors.password = "The password is incorrect. Please try again.";
+        }
+    } catch (error) {
+        console.error('Error validating password:', error);
+        form.errors.password = "Server error. Please try again later.";
+    }
+};
+
+
+const isValidEmail = (email) => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  return re.test(String(email).toLowerCase());
+};
+
+const clearError = (field) => {
+  form.errors[field] = '';
+};
+
+const hideErrorsOnClickOutside = (event) => {
+  if (!event.target.closest('.error-message')) {
+    form.errors.email = '';
+    form.errors.password = '';
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('click', hideErrorsOnClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', hideErrorsOnClickOutside);
+});
 </script>
 
 <style>
@@ -179,5 +271,69 @@ html, body {
 
 .fixed.z-50 {
   z-index: 50;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #ffa726;
+  border-radius: 4px;
+  padding: 2px;
+  color: #ff6f00;
+  width: 130%;
+  margin-top: 4px;
+  position: absolute;
+  left: -15%;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+.error-icon {
+  margin-right: 4px;
+  margin-top: -4px;
+  font-size: 18px;
+  padding: 2px;
+}
+
+.error-text {
+  font-size: 14px;
+}
+
+.error-message::before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 80px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent #ffffff transparent;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.error-message.fade-out {
+  animation: fadeOutDown 0.3s ease forwards;
 }
 </style>

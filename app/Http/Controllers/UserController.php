@@ -1,26 +1,48 @@
 <?php
 
+namespace App\Http\Controllers;
 
-
-namespace App\Http\Controllers; // Correct namespace based on your file location
-
-use App\Http\Controllers\Controller; // Import the base controller class
-use Illuminate\Http\Request; // Import the Request class for handling HTTP requests
-use Illuminate\Support\Facades\Auth; // Import the Auth facade for authentication
+use App\Models\User; // Make sure you import the User model
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     /**
-     * Get the role of the authenticated user.
+     * Check if the email exists in the database.
      */
-    public function getUserRole(Request $request)
+    public function checkEmail(Request $request)
     {
-        $user = Auth::user(); // Retrieve the currently authenticated user
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        // Find the user by email
+        $user = User::where('email', $request->input('email'))->first();
 
         if ($user) {
-            return response()->json(['role' => $user->role]); // Return the user's role
+            return response()->json(['exists' => true]);
         } else {
-            return response()->json(['error' => 'Unauthorized'], 401); // Return an error if not authenticated
+            return response()->json(['exists' => false]);
+        }
+    }
+
+    /**
+     * Validate the password for the given email.
+     */
+    public function validatePassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = User::where('email', $request->input('email'))->first();
+
+        if ($user && Hash::check($request->input('password'), $user->password)) {
+            return response()->json(['valid' => true]);
+        } else {
+            return response()->json(['valid' => false]);
         }
     }
 }

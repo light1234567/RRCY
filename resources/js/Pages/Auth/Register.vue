@@ -4,8 +4,7 @@
   </Head>
 
   <div class="background-container">
-    <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat;">
-    
+    <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden">
       <main class="flex-grow flex items-center justify-center p-4 md:p-6 lg:p-8">
         <div class="w-full max-w-lg p-6 shadow-2xl rounded-md border-2 border-gray-300 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg flex flex-col items-center transform hover:translate-y-0 transition-transform duration-300">
           <!-- Register Form -->
@@ -15,68 +14,73 @@
                 RRCY REGISTER
               </h2>
             </div>
-            <form class="mt-4 space-y-4" @submit.prevent="submit">
+            <form class="mt-4 space-y-4" @submit.prevent="submit" @click="clearErrors">
               <div class="shadow-sm space-y-4">
                 <div class="flex flex-col md:flex-row md:space-x-4">
-                  <div class="flex-1">
+                  <div class="flex-1 relative">
                     <InputLabel for="fname" value="First Name" />
                     <TextInput
                       id="fname"
                       v-model="form.fname"
                       type="text"
-                      pattern="[A-Za-z\- ]+"
                       class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      required
-                      autofocus
                       autocomplete="given-name"
-                      title="First name can only contain letters and hyphens."
+                      @input="clearError('fname')"
                     />
-                    <InputError class="mt-1" :message="form.errors.fname" />
+                    <div v-if="form.errors.fname" class="error-message absolute z-10 mt-1">
+                      <span class="error-icon">⚠️</span>
+                      <span class="error-text">{{ form.errors.fname }}</span>
+                    </div>
                   </div>
-                  <div class="flex-1">
+                  <div class="flex-1 relative">
                     <InputLabel for="lname" value="Last Name" />
                     <TextInput
                       id="lname"
                       v-model="form.lname"
                       type="text"
-                      pattern="[A-Za-z\- ]+"
                       class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      required
                       autocomplete="family-name"
-                      title="Last name can only contain letters and hyphens."
+                      @input="clearError('lname')"
                     />
-                    <InputError class="mt-1" :message="form.errors.lname" />
+                    <div v-if="form.errors.lname" class="error-message absolute z-10 mt-1">
+                      <span class="error-icon">⚠️</span>
+                      <span class="error-text">{{ form.errors.lname }}</span>
+                    </div>
                   </div>
-                  <div class="w-1/6">
+                  <div class="w-1/6 relative">
                     <InputLabel for="middlename" value="(M. I.)" />
                     <TextInput
                       id="middlename"
                       v-model="form.middlename"
                       type="text"
-                      pattern="[A-Za-z\-]+"
                       class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      required
                       maxlength="1"
                       autocomplete="additional-name"
-                      title="Middle initial can only contain letter."
+                      @input="clearError('middlename')"
                     />
-                    <InputError class="mt-1" :message="form.errors.middlename" />
+                    <div v-if="form.errors.middlename" class="error-message absolute z-10 mt-1">
+                      <span class="error-icon">⚠️</span>
+                      <span class="error-text">{{ form.errors.middlename }}</span>
+                    </div>
                   </div>
                 </div>
 
-                <div>
+                <div class="relative">
                   <InputLabel for="email" value="Email" />
                   <TextInput
                     id="email"
                     v-model="form.email"
-                    type="email"
+                    type="text"  
                     class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    required
                     autocomplete="username"
+                    @input="clearError('email')"
                   />
-                  <InputError class="mt-1" :message="form.errors.email" />
+                  <div v-if="form.errors.email" class="error-message absolute z-10 mt-1">
+                    <span class="error-icon">⚠️</span>
+                    <span class="error-text">{{ form.errors.email }}</span>
+                  </div>
                 </div>
-                <div>
+                <div class="relative">
                   <InputLabel for="password" value="Password" />
                   <div class="relative">
                     <TextInput
@@ -84,14 +88,16 @@
                       v-model="form.password"
                       :type="showPassword ? 'text' : 'password'"
                       class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      required
                       autocomplete="new-password"
+                      @input="clearError('password')"
                     />
-                  
+                    <div v-if="form.errors.password" class="error-message absolute z-10 mt-1">
+                      <span class="error-icon">⚠️</span>
+                      <span class="error-text">{{ form.errors.password }}</span>
+                    </div>
                   </div>
-                  <InputError class="mt-1" :message="form.errors.password" />
                 </div>
-                <div>
+                <div class="relative">
                   <InputLabel for="password_confirmation" value="Confirm Password" />
                   <div class="relative">
                     <TextInput
@@ -99,20 +105,22 @@
                       v-model="form.password_confirmation"
                       :type="showPasswordConfirmation ? 'text' : 'password'"
                       class="mt-1 block w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-md border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      required
                       autocomplete="new-password"
+                      @input="clearError('password_confirmation')"
                     />
-                 
+                    <div v-if="form.errors.password_confirmation" class="error-message absolute z-10 mt-1">
+                      <span class="error-icon">⚠️</span>
+                      <span class="error-text">{{ form.errors.password_confirmation }}</span>
+                    </div>
                   </div>
-                  <InputError class="mt-1" :message="form.errors.password_confirmation" />
                 </div>
-                <div>
+                <div class="relative">
                   <InputLabel for="role" value="Role" />
                   <select
                     id="role"
                     v-model="form.role"
                     class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm bg-white bg-opacity-50 backdrop-filter backdrop-blur-md"
-                    required
+                    @change="clearError('role')"
                   >
                     <option value=""></option>
                     <option value="social services">Social Services</option>
@@ -123,7 +131,10 @@
                     <option value="educational services">Educational Services</option>
                     <option value="psd">PSD</option>
                   </select>
-                  <InputError class="mt-1" :message="form.errors.role" />
+                  <div v-if="form.errors.role" class="error-message absolute z-10 mt-1">
+                    <span class="error-icon">⚠️</span>
+                    <span class="error-text">{{ form.errors.role }}</span>
+                  </div>
                 </div>
               </div>
               <div class="flex items-center justify-end mt-2">
@@ -202,7 +213,94 @@ const form = useForm({
   role: '', 
 });
 
-const submit = () => { form.post(route('register')); }
+const submit = () => { 
+  clearErrors(); // Clear any previous errors
+
+  let isValid = true;
+
+  // Validate First Name
+  if (!form.fname) {
+    form.errors.fname = 'First Name is required.';
+    isValid = false;
+  } else if (!/^[A-Za-z\- ]+$/.test(form.fname)) {
+    form.errors.fname = 'First name can only contain letters and hyphens.';
+    isValid = false;
+  }
+  if (!isValid) return; // Stop further validation if First Name is invalid
+
+  // Validate Last Name
+  if (!form.lname) {
+    form.errors.lname = 'Last Name is required.';
+    isValid = false;
+  } else if (!/^[A-Za-z\- ]+$/.test(form.lname)) {
+    form.errors.lname = 'Last name can only contain letters and hyphens.';
+    isValid = false;
+  }
+  if (!isValid) return; // Stop further validation if Last Name is invalid
+
+  // Validate Middle Initial
+  if (!form.middlename) {
+    form.errors.middlename = 'Middle Initial is required.';
+    isValid = false;
+  } else if (!/^[A-Za-z]+$/.test(form.middlename)) {
+    form.errors.middlename = 'Middle initial can only contain letters.';
+    isValid = false;
+  }
+  if (!isValid) return; // Stop further validation if Middle Initial is invalid
+
+  // Validate Email
+  if (!form.email) {
+    form.errors.email = 'Email is required.';
+    isValid = false;
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    form.errors.email = 'Please enter a valid email address.';
+    isValid = false;
+  }
+  if (!isValid) return; // Stop further validation if Email is invalid
+
+  // Validate Password
+  if (!form.password) {
+    form.errors.password = 'Password is required.';
+    isValid = false;
+  }
+  if (!isValid) return; // Stop further validation if Password is invalid
+
+  // Validate Password Confirmation
+  if (!form.password_confirmation) {
+    form.errors.password_confirmation = 'Password confirmation is required.';
+    isValid = false;
+  } else if (form.password !== form.password_confirmation) {
+    form.errors.password_confirmation = 'Passwords do not match.';
+    isValid = false;
+  }
+  if (!isValid) return; // Stop further validation if Password Confirmation is invalid
+
+  // Validate Role
+  if (!form.role) {
+    form.errors.role = 'Role is required.';
+    isValid = false;
+  }
+
+  if (isValid) {
+    form.post(route('register'));
+  }
+};
+
+// Clear specific error when user interacts with the field
+const clearError = (field) => {
+  form.errors[field] = '';
+};
+
+// Clear all previous errors
+const clearErrors = () => {
+  form.errors.fname = '';
+  form.errors.lname = '';
+  form.errors.middlename = '';
+  form.errors.email = '';
+  form.errors.password = '';
+  form.errors.password_confirmation = '';
+  form.errors.role = '';
+};
 
 const showPassword = ref(false);
 const showPasswordConfirmation = ref(false);
@@ -240,5 +338,54 @@ body, html {
   background-repeat: no-repeat;
   height: calc(100% - 100px); /* Adjust the height by the size of header and footer */
   box-sizing: border-box;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #ffa726;
+  border-radius: 4px;
+  padding: 2px;
+  color: #ff6f00;
+  width: 130%;
+  margin-top: 4px;
+  position: absolute;
+  left: -15%;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+.error-icon {
+  margin-right: 4px;
+  margin-top: -4px;
+  font-size: 18px;
+  padding: 2px;
+}
+
+.error-text {
+  font-size: 14px;
+}
+
+.error-message::before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 15%;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent #ffffff transparent;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

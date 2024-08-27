@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdmissionController;
@@ -25,7 +26,10 @@ use App\Http\Controllers\SwappingFormController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NursingCareServiceController;
 
+Route::post('/check-email', [UserController::class, 'checkEmail']);
+Route::post('/validate-password', [UserController::class, 'validatePassword']);
 
+Route::post('/user-role', [UserController::class, 'getUserRole']);
 // Existing Routes
 // User Role Routes
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
