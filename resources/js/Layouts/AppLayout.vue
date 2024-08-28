@@ -68,10 +68,10 @@
           </div> -->
           <!-- LOGO DSWD -->
           <img
-          :class="['p-6 mt-4 mb-4 relative z-10 transition-all duration-300', isSidebarCollapsed ? 'h-24 w-20' : 'h-28 w-60']"
-          src="/images/rrcy_dswd.png"
-          alt="Logo"
-        />
+    :class="['p-6 mt-4 mb-4 relative z-10 transition-all duration-300', isSidebarCollapsed ? 'mt-8 h-20 w-28' : 'h-28 w-60']"
+    :src="isSidebarCollapsed ? '/images/rrcy.png' : '/images/transparent.png'"
+    alt="Logo"
+  />
 
           <!-- Divider Line -->
           <div>

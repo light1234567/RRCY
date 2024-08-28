@@ -6,12 +6,12 @@
         <button 
           @click="toggleDropdown" 
           :class="[
-            'fixed bottom-6 right-6 flex items-center justify-center w-12 h-12 text-md border border-gray-500 rounded-full bg-white shadow-xl focus:outline-none focus:ring-1 focus:ring-blue-500',
+            'fixed bottom-6 right-6 flex items-center justify-center w-14 h-14 text-md border border-gray-500 rounded-full bg-gray-800 shadow-xl focus:outline-none focus:ring-1 focus:ring-blue-500',
             { 'glow': isDropdownOpen } // Add glow effect when dropdown is open
           ]"
         >
           <!-- SVG for form icon -->
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 9h10M7 13h10M7 17h10M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"></path>
           </svg>
         </button>

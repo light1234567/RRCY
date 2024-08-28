@@ -24,6 +24,9 @@
         "@fortawesome/vue-fontawesome": "^3.0.8",
         "@heroicons/vue": "^2.1.5",
         "@inertiajs/inertia-vue3": "^0.6.0",
+        "html2canvas": "^1.4.1",
+        "html2pdf.js": "^0.10.2",
+        "jspdf": "^2.5.1",
         "vue-router": "^4.4.0",
         "ziggy": "^2.4.0",
         "ziggy-js": "^2.3.0"
