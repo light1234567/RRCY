@@ -29,6 +29,14 @@
       </svg>
       <span>Save</span>
     </button>
+
+    <!-- Export to PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Export to PDF</span>
+    </button>
   </div>
       
   <div>
@@ -151,6 +159,7 @@
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
+import { jsPDF } from 'jspdf';
 
 export default {
   name: 'KasabutanSheet',
@@ -261,6 +270,53 @@ export default {
       this.isSaveResultModalOpen = false;
       this.saveResultTitle = '';
       this.saveResultMessage = '';
+    },
+    exportToPdf() {
+      const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(11);
+
+      // Add header
+      const imgData = '/images/headerlogo2.png'; 
+      pdf.addImage(imgData, 'PNG', 15, 10, 50, 30); 
+      pdf.setFontSize(10);
+      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 30);
+
+      // Add title
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(18);
+      pdf.text('KASABUTAN', 105, 60, null, null, 'center');
+
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(11);
+
+      // Add content
+      pdf.text(`Ako si ${this.clientName} usa ka residente diri sa DSWD-RRCY.`, 20, 80);
+      pdf.text(`Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center.`, 20, 90);
+      pdf.text(`Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court`, 20, 100);
+      pdf.text(`kung dili "COLOR RED" and akong Performance equivalent to "OUTSTANDING".`, 20, 110);
+      pdf.text(`Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY`, 20, 120);
+      pdf.text(`hangtud na ako moabot sa 21 anyos.`, 20, 130);
+
+      pdf.text(`Client/Resident: ${this.form.client_resident}`, 20, 160);
+      pdf.text(`Pangalan/Pirma sa Ginikanan/Guardian: ${this.form.parent_guardian}`, 20, 170);
+      pdf.text(`Case Manager: ${this.form.case_manager}`, 20, 180);
+
+      pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 20, 220);
+      pdf.text('Center Head/SWO IV', 20, 230);
+
+      // Footer
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('PAGE 1 of 1', 105, 290, null, null, 'center');
+      pdf.line(20, 292, 190, 292);
+      pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 105, 297, null, null, 'center');
+      pdf.text('Email: rrxy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 302, null, null, 'center');
+
+      const footerImgData = '/images/footerimg.png';
+      pdf.addImage(footerImgData, 'PNG', 160, 285, 30, 15);
+
+      pdf.save(`kasabutan-${this.form.client_id}.pdf`);
     }
   }
 };

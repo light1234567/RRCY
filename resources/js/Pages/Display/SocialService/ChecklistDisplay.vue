@@ -1,22 +1,22 @@
 <template>
 
   <!-- Tabs for Actions -->
-  <div v-if="editMode" class="flex  absolute p-6 -mt-2 space-x-4">
+  <div v-if="editMode" class="flex absolute p-6 -mt-2 space-x-4">
     <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
       </svg>
       <span class="">Back</span>
     </button>
-    </div>
+  </div>
 
   <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-      <!-- Pagination Component -->
-  <Pagination 
-    :totalPages="totalPages" 
-    :currentPage="currentPage" 
-    @update:currentPage="currentPage = $event" 
-  />
+    <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
     <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
@@ -29,6 +29,14 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
       <span>Save</span>
+    </button>
+
+    <!-- Export to PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Export to PDF</span>
     </button>
   </div>
 
@@ -192,6 +200,7 @@
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
+import { jsPDF } from 'jspdf';
 
 export default {
   components: {
@@ -344,6 +353,87 @@ export default {
       } else if (field === 'no' && item.no) {
         item.yes = false;
       }
+    },
+    exportToPdf() {
+      const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(11);
+
+      // Add header
+      const imgData = '/images/headerlogo2.png'; 
+      pdf.addImage(imgData, 'PNG', 15, 10, 50, 30); 
+      pdf.setFontSize(10);
+      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 30);
+
+      // Page 1 content
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(18);
+      pdf.text('Checklist of Requirements during Admission', 105, 60, null, null, 'center');
+
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(11);
+
+      // Table headers
+      pdf.text('No.', 20, 80);
+      pdf.text('Documents', 40, 80);
+      pdf.text('Yes', 140, 80);
+      pdf.text('No', 160, 80);
+      pdf.text('Remarks', 180, 80);
+
+      // Table content for checklist
+      this.checklist.forEach((item, index) => {
+        const offset = 90 + (index * 10);
+        pdf.text(`${index + 1}`, 20, offset);
+        pdf.text(`${item.document}`, 40, offset);
+        if (item.yes) {
+          pdf.text('✔', 140, offset);
+        }
+        if (item.no) {
+          pdf.text('✔', 160, offset);
+        }
+        pdf.text(`${item.remarks}`, 180, offset);
+      });
+
+      pdf.addPage(); // Add a new page for Page 2
+
+      // Page 2 content
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(18);
+      pdf.text('RRCY Forms', 105, 20, null, null, 'center');
+
+      pdf.setFont('helvetica', 'normal');
+      pdf.setFontSize(11);
+
+      // Table headers
+      pdf.text('No.', 20, 40);
+      pdf.text('Forms', 40, 40);
+      pdf.text('Yes', 140, 40);
+      pdf.text('No', 160, 40);
+      pdf.text('Remarks', 180, 40);
+
+      // Table content for RRCY forms
+      this.rrForms.forEach((item, index) => {
+        const offset = 50 + (index * 10);
+        pdf.text(`${index + 1}`, 20, offset);
+        pdf.text(`${item.form}`, 40, offset);
+        if (item.yes) {
+          pdf.text('✔', 140, offset);
+        }
+        if (item.no) {
+          pdf.text('✔', 160, offset);
+        }
+        pdf.text(`${item.remarks}`, 180, offset);
+      });
+
+      // Footer
+      pdf.setFontSize(10);
+      pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 105, 290, null, null, 'center');
+      pdf.text('Email: rrxy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 295, null, null, 'center');
+
+      const footerImgData = '/images/footerimg.png';
+      pdf.addImage(footerImgData, 'PNG', 160, 285, 30, 15);
+
+      pdf.save(`checklist-rrcy-forms-${this.clientId}.pdf`);
     }
   },
   mounted() {
@@ -357,45 +447,44 @@ export default {
     }
   }
 };
-
 </script>
 
 <style scoped>
 .a4-container {
-max-width: 210mm;
-padding: 10mm;
-background: white;
-border: 1px solid #ccc;
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-page-break-after: always;
+  max-width: 210mm;
+  padding: 10mm;
+  background: white;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  page-break-after: always;
 }
 
 button {
-transition: background-color 0.3s;
-font-size: 0.75rem;
+  transition: background-color 0.3s;
+  font-size: 0.75rem;
 }
 button:hover {
-background-color: #2563eb;
+  background-color: #2563eb;
 }
 .bg-blue-500:checked {
-background-color: #2563eb;
+  background-color: #2563eb;
 }
 .w-16 {
-width: 4rem; /* 64px */
+  width: 4rem; /* 64px */
 }
 .w-96 {
-width: 24rem; /* 384px */
+  width: 24rem; /* 384px */
 }
 textarea {
-min-height: 2.5rem; /* Minimum height for textarea */
-resize: vertical; /* Allows vertical resizing */
+  min-height: 2.5rem; /* Minimum height for textarea */
+  resize: vertical; /* Allows vertical resizing */
 }
 .border-black {
-border-color: #000 !important;
+  border-color: #000 !important;
 }
 .text-xs {
-font-size: 0.75rem; /* Smaller font size */
+  font-size: 0.75rem; /* Smaller font size */
 }
 </style>
