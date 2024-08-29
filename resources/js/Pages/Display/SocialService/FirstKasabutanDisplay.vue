@@ -37,10 +37,18 @@
       </svg>
       <span>Export to PDF</span>
     </button>
+
+    <!-- Print Button -->
+    <button @click="printContent" class="flex items-center space-x-2 px-3 py-1 bg-yellow-500 text-white rounded-md text-xs">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18v-6m0 0V6m0 6h6m-6 0H6"></path>
+      </svg>
+      <span>Print</span>
+    </button>
   </div>
       
   <div>
-    <div class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+    <div ref="contentToPrint" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
       <div class="relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
         <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
@@ -48,7 +56,6 @@
       <div class="text-center mb-8">
         <h1 class="text-[35px] font-bold">KASABUTAN</h1>
       </div>
-    
 
       <!-- Save Confirmation Modal -->
       <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
@@ -134,24 +141,23 @@
         </div>
       </div>
 
-
-      <div class="text-left  mt-16">
+      <div class="text-left mt-16">
         <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
         <p>Center Head/SWO IV</p>
       </div>
 
       <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-         <div class="flex justify-between items-center">
-           <div class="flex flex-col">
-             <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
-             <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-             <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-           </div>
-           <div class="ml-4">
-             <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-           </div>
-         </div>
-       </div>
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
+            <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          </div>
+          <div class="ml-4">
+            <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -317,8 +323,60 @@ export default {
       pdf.addImage(footerImgData, 'PNG', 160, 285, 30, 15);
 
       pdf.save(`kasabutan-${this.form.client_id}.pdf`);
-    }
-  }
+    },
+    printContent() {
+      const originalContent = document.body.innerHTML;
+      
+      // Base64 encoded image for header logo (replace with actual Base64 data)
+      const headerLogoBase64 = 'data:image/png;base64,...'; // Replace with your Base64 encoded image string
+
+      // Base64 encoded image for footer (replace with actual Base64 data)
+      const footerImgBase64 = 'data:image/png;base64,...'; // Replace with your Base64 encoded image string
+
+      document.body.innerHTML = `
+        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px;">
+          <div class="content">
+            <div class="header" style="text-align: center;">
+              <img src="${headerLogoBase64}" style="width: 200px; margin-bottom: 20px;" alt="Logo">
+              <p style="font-size: 10px;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+            </div>
+
+            <h1 style="text-align: center; font-size: 28px; margin-bottom: 40px; font-weight: bold;">KASABUTAN</h1>
+
+            <div style="text-align: justify; margin-bottom: 16px;">
+              <p><span style="margin-left: 32px;">Ako</span> si <span style="font-weight: bold; text-decoration: underline;">${this.clientName}</span> usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili <strong>“COLOR RED”</strong> and akong Performance equivalent to <strong>“OUTSTANDING”</strong>.</p>
+              <p style="margin-left: 32px;">Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.</p>
+            </div>
+
+            <div style="margin-bottom: 32px;">
+              <p>Client/Resident: <span style="border-bottom: 2px solid black;">${this.form.client_resident}</span></p>
+              <p>Pangalan/Pirma sa Ginikanan/Guardian: <span style="border-bottom: 2px solid black;">${this.form.parent_guardian}</span></p>
+              <p>Case Manager: <span style="border-bottom: 2px solid black;">${this.form.case_manager}</span></p>
+            </div>
+
+            <div style="text-align: left; margin-top: 64px;">
+              <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
+              <p>Center Head/SWO IV</p>
+            </div>
+          </div>
+
+          <div style="text-align: center; font-size: 10px; position: fixed; bottom: 20px; left: 0; right: 0;">
+            <p>DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)</p>
+            <p>Email: rrxy.fo11@dswd.gov.ph | Tel. No.: 293-0306</p>
+          </div>
+
+          <div style="position: absolute; bottom: 0; right: 20px; font-size: 10px;">
+            PAGE 1 of 1
+          </div>
+        </div>
+      `;
+
+      window.print(); // Trigger the print dialog
+
+      document.body.innerHTML = originalContent; // Restore the original content of the page
+      window.location.reload(); // Reload the page to restore any event listeners and state
+    },
+  },
 };
 </script>
 
