@@ -294,8 +294,8 @@ export default {
             })
             .catch(error => {
                 console.error('Error fetching report data:', error);
-                this.message = 'No existing report data found, please create a new entry.';
-                this.messageType = 'info';
+               
+                
                 this.fetchClientData(clientId);
             });
     },
@@ -305,13 +305,13 @@ export default {
                 const client = response.data;
                 this.form.client_id = client.id; // Set the client_id
                 this.form.name = `${client.first_name} ${client.last_name}`;
-                this.message = 'Client data loaded successfully!';
-                this.messageType = 'success';
+                
+               
             })
             .catch(error => {
                 console.error('Error fetching client data:', error);
-                this.message = 'Failed to fetch client data';
-                this.messageType = 'error';
+                
+                
             });
     },
     submitForm() {

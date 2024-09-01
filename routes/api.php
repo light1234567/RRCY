@@ -26,6 +26,8 @@ use App\Http\Controllers\SwappingFormController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NursingCareServiceController;
 use App\Http\Controllers\PerformanceObservationReportController;
+use App\Http\Controllers\TrainingNeedsAssessmentController;
+use App\Http\Controllers\LearnerAcademicBehavioralFormController;
 
 Route::post('/check-email', [UserController::class, 'checkEmail']);
 Route::post('/validate-password', [UserController::class, 'validatePassword']);
@@ -190,4 +192,12 @@ Route::delete('/performance-observation-reports/{id}', [PerformanceObservationRe
 Route::get('/performance-observation-reports/{client_id}', [PerformanceObservationReportController::class, 'show']);
 Route::post('/performance-observation-reports/{client_id}', [PerformanceObservationReportController::class, 'storeOrUpdate']);
 
+
+//Training Needs Assessment Routes
+Route::get('/training-needs-assessment/{client_id}', [TrainingNeedsAssessmentController::class, 'show']);
+Route::put('/training-needs-assessment/{client_id}', [TrainingNeedsAssessmentController::class, 'storeOrUpdate']);
+
+
+Route::get('/learner-academic-behavioral-forms/{client_id}', [LearnerAcademicBehavioralFormController::class, 'show']);
+Route::post('/learner-academic-behavioral-forms', [LearnerAcademicBehavioralFormController::class, 'storeOrUpdate']);
 
