@@ -13,12 +13,6 @@ class CreatePsychologicalInterventionPlansTable extends Migration
             $table->unsignedBigInteger('client_id');
             $table->date('as_of_date')->nullable();
             $table->text('progress_notes')->nullable();
-            $table->text('objectives')->nullable();
-            $table->text('activities')->nullable();
-            $table->string('responsible_person')->nullable();
-            $table->string('time_frame')->nullable();
-            $table->text('expected_output')->nullable();
-            $table->text('progress')->nullable();
             $table->string('prepared_by')->nullable();
             $table->string('noted_by')->nullable();
             $table->timestamps();
@@ -32,3 +26,4 @@ class CreatePsychologicalInterventionPlansTable extends Migration
         Schema::dropIfExists('psychological_intervention_plans');
     }
 }
+

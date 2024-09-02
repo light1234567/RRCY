@@ -13,12 +13,6 @@ class PsychologicalInterventionPlan extends Model
         'client_id',
         'as_of_date',
         'progress_notes',
-        'objectives',
-        'activities',
-        'responsible_person',
-        'time_frame',
-        'expected_output',
-        'progress',
         'prepared_by',
         'noted_by',
     ];
@@ -26,5 +20,10 @@ class PsychologicalInterventionPlan extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(PsychologicalInterventionPlanItem::class, 'plan_id');
     }
 }
