@@ -336,7 +336,6 @@ export default {
     pdf.setFont('helvetica', 'normal'); // Reset font to normal for the following text
 
     // Function to draw a custom checkmark inside the checkbox
-          // Function to draw a custom checkmark inside the checkbox
       function drawCheckmark(pdf, x, y) {
           pdf.setLineWidth(0.1);
           pdf.line(x, y + 1, x + 1, y + 2.5); // Adjust the first line of the checkmark
@@ -443,7 +442,8 @@ export default {
 
     // Noted By section
     pdf.setFontSize(11);
-    pdf.text('Noted By:', 108, offset, null, null, 'center');
+    pdf.text('Noted By:', 108, offset - 5, null, null, 'center');
+
     pdf.setFontSize(11);
     pdf.setFont('helvetica', 'bold');
     // Centered text with the underline above

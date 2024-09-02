@@ -1,5 +1,6 @@
 <template>
   <!-- Tabs for Actions -->
+   
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
      <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -32,7 +33,9 @@
          <span>Save</span>
        </button>
      </div>
-
+     <button @click="exportToPdf" class="mt-4 px-4 py-2 bg-blue-600 rounded">
+      Export to PDF
+    </button>
     <!-- Modal for Save Confirmation -->
     <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
      <div class="fixed inset-0 bg-black opacity-50"></div>
@@ -89,7 +92,7 @@
 
 
    <!--- Page 1 of 4 -->
-   <div v-if="currentPage === 1" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+   <div ref="pdfContent" v-if="currentPage === 1" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
        <div class="">
          <div class="text-center mb-8">
            <div class="relative flex justify-between items-center mb-2">
@@ -210,7 +213,7 @@
  </div>
 
      
-     <div v-if="currentPage === 2" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+     <div ref="pdfContent" v-if="currentPage === 2" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
      <div class="mb-8">
        <h2 class="text-lg font-semibold">A. Major life Events:</h2>
        <div class="grid grid-cols-2 gap-4">
@@ -350,9 +353,9 @@
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.others" :disabled="!editMode" /> others (pls. specify)</label><br />
          </div>
          <div>
-           <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.withdrawal" :disabled="!editMode" /> withdrawal</label><br />
+          <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.indulge_in_illegal_substance" :disabled="!editMode" /> indulge in illegal substance</label><br />
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.unresponsive_passive" :disabled="!editMode" /> unresponsive/ passive</label><br />
-           <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.indulge_in_illegal_substance" :disabled="!editMode" /> indulge in illegal substance</label><br />
+           <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.withdrawal" :disabled="!editMode" /> withdrawal</label><br />
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.snatching" :disabled="!editMode" /> snatching</label><br />
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.staying_in_street" :disabled="!editMode" /> staying in the street</label><br />
          </div>
@@ -521,6 +524,8 @@
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
+import { jsPDF } from 'jspdf';
+
 
 export default {
   name: 'GeneralIntakeSheet',
@@ -734,6 +739,560 @@ export default {
         console.error('Error fetching client data:', error);
       }
     },
+    exportToPdf() {
+  const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
+
+  // Set default font properties
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(11);
+  pdf.setLineHeightFactor(1.5);
+
+  // Page 1 content
+  let offset = 327; // Initialize offset at the start of page 1
+
+  const imgData = '/images/headerlogo2.png'; // Ensure this is accessible or use base64
+  pdf.addImage(imgData, 'PNG', 15, 10, 75, 35); // Increase width to 75 and height to 35
+
+  // Add the header below the image
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+
+  // Add the title
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(18);
+  pdf.text('GENERAL INTAKE SHEET', 108, 60, null, null, 'center');
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(11);
+
+  // Date
+  pdf.setFontSize(11);
+  pdf.text(`Date: ${String(this.sheet.date)}`, 160, 70);
+  pdf.line(170, 71, 200, 71);
+
+  // Identifying Information
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('I. Identifying Information:', 20, 90);
+  pdf.setFont('helvetica', 'normal'); // Reset font to normal for subsequent text
+
+  pdf.setFontSize(11);
+  pdf.text(`Name of client:`, 20, 100);
+  pdf.text(String(this.sheet.name), 52, 100);
+  pdf.line(52, 101, 130, 101);
+
+  pdf.text(`Age:`, 135, 100);
+  pdf.text(String(this.sheet.age), 148, 100);
+  pdf.line(148, 101, 170, 101);
+
+  pdf.text(`Sex:`, 175, 101);
+  pdf.text(String(this.sheet.sex), 187, 100);
+  pdf.line(187, 101, 200, 101);
+
+  pdf.text(`Address:`, 20, 110);
+  pdf.text(String(this.sheet.address), 42, 110);
+  pdf.line(42, 111, 200, 111);
+
+  pdf.text(`Date of Birth:`, 20, 120);
+  pdf.text(String(this.sheet.date_of_birth), 48, 120);
+  pdf.line(48, 121, 124, 121);
+
+  pdf.text(`Place of birth:`, 130, 120);
+  pdf.text(String(this.sheet.place_of_birth), 160, 120);
+  pdf.line(160, 121, 200, 121);
+
+  pdf.text(`Religion:`, 20, 130);
+  pdf.text(String(this.sheet.religion), 40, 130);
+  pdf.line(40, 131, 200, 131);
+
+  pdf.text(`Occupation:`, 20, 140);
+  pdf.text(String(this.sheet.occupation), 44, 140);
+  pdf.line(44, 141, 200, 141);
+
+  pdf.text(`Highest Educ'l Att't:`, 20, 150);
+  pdf.text(String(this.sheet.highest_educ_att), 60, 150);
+  pdf.line(60, 151, 200, 151);
+
+  pdf.text(`Name of School:`, 20, 160);
+  pdf.text(String(this.sheet.school_name), 56, 160);
+  pdf.line(56, 161, 200, 161);
+
+  pdf.text(`Class Adviser:`, 20, 170);
+  pdf.text(String(this.sheet.class_adviser), 54, 170);
+  pdf.line(54, 171, 200, 171);
+
+  // Problem Presented
+  pdf.setFont('helvetica', 'bold'); // Set font to bold
+  pdf.setFontSize(11);
+  pdf.text('II. Problem Presented:', 20, 190);
+  pdf.setFont('helvetica', 'normal'); // Reset font to normal for subsequent text
+
+  pdf.setFontSize(11);
+  pdf.text(String(this.sheet.problem_presented), 20, 200, { maxWidth: 180 });
+  pdf.line(20, 201, 200, 201);
+  pdf.line(20, 207, 200, 207);
+  pdf.line(20, 213, 200, 213);
+  pdf.line(20, 219, 200, 219);
+  pdf.line(20, 225, 200, 225);
+  pdf.line(20, 231, 200, 231);
+
+  // Brief Physical Description
+  pdf.setFont('helvetica', 'bold'); // Set font to bold
+  pdf.setFontSize(11);
+  pdf.text('III. Brief Physical Description of the Minor:', 20, 240);
+  pdf.setFont('helvetica', 'normal'); // Reset font to normal for subsequent text
+  pdf.setFontSize(11);
+  pdf.text(String(this.sheet.brief_physical_description), 20, 250, { maxWidth: 170 });
+  pdf.line(20, 251, 200, 251);
+  pdf.line(20, 257, 200, 257);
+  pdf.line(20, 263, 200, 263);
+  pdf.line(20, 269, 200, 269);
+  pdf.line(20, 275, 200, 275);
+  pdf.line(20, 281, 200, 281);
+  pdf.line(20, 287, 200, 287);
+  // Footer
+  pdf.setFont('Times');
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text(`PAGE 1 of ${String(this.totalPages)}`, 108, 330, null, null, 'center');
+  pdf.setFont('helvetica', 'normal');
+  pdf.setLineWidth(0.5);
+  pdf.line(20, offset + 5, 210 - 30, offset + 5);
+  pdf.setFontSize(8);
+  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
+  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
+
+  // Add the footer image
+  const footerImgData = '/images/footerimg.png';
+  pdf.addImage(footerImgData, 'PNG', 182, offset, 20, 10);
+
+  // Move to the second page
+  pdf.addPage();
+  offset = 327; // Reset offset for the second page
+
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+
+  // Page 2 content
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(11);
+      
+  // Section A: Major Life Events
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('A. Major Life Events:', 20, 30);
+
+  pdf.setFont('helvetica', 'normal');
+  const majorLifeEvents = [
+  { label: 'Death of Parents', value: this.sheet.major_life_event.death_of_parents, x: 20, y: 40 },
+  { label: 'Separation from the family', value: this.sheet.major_life_event.separation_from_family, x: 20, y: 50 },
+  { label: 'Victim of natural / manmade disaster', value: this.sheet.major_life_event.natural_disaster, x: 20, y: 60 },
+  { label: 'Victim of apprehension', value: this.sheet.major_life_event.apprehension, x: 20, y: 70 },
+  { label: 'Victim of physical abuse', value: this.sheet.major_life_event.physical_abuse, x: 20, y: 80 },
+  { label: 'With suicidal tendencies', value: this.sheet.major_life_event.suicidal_tendencies, x: 20, y: 90 },
+  { label: 'Mistaken identity', value: this.sheet.major_life_event.mistaken_identity, x: 20, y: 100 },
+  { label: 'Abandonment', value: this.sheet.major_life_event.abandonment, x: 120, y: 40 },
+  { label: 'Serious Accident', value: this.sheet.major_life_event.serious_accident, x: 120, y: 50 },
+  { label: 'Victim of demolition', value: this.sheet.major_life_event.demolition, x: 120, y: 60 },
+  { label: 'Victim of sexual abuse', value: this.sheet.major_life_event.sexual_abuse, x: 120, y: 70 },
+  { label: 'Victim of verbal abuse', value: this.sheet.major_life_event.verbal_abuse, x: 120, y: 80 },
+  { label: 'Acquired disability', value: this.sheet.major_life_event.disability, x: 120, y: 90 },
+  { label: 'Others (pls. Specify)', value: this.sheet.major_life_event.others, x: 120, y: 100 }
+  ];
+
+  majorLifeEvents.forEach((event) => {
+    pdf.text(`[${event.value ? 'X' : ' '}] ${event.label}`, event.x, event.y);
+  }); 
+  // Section B: Enduring Life Strain
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('B. Enduring Life Strain:', 20, 115);
+
+  pdf.setFont('helvetica', 'normal');
+  const enduringLifeStrains = [
+    { label: 'Poverty', value: this.sheet.enduring_life_strain.poverty, x: 20, y: 125 },
+    { label: 'Physical illness', value: this.sheet.enduring_life_strain.physical_illness, x: 20, y: 135 },
+    { label: 'Lack of recreational facilities', value: this.sheet.enduring_life_strain.lack_recreational_facilities, x: 20, y: 145 },
+    { label: 'Exclusion from peers', value: this.sheet.enduring_life_strain.exclusion_from_peers, x: 20, y: 155 },
+    { label: 'Other (pls. specify)', value: this.sheet.enduring_life_strain.other, x: 20, y: 165 },
+    { label: 'Constant need to earn for the family', value: this.sheet.enduring_life_strain.constant_need_to_earn, x: 120, y: 125 },
+    { label: 'Lack of educational opportunity', value: this.sheet.enduring_life_strain.lack_education_opportunity, x: 120, y: 135 },
+    { label: 'Exclusion from school', value: this.sheet.enduring_life_strain.exclusion_from_school, x: 120, y: 145 },
+    { label: 'With disability', value: this.sheet.enduring_life_strain.with_disability, x: 120, y: 155 }
+  ];
+
+  enduringLifeStrains.forEach((strain) => {
+      pdf.text(`[${strain.value ? 'X' : ' '}] ${strain.label}`, strain.x, strain.y);
+  });
+
+  const sectionStartY = 180; // Adjust this to set the starting position for the section title
+
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('C. Life Transition:', 20, sectionStartY);
+
+  // Define life transitions with dynamic x and y coordinates
+  const lifeTransitions = [
+      { label: 'Moving from one neighbour to another', value: this.sheet.life_transition.moving_neighbour, x: 20, y: sectionStartY + 10 },
+      { label: 'Changing peer group', value: this.sheet.life_transition.changing_peer_group, x: 20, y: sectionStartY + 20 },
+      { label: 'Moving to another place of residence due to demolition', value: this.sheet.life_transition.moving_due_to_demolition, x: 20, y: sectionStartY + 30 },
+      { label: 'Moving to another place of residence due to disaster', value: this.sheet.life_transition.moving_due_to_disaster, x: 20, y: sectionStartY + 40 },
+      { label: 'Moving from biological family to a kinship/foster placement', value: this.sheet.life_transition.kinship_foster_placement, x: 20, y: sectionStartY + 50 },
+      { label: 'Beginning romantic relationship', value: this.sheet.life_transition.beginning_romantic_relationship, x: 20, y: sectionStartY + 60 },
+      { label: 'Beginning romantic relationship of parents', value: this.sheet.life_transition.beginning_parents_romantic_relationship, x: 20, y: sectionStartY + 70 },
+      { label: 'Others (pls. specify)', value: this.sheet.life_transition.others, x: 20, y: sectionStartY + 80 }
+  ];
+
+  // Add items with checkboxes
+  pdf.setFont('helvetica', 'normal');
+  lifeTransitions.forEach((transition) => {
+      pdf.text(`[${transition.value ? 'X' : ' '}] ${transition.label}`, transition.x, transition.y);
+  });
+
+  const developmentChangesStartY = 275; // Adjust this to set the starting position for the Development Changes section
+
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('D. Development Changes:', 20, developmentChangesStartY);
+
+  // Define development changes with dynamic x and y coordinates
+  const developmentChanges = [
+      { label: 'Early childhood 1-6 yrs. Old', value: this.sheet.development_changes.early_childhood, x: 20, y: developmentChangesStartY + 10 },
+      { label: 'School age 7-12 yrs. Old', value: this.sheet.development_changes.school_age, x: 20, y: developmentChangesStartY + 20 },
+      { label: 'Adolescence 13-18 yrs. old', value: this.sheet.development_changes.adolescence, x: 20, y: developmentChangesStartY + 30 }
+  ];
+
+  // Add items with checkboxes
+  pdf.setFont('helvetica', 'normal');
+  developmentChanges.forEach((change) => {
+      pdf.text(`[${change.value ? 'X' : ' '}] ${change.label}`, change.x, change.y);
+  });
+
+  // Footer for Page 2
+  pdf.setFont('Times');
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text(`PAGE 2 of ${String(this.totalPages)}`, 108, 330, null, null, 'center');
+  pdf.setFont('helvetica', 'normal');
+  pdf.setLineWidth(0.5);
+  pdf.line(20, offset + 5, 210 - 30, offset + 5);
+  pdf.setFontSize(8);
+  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
+  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
+  pdf.addImage(footerImgData, 'PNG', 182, offset, 20, 10);
+
+  // Move to the second page
+  pdf.addPage();
+  offset = 327; // Reset offset for the second page
+
+  pdf.setFontSize(10);
+  pdf.setFont('helvetica', 'italic');
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+
+  const normalizationStartY = 30; // Adjust this to set the starting position for the Normalization section
+  const feelingsStartY = 165; // Adjust this to set the starting position for the Feelings / Behaviour towards the incident section
+  const attachmentsStartY = 218; // Adjust this to set the starting position for the Attachments section
+  const skillsStartY = 270; // Adjust this to set the starting position for the Skills section
+
+  // Set font and size for section title
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('E. Normalization:', 20, 30);
+
+  // Set font and size for content
+  pdf.setFont('helvetica', 'normal');
+
+  // Define checkbox positions and labels with x and y coordinates
+  const normalizationItems = [
+    { label: 'legality/law enforcement (weak)', value: this.sheet.normalization.legality_law_enforcement, x: 20, y: 40 },
+    { label: 'Availability of:', value: '', x: 20, y: 50 },
+    { label: 'Commercial sex', value: this.sheet.normalization.commercial_sex, x: 30, y: 60 },
+    { label: 'substance/illegal drugs', value: this.sheet.normalization.substance_illegal_drugs, x: 30, y: 70 },
+    { label: 'Pornography materials to include video tapes', value: this.sheet.normalization.pornography_materials, x: 30, y: 80 },
+    { label: 'Red houses', value: this.sheet.normalization.red_houses, x: 30, y: 90 },
+    { label: 'Price- least expensive', value: this.sheet.normalization.price_least_expensive, x: 20, y: 100 },
+    { label: 'Advertisement/ sponsorship/ media presentation', value: this.sheet.normalization.advertisement_media, x: 20, y: 110 },
+    { label: 'Advertisement promoting liquors/cigarettes/clubs/', value: this.sheet.normalization.advertisement_promoting_liquors, x: 30, y: 120, split: true },
+    { label: 'Television shows', value: this.sheet.normalization.television_shows, x: 30, y: 140 },
+    { label: 'Movies', value: this.sheet.normalization.movies, x: 30, y: 150 },
+    { label: 'printed materials', value: this.sheet.normalization.printed_materials, x: 130, y: 40 },
+    { label: 'Community acceptance', value: this.sheet.normalization.community_acceptance, x: 120, y: 50 },
+    { label: 'Source of income', value: this.sheet.normalization.source_of_income, x: 130, y: 60 },
+    { label: 'involve in actual trade/ production', value: this.sheet.normalization.involve_in_trade, x: 130, y: 70 },
+    { label: 'Role of culture (culturally accepted)', value: this.sheet.normalization.role_of_culture, x: 120, y: 80 },
+    { label: 'Smoking', value: this.sheet.normalization.smoking, x: 130, y: 90 },
+    { label: 'Abuse', value: this.sheet.normalization.abuse, x: 130, y: 100 },
+    { label: 'Illicit relationship', value: this.sheet.normalization.illicit_relationship, x: 130, y: 110 },
+    { label: 'Incest relationship', value: this.sheet.normalization.incest_relationship, x: 130, y: 120 },
+    { label: 'Begging', value: this.sheet.normalization.begging, x: 130, y: 130 },
+    { label: 'Rugby sniffing', value: this.sheet.normalization.rugby_sniffing, x: 130, y: 140 }
+  ];
+  // Add items with checkboxes
+  pdf.setFont('helvetica', 'normal');
+  normalizationItems.forEach((item) => {
+      if (item.split) {
+          // Split the label into two lines
+          const lines = [
+              'Advertisement promoting liquors/cigarettes/clubs/',
+              'red houses'
+          ];
+          lines.forEach((line, index) => {
+              if (index === 0) {
+                  // Add checkbox only for the first line
+                  pdf.text(`[${item.value ? 'X' : ' '}] ${line}`, item.x, item.y + (index * 10));
+              } else {
+                  // Add label without checkbox for the second line
+                  pdf.text(`${line}`, item.x + 10, item.y + (index * 10)); // Adjust x for alignment
+              }
+          });
+      } else {
+          // For items that do not need splitting
+          pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
+      }
+  });
+
+  // Add checkbox items to PDF
+  pdf.setFont('helvetica', 'normal');
+  normalizationItems.forEach((item) => {
+      pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
+  });
+
+
+  pdf.setFontSize(11);
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('F. Feelings / Behaviour towards the incident:', 20, feelingsStartY);
+
+  // Define feelings and behavior items with dynamic x and y coordinates
+  pdf.setFont('helvetica', 'normal');
+  const feelingsItems = [
+      { label: 'stow away', value: this.sheet.behaviour_towards_incident.stow_away, x: 20, y: feelingsStartY + 10 },
+      { label: 'irritable', value: this.sheet.behaviour_towards_incident.irritable, x: 20, y: feelingsStartY + 20 },
+      { label: 'Delinquent behaviour', value: this.sheet.behaviour_towards_incident.delinquent_behaviour, x: 20, y: feelingsStartY + 30 },
+      { label: 'stealing', value: this.sheet.behaviour_towards_incident.stealing, x: 20, y: feelingsStartY + 40 },
+      { label: 'begging', value: this.sheet.behaviour_towards_incident.begging, x: 90, y: feelingsStartY + 10 },
+      { label: 'staying in the street', value: this.sheet.behaviour_towards_incident.staying_in_street, x: 90, y: feelingsStartY + 20 },
+      { label: 'indulge in illegal substance', value: this.sheet.behaviour_towards_incident.indulge_in_illegal_substance, x: 90, y: feelingsStartY + 30 },
+      { label: 'unresponsive/ passive', value: this.sheet.behaviour_towards_incident.unresponsive_passive, x: 90, y: feelingsStartY + 40 },
+      { label: 'withdrawal', value: this.sheet.behaviour_towards_incident.withdrawal, x: 150, y: feelingsStartY + 10 },
+      { label: 'snatching', value: this.sheet.behaviour_towards_incident.snatching, x: 150, y: feelingsStartY + 20 },
+      { label: 'others (pls. specify)', value: this.sheet.behaviour_towards_incident.others, x: 150, y: feelingsStartY + 30 },
+    ];
+
+    // Add feelings and behavior items with checkboxes
+    feelingsItems.forEach((item) => {
+        pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
+    });
+
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('G. Attachments:', 20, attachmentsStartY);
+
+    // Define attachments items with dynamic x and y coordinates
+    pdf.setFont('helvetica', 'normal');
+    const attachmentsItems = [
+        { label: 'Mother', value: this.sheet.attachments.mother, x: 20, y: attachmentsStartY + 10 },
+        { label: 'Grandmother', value: this.sheet.attachments.grandmother, x: 20, y: attachmentsStartY + 20 },
+        { label: 'Aunt', value: this.sheet.attachments.aunt, x: 20, y: attachmentsStartY + 30 },
+        { label: 'Neighbour', value: this.sheet.attachments.neighbour, x: 20, y: attachmentsStartY + 40 },
+        { label: 'Cousin', value: this.sheet.attachments.cousin, x: 90, y: attachmentsStartY + 10 },
+        { label: 'father', value: this.sheet.attachments.father, x: 90, y: attachmentsStartY + 20 },
+        { label: 'grand father', value: this.sheet.attachments.grandfather, x: 90, y: attachmentsStartY + 30 },
+        { label: 'uncle', value: this.sheet.attachments.uncle, x: 90, y: attachmentsStartY + 40 },
+        { label: 'peer', value: this.sheet.attachments.peer, x: 150, y: attachmentsStartY + 10 },
+        { label: 'schoolmate', value: this.sheet.attachments.schoolmate, x: 150, y: attachmentsStartY + 20 },
+        { label: 'classmate', value: this.sheet.attachments.classmate, x: 150, y: attachmentsStartY + 30 }
+    ];
+
+    // Add attachments items with checkboxes
+    attachmentsItems.forEach((item) => {
+        pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
+    });
+
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('H. Skills:', 20, skillsStartY);
+
+    pdf.setFont('helvetica', 'normal');
+    const skillsItems = [
+      { label: 'Problem solving', value: this.sheet.skills.problem_solving, x: 20, y: skillsStartY + 10 },
+      { label: 'Interpersonal relationship', value: this.sheet.skills.interpersonal_relationship, x: 20, y: skillsStartY + 20 },
+      { label: 'Communication skills', value: this.sheet.skills.communication_skills, x: 20, y: skillsStartY + 30 },
+      { label: 'Vocational skills', value: this.sheet.skills.vocational_skills, x: 20, y: skillsStartY + 40 },
+      { label: 'Critical thinking', value: this.sheet.skills.critical_thinking, x: 90, y: skillsStartY + 10 },
+      { label: 'Self-awareness', value: this.sheet.skills.self_awareness, x: 90, y: skillsStartY + 20 },
+      { label: 'Coping skills', value: this.sheet.skills.coping_skills, x: 90, y: skillsStartY + 30 },
+      { label: 'Survival skills', value: this.sheet.skills.survival_skills, x: 90, y: skillsStartY + 40 },
+      { label: 'Decision making skills', value: this.sheet.skills.decision_making_skills, x: 150, y: skillsStartY + 10 },
+      { label: 'Comprehension', value: this.sheet.skills.comprehension, x: 150, y: skillsStartY + 20 },
+      { label: 'Others', value: this.sheet.skills.others, x: 150, y: skillsStartY + 30 },
+    ];
+
+    pdf.setFont('helvetica', 'normal');
+    skillsItems.forEach(item => {
+      pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
+    });
+
+      // Footer
+    pdf.setFont('Times');
+    pdf.setFontSize(10);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(`PAGE 3 of ${String(this.totalPages)}`, 108, 330, null, null, 'center');
+    pdf.setFont('helvetica', 'normal');
+    pdf.setLineWidth(0.5);
+    pdf.line(20, offset + 5, 210 - 30, offset + 5);
+    pdf.setFontSize(8);
+    pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
+    pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
+
+    // Add the footer image
+    const footerImageData = '/images/footerimg.png';
+    pdf.addImage(footerImageData, 'PNG', 182, offset, 20, 10);
+
+    pdf.addPage();
+    pdf.setFontSize(10);
+    pdf.setFont('helvetica', 'italic');
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Resources:', 20, 30);
+
+    // Set font and size for content
+    pdf.setFont('helvetica', 'normal');
+
+    // Resources Section
+    const resourcesItems = [
+      { label: 'Internal resources', value: this.sheet.resources.internal, x: 20, y: 40 },
+      { label: 'Intelligence', value: this.sheet.resources.intelligence, x: 30, y: 50, indent: true },
+      { label: 'Spirituality', value: this.sheet.resources.spirituality, x: 30, y: 60, indent: true },
+      { label: 'Resourceful', value: this.sheet.resources.resourceful, x: 30, y: 70, indent: true },
+      { label: 'Obedient', value: this.sheet.resources.obedient, x: 120, y: 50 },
+      { label: 'Others', value: this.sheet.resources.others, x: 120, y: 60, indent: true },
+      { label: 'External Resources', value: this.sheet.resources.external, x: 20, y: 80 },
+      { label: 'Family', value: this.sheet.resources.family, x: 30, y: 90, indent: true },
+      { label: 'Peers', value: this.sheet.resources.peers, x: 30, y: 100, indent: true },
+      { label: 'Health services', value: this.sheet.resources.health_services, x: 30, y: 110, indent: true },
+      { label: 'Recreational services', value: this.sheet.resources.recreational_services, x: 30, y: 120, indent: true },
+      { label: 'NGOs existing in the community', value: this.sheet.resources.ngos, x: 120, y: 90, indent: true },
+      { label: 'Civic Organization', value: this.sheet.resources.civic_organization, x: 120, y: 100, indent: true },
+      { label: 'Others (pls. specify)', value: this.sheet.resources.others, x: 120, y: 110, indent: true }
+    ];
+
+    resourcesItems.forEach(item => {
+      pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
+    });
+
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('IV. Activities or source of income in the street:', 20, 130);
+
+     // Set font and size for content
+     pdf.setFont('helvetica', 'normal');
+
+    // Source of Income Section
+    const incomeItems = [
+      { label: 'Vending', value: this.sheet.source_of_income_in_street.vending, x: 30, y: 140 },
+      { label: 'Car wash boy', value: this.sheet.source_of_income_in_street.car_wash_boy, x: 30, y: 150 },
+      { label: 'Rugby user', value: this.sheet.source_of_income_in_street.rugby_user, x: 30, y: 160 },
+      { label: 'Porter', value: this.sheet.source_of_income_in_street.porter, x: 120, y: 140 },
+      { label: 'Barker', value: this.sheet.source_of_income_in_street.barker, x: 120, y: 150 }
+    ];
+
+    incomeItems.forEach(item => {
+      pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
+    });
+
+  // Text fields
+  pdf.text('Earnings/ income:', 20, 170);
+  pdf.text(this.sheet.earnings_income || '', 55, 170);
+
+  // Set the line width to a thinner value
+  pdf.setLineWidth(0.3); // Adjust the value to make it thinner (0.5 is fairly thin)
+
+  // Draw a thin line under "Earnings/ income"
+  pdf.line(55, 171, 200, 171);
+
+  pdf.text('Hours of stay in the street:', 20, 180);
+  pdf.text(this.sheet.hrs_stay_in_street || '', 70, 180);
+
+  // Draw line under "Hours of stay in the street"
+  pdf.line(70, 181, 200, 181);
+
+  pdf.text('Length of stay in the street:', 20, 190);
+  pdf.text(this.sheet.length_stay_in_street || '', 70, 190);
+
+  // Draw line under "Length of stay in the street"
+  pdf.line(70, 191, 200, 191);
+
+  pdf.text('Common Substance used:', 20, 200);
+  pdf.text(this.sheet.common_substance_used || '', 70, 200);
+
+  // Draw line under "Common Substance used"
+  pdf.line(70, 201, 200, 201);
+
+
+    // Initial Assessment
+    pdf.setFont("helvetica", "bold"); // Use "bold" for the bold style
+    pdf.text('INITIAL ASSESSMENT:', 20, 210);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(this.sheet.initial_assessment || '', 20, 220, {  indent: true, maxWidth: 180 });
+    pdf.line(20, 221, 200, 221);
+    pdf.line(20, 227, 200, 227);
+    pdf.line(20, 233, 200, 233);
+    pdf.line(20, 239, 200, 239);
+    // Recommendations
+    pdf.setFont("helvetica", "bold");
+    pdf.text('RECOMMENDATIONS:', 20, 250);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(this.sheet.recommendations || '', 20, 260, {   maxWidth: 180 });
+    pdf.line(20, 261, 200, 261);
+    pdf.line(20, 267, 200, 267);
+    pdf.line(20, 273, 200, 273);
+
+    // Prepared by and Reviewed by
+    pdf.text('Prepared by:', 20, 290);
+    pdf.setFont("helvetica", "bold"); // Use "bold" for the bold style
+    // Define the text
+    const preparedByText = this.sheet.prepared_by || '';
+
+    // Add the text
+    pdf.text(preparedByText, 20, 300);
+
+    // Calculate the width of the text
+    const textWidth = pdf.getTextWidth(preparedByText);
+
+    // Draw a line below the text, with the width matching the text's width
+    pdf.line(20, 301, 20 + textWidth, 301);
+    pdf.setFont("helvetica", "normal");
+    pdf.text('SWO __/Case Manager', 20, 305);
+
+    pdf.text('Reviewed by:', 140, 290);
+    pdf.setFont("helvetica", "bold"); // Use "bold" for the bold style
+    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 140, 300);
+    pdf.line(140, 301, 200, 301); 
+    pdf.setFont("helvetica", "normal");
+    pdf.text('Center Head/SWO IV', 140, 305);
+    pdf.setFont('helvetica', 'bold');
+
+    // Footer
+    pdf.setFont('Times');
+    pdf.setFontSize(10);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(`PAGE 4 of ${String(this.totalPages)}`, 108, 330, null, null, 'center');
+    pdf.setFont('helvetica', 'normal');
+    pdf.setLineWidth(0.5);
+    pdf.line(20, offset + 5, 210 - 30, offset + 5);
+    pdf.setFontSize(8);
+    pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
+    pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
+
+    // Add the footer image
+    const footerImgeData = '/images/footerimg.png';
+    pdf.addImage(footerImgeData, 'PNG', 182, offset, 20, 10);
+
+      // Save the PDF
+      pdf.save('General Intake Sheet.pdf');
+    },
+
     calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);
