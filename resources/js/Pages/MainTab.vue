@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <template #header>
-      <h1 class="text-lg font-bold text-red-800">CICL Information</h1>
+      <h1 class="text-lg ml-12 font-bold text-red-800">CICL Information</h1>
     </template>
 
     <div v-if="loading" class="text-center py-4">Loading client data...</div>

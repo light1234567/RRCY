@@ -6,7 +6,7 @@
         <button 
           @click="toggleDropdown" 
           :class="[
-            'fixed bottom-6 right-6 flex items-center justify-center w-14 h-14 text-md border border-gray-500 rounded-full bg-gray-800 shadow-xl focus:outline-none focus:ring-1 focus:ring-blue-500',
+            'fixed bottom-6 right-6 flex items-center justify-center w-14 h-14 text-md border border-gray-500 rounded-full bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 shadow-xl focus:outline-none focus:ring-1 focus:ring-blue-500',
             { 'glow': isDropdownOpen } // Add glow effect when dropdown is open
           ]"
         >

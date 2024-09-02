@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="Dashboard">
     <template #header>
-        <h1 class="ml-0 text-lg font-bold  text-red-800">ADMISSION FORM/NEW CLIENT</h1>
+        <h1 class="ml-12 text-lg font-bold  text-red-800">ADMISSION FORM/NEW CLIENT</h1>
       </template>
       <div style="background-image: url(''); background-size: cover; background-position: center;">
       <h1 class="text-lg p-1 text-customBlue ml-10  font-bold mb-4">

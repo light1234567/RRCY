@@ -4,14 +4,14 @@
 
     <Banner />
 
-    <div class="min-h-screen bg-gradient-to-r from-stone-50 via-gray-50 to-slate-100  flex ">
+    <div class="min-h-screen bg-gradient-to-bl from-slate-50 via-gray-50 to-zinc-50  flex ">
       <!-- Sidebar -->
       <nav
         :class="{
-          'w-52': !isSidebarCollapsed,
+          'w-64': !isSidebarCollapsed,
           'w-20': isSidebarCollapsed
         }"
-        class="fixed bg-customBlue border-r border-gray-100 h-full z-40 transition-all duration-300"
+        class="fixed bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 border-r border-gray-100 h-full z-40 transition-all duration-300"
       >
         <div class="flex flex-col h-full relative">
           <!-- Sidebar Toggle Button (Arrow Icon) -->
@@ -68,7 +68,7 @@
           </div> -->
           <!-- LOGO DSWD -->
           <img
-    :class="['p-6 mt-4 mb-4 relative z-10 transition-all duration-300', isSidebarCollapsed ? 'mt-8 h-20 w-28' : 'h-28 w-60']"
+    :class="['p-6 mt-4 mb-4 relative z-10 transition-all duration-300', isSidebarCollapsed ? 'mt-8 h-20 w-28' : 'h-32 w-68']"
     :src="isSidebarCollapsed ? '/images/rrcy.png' : '/images/transparent.png'"
     alt="Logo"
   />
@@ -330,7 +330,7 @@
   </header>
 </div>
         <!-- Page Content -->
-        <main class=""> <!-- Adjust padding to match header height -->
+        <main class="ml-12"> <!-- Adjust padding to match header height -->
           <slot />
         </main>
       </div>

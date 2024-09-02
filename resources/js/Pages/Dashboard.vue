@@ -48,7 +48,7 @@ html, body {
 <template>
     <AppLayout title="Dashboard">
         <template #header>
-        <h1 class="text-xl font-bold -ml-4 text-customBlue">Dashboard</h1>
+        <h1 class="text-xl font-bold ml-12 text-red-800">Dashboard</h1>
       </template>
       
       <!-- Main Content -->

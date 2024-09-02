@@ -1,7 +1,7 @@
 <template>
   <AppLayout title="CICL">
     <template #header>
-      <h1 class="text-lg font-bold text-red-800">CICL</h1>
+      <h1 class="text-lg ml-12 font-bold text-red-800">CICL</h1>
     </template>
     <div class="">
       <div class="ml-6 max-w-6x1 mx-auto sm:px-6 lg:px-8 mt-8">
