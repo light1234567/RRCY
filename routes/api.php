@@ -28,6 +28,7 @@ use App\Http\Controllers\NursingCareServiceController;
 use App\Http\Controllers\PerformanceObservationReportController;
 use App\Http\Controllers\TrainingNeedsAssessmentController;
 use App\Http\Controllers\LearnerAcademicBehavioralFormController;
+use App\Http\Controllers\LearnerAssessmentFormController;
 
 Route::post('/check-email', [UserController::class, 'checkEmail']);
 Route::post('/validate-password', [UserController::class, 'validatePassword']);
@@ -201,3 +202,6 @@ Route::put('/training-needs-assessment/{client_id}', [TrainingNeedsAssessmentCon
 Route::get('/learner-academic-behavioral-forms/{client_id}', [LearnerAcademicBehavioralFormController::class, 'show']);
 Route::post('/learner-academic-behavioral-forms', [LearnerAcademicBehavioralFormController::class, 'storeOrUpdate']);
 
+
+Route::get('/learner-assessment-forms/{client_id}', [LearnerAssessmentFormController::class, 'show']);
+Route::post('/learner-assessment-forms', [LearnerAssessmentFormController::class, 'storeOrUpdate']);
