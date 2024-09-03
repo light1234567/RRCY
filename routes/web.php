@@ -98,3 +98,8 @@ Route::post('/login', function (Request $request) {
 use App\Http\Controllers\RegisterController;
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
+use App\Http\Controllers\LocationController;
+
+Route::get('/provinces', [LocationController::class, 'getProvinces']);
+Route::get('/citymunis/{provincePsgc}', [LocationController::class, 'getCityMunis']);
+Route::get('/barangays/{cityMuniPsgc}', [LocationController::class, 'getBarangays']);
