@@ -15,11 +15,12 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Roboto Mono', ...defaultTheme.fontFamily.sans],
+                sans: ['Arimo', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 'customBlue': 'rgb(6, 18, 56)', // Define your custom RGB color
                 'customglue': '#202A4D',
+             
             },
             
             

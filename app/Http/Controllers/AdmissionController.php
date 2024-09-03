@@ -19,6 +19,7 @@ class AdmissionController extends Controller
             'client.first_name' => 'required|string|max:255',
             'client.middle_name' => 'nullable|string|max:255',
             'client.last_name' => 'required|string|max:255',
+            'client.suffix' => 'string|max:10',
             'client.sex' => 'required|string|max:10',
             'client.date_of_birth' => 'required|date',
             'client.place_of_birth' => 'required|string|max:255',

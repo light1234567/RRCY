@@ -12,26 +12,10 @@
         <fieldset class="border border-blue-900 p-4 mb-2 mr-8 ml-16 rounded-sm">
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold">CLIENT INFORMATION</legend>
           
-          <div class="mb-2">
-                <label for="child_status" class="block mb-1 text-sm">
-                  Child Status <span class="text-red-500">*</span>
-                </label>
-                <select
-                  id="child_status"
-                  v-model="form.client.child_status"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                >  
-                  <option value="Still at the Center (SATC)">Still at the Center (SATC)</option>
-                  <option value="Discharge">Discharge</option>
-                  <option value="Leave without Permission (LWOP)">Leave without Permission (LWOP)</option>
-                </select>
-          </div> 
-
           <div class="grid grid-cols-1">
-            <!-- Name, Sex, and Date of Birth -->
+            <!-- Name, Suffix, and Sex using a Grid Layout -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
-              <div class="md:col-span-1 mb-2">
+              <div class="mb-2">
                 <label for="clientFirstName" class="block mb-1 text-sm">
                   First Name: <span class="text-red-500">*</span>
                 </label>
@@ -43,7 +27,7 @@
                   required
                 />
               </div>
-              <div class="md:col-span-1 mb-2">
+              <div class="mb-2">
                 <label for="clientMiddleName" class="block mb-1 text-sm">Middle Name:</label>
                 <input
                   type="text"
@@ -52,7 +36,7 @@
                   class="w-full px-2 py-1 border rounded-md text-sm"
                 />
               </div>
-              <div class="md:col-span-1 mb-2">
+              <div class="mb-2">
                 <label for="clientLastName" class="block mb-1 text-sm">
                   Last Name: <span class="text-red-500">*</span>
                 </label>
@@ -64,25 +48,24 @@
                   required
                 />
               </div>
-              <div class="md:col-span-1 mb-2">
-                <label for="clientSex" class="block mb-1 text-sm">
-                  Sex: <span class="text-red-500">*</span>
+              <div class="mb-2">
+                <label for="clientSuffix" class="block mb-1 text-sm">
+                  Suffix: 
                 </label>
-                <select
-                  id="clientSex"
-                  v-model="form.client.sex"
+                <input
+                  type="text"
+                  id="clientSuffix"
+                  v-model="form.client.suffix"
                   class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
+                  placeholder="e.g., Jr."
                 >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                </select>
               </div>
             </div>
 
-            <!-- Date of Birth and Place of Birth -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-              <div class="md:col-span-1 mb-2">
+
+          <!-- Date of Birth, Place of Birth, Sex, and Child Status -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
+              <div class="mb-2">
                 <label for="clientDob" class="block mb-1 text-sm">
                   Date of Birth: <span class="text-red-500">*</span>
                 </label>
@@ -94,7 +77,7 @@
                   required
                 />
               </div>
-              <div class="md:col-span-1 mb-2">
+              <div class="mb-2">
                 <label for="clientPlaceOfBirth" class="block mb-1 text-sm">
                   Place of Birth: <span class="text-red-500">*</span>
                 </label>
@@ -103,10 +86,41 @@
                   id="clientPlaceOfBirth"
                   v-model="form.client.place_of_birth"
                   class="w-full px-2 py-1 border rounded-md text-sm"
+                  placeholder="City/Province"
+                  required
+                />
+              </div>
+              <div class="mb-2">
+                <label for="child_status" class="block mb-1 text-sm">
+                  Child Status <span class="text-red-500">*</span>
+                </label>
+                <select
+                  id="child_status"
+                  v-model="form.client.child_status"
+                  class="w-full px-2 py-1 border rounded-md text-sm"
+                  required
+                >  
+                  <option value="">Select Child Status</option>
+                  <option value="Still at the Center (SATC)">Still at the Center (SATC)</option>
+                  <option value="Discharge">Discharge</option>
+                  <option value="Leave without Permission (LWOP)">Leave without Permission (LWOP)</option>
+                </select>
+              </div> 
+              <div class="mb-2">
+                <label for="clientSex" class="block mb-1 text-sm">
+                  Sex: <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="clientSex"
+                  v-model="form.client.sex"
+                  class="w-full px-2 py-1 border rounded-md text-sm"
+                  readonly
                   required
                 />
               </div>
             </div>
+
 
             <!-- Address Breakdown with Cascading Dropdowns -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
@@ -208,23 +222,26 @@
               />
             </div>
             <div class="mb-2">
-              <label for="height" class="block mb-1 text-sm">Height (cm):</label>
-              <input
-                type="number"
-                id="height"
-                v-model="form.distinguishing_marks.height"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-              />
-            </div>
-            <div class="mb-2">
-              <label for="weight" class="block mb-1 text-sm">Weight (kg):</label>
-              <input
-                type="number"
-                id="weight"
-                v-model="form.distinguishing_marks.weight"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-              />
-            </div>
+                <label for="height" class="block mb-1 text-sm">Height (cm):</label>
+                <input
+                  type="number"
+                  id="height"
+                  v-model="form.distinguishing_marks.height"
+                  class="w-full px-2 py-1 border rounded-md text-sm"
+                  max="999"  
+                  min="0"    
+                />
+              </div>
+              <div class="mb-2">
+                <label for="weight" class="block mb-1 text-sm">Weight (kg):</label>
+                <input
+                  type="number"
+                  id="weight"
+                  v-model="form.distinguishing_marks.weight"
+                  class="w-full px-2 py-1 border rounded-md text-sm"
+                  max="999" 
+                />
+              </div>
             <div class="mb-2">
               <label for="colourOfEye" class="block mb-1 text-sm">Colour of Eye:</label>
               <input
@@ -232,7 +249,6 @@
                 id="colourOfEye"
                 v-model="form.distinguishing_marks.colour_of_eye"
                 class="w-full px-2 py-1 border rounded-md text-sm"
-                placeholder="Enter Eye Colour"
               />
             </div>
             <div class="mb-2">
@@ -242,36 +258,15 @@
                 id="skinColour"
                 v-model="form.distinguishing_marks.skin_colour"
                 class="w-full px-2 py-1 border rounded-md text-sm"
-                placeholder="Enter Skin Colour"
               />
             </div>
           </div>
         </fieldset>
 
-        <!-- Admission Details -->
-        <fieldset class="border border-blue-900 p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
+         <!-- Admission Details -->
+         <fieldset class="border border-blue-900 p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">ADMISSION DETAILS</legend>
-          <div class="mb-2">
-                <label for="case_status" class="block mb-1 text-sm">
-                  Case Status <span class="text-red-500">*</span>
-                </label>
-                <select
-                  id="case_status"
-                  v-model="form.admission.case_status"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                >  
-                  <option value="On trial">On trial</option>
-                  <option value="Suspended sentence">Suspended sentence</option>
-                  <option value="Acquitted">Acquitted</option>
-                  <option value="Dismissed">Dismissed</option>
-                  <option value="Provisionally Dismissed">Provisionally Dismissed</option>
-                  <option value="Rehabilitation">Rehabilitation</option>
-                  <option value="Diversion">Diversion</option>
-                  <option value="Disposition Measure">Disposition Measure</option>
-                  <option value="Child-at-risk (CAR)">Child-at-risk (CAR)</option>
-                </select>
-          </div> 
+         
 
           <div class="grid grid-cols-1 gap-2">
             <div class="mb-2 col-span-1">
@@ -309,7 +304,6 @@
                   v-model="form.admission.offense_committed"
                   class="w-full px-2 py-1 border rounded-md text-sm"
                   required
-                  placeholder="Enter Offense"
                 />
               </div>
               <div class="mb-2">
@@ -325,7 +319,7 @@
                 />
               </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
               <div class="mb-2">
                 <label for="daysInJail" class="block mb-1 text-sm">
                   Days in Jail: <span class="text-red-500">*</span>
@@ -350,9 +344,33 @@
                   required
                 />
               </div>
+              <div class="mb-2">
+                <label for="case_status" class="block mb-1 text-sm">
+                  Case Status <span class="text-red-500">*</span>
+                </label>
+                <select
+                  id="case_status"
+                  v-model="form.admission.case_status"
+                  class="w-full px-2 py-1 border rounded-md text-sm"
+                  required
+                >
+                  <option value="">Select Case Status</option>
+                  <option value="On trial">On trial</option>
+                  <option value="Suspended sentence">Suspended sentence</option>
+                  <option value="Acquitted">Acquitted</option>
+                  <option value="Dismissed">Dismissed</option>
+                  <option value="Provisionally Dismissed">Provisionally Dismissed</option>
+                  <option value="Rehabilitation">Rehabilitation</option>
+                  <option value="Diversion">Diversion</option>
+                  <option value="Disposition Measure">Disposition Measure</option>
+                  <option value="Child-at-risk (CAR)">Child-at-risk (CAR)</option>
+                </select>
+              </div>
+
             </div>
           </div>
         </fieldset>
+
 
         <!-- Documents Submitted -->
         <fieldset class="border border-blue-900 p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
@@ -485,7 +503,7 @@
   </AppLayout>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import axios from 'axios';
 import NotificationModal from '@/Components/NotificationModal.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
@@ -495,7 +513,8 @@ const form = ref({
     first_name: '',
     middle_name: '',
     last_name: '',
-    sex: '',
+    suffix: '',
+    sex: 'Male',
     date_of_birth: '',
     place_of_birth: '',
     province: '',
@@ -576,7 +595,7 @@ const onCityChange = async () => {
 
 const saveForm = async () => {
   console.log('Form Data:', form.value);
-
+  
   try {
     const response = await axios.post('/api/save-admission', form.value);
     modalType.value = 'success';
@@ -595,13 +614,38 @@ const saveForm = async () => {
   }
 };
 
+// Watcher to limit height input to three digits
+watch(
+  () => form.value.distinguishing_marks.height,
+  (newValue) => {
+    if (newValue && newValue > 999) {
+      form.value.distinguishing_marks.height = 999; // Set maximum to 999
+    } else if (newValue && newValue.toString().length > 3) {
+      form.value.distinguishing_marks.height = parseInt(newValue.toString().slice(0, 3), 10);
+    }
+  }
+);
+
+// Watcher to limit weight input to three digits
+watch(
+  () => form.value.distinguishing_marks.weight,
+  (newValue) => {
+    if (newValue && newValue > 999) {
+      form.value.distinguishing_marks.weight = 999; // Set maximum to 999
+    } else if (newValue && newValue.toString().length > 3) {
+      form.value.distinguishing_marks.weight = parseInt(newValue.toString().slice(0, 3), 10);
+    }
+  }
+);
+
 const resetForm = () => {
   form.value = {
     client: {
       first_name: '',
       middle_name: '',
       last_name: '',
-      sex: '',
+      suffix: '',
+      sex: 'Male',
       date_of_birth: '',
       place_of_birth: '',
       province: '',
