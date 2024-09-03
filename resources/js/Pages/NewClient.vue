@@ -76,12 +76,11 @@
               </div>
               <div class="md:col-span-1 mb-2">
                 <label for="clientPlaceOfBirth" class="block mb-1 text-sm">
-                  Place of Birth:  <span class="text-red-500">*</span>
+                  Place of Birth: <span class="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   id="clientPlaceOfBirth"
-                  placeholder="Province/City"
                   v-model="form.client.place_of_birth"
                   class="w-full px-2 py-1 border rounded-md text-sm"
                   required
@@ -99,11 +98,11 @@
                   id="clientProvince"
                   v-model="form.client.province"
                   class="w-full px-2 py-1 border rounded-md text-sm"
-                  @change="fetchCityMunis"
+                  @change="onProvinceChange"
                   required
                 >
                   <option value="">Select Province</option>
-                  <option v-for="province in provinces" :key="province.psgc" :value="province.psgc">
+                  <option v-for="province in provinces" :key="province.psgc" :value="province.col_province">
                     {{ province.col_province }}
                   </option>
                 </select>
@@ -116,12 +115,12 @@
                   id="clientCity"
                   v-model="form.client.city"
                   class="w-full px-2 py-1 border rounded-md text-sm"
-                  @change="fetchBarangays"
+                  @change="onCityChange"
                   :disabled="!form.client.province"
                   required
                 >
                   <option value="">Select City/Municipality</option>
-                  <option v-for="citymuni in cityMunis" :key="citymuni.psgc" :value="citymuni.psgc">
+                  <option v-for="citymuni in cityMunis" :key="citymuni.psgc" :value="citymuni.col_citymuni">
                     {{ citymuni.col_citymuni }}
                   </option>
                 </select>
@@ -138,7 +137,7 @@
                   required
                 >
                   <option value="">Select Barangay</option>
-                  <option v-for="brgy in barangays" :key="brgy.psgc" :value="brgy.psgc">
+                  <option v-for="brgy in barangays" :key="brgy.psgc" :value="brgy.col_brgy">
                     {{ brgy.col_brgy }}
                   </option>
                 </select>
@@ -504,12 +503,14 @@ const fetchProvinces = async () => {
   }
 };
 
-const fetchCityMunis = async () => {
-  if (form.value.client.province) {
+const onProvinceChange = async () => {
+  const selectedProvince = provinces.value.find(p => p.col_province === form.value.client.province);
+  if (selectedProvince) {
     try {
-      const response = await axios.get(`/citymunis/${form.value.client.province}`);
+      const response = await axios.get(`/citymunis/${selectedProvince.psgc}`);
       cityMunis.value = response.data;
       form.value.client.city = ''; // Reset city selection
+      form.value.client.barangay = ''; // Reset barangay selection
       barangays.value = []; // Clear barangays
     } catch (error) {
       console.error('Error fetching city/municipalities:', error);
@@ -517,10 +518,11 @@ const fetchCityMunis = async () => {
   }
 };
 
-const fetchBarangays = async () => {
-  if (form.value.client.city) {
+const onCityChange = async () => {
+  const selectedCity = cityMunis.value.find(c => c.col_citymuni === form.value.client.city);
+  if (selectedCity) {
     try {
-      const response = await axios.get(`/barangays/${form.value.client.city}`);
+      const response = await axios.get(`/barangays/${selectedCity.psgc}`);
       barangays.value = response.data;
       form.value.client.barangay = ''; // Reset barangay selection
     } catch (error) {
@@ -530,6 +532,9 @@ const fetchBarangays = async () => {
 };
 
 const saveForm = async () => {
+  // Log the form data to ensure correct values
+  console.log('Form Data:', form.value);
+
   try {
     const response = await axios.post('/api/save-admission', form.value);
     modalType.value = 'success';

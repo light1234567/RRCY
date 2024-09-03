@@ -194,9 +194,16 @@
 
      
      <div class="mb-8">
-       <h2 class="text-lg font-semibold">III. Brief Physical description of the minor:</h2>
-       <textarea v-model="sheet.brief_physical_description" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
-     </div>
+  <h2 class="text-lg font-semibold">III. Brief Physical Description of the Minor:</h2>
+
+  <!-- Child's Description -->
+  <div class="mb-4">
+    <label class="block text-base text-black-700 mb-2">Child’s Description:</label>
+    <textarea v-model="sheet.brief_physical_description" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
+  </div>
+</div>
+
+
    </div>
    <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
        <div class="flex justify-between items-center">
@@ -214,29 +221,35 @@
 
      
      <div ref="pdfContent" v-if="currentPage === 2" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
-     <div class="mb-8">
-       <h2 class="text-lg font-semibold">A. Major life Events:</h2>
-       <div class="grid grid-cols-2 gap-4">
-         <div>
-           <label><input type="checkbox" v-model="sheet.major_life_event.death_of_parents" :disabled="!editMode" /> Death of Parents</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.separation_from_family" :disabled="!editMode" /> Separation from the family</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.natural_disaster" :disabled="!editMode" /> Victim of natural / manmade disaster</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.apprehension" :disabled="!editMode" /> Victim of apprehension</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.physical_abuse" :disabled="!editMode" /> Victim of physical abuse</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.suicidal_tendencies" :disabled="!editMode" /> with suicidal tendencies</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.mistaken_identity" :disabled="!editMode" /> mistaken identity</label><br />
-         </div>
-         <div>
-           <label><input type="checkbox" v-model="sheet.major_life_event.abandonment" :disabled="!editMode" /> Abandonment</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.serious_accident" :disabled="!editMode" /> Serious Accident</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.demolition" :disabled="!editMode" /> Victim of demolition</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.sexual_abuse" :disabled="!editMode" /> Victim of sexual abuse</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.verbal_abuse" :disabled="!editMode" /> Victim of verbal abuse</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.disability" :disabled="!editMode" /> acquired disability</label><br />
-           <label><input type="checkbox" v-model="sheet.major_life_event.others" :disabled="!editMode" /> others: (pls. Specify)</label><br />
-         </div>
-       </div>
-     </div>
+      <div class="mb-8">
+  <h2 class="text-lg font-semibold">A. Major life Events:</h2>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label><input type="checkbox" v-model="sheet.major_life_event.death_of_parents" :disabled="!editMode" /> Death of Parents</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.separation_from_family" :disabled="!editMode" /> Separation from the family</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.natural_disaster" :disabled="!editMode" /> Victim of natural / manmade disaster</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.apprehension" :disabled="!editMode" /> Victim of apprehension</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.physical_abuse" :disabled="!editMode" /> Victim of physical abuse</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.suicidal_tendencies" :disabled="!editMode" /> with suicidal tendencies</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.mistaken_identity" :disabled="!editMode" /> mistaken identity</label><br />
+    </div>
+    <div>
+      <label><input type="checkbox" v-model="sheet.major_life_event.abandonment" :disabled="!editMode" /> Abandonment</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.serious_accident" :disabled="!editMode" /> Serious Accident</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.demolition" :disabled="!editMode" /> Victim of demolition</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.sexual_abuse" :disabled="!editMode" /> Victim of sexual abuse</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.verbal_abuse" :disabled="!editMode" /> Victim of verbal abuse</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.disability" :disabled="!editMode" /> acquired disability</label><br />
+      
+      <!-- Other specify field with small text input and underline -->
+      <div class="flex items-center mt-2">
+        <span class="mr-2">Others: (pls. Specify)</span>
+        <input type="text" v-model="sheet.major_life_event.others_specify" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none text-xs w-24" :readonly="!editMode" />
+      </div>
+    </div>
+  </div>
+</div>
+
 
      <div class="mb-8">
        <h2 class="text-lg font-semibold">B. Enduring Life Strain:</h2>
@@ -257,21 +270,47 @@
        </div>
      </div>
 
-     <div class="mb-8">
-       <h2 class="text-lg font-semibold">C. Life Transition:</h2>
-       <div class="grid grid-cols-2 gap-4">
-         <div>
-           <label><input type="checkbox" v-model="sheet.life_transition.moving_neighbour" :disabled="!editMode" /> moving from one neighbour to another</label><br />
-           <label><input type="checkbox" v-model="sheet.life_transition.changing_peer_group" :disabled="!editMode" /> Changing peer group</label><br />
-           <label><input type="checkbox" v-model="sheet.life_transition.moving_due_to_demolition" :disabled="!editMode" /> moving of another place of residence due to demolition</label><br />
-           <label><input type="checkbox" v-model="sheet.life_transition.moving_due_to_disaster" :disabled="!editMode" /> moving of another place of residence due to disaster</label><br />
-           <label><input type="checkbox" v-model="sheet.life_transition.kinship_foster_placement" :disabled="!editMode" /> moving from biological family to a kinship/ foster placement</label><br />
-           <label><input type="checkbox" v-model="sheet.life_transition.beginning_romantic_relationship" :disabled="!editMode" /> beginning romantic relationship</label><br />
-           <label><input type="checkbox" v-model="sheet.life_transition.beginning_parents_romantic_relationship" :disabled="!editMode" /> beginning romantic relationship of parents</label><br />
-           <label><input type="checkbox" v-model="sheet.life_transition.others" :disabled="!editMode" /> others (pls. specify)</label><br />
-         </div>
-       </div>
-     </div>
+
+    <div class="mb-8">
+  <h2 class="text-lg font-semibold">C. Life Transition:</h2>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.life_transition.moving_neighbour" :disabled="!editMode" />
+        <span class="ml-2">Moving from one neighbour to another</span>
+      </label>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.life_transition.changing_peer_group" :disabled="!editMode" />
+        <span class="ml-2">Changing peer group</span>
+      </label>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.life_transition.moving_due_to_demolition" :disabled="!editMode" />
+        <span class="ml-2">Moving of another place of residence due to demolition</span>
+      </label>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.life_transition.moving_due_to_disaster" :disabled="!editMode" />
+        <span class="ml-2">Moving of another place of residence due to disaster</span>
+      </label>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.life_transition.kinship_foster_placement" :disabled="!editMode" />
+        <span class="ml-2">Moving from biological family to a kinship/ foster placement</span>
+      </label>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.life_transition.beginning_romantic_relationship" :disabled="!editMode" />
+        <span class="ml-2">Beginning romantic relationship</span>
+      </label>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.life_transition.beginning_parents_romantic_relationship" :disabled="!editMode" />
+        <span class="ml-2">Beginning romantic relationship of parents</span>
+      </label>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.life_transition.others" :disabled="!editMode" />
+        <span class="ml-2">Others (pls. specify)</span>
+      </label>
+    </div>
+  </div>
+</div>
+
    
   
    
@@ -301,45 +340,129 @@
 
    <div v-if="currentPage === 3" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
 
-     <div class="mb-8">
-       <h2 class="text-lg font-semibold">E. Normalization:</h2>
-       <div class="grid grid-cols-2 gap-4">
-         <div>
-           <label><input type="checkbox" v-model="sheet.normalization.legality_law_enforcement" :disabled="!editMode" /> legality/law enforcement (weak)</label><br />
-           <label><input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" /> Availability of:</label><br />
-           <div class="ml-4">
-             <label><input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" /> Commercial sex</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.substance_illegal_drugs" :disabled="!editMode" /> substance/illegal drugs</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.pornography_materials" :disabled="!editMode" /> Pornography materials to include video tapes</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.red_houses" :disabled="!editMode" /> Red houses</label><br />
-           </div>
-           <label><input type="checkbox" v-model="sheet.normalization.price_least_expensive" :disabled="!editMode" /> Price- least expensive</label><br />
-           <label><input type="checkbox" v-model="sheet.normalization.advertisement_media" :disabled="!editMode" /> Advertisement/ sponsorship/ media presentation</label><br />
-           <div class="ml-4">
-             <label><input type="checkbox" v-model="sheet.normalization.advertisement_promoting_liquors" :disabled="!editMode" /> Advertisement promoting liquors/cigarettes/clubs/red houses</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.television_shows" :disabled="!editMode" /> Television shows</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.movies" :disabled="!editMode" /> Movies</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.printed_materials" :disabled="!editMode" /> printed materials</label><br />
-           </div>
-         </div>
-         <div>
-           <label><input type="checkbox" v-model="sheet.normalization.community_acceptance" :disabled="!editMode" /> Community acceptance</label><br />
-           <div class="ml-4">
-             <label><input type="checkbox" v-model="sheet.normalization.source_of_income" :disabled="!editMode" /> Source of income</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.involve_in_trade" :disabled="!editMode" /> involve in actual trade/ production</label><br />
-           </div>
-           <label><input type="checkbox" v-model="sheet.normalization.role_of_culture" :disabled="!editMode" /> Role of culture (culturally accepted)</label><br />
-           <div class="ml-4">
-             <label><input type="checkbox" v-model="sheet.normalization.smoking" :disabled="!editMode" /> Smoking</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.abuse" :disabled="!editMode" /> Abuse</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.illicit_relationship" :disabled="!editMode" /> Illicit relationship</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.incest_relationship" :disabled="!editMode" /> Incest relationship</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.begging" :disabled="!editMode" /> Begging</label><br />
-             <label><input type="checkbox" v-model="sheet.normalization.rugby_sniffing" :disabled="!editMode" /> Rugby sniffing</label><br />
-           </div>
-         </div>
-       </div>
-     </div>
+    <div class="mb-8">
+  <h2 class="text-lg font-semibold">E. Normalization:</h2>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.legality_law_enforcement" :disabled="!editMode" />
+        <span class="ml-2">Legality/law enforcement (weak)</span>
+      </label>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" />
+        <span class="ml-2">Availability of:</span>
+      </label>
+      <div class="ml-4">
+        <label class="flex items-center whitespace-nowrap">
+          <input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" />
+          <span class="ml-2">Commercial sex</span>
+        </label>
+        <label class="flex items-center whitespace-nowrap">
+          <input type="checkbox" v-model="sheet.normalization.substance_illegal_drugs" :disabled="!editMode" />
+          <span class="ml-2">Substance/illegal drugs</span>
+        </label>
+        <label class="flex items-center whitespace-nowrap">
+          <input type="checkbox" v-model="sheet.normalization.pornography_materials" :disabled="!editMode" />
+          <span class="ml-2">Pornography materials to include video tapes</span>
+        </label>
+        <label class="flex items-center whitespace-nowrap">
+          <input type="checkbox" v-model="sheet.normalization.red_houses" :disabled="!editMode" />
+          <span class="ml-2">Red houses</span>
+        </label>
+      </div>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.price_least_expensive" :disabled="!editMode" />
+        <span class="ml-2">Price - least expensive</span>
+      </label>
+      <div>
+        <label class="flex items-center whitespace-nowrap">
+          <input type="checkbox" v-model="sheet.normalization.advertisement_media" :disabled="!editMode" />
+          <span class="ml-2">Advertisement/ sponsorship/ media presentation</span>
+        </label>
+        <div class="ml-4">
+          <label class="flex items-center whitespace-nowrap">
+            <input type="checkbox" v-model="sheet.normalization.advertisement_promoting_liquors" :disabled="!editMode" />
+            <span class="ml-2">Advertisement promoting liquors/cigarettes/clubs/red houses</span>
+          </label>
+          <label class="flex items-center whitespace-nowrap">
+            <input type="checkbox" v-model="sheet.normalization.television_shows" :disabled="!editMode" />
+            <span class="ml-2">Television shows</span>
+          </label>
+          <label class="flex items-center whitespace-nowrap">
+            <input type="checkbox" v-model="sheet.normalization.movies" :disabled="!editMode" />
+            <span class="ml-2">Movies</span>
+          </label>
+          <label class="flex items-center whitespace-nowrap">
+            <input type="checkbox" v-model="sheet.normalization.printed_materials" :disabled="!editMode" />
+            <span class="ml-2">Printed materials</span>
+          </label>
+        </div>
+      </div>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.community_acceptance" :disabled="!editMode" />
+        <span class="ml-2">Community acceptance</span>
+      </label>
+      <div class="ml-4">
+        <label class="flex items-center whitespace-nowrap">
+          <input type="checkbox" v-model="sheet.normalization.source_of_income" :disabled="!editMode" />
+          <span class="ml-2">Source of income</span>
+        </label>
+        <label class="flex items-center whitespace-nowrap">
+          <input type="checkbox" v-model="sheet.normalization.involve_in_trade" :disabled="!editMode" />
+          <span class="ml-2">Involve in actual trade/production</span>
+        </label>
+      </div>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.role_of_culture" :disabled="!editMode" />
+        <span class="ml-2">Role of culture (culturally accepted)</span>
+      </label>
+      <div class="ml-4">
+  <div class="grid grid-cols-2 gap-x-4">
+    <div>
+      <label class="flex items-center space-x-1 whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.smoking" :disabled="!editMode" />
+        <span>Smoking</span>
+      </label>
+      <label class="flex items-center space-x-1 whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.abuse" :disabled="!editMode" />
+        <span>Abuse</span>
+      </label>
+      <label class="flex items-center space-x-1 whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.illicit_relationship" :disabled="!editMode" />
+        <span>Illicit relationship</span>
+      </label>
+      <label class="flex items-center space-x-1 whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.incest_relationship" :disabled="!editMode" />
+        <span>Incest relationship</span>
+      </label>
+      <label class="flex items-center space-x-1 whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.rugby_sniffing" :disabled="!editMode" />
+        <span>Rugby Sniffing</span>
+      </label>
+    </div>
+    <div class="ml-20">
+      <label class="flex items-center space-x-1 whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.Drinking" :disabled="!editMode" />
+        <span>Drinking</span>
+      </label>
+      <label class="flex items-center space-x-1 whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.gambling" :disabled="!editMode" />
+        <span>Gambling</span>
+      </label>
+      <label class="flex items-center space-x-1 whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.polygamous_relationship" :disabled="!editMode" />
+        <span>Polygamous Relationship</span>
+      </label>
+      <label class="flex items-center space-x-1 whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.begging" :disabled="!editMode" />
+        <span>Begging</span>
+      </label>
+    </div>
+  </div>
+      </div>
+    </div>
+  </div>
+</div>
 
      <div class="mb-8">
        <h2 class="text-lg font-semibold">F. Feelings / Behaviour towards the incident:</h2>
@@ -359,8 +482,22 @@
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.snatching" :disabled="!editMode" /> snatching</label><br />
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.staying_in_street" :disabled="!editMode" /> staying in the street</label><br />
          </div>
+         <label><input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" /> Feelings:</label><br />
+           <div class="ml-4">
+             <label><input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" /> Feeling of Freedom</label><br />
+             <label><input type="checkbox" v-model="sheet.normalization.substance_illegal_drugs" :disabled="!editMode" /> Hatred</label><br />
+             <label><input type="checkbox" v-model="sheet.normalization.pornography_materials" :disabled="!editMode" /> Independence</label><br />
+             <label><input type="checkbox" v-model="sheet.normalization.red_houses" :disabled="!editMode" /> Others (pls specify)</label><br />
+           </div>
+           <div>
+             <label><input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" /> Contented</label><br />
+             <label><input type="checkbox" v-model="sheet.normalization.substance_illegal_drugs" :disabled="!editMode" /> belongingness</label><br />
+             <label><input type="checkbox" v-model="sheet.normalization.pornography_materials" :disabled="!editMode" /> Guilt</label><br />
+             <label><input type="checkbox" v-model="sheet.normalization.red_houses" :disabled="!editMode" /> Rebellion</label><br />
+           </div>
        </div>
      </div>
+     
 
      <div class="mb-8">
        <h2 class="text-lg font-semibold">G. Attachments:</h2>
@@ -371,6 +508,8 @@
            <label><input type="checkbox" v-model="sheet.attachments.aunt" :disabled="!editMode" /> Aunt</label><br />
            <label><input type="checkbox" v-model="sheet.attachments.neighbour" :disabled="!editMode" /> Neighbour</label><br />
            <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Cousin</label><br />
+           <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Teacher</label><br />
+           <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Othe</label><br />
          </div>
          <div>
            <label><input type="checkbox" v-model="sheet.attachments.father" :disabled="!editMode" /> father</label><br />
@@ -417,107 +556,140 @@
      </div>
    </div>
 
-
-   <div v-if="currentPage === 4" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
-     <div class="mb-8">
-       <h2 class="text-lg font-semibold">Resources:</h2>
-       <div class="grid grid-cols-2 gap-4">
-         <div>
-           <label><input type="checkbox" v-model="sheet.resources.internal" :disabled="!editMode" /> Internal resources</label><br />
-           <div class="ml-4">
-             <label><input type="checkbox" v-model="sheet.resources.intelligence" :disabled="!editMode" /> Intelligence</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.spirituality" :disabled="!editMode" /> Spirituality</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.resourceful" :disabled="!editMode" /> Resourceful</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.obedient" :disabled="!editMode" /> Obedient</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.others" :disabled="!editMode" /> others</label><br />
-           </div>
-         </div>
-         <div>
-           <label><input type="checkbox" v-model="sheet.resources.external" :disabled="!editMode" /> External Resources</label><br />
-           <div class="ml-4">
-             <label><input type="checkbox" v-model="sheet.resources.family" :disabled="!editMode" /> Family</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.peers" :disabled="!editMode" /> Peers</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.health_services" :disabled="!editMode" /> Health services</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.recreational_services" :disabled="!editMode" /> Recreational services</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.ngos" :disabled="!editMode" /> NGOs existing in the community</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.civic_organization" :disabled="!editMode" /> Civic Organization</label><br />
-             <label><input type="checkbox" v-model="sheet.resources.others" :disabled="!editMode" /> others (pls. specify)</label><br />
-           </div>
-         </div>
-       </div>
-     </div>
-
-     <div class="mb-8">
-       <h2 class="text-lg font-semibold">IV. Activities or source of income in the street:</h2>
-       <div class="grid grid-cols-2 gap-4">
-         <div>
-           <label><input type="checkbox" v-model="sheet.source_of_income_in_street.vending" :disabled="!editMode" /> vending</label><br />
-           <label><input type="checkbox" v-model="sheet.source_of_income_in_street.car_wash_boy" :disabled="!editMode" /> Car wash boy</label><br />
-           <label><input type="checkbox" v-model="sheet.source_of_income_in_street.rugby_user" :disabled="!editMode" /> Rugby user</label><br />
-         </div>
-         <div>
-           <label><input type="checkbox" v-model="sheet.source_of_income_in_street.porter" :disabled="!editMode" /> porter</label><br />
-           <label><input type="checkbox" v-model="sheet.source_of_income_in_street.barker" :disabled="!editMode" /> barker</label><br />
-         </div>
-       </div>
-       <div class="space-y-2">
-         <div class="flex items-center mb-4">
-           <label class="block text-base font-semibold text-gray-700 mr-4">Earnings/ income:</label>
-           <input type="text" v-model="sheet.earnings_income" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
-         </div>
-         <div class="flex items-center mb-4">
-           <label class="block text-base font-semibold text-gray-700 mr-4">Hours of stay in the street:</label>
-           <input type="text" v-model="sheet.hrs_stay_in_street" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
-         </div>
-         <div class="flex items-center mb-4">
-           <label class="block text-base font-semibold text-gray-700 mr-4">Length of stay in the street:</label>
-           <input type="text" v-model="sheet.length_stay_in_street" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
-         </div>
-         <div class="flex items-center mb-4">
-           <label class="block text-base font-semibold text-gray-700 mr-4">Common Substance used:</label>
-           <input type="text" v-model="sheet.common_substance_used" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
-         </div>
-       </div>
-     </div>
-
-     <div class="mb-8">
-       <h2 class="text-lg font-semibold">V. INITIAL ASSESSMENT:</h2>
-       <textarea v-model="sheet.initial_assessment" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
-     </div>
-
-     <div class="mb-8">
-       <h2 class="text-lg font-semibold">VI. RECOMMENDATIONS:</h2>
-       <textarea v-model="sheet.recommendations" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
-     </div>
    
+<div v-if="currentPage === 4" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
 
-     <div class="flex justify-between mb-8">
-       <div class="flex flex-col items-start">
-         <label class="block text-base font-semibold text-gray-700 mb-1">Prepared by:</label>
-         <input type="text" v-model="sheet.prepared_by" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
-         <p>SWO __/Case Manager</p>
-       </div>
-       <div class="flex flex-col items-end">
-         <label class="block text-base font-semibold text-gray-700 mb-8">Reviewed by:</label>
-         <div class="text-right">
-           <p>ANGELIC B. PAÑA, RSW, MSSW</p>
-           <p>Center Head/SWO IV</p>
-         </div>
-       </div>
-     </div>
-     <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-       <div class="flex justify-between items-center">
-         <div class="flex flex-col">
-           <p class="ml-24 -mb-4 font-bold">PAGE 4 of {{ totalPages }}</p>
-           <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-           <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-         </div>
-         <div class="ml-4">
-           <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
-         </div>
-       </div>
-     </div>
+<div class="mb-8">
+  <h2 class="text-lg font-semibold">Resources:</h2>
+  <div class="space-y-8">
+    <div class="flex space-x-8">
+  <div class="w-1/2">
+    <label><input type="checkbox" v-model="sheet.resources.internal" :disabled="!editMode" /> Internal Resources</label><br />
+    <div class="ml-4">
+      <label><input type="checkbox" v-model="sheet.resources.intelligence" :disabled="!editMode" /> Intelligence</label><br />
+      <label><input type="checkbox" v-model="sheet.resources.spirituality" :disabled="!editMode" /> Spirituality</label><br />
+      <label><input type="checkbox" v-model="sheet.resources.resourceful" :disabled="!editMode" /> Resourceful</label><br />
+      <label><input type="checkbox" v-model="sheet.resources.obedient" :disabled="!editMode" /> Obedient</label><br />
+      <label><input type="checkbox" v-model="sheet.resources.others" :disabled="!editMode" /> Others</label><br />
+    </div>
   </div>
+  <div class="w-1/2">
+    <div class="ml-4 space-y-2">
+      <label><input type="checkbox" v-model="sheet.resources.education" :disabled="!editMode" /> Education</label><br />
+      <label><input type="checkbox" v-model="sheet.resources.discipline" :disabled="!editMode" /> Discipline</label><br />
+      <label><input type="checkbox" v-model="sheet.resources.respectful" :disabled="!editMode" /> Respectful</label><br />
+      <label><input type="checkbox" v-model="sheet.resources.submissive" :disabled="!editMode" /> Submissive</label><br />
+    </div>
+  </div>
+
+
+</div>
+
+
+
+    <div class="flex space-x-8">
+      <div class="w-1/2">
+        <label><input type="checkbox" v-model="sheet.resources.external" :disabled="!editMode" /> External Resources</label><br />
+        <div class="ml-4">
+          <label><input type="checkbox" v-model="sheet.resources.family" :disabled="!editMode" /> Family</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.peers" :disabled="!editMode" /> Peers</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.health_services" :disabled="!editMode" /> Health Services</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.recreational_services" :disabled="!editMode" /> Recreational Services</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.ngos" :disabled="!editMode" /> NGOs Existing in the Community</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.civic_organization" :disabled="!editMode" /> Civic Organization</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.others_external" :disabled="!editMode" /> Others (pls. specify)</label><br />
+        </div>
+      </div>
+
+      <!-- Additional Resources Section -->
+      <div class="w-1/2 ml-4">
+        <div class="space-y-2">
+          <label><input type="checkbox" v-model="sheet.resources.street_children" :disabled="!editMode" /> Other Street Children</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.street_educators" :disabled="!editMode" /> Street Educators</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.vocational_services" :disabled="!editMode" /> Vocational Services</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.lgu_staff" :disabled="!editMode" /> LGU Staff at All Levels</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.peoples_organization" :disabled="!editMode" /> People’s Organization</label><br />
+          <label><input type="checkbox" v-model="sheet.resources.faith_based_organization" :disabled="!editMode" /> Faith Based Organization</label><br />
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h2 class="text-lg font-semibold">IV. Activities or source of income in the street:</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label><input type="checkbox" v-model="sheet.source_of_income_in_street.vending" :disabled="!editMode" /> Vending</label><br />
+          <label><input type="checkbox" v-model="sheet.source_of_income_in_street.car_wash_boy" :disabled="!editMode" /> Car wash boy</label><br />
+          <label><input type="checkbox" v-model="sheet.source_of_income_in_street.rugby_user" :disabled="!editMode" /> Rugby user</label><br />
+        </div>
+        <div>
+          <label><input type="checkbox" v-model="sheet.source_of_income_in_street.porter" :disabled="!editMode" /> Porter</label><br />
+          <label><input type="checkbox" v-model="sheet.source_of_income_in_street.barker" :disabled="!editMode" /> Barker</label><br />
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="flex items-center mb-4">
+          <label class="block text-base font-semibold text-gray-700 mr-4">Earnings/ income:</label>
+          <input type="text" v-model="sheet.earnings_income" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+        </div>
+        <div class="flex items-center mb-4">
+          <label class="block text-base font-semibold text-gray-700 mr-4">Hours of stay in the street:</label>
+          <input type="text" v-model="sheet.hrs_stay_in_street" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+        </div>
+        <div class="flex items-center mb-4">
+          <label class="block text-base font-semibold text-gray-700 mr-4">Length of stay in the street:</label>
+          <input type="text" v-model="sheet.length_stay_in_street" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+        </div>
+        <div class="flex items-center mb-4">
+          <label class="block text-base font-semibold text-gray-700 mr-4">Common Substance used:</label>
+          <input type="text" v-model="sheet.common_substance_used" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="mb-8">
+  <h2 class="text-lg font-semibold">V. INITIAL ASSESSMENT:</h2>
+  <textarea v-model="sheet.initial_assessment" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
+</div>
+
+<div class="mb-8">
+      <h2 class="text-lg font-semibold">VI. RECOMMENDATIONS:</h2>
+      <textarea v-model="sheet.recommendations" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
+    </div>
+
+    <div class="flex justify-between mb-8">
+      <div class="flex flex-col items-start">
+        <label class="block text-base font-semibold text-gray-700 mb-1">Prepared by:</label>
+        <input type="text" v-model="sheet.prepared_by" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+        <p>SWO __/Case Manager</p>
+      </div>
+      <div class="flex flex-col items-end">
+        <label class="block text-base font-semibold text-gray-700 mb-8">Reviewed by:</label>
+        <div class="text-right">
+          <p>ANGELIC B. PAÑA, RSW, MSSW</p>
+          <p>Center Head/SWO IV</p>
+        </div>
+      </div>
+    </div>
+ 
+
+<div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+  <div class="flex justify-between items-center">
+    <div class="flex flex-col">
+      <p class="ml-24 -mb-4 font-bold">PAGE 4 of {{ totalPages }}</p>
+      <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+      <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+    </div>
+    <div class="ml-4">
+      <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+    </div>
+  </div>
+</div>
+</div>
+
 
 </template>
 
