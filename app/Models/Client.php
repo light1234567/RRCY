@@ -21,7 +21,7 @@ class Client extends Model
         'barangay',
         'street',
         'religion',
-        'Status'
+        'child_status'
     ];
 
     public function admissions()

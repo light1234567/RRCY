@@ -19,8 +19,9 @@ class CreateAdmissionsTable extends Migration
             $table->integer('days_in_detention_center');
             $table->string('action_taken');
             $table->string('general_impression');
+            $table->string('case_status');
             $table->timestamps();
-
+            
             // Foreign key definition
             $table->foreign('client_id')
                   ->references('id')

@@ -15,6 +15,7 @@ class AdmissionController extends Controller
     {
         // Validate the incoming request data
         $validated = $request->validate([
+            'client.child_status' => 'required|string|max:255',
             'client.first_name' => 'required|string|max:255',
             'client.middle_name' => 'nullable|string|max:255',
             'client.last_name' => 'required|string|max:255',
@@ -31,6 +32,7 @@ class AdmissionController extends Controller
             'distinguishing_marks.weight' => 'nullable|numeric',
             'distinguishing_marks.colour_of_eye' => 'nullable|string|max:255',
             'distinguishing_marks.skin_colour' => 'nullable|string|max:255',
+            'admission.case_status' => 'required|string|max:255',
             'admission.committing_court' => 'required|string|max:255',
             'admission.crim_case_number' => 'required|string|max:255',
             'admission.offense_committed' => 'required|string|max:255',

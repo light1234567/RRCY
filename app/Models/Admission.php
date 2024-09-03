@@ -10,6 +10,7 @@ class Admission extends Model
     use HasFactory;
 
     protected $fillable = [
+        'case_status',
         'committing_court',
         'crim_case_number',
         'offense_committed',

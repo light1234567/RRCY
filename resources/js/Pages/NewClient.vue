@@ -3,12 +3,31 @@
     <template #header>
       <h1 class="ml-12 text-lg font-bold text-red-800">ADMISSION FORM/NEW CLIENT</h1>
     </template>
+
     <div style="background-image: url(''); background-size: cover; background-position: center;">
       <h1 class="text-lg p-1 text-customBlue ml-10 font-bold mb-4"></h1>
       <form @submit.prevent="saveForm">
+        
         <!-- Client Information -->
         <fieldset class="border border-blue-900 p-4 mb-2 mr-8 ml-16 rounded-sm">
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold">CLIENT INFORMATION</legend>
+          
+          <div class="mb-2">
+                <label for="child_status" class="block mb-1 text-sm">
+                  Child Status <span class="text-red-500">*</span>
+                </label>
+                <select
+                  id="child_status"
+                  v-model="form.client.child_status"
+                  class="w-full px-2 py-1 border rounded-md text-sm"
+                  required
+                >  
+                  <option value="Still at the Center (SATC)">Still at the Center (SATC)</option>
+                  <option value="Discharge">Discharge</option>
+                  <option value="Leave without Permission (LWOP)">Leave without Permission (LWOP)</option>
+                </select>
+          </div> 
+
           <div class="grid grid-cols-1">
             <!-- Name, Sex, and Date of Birth -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
@@ -49,14 +68,15 @@
                 <label for="clientSex" class="block mb-1 text-sm">
                   Sex: <span class="text-red-500">*</span>
                 </label>
-                <input
-                  type="text"
+                <select
                   id="clientSex"
                   v-model="form.client.sex"
                   class="w-full px-2 py-1 border rounded-md text-sm"
                   required
-                  placeholder="Enter Sex"
-                />
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
               </div>
             </div>
 
@@ -231,6 +251,28 @@
         <!-- Admission Details -->
         <fieldset class="border border-blue-900 p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">ADMISSION DETAILS</legend>
+          <div class="mb-2">
+                <label for="case_status" class="block mb-1 text-sm">
+                  Case Status <span class="text-red-500">*</span>
+                </label>
+                <select
+                  id="case_status"
+                  v-model="form.admission.case_status"
+                  class="w-full px-2 py-1 border rounded-md text-sm"
+                  required
+                >  
+                  <option value="On trial">On trial</option>
+                  <option value="Suspended sentence">Suspended sentence</option>
+                  <option value="Acquitted">Acquitted</option>
+                  <option value="Dismissed">Dismissed</option>
+                  <option value="Provisionally Dismissed">Provisionally Dismissed</option>
+                  <option value="Rehabilitation">Rehabilitation</option>
+                  <option value="Diversion">Diversion</option>
+                  <option value="Disposition Measure">Disposition Measure</option>
+                  <option value="Child-at-risk (CAR)">Child-at-risk (CAR)</option>
+                </select>
+          </div> 
+
           <div class="grid grid-cols-1 gap-2">
             <div class="mb-2 col-span-1">
               <label for="committingCourt" class="block mb-1 text-sm">
@@ -442,7 +484,6 @@
     </div>
   </AppLayout>
 </template>
-
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
@@ -454,14 +495,15 @@ const form = ref({
     first_name: '',
     middle_name: '',
     last_name: '',
-    sex: 'male',
+    sex: '',
     date_of_birth: '',
     place_of_birth: '',
     province: '',
     city: '',
     barangay: '',
     street: '',
-    religion: ''
+    religion: '',
+    child_status: ''
   },
   distinguishing_marks: {
     tattoo_scars: '',
@@ -471,6 +513,7 @@ const form = ref({
     skin_colour: ''
   },
   admission: {
+    case_status: '',
     committing_court: '',
     crim_case_number: '',
     offense_committed: '',
@@ -532,7 +575,6 @@ const onCityChange = async () => {
 };
 
 const saveForm = async () => {
-  // Log the form data to ensure correct values
   console.log('Form Data:', form.value);
 
   try {
@@ -542,48 +584,54 @@ const saveForm = async () => {
     showModal.value = true;
     resetForm(); // Reset the form after successful save
   } catch (error) {
+    if (error.response && error.response.data && error.response.data.errors) {
+      console.error('Validation errors:', error.response.data.errors);
+    } else {
+      console.error('Error saving form:', error);
+    }
     modalType.value = 'error';
     modalMessage.value = 'Failed to save form. Please try again.';
     showModal.value = true;
-    console.error(error);
   }
 };
 
 const resetForm = () => {
   form.value = {
     client: {
-        first_name: '',
-        middle_name: '',
-        last_name: '',
-        sex: 'male',
-        date_of_birth: '',
-        place_of_birth: '',
-        province: '',
-        city: '',
-        barangay: '',
-        street: '',
-        religion: ''
+      first_name: '',
+      middle_name: '',
+      last_name: '',
+      sex: '',
+      date_of_birth: '',
+      place_of_birth: '',
+      province: '',
+      city: '',
+      barangay: '',
+      street: '',
+      religion: '',
+      child_status: ''
     },
     distinguishing_marks: {
-        tattoo_scars: '',
-        height: '',
-        weight: '',
-        colour_of_eye: '',
-        skin_colour: ''
+      tattoo_scars: '',
+      height: '',
+      weight: '',
+      colour_of_eye: '',
+      skin_colour: ''
     },
     admission: {
-        committing_court: '',
-        crim_case_number: '',
-        offense_committed: '',
-        date_admitted: '',
-        days_in_jail: '',
-        days_in_detention_center: '',
-        action_taken: '',
-        general_impression: ''
+      case_status: '',
+      committing_court: '',
+      crim_case_number: '',
+      offense_committed: '',
+      date_admitted: '',
+      days_in_jail: '',
+      days_in_detention_center: '',
+      action_taken: '',
+      general_impression: ''
     },
     documents_submitted: {
-        documents: [],
-        others: ''
+      documents: [],
+      others: ''
     }
   };
 };
@@ -596,7 +644,3 @@ const toggleOtherDocuments = () => {
 
 fetchProvinces(); // Load provinces when the component is mounted
 </script>
-
-<style scoped>
-/* Add your styles here */
-</style>
