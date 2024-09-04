@@ -28,6 +28,7 @@
         "html2pdf.js": "^0.10.2",
         "jspdf": "^2.5.1",
         "vue-router": "^4.4.0",
+        "vue3-datepicker": "^0.4.0",
         "ziggy": "^2.4.0",
         "ziggy-js": "^2.3.0"
     }

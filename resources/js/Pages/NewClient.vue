@@ -4,12 +4,12 @@
       <h1 class="ml-12 text-lg font-bold text-red-800">ADMISSION FORM/NEW CLIENT</h1>
     </template>
 
-    <div style="background-image: url(''); background-size: cover; background-position: center;">
+    <div class="">
       <h1 class="text-lg p-1 text-customBlue ml-10 font-bold mb-4"></h1>
       <form @submit.prevent="saveForm">
         
         <!-- Client Information -->
-        <fieldset class="border border-blue-900 p-4 mb-2 mr-8 ml-16 rounded-sm">
+        <fieldset class="bg-white border shadow-md p-4 mb-2 mr-8 ml-16 rounded-sm">
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold">CLIENT INFORMATION</legend>
           
           <div class="grid grid-cols-1">
@@ -23,6 +23,7 @@
                   type="text"
                   id="clientFirstName"
                   v-model="form.client.first_name"
+                  @input="removeNumbers('first_name')"
                   class="w-full px-2 py-1 border rounded-md text-sm"
                   required
                 />
@@ -33,6 +34,7 @@
                   type="text"
                   id="clientMiddleName"
                   v-model="form.client.middle_name"
+                  @input="removeNumbers('middle_name')"
                   class="w-full px-2 py-1 border rounded-md text-sm"
                 />
               </div>
@@ -44,6 +46,7 @@
                   type="text"
                   id="clientLastName"
                   v-model="form.client.last_name"
+                  @input="removeNumbers('last_name')"
                   class="w-full px-2 py-1 border rounded-md text-sm"
                   required
                 />
@@ -56,6 +59,7 @@
                   type="text"
                   id="clientSuffix"
                   v-model="form.client.suffix"
+                  @input="removeNumbers('suffix')"
                   class="w-full px-2 py-1 border rounded-md text-sm"
                   placeholder="e.g., Jr."
                 >
@@ -65,18 +69,20 @@
 
           <!-- Date of Birth, Place of Birth, Sex, and Child Status -->
           <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
-              <div class="mb-2">
-                <label for="clientDob" class="block mb-1 text-sm">
-                  Date of Birth: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  id="clientDob"
-                  v-model="form.client.date_of_birth"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                />
-              </div>
+            <div class="mb-2">
+              <label for="clientDob" class="block mb-1 text-sm">
+                Date of Birth: <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                id="clientDob"
+                v-model="form.client.date_of_birth"
+                class="w-full px-2 py-1 border rounded-md text-sm"
+                :max="form.client.maxDateOfBirth"
+                :min="form.client.minDateOfBirth"
+                required
+              />
+            </div>
               <div class="mb-2">
                 <label for="clientPlaceOfBirth" class="block mb-1 text-sm">
                   Place of Birth: <span class="text-red-500">*</span>
@@ -90,6 +96,8 @@
                   required
                 />
               </div>
+
+              
               <div class="mb-2">
                 <label for="child_status" class="block mb-1 text-sm">
                   Child Status <span class="text-red-500">*</span>
@@ -207,7 +215,7 @@
         </fieldset>
 
         <!-- Distinguishing Marks -->
-        <fieldset class="border border-blue-900 p-4 mb-2 mr-8 ml-16 mt-8 rounded-sm">
+        <fieldset class="border shadow-md bg-white p-4 mb-2 mr-8 ml-16 mt-8 rounded-sm">
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">
             DISTINGUISHING MARKS
           </legend>
@@ -264,7 +272,7 @@
         </fieldset>
 
          <!-- Admission Details -->
-         <fieldset class="border border-blue-900 p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
+         <fieldset class="border shadow-md bg-white p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">ADMISSION DETAILS</legend>
          
 
@@ -373,7 +381,7 @@
 
 
         <!-- Documents Submitted -->
-        <fieldset class="border border-blue-900 p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
+        <fieldset class="border bg-white shadow-md p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">DOCUMENTS SUBMITTED</legend>
           <div class="grid grid-cols-1 gap-2">
             <div class="mb-2">
@@ -503,7 +511,7 @@
   </AppLayout>
 </template>
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue'; // Add onMounted
 import axios from 'axios';
 import NotificationModal from '@/Components/NotificationModal.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
@@ -522,7 +530,9 @@ const form = ref({
     barangay: '',
     street: '',
     religion: '',
-    child_status: ''
+    child_status: '',
+    maxDateOfBirth: '',
+    minDateOfBirth: '', 
   },
   distinguishing_marks: {
     tattoo_scars: '',
@@ -556,6 +566,7 @@ const showModal = ref(false);
 const modalType = ref('success');
 const modalMessage = ref('');
 
+// Function to fetch provinces
 const fetchProvinces = async () => {
   try {
     const response = await axios.get('/provinces');
@@ -565,6 +576,7 @@ const fetchProvinces = async () => {
   }
 };
 
+// Handle province selection change
 const onProvinceChange = async () => {
   const selectedProvince = provinces.value.find(p => p.col_province === form.value.client.province);
   if (selectedProvince) {
@@ -580,6 +592,12 @@ const onProvinceChange = async () => {
   }
 };
 
+// Method to remove numbers from input
+const removeNumbers = (field) => {
+  form.value.client[field] = form.value.client[field].replace(/[0-9]/g, '');
+};
+
+// Handle city selection change
 const onCityChange = async () => {
   const selectedCity = cityMunis.value.find(c => c.col_citymuni === form.value.client.city);
   if (selectedCity) {
@@ -593,6 +611,7 @@ const onCityChange = async () => {
   }
 };
 
+// Save form data
 const saveForm = async () => {
   console.log('Form Data:', form.value);
   
@@ -613,6 +632,20 @@ const saveForm = async () => {
     showModal.value = true;
   }
 };
+
+onMounted(() => {
+  const today = new Date();
+
+  // Calculate the year when someone would be 10 years old today
+  const maxYear = today.getFullYear() - 10;
+  const maxDate = new Date(maxYear, 11, 31); // Set to December 31 of that year
+  form.value.client.maxDateOfBirth = maxDate.toISOString().split('T')[0];
+
+  // Calculate the year when someone would be 25 years old today
+  const minYear = today.getFullYear() - 25;
+  const minDate = new Date(minYear, 0, 1); // Set to January 1 of that year
+  form.value.client.minDateOfBirth = minDate.toISOString().split('T')[0];
+});
 
 // Watcher to limit height input to three digits
 watch(
@@ -638,6 +671,7 @@ watch(
   }
 );
 
+// Reset the form to initial state
 const resetForm = () => {
   form.value = {
     client: {
@@ -653,7 +687,8 @@ const resetForm = () => {
       barangay: '',
       street: '',
       religion: '',
-      child_status: ''
+      child_status: '',
+      maxDateOfBirth: form.value.client.maxDateOfBirth // Keep the max date of birth
     },
     distinguishing_marks: {
       tattoo_scars: '',
@@ -680,11 +715,14 @@ const resetForm = () => {
   };
 };
 
+// Function to handle "Other" document selection
 const toggleOtherDocuments = () => {
   if (!form.value.documents_submitted.documents.includes('Others')) {
     form.value.documents_submitted.others = '';
   }
 };
 
-fetchProvinces(); // Load provinces when the component is mounted
+// Load provinces when the component is mounted
+onMounted(fetchProvinces);
 </script>
+

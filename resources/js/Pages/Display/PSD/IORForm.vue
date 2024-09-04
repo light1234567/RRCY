@@ -1,40 +1,69 @@
 <template>
-  <div class="p-8">
+  <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
     <!-- Header -->
-    <div class="text-center mb-8">
-      <img src="path-to-your-logo.png" alt="DSWD Logo" class="mx-auto mb-4" />
-      <h1 class="text-lg font-bold">PROTECTIVE SERVICES DIVISION</h1>
-      <h2 class="text-md">REGIONAL REHABILITATION CENTER FOR YOUTH FO XI</h2>
-      <h3 class="text-sm">DSWD-GF-010 | REV 02 / 22 SEPT 2023</h3>
+    <div class="relative flex justify-between items-center mb-4">
+      <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48">
+      <div class="text-right">
+        <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
+        <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth RFO XI</p>
+        <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+      </div>
+    </div>
+    <div class="text-center mb-4 border-b-2 border-gray-300 pb-2">
+      <h1 class="text-lg font-bold">INDIVIDUAL PERFORMANCE OBSERVATION REPORT</h1>
     </div>
 
-    <!-- Buttons -->
-    <div class="flex justify-end space-x-4">
-      <button v-if="!editMode" @click="toggleEdit" type="button" class="px-4 py-2 bg-blue-500 text-white rounded">Edit</button>
-      <button v-else @click="submitForm" type="button" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
+    <div class="flex items-center justify-center mb-6">
+      <p class="text-md font-semibold mr-4">For the Period:</p>
+      <input type="text" v-model="form.period" class="underline-input bg-transparent border-b-2 border-gray-300 text-center text-xs" />
     </div>
 
     <!-- Success/Error Message -->
-    <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
-
+    <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
+      {{ message }}
+    </div>
+      
     <!-- General Information -->
-    <div class="mb-8 grid grid-cols-2 gap-4">
+    <div class="mb-6 grid grid-cols-2 gap-4">
       <div>
         <label class="block font-bold mb-1">Name of Resident:</label>
-        <input type="text" v-model="form.name" class="w-full p-2 border rounded" readonly />
+        <input type="text" v-model="form.name" class="w-full p-2 border border-gray-300 rounded text-sm" readonly />
       </div>
       <div>
         <label class="block font-bold mb-1">Date of Assessment:</label>
-        <input type="date" v-model="form.assessment_date" class="w-full p-2 border rounded" :readonly="!editMode" />
+        <input type="date" v-model="form.assessment_date" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode" />
       </div>
       <div class="col-span-2">
         <label class="block font-bold mb-1">Trainings Attended for the Month:</label>
-        <input type="text" v-model="form.trainings_attended" class="w-full p-2 border rounded" :readonly="!editMode" />
+        <input type="text" v-model="form.trainings_attended" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode" />
       </div>
     </div>
 
+<!-- Scale of Measurement Section -->
+ 
+<h4 class="text-center mb-4 border-b-2 border-gray-300 pb-2 font-bold mb-2 ">SCALE OF MEASUREMENT</h4>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="flex justify-between ">
+          <span>4 - PIRMI GINABUHAT</span>
+          <em>(ALWAYS)</em>
+        </div>
+        <div class="flex justify-between">
+          <span>2 - KUNG GANAHAN LANG GINABUHAT</span>
+          <em>(SELDOM)</em>
+        </div>
+        <div class="flex justify-between">
+          <span>3 - USAHAY RA GINABUHAT</span>
+          <em>(SOMETIMES)</em>
+        </div>
+        <div class="flex justify-between">
+          <span>1 - WALA JUD GIBUHAT</span>
+          <em>(NEVER)</em>
+        </div>
+      </div>
+
+
     <!-- Sections for Indicators and Remarks -->
-    <div v-for="(section, index) in form.sections" :key="index" class="mb-8">
+    <div v-for="(section, index) in form.sections" :key="index" class="mb-6">
       <h4 class="font-bold mb-2">{{ section.title }}</h4>
       <table class="w-full border-collapse border mb-4">
         <thead>
@@ -49,73 +78,206 @@
           <tr v-for="(indicator, iIndex) in section.indicators" :key="iIndex">
             <td colspan="3" class="p-2 border">{{ indicator.description }}</td>
             <td class="p-2 border text-center">
-              <input type="number" min="1" max="4" v-model="indicator.self_rating" class="w-full text-center" :readonly="!editMode" />
+              <input type="number" min="1" max="4" v-model="indicator.self_rating" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
             </td>
             <td class="p-2 border text-center">
-              <input type="number" min="1" max="4" v-model="indicator.mdo_rating" class="w-full text-center" :readonly="!editMode" />
+              <input type="number" min="1" max="4" v-model="indicator.mdo_rating" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
             </td>
             <td class="p-2 border text-center">{{ calculateTotalRating(indicator) }}</td>
           </tr>
         </tbody>
       </table>
-      <p class="mb-1"><strong>Sub-Total:</strong> {{ calculateSubTotal(section) }}</p>      <label class="block font-bold mb-1">Remarks:</label>
-      <textarea v-model="section.remarks" class="w-full p-2 border rounded" :readonly="!editMode"></textarea>
+      <p class="mb-1"><strong>Sub-Total:</strong> {{ calculateSubTotal(section) }}</p>
+      <label class="block font-bold mb-1">Remarks:</label>
+      <textarea v-model="section.remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
     </div>
 
+    
+
+    <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <p class="ml-24 -mb-2 font-bold">PAGE 1 of 2</p>
+            <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          </div>
+          <div class="ml-4">
+            <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+          </div>
+        </div>
+      </div>
+      
+  </div>
+
+
+
+  <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+
+    <!-- Success/Error Message -->
+    <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
+      {{ message }}
+    </div>
+      
+    <!-- General Information -->
+    <div class="mb-6 grid grid-cols-2 gap-4">
+      <div>
+        <label class="block font-bold mb-1">Name of Resident:</label>
+        <input type="text" v-model="form.name" class="w-full p-2 border border-gray-300 rounded text-sm" readonly />
+      </div>
+      <div>
+        <label class="block font-bold mb-1">Date of Assessment:</label>
+        <input type="date" v-model="form.assessment_date" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode" />
+      </div>
+    </div>
+
+    <!-- Sections for Indicators and Remarks -->
+    <div v-for="(section, index) in form.sectionss" :key="index" class="mb-6">
+      <h4 class="font-bold mb-2">{{ section.title }}</h4>
+      <table class="w-full border-collapse border mb-4">
+        <thead>
+          <tr class="bg-gray-200">
+            <th colspan="3" class="text-center p-2 border">Indicators</th>
+            <th class="text-center p-2 border">Self-Rating</th>
+            <th class="text-center p-2 border">MDO's Rating</th>
+            <th class="text-center p-2 border">Total Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(indicator, iIndex) in section.indicators" :key="iIndex">
+            <td colspan="3" class="p-2 border">{{ indicator.description }}</td>
+            <td class="p-2 border text-center">
+              <input type="number" min="1" max="4" v-model="indicator.self_rating" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+            </td>
+            <td class="p-2 border text-center">
+              <input type="number" min="1" max="4" v-model="indicator.mdo_rating" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+            </td>
+            <td class="p-2 border text-center">{{ calculateTotalRating(indicator) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="mb-1"><strong>Sub-Total:</strong> {{ calculateSubTotal(section) }}</p>
+      <label class="block font-bold mb-1">Remarks:</label>
+      <textarea v-model="section.remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+    </div>
+    <div class="w-full h-full p-4">
+    <table class="w-full h-full border-collapse border border-black table-fixed">
+        <tr>
+            <td class="border border-black p-4 align-top">4 - Points - Excellent/Full cooperation and proper physical condition</td>
+            <td class="border border-black p-4 align-top">2 - 2.99 Points - Needs Improvement/Complies with the request to cooperate</td>
+        </tr>
+        <tr>
+            <td class="border border-black p-4 align-top">3 - 3.99 Points - Very Satisfactory/Appropriate behavior and condition during the training</td>
+            <td class="border border-black p-4 align-top">1 - 1.99 Points - Needs Close Monitoring/Problem is Prominent</td>
+        </tr>
+    </table>
+</div>
+      <br />
+
+
+
     <!-- General Remarks/Recommendations -->
-    <div class="mb-8">
+    <div class="mb-6">
       <label class="block font-bold mb-1">General Remarks/Recommendation:</label>
-      <textarea v-model="form.general_remarks" class="w-full p-2 border rounded" :readonly="!editMode"></textarea>
+      <textarea v-model="form.general_remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
     </div>
 
     <!-- Trainings Previously Attended -->
-<div class="mb-8">
-  <h4 class="font-bold mb-2">Trainings Previously Attended</h4>
-  <table class="w-full border-collapse border mb-4">
-    <thead>
-      <tr class="bg-gray-200">
-        <th class="text-center p-2 border">No.</th>
-        <th class="text-center p-2 border">Title of the Training</th>
-        <th class="text-center p-2 border">Date of Attendance</th>
-        <th class="text-center p-2 border">Status</th>
-        <th class="text-center p-2 border">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(training, index) in form.trainings" :key="index">
-        <td class="p-2 border text-center">{{ index + 1 }}</td>
-        <td class="p-2 border">
-          <input type="text" v-model="training.title" class="w-full p-2 border rounded" :readonly="!editMode" />
-        </td>
-        <td class="p-2 border">
-          <input type="date" v-model="training.date_of_attendance" class="w-full p-2 border rounded" :readonly="!editMode" />
-        </td>
-        <td class="p-2 border">
-          <input type="text" v-model="training.status" class="w-full p-2 border rounded" :readonly="!editMode" />
-        </td>
-        <td class="p-2 border text-center">
-          <button @click="removeTraining(index)" type="button" class="px-2 py-1 bg-red-500 text-white rounded" :disabled="!editMode">Remove</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <button @click="addTraining" type="button" class="px-4 py-2 bg-blue-500 text-white rounded" :disabled="!editMode">Add Training</button>
-</div>
+    <div class="mb-6">
+      <h4 class="font-bold mb-2">Trainings Previously Attended</h4>
+      <table class="w-full border-collapse border mb-4">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="text-center p-2 border">No.</th>
+            <th class="text-center p-2 border">Title of the Training</th>
+            <th class="text-center p-2 border">Date of Attendance</th>
+            <th class="text-center p-2 border">Status</th>
+            <th class="text-center p-2 border">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(training, index) in form.trainings" :key="index">
+            <td class="p-2 border text-center">{{ index + 1 }}</td>
+            <td class="p-2 border">
+              <input type="text" v-model="training.title" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode" />
+            </td>
+            <td class="p-2 border">
+              <input type="date" v-model="training.date_of_attendance" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode" />
+            </td>
+            <td class="p-2 border">
+              <input type="text" v-model="training.status" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode" />
+            </td>
+            <td class="p-2 border text-center">
+              <button @click="removeTraining(index)" type="button" class="px-2 py-1 bg-red-500 text-white rounded" :disabled="!editMode">Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button @click="addTraining" type="button" class="px-4 py-2 bg-blue-500 text-white rounded" :disabled="!editMode">Add Training</button>
+    </div>
 
+    
+  <!-- Signatures Section -->
+  <div class="mb-6 flex gap-4">
+    <!-- Prepared by Signature -->
+    <div class="w-1/2">
+      <label for="preparedBy" class="block text-sm font-medium">Prepared by:</label>
+      <div class="flex items-center">
+        <input
+          type="text"
+          id="preparedBy"
+          value="JENNY C. CADOYAS"
+          class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm "
+        >
+      </div>
+      <p class="text-sm mt-2">MDO I</p>
 
-    <!-- Prepared By and Noted By -->
-    <div class="grid grid-cols-2 gap-4 mb-8">
-      <div>
-        <label class="block font-bold mb-1">Prepared by:</label>
-        <input type="text" v-model="form.prepared_by" class="w-full p-2 border rounded" :readonly="!editMode" />
+      
+      <div class="flex items-center">
+        <input
+          type="text"
+          id="preparedBy"
+          value="SHERWIN B. GABUTAN"
+          class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm "
+        >
       </div>
-      <div>
-        <label class="block font-bold mb-1">Noted by:</label>
-        <input type="text" v-model="form.noted_by" class="w-full p-2 border rounded" :readonly="!editMode" />
+      <p class="text-sm mt-2">MDO II</p>
+      
+      
+    </div>
+  
+    <!-- Noted by Signature -->
+    <div class="w-1/2">
+      <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
+      <div class="flex items-center">
+        <input
+          type="text"
+          id="notedBy"
+          value="ANGELIC B. PAÑA"
+          readonly
+          class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm "
+        >
       </div>
+      <p class="text-sm mt-2">Center Head</p>
     </div>
   </div>
+
+    <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <p class="ml-24 -mb-2 font-bold">PAGE 2 of 2</p>
+            <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          </div>
+          <div class="ml-4">
+            <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+          </div>
+        </div>
+      </div>
+      
+      
+  </div>
 </template>
+
 
 <script>
 import axios from 'axios';
@@ -160,10 +322,10 @@ export default {
             remarks: '',
             indicators: [
               { description: 'Has the initiative to improve his given skills and talents.', self_rating: '', mdo_rating: '' },
-              { description: 'Has shown his best in any given tasks.', self_rating: '', mdo_rating: '' },
-              { description: 'Shares his talent for best results on a given activity.', self_rating: '', mdo_rating: '' },
-              { description: 'Has the capacity to teach his co-residents on things that will improve and show their best in a given situation.', self_rating: '', mdo_rating: '' },
-              { description: 'Continues to try new things that will increase and improve his learnings.', self_rating: '', mdo_rating: '' },
+              { description: 'Punctual in attending the training.', self_rating: '', mdo_rating: '' },
+              { description: 'Demonstrates knowledge in the area of expertise.', self_rating: '', mdo_rating: '' },
+              { description: 'Shows interest in learning by actively participating in discussions.', self_rating: '', mdo_rating: '' },
+              { description: 'Observes cleanliness and orderliness of the training venue.', self_rating: '', mdo_rating: '' },
             ],
           },
           {
@@ -178,16 +340,18 @@ export default {
               { description: 'Learns easily on productive endeavors taught to him.', self_rating: '', mdo_rating: '' },
             ],
           },
+        ],
+        sectionss: [
           {
             title: 'E. ATTITUDE',
             sub_total: 0,
             remarks: '',
             indicators: [
-              { description: 'He abides with policies of the training at all times.', self_rating: '', mdo_rating: '' },
+              { description: 'He abides with policies of the training at all times..', self_rating: '', mdo_rating: '' },
               { description: 'He follows instructions on given tasks.', self_rating: '', mdo_rating: '' },
               { description: 'Treats his co-residents fairly.', self_rating: '', mdo_rating: '' },
               { description: 'He is a peacemaker at all times.', self_rating: '', mdo_rating: '' },
-              { description: 'Can cope with challenges and difficulties.', self_rating: '', mdo_rating: '' },
+              { description: 'Can cope up with challenges and difficulties.', self_rating: '', mdo_rating: '' },
             ],
           },
           {
@@ -195,15 +359,15 @@ export default {
             sub_total: 0,
             remarks: '',
             indicators: [
-              { description: 'Never complains on unexpected changes/result of a group task.', self_rating: '', mdo_rating: '' },
+              { description: 'Never complains on unexpected changes/result of a group tasks.', self_rating: '', mdo_rating: '' },
               { description: 'Gentle in his actions/decisions.', self_rating: '', mdo_rating: '' },
               { description: 'Can handle challenging tasks.', self_rating: '', mdo_rating: '' },
               { description: 'Can think appropriately in any given situation.', self_rating: '', mdo_rating: '' },
-              { description: 'Never argues with co-residents and trainer to create conflict.', self_rating: '', mdo_rating: '' },
+              { description: 'Never argues with co-residents and trainor to create conflict.', self_rating: '', mdo_rating: '' },
             ],
           },
           {
-            title: 'G. LIFE\'S ASPIRATIONS',
+            title: 'G. LIFE ASPIRATIONS ',
             sub_total: 0,
             remarks: '',
             indicators: [
@@ -216,186 +380,51 @@ export default {
           },
         ],
         general_remarks: '',
-        trainings: [
-          { title: '', date_of_attendance: '', status: '' },
-          // Add more trainings as needed...
-        ],
+        trainings: [],
         prepared_by: '',
         noted_by: '',
       },
-      originalForm: null,
       editMode: false,
       message: '',
       messageType: '', // 'success' or 'error'
     };
   },
-  mounted() {
-    this.fetchReportData();
-  },
-  watch: {
-    '$route.params.id': 'fetchReportData',
-}
-,
   methods: {
-    addTraining() {
-    this.form.trainings.push({ title: '', date_of_attendance: '', status: '' });
-  },
-  removeTraining(index) {
-    this.form.trainings.splice(index, 1);
-  },
-    fetchReportData() {
-        const clientId = this.$route.params.id;
-        if (!clientId) {
-            console.warn("Client ID is undefined, data fetch aborted.");
-            return;
-        }
-
-        axios.get(`/api/performance-observation-reports/${clientId}`)
-            .then(response => {
-                console.log('API Response:', response.data);  // Log API response
-
-                if (response.data) {
-                    // Ensure the response structure is correct
-                    if (response.data.sections && Array.isArray(response.data.sections)) {
-                        this.form.sections = response.data.sections.map(section => ({
-                            title: section.title,
-                            sub_total: section.sub_total,
-                            remarks: section.remarks,
-                            indicators: section.indicators.map(indicator => ({
-                                description: indicator.description,
-                                self_rating: indicator.self_rating,
-                                mdo_rating: indicator.mdo_rating,
-                            }))
-                        }));
-                    }
-                    
-                    if (response.data.trainings && Array.isArray(response.data.trainings)) {
-                        this.form.trainings = response.data.trainings.map(training => ({
-                            title: training.title,
-                            date_of_attendance: training.date_of_attendance,
-                            status: training.status,
-                        }));
-                    }
-
-                    this.form.client_id = response.data.client_id;
-                    this.form.name = `${response.data.client.first_name} ${response.data.client.last_name}`;
-                    this.form.assessment_date = response.data.assessment_date;
-                    this.form.trainings_attended = response.data.trainings_attended;
-                    this.form.general_remarks = response.data.general_remarks;
-                    this.form.prepared_by = response.data.prepared_by;
-                    this.form.noted_by = response.data.noted_by;
-
-                    console.log('Form after API fetch:', this.form);  // Log the form data after fetch
-                    this.message = 'Data loaded successfully!';
-                    this.messageType = 'success';
-                } else {
-                    this.fetchClientData(clientId);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching report data:', error);
-               
-                
-                this.fetchClientData(clientId);
-            });
-    },
-    fetchClientData(clientId) {
-        axios.get(`/api/clients/${clientId}`)
-            .then(response => {
-                const client = response.data;
-                this.form.client_id = client.id; // Set the client_id
-                this.form.name = `${client.first_name} ${client.last_name}`;
-                
-               
-            })
-            .catch(error => {
-                console.error('Error fetching client data:', error);
-                
-                
-            });
+    toggleEdit() {
+      this.editMode = !this.editMode;
     },
     submitForm() {
-        console.log("Submitting form with data:", this.form);
-
-        if (!this.form.client_id) {
-            this.message = 'Failed to save data: Missing client ID';
-            this.messageType = 'error';
-            return;
-        }
-        if (!this.form.assessment_date) {
-            this.message = 'Assessment date is required.';
-            this.messageType = 'error';
-            return;
-        }
-
-        axios.post(`/api/performance-observation-reports/${this.form.client_id}`, this.form)
-            .then(response => {
-                const updatedSections = response.data.sections || this.form.sections;
-                const updatedTrainings = response.data.trainings || this.form.trainings;
-
-                this.form = {
-                    ...this.form,
-                    ...response.data, 
-                    sections: this.form.sections.map((section, index) => ({
-                        ...section,
-                        ...updatedSections[index] || {} // Ensure section exists before merging
-                    })),
-                    trainings: this.form.trainings.map((training, index) => ({
-                        ...training,
-                        ...updatedTrainings[index] || {} // Ensure training exists before merging
-                    })),
-                };
-
-                this.editMode = false;
-                this.message = 'Data saved or updated successfully!';
-                this.messageType = 'success';
-            })
-            .catch(error => {
-                const errorMessage = this.constructDetailedErrorMessage(error);
-                console.error('Failed to save or update data:', errorMessage);
-                this.message = errorMessage;
-                this.messageType = 'error';
-            });
-    },
-    constructDetailedErrorMessage(error) {
-        let message = 'Failed to save or update data: ';
-    
-        if (error.response) {
-            message += `HTTP ${error.response.status} (${error.response.statusText}) - `;
-    
-            if (error.response.data && error.response.data.message) {
-                message += `${error.response.data.message}. `;
-            }
-    
-            if (error.response.data && error.response.data.errors) {
-                const errorDetails = Object.entries(error.response.data.errors)
-                    .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
-                    .join('; ');
-                message += `Details: ${errorDetails}`;
-            }
-        } else if (error.request) {
-            message += 'No response received from the server. ';
-        } else {
-            message += `Request setup error: ${error.message}. `;
-        }
-    
-        return message;
-    },
-    toggleEdit() {
-        this.editMode = !this.editMode;
+      // Replace with your form submission logic
+      axios.post('/api/form-submit', this.form)
+        .then(response => {
+          this.message = 'Form submitted successfully!';
+          this.messageType = 'success';
+        })
+        .catch(error => {
+          this.message = 'Error submitting form.';
+          this.messageType = 'error';
+        });
     },
     calculateTotalRating(indicator) {
-        return (Number(indicator.self_rating) + Number(indicator.mdo_rating)) / 2 || 0;
+      return (parseFloat(indicator.self_rating) || 0) + (parseFloat(indicator.mdo_rating) || 0);
     },
     calculateSubTotal(section) {
-      const totalRatings = section.indicators.reduce((sum, indicator) => sum + this.calculateTotalRating(indicator), 0);
-      return (totalRatings / 5).toFixed(2); // Divide by 5 as per your requirement and round to 2 decimal places
+      return section.indicators.reduce((sum, indicator) => sum + (parseFloat(indicator.self_rating) || 0), 0);
     },
-},
+    addTraining() {
+      this.form.trainings.push({
+        title: '',
+        date_of_attendance: '',
+        status: ''
+      });
+    },
+    removeTraining(index) {
+      this.form.trainings.splice(index, 1);
+    },
+  },
 };
 </script>
 
-
 <style scoped>
-/* Add any additional styling here */
+/* Add any custom styles here */
 </style>

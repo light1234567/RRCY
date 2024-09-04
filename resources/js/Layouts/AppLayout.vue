@@ -4,7 +4,7 @@
 
     <Banner />
 
-    <div class="min-h-screen bg-gradient-to-bl from-slate-50 via-gray-50 to-zinc-50  flex ">
+    <div class="min-h-screen bg-gradient-to-t from-slate-100 via-gray-100 to-zinc-100 flex ">
       <!-- Sidebar -->
       <nav
         :class="{

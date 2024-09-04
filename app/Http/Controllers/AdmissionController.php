@@ -19,7 +19,7 @@ class AdmissionController extends Controller
             'client.first_name' => 'required|string|max:255',
             'client.middle_name' => 'nullable|string|max:255',
             'client.last_name' => 'required|string|max:255',
-            'client.suffix' => 'string|max:10',
+            'client.suffix' => 'nullable|string|max:10',
             'client.sex' => 'required|string|max:10',
             'client.date_of_birth' => 'required|date',
             'client.place_of_birth' => 'required|string|max:255',
@@ -46,6 +46,11 @@ class AdmissionController extends Controller
             'documents_submitted.documents.*' => 'string|max:255',
             'documents_submitted.others' => 'nullable|string|max:255',
         ]);
+
+        // Replace NULL values with empty strings for the suffix field
+        if (is_null($validated['client']['suffix'])) {
+            $validated['client']['suffix'] = '';
+        }
 
         try {
             // Create the client
@@ -97,16 +102,15 @@ class AdmissionController extends Controller
         ])->get();
         return response()->json($clients);
     }
-    
-public function getAdmissionByClientId($client_id)
-{
-    $admission = Admission::where('client_id', $client_id)->first();
 
-    if (!$admission) {
-        return response()->json(['message' => 'Admission not found'], 404);
+    public function getAdmissionByClientId($client_id)
+    {
+        $admission = Admission::where('client_id', $client_id)->first();
+
+        if (!$admission) {
+            return response()->json(['message' => 'Admission not found'], 404);
+        }
+
+        return response()->json($admission);
     }
-
-    return response()->json($admission);
-}
-
 }
