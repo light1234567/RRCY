@@ -136,9 +136,15 @@
         </table>
       </div>
       <div class="w-1/3 flex justify-center items-center">
-        <div class="w-32 h-32 border border-gray-300 rounded-full overflow-hidden">
+        <div class="w-32 h-32 border border-gray-300 rounded-full overflow-hidden relative">
           <!-- Profile picture should go here -->
-          <img src="path-to-profile-pic.png" alt="Profile Picture" class="w-full h-full object-cover">
+          <img :src="profileImageUrl" alt="Profile Picture" class="w-full h-full object-cover">
+          <!-- Hidden file input for uploading the image -->
+          <input type="file" @change="handleFileUpload" ref="fileInput" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer" style="display: none;">
+          <!-- Clickable overlay to trigger file input -->
+          <div v-if="editMode" @click="triggerFileInput" class="absolute inset-0 cursor-pointer bg-black bg-opacity-25 flex items-center justify-center">
+            <span class="text-white">Change Photo</span>
+          </div>
         </div>
       </div>
     </div>
@@ -201,39 +207,64 @@ export default {
         remarks: '',
         prepared_by: '',
         noted_by: '',
+        profile_image: null, // Profile image added to form
+        file: null, // File added to handle uploads
+        client_id: null, // Ensure client_id is explicitly defined
+        id: null, // This will hold the id of NursingCareService if exists
       },
       editMode: false,
+      profileImageUrl: '', // To display uploaded image
     };
   },
   mounted() {
     const clientId = this.$route.params.id;
+    console.log('Mounted with client ID:', clientId); // Log client ID on component mount
     this.fetchData(clientId);
   },
   watch: {
-    '$route.params.id'(newClientId) {
+    '$route.params.id': function (newClientId) {
+      console.log('Watched client ID change:', newClientId); // Log client ID on route change
       this.fetchData(newClientId);
     }
   },
   methods: {
-    async fetchData(clientId) {
-      try {
-        const response = await axios.get(`/api/initial-psychological-assessments/${clientId}`);
-        if (response.data.assessment) {
-          Object.assign(this.form, response.data.assessment);
-          this.form.client_id = clientId;
-          const client = response.data.client;
-          const admission = response.data.admission;
-          this.form.client_name = `${client.first_name} ${client.last_name}`;
-          this.form.birthdate = client.date_of_birth;
-          this.form.age = this.calculateAge(client.date_of_birth);
-          this.form.religion = client.religion;
-          this.form.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
-          this.form.date_of_admission = admission.date_admitted;
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    },
+    fetchData(clientId) {
+    console.log('Fetching data for client ID:', clientId); // Log client ID before API call
+    axios.get(`/api/nursing-care-services/${clientId}`)
+        .then(response => {
+            console.log('API Response:', response.data); // Log full API response
+            if (response.data) {
+                const { client, assessment } = response.data;
+
+                // Log client details
+                console.log('Fetched Client Details:', client);
+
+                // Populate the form with client details
+                this.form.client_name = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
+                this.form.birthdate = client.date_of_birth;
+                this.form.age = this.calculateAge(client.date_of_birth);
+                this.form.religion = client.religion;
+                this.form.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
+                this.form.client_id = client.id; // Ensure client_id is set
+                this.form.date_of_admission = client.admissions.length ? client.admissions[0].date_admitted : null; // Ensure date_of_admission is set
+
+                if (assessment) {
+                    Object.assign(this.form, assessment); // Assigning all assessment fields to form
+                    this.form.id = assessment.id; // Store the NursingCareService ID
+                    this.profileImageUrl = assessment.profile_image ? `/storage/${assessment.profile_image}` : 'path-to-default-pic.png';
+                    console.log('Fetched NursingCareService Details:', assessment); // Log assessment details
+                } else {
+                    // Initialize form fields if no assessment found
+                    this.profileImageUrl = 'path-to-default-pic.png';
+                    console.log('No NursingCareService found. Client initialized:', this.form); // Log client initialization
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+}
+,
     calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);
@@ -258,10 +289,87 @@ export default {
     toggleEdit() {
       this.editMode = !this.editMode;
     },
-    async saveData() {
-      // Add your save logic here
-      this.toggleEdit();
+    triggerFileInput() {
+      this.$refs.fileInput.click();
     },
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.form.file = file; // Store the file for submission
+        this.profileImageUrl = URL.createObjectURL(file); // Update image display immediately
+        console.log('File selected for upload:', file); // Log file details
+      } else {
+        // If no file is selected, clear the file from form data
+        this.form.file = null;
+        console.log('No file selected for upload'); // Log no file selected
+      }
+    },
+    saveData() {
+    const formData = new FormData();
+
+    // Ensure required fields are added
+    if (this.form.client_id) {
+        formData.append('client_id', this.form.client_id);
+    } else {
+        console.error('Missing client_id'); // Log missing client_id
+    }
+
+    if (this.form.date_of_admission) {
+        formData.append('date_of_admission', this.form.date_of_admission);
+    } else {
+        console.error('Missing date_of_admission'); // Log missing date_of_admission
+    }
+
+    // Append all other form fields to FormData
+    for (const key in this.form) {
+        if (this.form[key] !== null && key !== 'file' && key !== 'client_id' && key !== 'date_of_admission') {
+            formData.append(key, this.form[key]);
+        }
+    }
+
+    // Append the file if present
+    if (this.form.file) {
+        formData.append('profile_image', this.form.file);
+    }
+
+    // Determine the appropriate URL and method
+    const isUpdate = Boolean(this.form.id);
+    const requestUrl = isUpdate
+        ? `/api/nursing-care-services/${this.form.id}`
+        : `/api/nursing-care-services`;
+
+    const requestMethod = isUpdate ? 'put' : 'post';
+
+    console.log(`Saving data using ${requestMethod.toUpperCase()} for client ID:`, this.form.client_id);
+
+    axios[requestMethod](requestUrl, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    })
+    .then(response => {
+        this.toggleEdit();
+        alert('Data saved successfully!');
+
+        // Update profileImageUrl if a new image has been uploaded and returned
+        if (response.data.profile_image) {
+            this.profileImageUrl = `/storage/${response.data.profile_image}`;
+        }
+
+        // Fetch updated data to reflect all changes
+        this.fetchData(this.form.client_id);
+    })
+    .catch(error => {
+        if (error.response && error.response.data.errors) {
+            console.error('Error saving data:', error.response.data.errors);
+            alert('Error saving data. Please check the input fields and try again.');
+        } else {
+            console.error('Unexpected error:', error);
+            alert('Unexpected error occurred. Please try again.');
+        }
+    });
+}
+
   },
 };
 </script>

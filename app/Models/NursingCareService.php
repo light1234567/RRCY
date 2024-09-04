@@ -31,6 +31,7 @@ class NursingCareService extends Model
         'remarks',
         'prepared_by',
         'noted_by',
+        'profile_image',  // Add profile image to fillable
     ];
 
     public function client()

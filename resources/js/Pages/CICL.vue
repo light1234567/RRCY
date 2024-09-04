@@ -34,25 +34,34 @@
         <!-- Clients List -->
         <div class="p-4">
           <table class="min-w-full divide-y divide-gray-200">
-            <thead>
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr
-                v-for="(client, index) in filteredClients"
-                :key="client.id"
-                class="cursor-pointer hover:bg-gray-100"
-                @click="navigateToEditPage(client.id)"
-              >
-                <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">{{ client.first_name }} {{ client.last_name }}</td>
-              </tr>
-              <tr v-if="filteredClients.length === 0">
-                <td colspan="2" class="px-6 py-4 text-center text-xs text-gray-500">No clients found</td>
-              </tr>
-            </tbody>
-          </table>
+  <thead>
+    <tr>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Case Status</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Child Status</th>
+      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Admitted</th>
+    </tr>
+  </thead>
+  <tbody class="bg-white divide-y divide-gray-200">
+    <tr
+      v-for="(client, index) in filteredClients"
+      :key="index"
+      class="cursor-pointer hover:bg-gray-100"
+      @click="navigateToEditPage(client.id)"
+    >
+      <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">{{ client.name }}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{{ client.age }}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{{ client.case_status }}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{{ client.child_status }}</td>
+      <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{{ client.date_admitted }}</td>
+    </tr>
+    <tr v-if="filteredClients.length === 0">
+      <td colspan="5" class="px-6 py-4 text-center text-xs text-gray-500">No clients found</td>
+    </tr>
+  </tbody>
+</table>
+
         </div>
       </div>
     </div>
@@ -73,12 +82,25 @@ const searchQuery = ref('');
 // Fetch clients from the API
 const fetchClients = async () => {
   try {
-    const response = await axios.get('/api/clients');
-    clients.value = response.data;
+    const response = await axios.get('/api/clients-data');
+    clients.value = response.data.map(client => {
+      const { first_name, last_name, date_of_birth } = client;
+      const admission = client.admissions[0]; // Assuming you want the first admission
+      const age = new Date().getFullYear() - new Date(date_of_birth).getFullYear();
+
+      return {
+        name: `${first_name} ${last_name}`,
+        age: age,
+        case_status: admission?.case_status || 'N/A',
+        child_status: client.child_status,
+        date_admitted: admission?.date_admitted || 'N/A',
+      };
+    });
   } catch (error) {
     console.error('Error fetching clients:', error);
   }
 };
+
 
 onMounted(fetchClients);
 

@@ -52,6 +52,7 @@ Route::delete('/clients/{id}', [ClientController::class, 'destroy']);
 // Admission Routes
 Route::post('/admission', [AdmissionController::class, 'store']);
 Route::get('/admissions/client/{client_id}', [AdmissionController::class, 'getAdmissionByClientId']);
+Route::get('/clients-data', [AdmissionController::class, 'getAllData']);
 Route::post('/save-admission', [AdmissionController::class, 'saveForm']);
 Route::get('/clients-data/{id}', [AdmissionController::class, 'getAllData']);
 
@@ -183,8 +184,8 @@ Route::delete('/swapping-forms/{id}', [SwappingFormController::class, 'destroy']
 // Nursing Care Service Routes
 Route::get('/nursing-care-services', [NursingCareServiceController::class, 'index']);
 Route::get('/nursing-care-services/{id}', [NursingCareServiceController::class, 'show']);
-Route::post('/nursing-care-services', [NursingCareServiceController::class, 'store']);
-Route::put('/nursing-care-services/{id}', [NursingCareServiceController::class, 'update']);
+Route::post('/nursing-care-services', [NursingCareServiceController::class, 'storeOrUpdate']);
+Route::put('/nursing-care-services/{id}', [NursingCareServiceController::class, 'storeOrUpdate']); // Combined route for store and update
 Route::delete('/nursing-care-services/{id}', [NursingCareServiceController::class, 'destroy']);
 
 

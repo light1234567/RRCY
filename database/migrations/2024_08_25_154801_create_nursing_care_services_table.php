@@ -10,8 +10,8 @@ class CreateNursingCareServicesTable extends Migration
     {
         Schema::create('nursing_care_services', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->date('date_of_admission');
+            $table->unsignedBigInteger('client_id')->nullable();
+            $table->date('date_of_admission')->nullable();
             $table->string('current_medical_status')->nullable();
             $table->float('temperature')->nullable();
             $table->integer('pulse_rate')->nullable();
@@ -31,6 +31,7 @@ class CreateNursingCareServicesTable extends Migration
             $table->text('remarks')->nullable();
             $table->string('prepared_by')->nullable();
             $table->string('noted_by')->nullable();
+            $table->string('profile_image')->nullable();  // Add profile image column
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
