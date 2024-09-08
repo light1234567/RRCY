@@ -4,7 +4,7 @@
 
     <Banner />
 
-    <div class="min-h-screen bg-gradient-to-t from-slate-100 via-gray-100 to-zinc-100 flex ">
+    <div >
       <!-- Sidebar -->
       <nav
         :class="{
@@ -49,29 +49,12 @@
             </svg>
           </button>
 
-          <!-- UserProfileImage 
-          <div class="flex flex-col items-center p-4 mt-4">
-            <UserProfileImage
-              :userImage="userImage"
-              :userName="userName"
-            />
-          </div>-->
-
-          <!-- Application Mark and User Menu 
-          <div class="flex flex-col items-center p-4">
-            <ApplicationMark
-              :isSidebarCollapsed="isSidebarCollapsed"
-              :userName="userName"
-              :userRole="userRole"
-              :userImage="userImage"
-            />
-          </div> -->
           <!-- LOGO DSWD -->
           <img
-    :class="['p-6 mt-4 mb-4 relative z-10 transition-all duration-300', isSidebarCollapsed ? 'mt-8 h-20 w-28' : 'h-32 w-68']"
-    :src="isSidebarCollapsed ? '/images/rrcy.png' : '/images/transparent.png'"
-    alt="Logo"
-  />
+            :class="['p-6 mt-4 mb-4 relative z-10 transition-all duration-300', isSidebarCollapsed ? 'mt-8 h-20 w-28' : 'h-32 w-68']"
+            :src="isSidebarCollapsed ? '/images/rrcy.png' : '/images/transparent.png'"
+            alt="Logo"
+          />
 
           <!-- Divider Line -->
           <div>
@@ -207,48 +190,48 @@
               </NavLink>
             </div>
 
-          <!-- User Link with Icon -->
-<div
-  v-if="isAdmin"
-  :class="{
-    'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
-    'w-full h-auto': !isSidebarCollapsed
-  }"
-  class="flex items-center justify-between mb-20 max-w-lg p-2 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
->
-  <NavLink
-    :href="route('user')"
-    :active="route().current('user')"
-    class="flex items-center space-x-4 w-full transition duration-150 ease-in-out"
-  >
-    <!-- User Icon -->
-    <svg
-      :class="{
-        'w-6 h-6': !isSidebarCollapsed,
-        'w-5 h-5': isSidebarCollapsed
-      }"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M12 4.5a4.5 4.5 0 100 9 4.5 4.5 0 100-9zm0 12a9 9 0 00-9 9h18a9 9 0 00-9-9z"
-      />
-    </svg>
-    <span
-      :class="{
-        'hidden': isSidebarCollapsed,
-        'block': !isSidebarCollapsed
-      }"
-      class="transition-opacity duration-300 text-white"
-    >
-      User
-    </span>
-  </NavLink>
-</div>
+            <!-- User Link with Icon -->
+            <div
+              v-if="isAdmin"
+              :class="{
+                'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
+                'w-full h-auto': !isSidebarCollapsed
+              }"
+              class="flex items-center justify-between mb-20 max-w-lg p-2 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
+            >
+              <NavLink
+                :href="route('user')"
+                :active="route().current('user')"
+                class="flex items-center space-x-4 w-full transition duration-150 ease-in-out"
+              >
+                <!-- User Icon -->
+                <svg
+                  :class="{
+                    'w-6 h-6': !isSidebarCollapsed,
+                    'w-5 h-5': isSidebarCollapsed
+                  }"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4.5a4.5 4.5 0 100 9 4.5 4.5 0 100-9zm0 12a9 9 0 00-9 9h18a9 9 0 00-9-9z"
+                  />
+                </svg>
+                <span
+                  :class="{
+                    'hidden': isSidebarCollapsed,
+                    'block': !isSidebarCollapsed
+                  }"
+                  class="transition-opacity duration-300 text-white"
+                >
+                  User
+                </span>
+              </NavLink>
+            </div>
 
             <!-- Divider Line -->
             <div>
@@ -294,41 +277,44 @@
       <div
         :class="{
           'ml-44': !isSidebarCollapsed,
-          'ml-20': isSidebarCollapsed
+          'ml-0': isSidebarCollapsed
         }"
         class="flex-1 transition-all duration-300"
       >
-        <!-- Page Heading -->
+       <!-- Page Heading -->
         <div class="w-full m-0 p-0">
-  <header class="w-full py-2 bg-white border border-gray-300  px-24 sm:px-8 lg:px-16 flex items-center">
-    <slot name="header" v-if="$slots.header"></slot>
+          <header class="w-full py-2 bg-white border shadow-md px-24 sm:px-8 lg:px-16 flex items-center">
+            <slot name="header" v-if="$slots.header"></slot>
 
-    <div class="ml-auto -mr-2 h-10 w-10">
-      <div class="h-full w-full bg-white rounded-full overflow-hidden">
-        <UserProfileImage
-          :userImage="userImage"
-          :userName="userName"
-        />
-      </div>
-    </div>
+            <div class="ml-auto -mr-2 h-8 w-8">
+              <div class="h-full w-full bg-white rounded-full overflow-hidden">
+                <UserProfileImage 
+                  :userImage="userImage"
+                  :userName="userName"
+                />
+              </div>
+            </div>
 
-    <div class="flex flex-col items-center -mr-2 mt-1/2 ml-2">
-      <ApplicationMark
-        :isSidebarCollapsed="isSidebarCollapsed"
-        :userName="userName"
-        
-        :userImage="userImage"
-      />
-    </div>
+            <!-- Add the vertical bar here -->
+            <div class="mx-4 ml-8 h-8 border-l border-gray-300"></div> <!-- This is the vertical bar -->
 
-    <!-- Add the small dropdown icon to the right using SVG -->
-    <div class="ml-4 -mr-8 mt-1">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-      </svg>
-    </div>
-  </header>
-</div>
+            <div class="flex flex-col items-center -mr-2 mt-1/2 ml-2">
+              <ApplicationMark
+                :isSidebarCollapsed="isSidebarCollapsed"
+                :userName="userName"
+                :userImage="userImage"
+              />
+            </div>
+
+            <!-- Add the small dropdown icon to the right using SVG -->
+            <div class="ml-4 -mr-8 mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </header>
+        </div>
+
         <!-- Page Content -->
         <main class="ml-12"> <!-- Adjust padding to match header height -->
           <slot />
@@ -342,7 +328,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Head, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
@@ -356,11 +342,15 @@ const props = usePage().props;
 const userImage = ref(props.auth.user.profile_photo_url || 'images/default.jpg');
 const userName = ref(props.auth.user.name || 'Default Name');
 const userRole = ref(props.auth.user.role || '(User)');
-const isSidebarCollapsed = ref(false);
+
+// Load sidebar state from localStorage
+const isSidebarCollapsed = ref(localStorage.getItem('isSidebarCollapsed') === 'true');
 const showModal = ref(false);
 
 const toggleSidebar = () => {
   isSidebarCollapsed.value = !isSidebarCollapsed.value;
+  // Store the sidebar state in localStorage
+  localStorage.setItem('isSidebarCollapsed', isSidebarCollapsed.value);
 };
 
 const logout = () => {
@@ -376,18 +366,9 @@ const logout = () => {
 
 const isSocialServices = computed(() => userRole.value === 'social services');
 const isAdmin = computed(() => userRole.value === 'admin');
+
+// Ensure the sidebar remains collapsed or expanded on page load
+onMounted(() => {
+  isSidebarCollapsed.value = localStorage.getItem('isSidebarCollapsed') === 'true';
+});
 </script>
-
-
-<style scoped>
-/* Ensure the sidebar toggle button is always clickable */
-.sidebar-button {
-  z-index: 50; /* Higher z-index to ensure it's above other elements */
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-</style>

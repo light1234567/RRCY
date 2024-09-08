@@ -9,7 +9,7 @@
     
     <!-- Display initials if no image is provided -->
     <div v-else class="w-10 h-10 flex items-center justify-center bg-blue-900 rounded-full cursor-pointer" @click="toggleDropdown">
-      <span class="text-xl font-semibold text-white">{{ userInitials }}</span>
+      <span class="text-md mb-2 font-semibold text-white">{{ userInitials }}</span>
     </div>
 
     <!-- Dropdown Content 

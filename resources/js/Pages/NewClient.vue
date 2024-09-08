@@ -1,5 +1,5 @@
 <template>
-  <AppLayout title="Dashboard">
+  <AppLayout title="New Client">
     <template #header>
       <h1 class="ml-12 text-lg font-bold text-red-800">ADMISSION FORM/NEW CLIENT</h1>
     </template>
@@ -105,15 +105,16 @@
                 <select
                   id="child_status"
                   v-model="form.client.child_status"
+                  :class="statusColorClass"
                   class="w-full px-2 py-1 border rounded-md text-sm"
                   required
-                >  
+                >
                   <option value="">Select Child Status</option>
                   <option value="Still at the Center (SATC)">Still at the Center (SATC)</option>
                   <option value="Discharge">Discharge</option>
                   <option value="Leave without Permission (LWOP)">Leave without Permission (LWOP)</option>
                 </select>
-              </div> 
+              </div>
               <div class="mb-2">
                 <label for="clientSex" class="block mb-1 text-sm">
                   Sex: <span class="text-red-500">*</span>
@@ -511,7 +512,7 @@
   </AppLayout>
 </template>
 <script setup>
-import { ref, watch, onMounted } from 'vue'; // Add onMounted
+import { ref, watch, onMounted, computed } from 'vue'; // Added necessary imports
 import axios from 'axios';
 import NotificationModal from '@/Components/NotificationModal.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
@@ -633,6 +634,7 @@ const saveForm = async () => {
   }
 };
 
+// Set the min and max dates for the date of birth
 onMounted(() => {
   const today = new Date();
 
@@ -671,7 +673,21 @@ watch(
   }
 );
 
-// Reset the form to initial state
+// Computed property to return the appropriate color class based on the child status
+const statusColorClass = computed(() => {
+  switch (form.value.client.child_status) {
+    case 'Still at the Center (SATC)':
+      return 'bg-green-100 text-green-800'; // Green background for SATC
+    case 'Discharge':
+      return 'bg-blue-100 text-blue-800'; // Blue background for Discharge
+    case 'Leave without Permission (LWOP)':
+      return 'bg-red-100 text-red-800'; // Red background for LWOP
+    default:
+      return 'bg-white text-black'; // Default color for no selection
+  }
+});
+
+// Reset the form to initial state while keeping date of birth constraints
 const resetForm = () => {
   form.value = {
     client: {
@@ -688,7 +704,8 @@ const resetForm = () => {
       street: '',
       religion: '',
       child_status: '',
-      maxDateOfBirth: form.value.client.maxDateOfBirth // Keep the max date of birth
+      maxDateOfBirth: form.value.client.maxDateOfBirth, // Keep the max date of birth
+      minDateOfBirth: form.value.client.minDateOfBirth, // Keep the min date of birth
     },
     distinguishing_marks: {
       tattoo_scars: '',
@@ -725,4 +742,3 @@ const toggleOtherDocuments = () => {
 // Load provinces when the component is mounted
 onMounted(fetchProvinces);
 </script>
-

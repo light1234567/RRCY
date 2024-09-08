@@ -1,11 +1,14 @@
 <template>
   <AppLayout title="CICL">
     <template #header>
-      <h1 class="text-lg ml-12 font-bold text-red-800">CICL</h1>
+      <div class="flex items-center">
+        <div class="w-2 h-6 bg-gray-400 mr-3"></div>
+        <h1 class="text-lg ml-12 font-bold text-red-800">CICL</h1>
+      </div>
     </template>
     <div class="ml-6 max-w-6x1 mx-auto sm:px-6 lg:px-8 mt-2">
       <div class="p-2 rounded-lg flex justify-between items-center">
-        <div class="relative -mr-2 w-80 ml-auto"> 
+        <div class="relative -mr-2 w-80 ml-auto">
           <span class="absolute -mt-2 inset-y-0 left-0 flex items-center pl-3">
             <svg
               class="h-5 w-5 text-gray-500"
@@ -26,16 +29,46 @@
             v-model="searchQuery"
             type="text"
             placeholder="Search"
-            class="mb-2 p-2 pl-10 border border-gray-300 rounded-md w-full text-sm" 
+            class="mb-2 p-2 pl-10 border border-gray-300 rounded-md w-full text-sm"
           />
         </div>
+        <!-- Filter Button -->
+        <button
+          @click="toggleFilterMenu"
+          class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >
+          Filters
+        </button>
       </div>
+
+      <!-- Filter Menu (Dropdown) -->
+      <div v-if="showFilters" class="mb-4 ml-6 bg-gray-100 p-4 rounded-lg">
+        <label class="block mb-2 font-bold text-sm text-gray-700">Case Status</label>
+        <select v-model="selectedCaseStatus" class="mb-4 p-2 border border-gray-300 rounded-md w-full">
+          <option value="">All</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+        </select>
+
+        <label class="block mb-2 font-bold text-sm text-gray-700">Child Status</label>
+        <select v-model="selectedChildStatus" class="mb-4 p-2 border border-gray-300 rounded-md w-full">
+          <option value="">All</option>
+          <option value="admitted">Admitted</option>
+          <option value="discharged">Discharged</option>
+        </select>
+
+        <button @click="applyFilters" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+          Apply Filters
+        </button>
+      </div>
+
       <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
         <!-- Clients List -->
         <div class="p-4">
           <table class="min-w-full divide-y divide-gray-400">
             <thead>
-              <tr class="">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profile</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Age</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Case Status</th>
@@ -50,14 +83,28 @@
                 class="cursor-pointer hover:bg-gray-100"
                 @click="navigateToEditPage(client.id)"
               >
-                <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">{{ client.name }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{{ client.age }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{{ client.case_status }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{{ client.child_status }}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{{ client.date_admitted }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-xs font-medium text-gray-900">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 rounded-full text-gray-500 bg-gray-200 p-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-2.7 0-8 1.4-8 4v2h16v-2c0-2.6-5.3-4-8-4z"/>
+                  </svg>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-[13px] font-medium text-gray-900">
+                  {{ client.name }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-[13px] text-black">{{ client.age }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-[13px] text-black">{{ client.case_status }}</td>
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-[13px]"
+                  :class="getChildStatusClass(client.child_status)"
+                >
+                  {{ client.child_status }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-[13px] text-gray-500">{{ client.date_admitted }}</td>
               </tr>
+
+              <!-- No Clients Found Row -->
               <tr v-if="filteredClients.length === 0">
-                <td colspan="5" class="px-6 py-4 text-center text-xs text-gray-500">No clients found</td>
+                <td colspan="6" class="px-6 py-4 text-center text-[13px] text-gray-500">No clients found</td>
               </tr>
             </tbody>
           </table>
@@ -74,9 +121,11 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-
 const clients = ref([]);
 const searchQuery = ref('');
+const showFilters = ref(false);
+const selectedCaseStatus = ref('');
+const selectedChildStatus = ref('');
 
 // Fetch clients from the API
 const fetchClients = async () => {
@@ -103,14 +152,52 @@ const fetchClients = async () => {
 
 onMounted(fetchClients);
 
+// Method to get the appropriate class based on child_status
+const getChildStatusClass = (childStatus) => {
+  switch (childStatus) {
+    case 'Still at the Center (SATC)':
+      return ' text-green-600'; // Green background for SATC
+    case 'Discharge':
+      return 'text-orange-600'; // Blue background for Discharge
+    case 'Leave without Permission (LWOP)':
+      return 'text-red-800'; // Red background for LWOP
+    default:
+      return ' text-black'; // Default background for no match
+  }
+};
+
+// Toggle filter menu visibility
+const toggleFilterMenu = () => {
+  showFilters.value = !showFilters.value;
+};
+
+// Apply filters based on case_status and child_status
+const applyFilters = () => {
+  showFilters.value = false; // Hide filter menu after applying filters
+};
+
 // Computed property to filter clients
 const filteredClients = computed(() => {
-  if (!searchQuery.value) {
-    return clients.value;
+  let filtered = clients.value;
+
+  // Filter by search query
+  if (searchQuery.value) {
+    filtered = filtered.filter(client =>
+      client.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
   }
-  return clients.value.filter(client =>
-    client.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+
+  // Filter by case status
+  if (selectedCaseStatus.value) {
+    filtered = filtered.filter(client => client.case_status === selectedCaseStatus.value);
+  }
+
+  // Filter by child status
+  if (selectedChildStatus.value) {
+    filtered = filtered.filter(client => client.child_status === selectedChildStatus.value);
+  }
+
+  return filtered;
 });
 
 // Function to navigate to edit page
@@ -123,5 +210,3 @@ const navigateToEditPage = (id) => {
 <style scoped>
 /* Add any component-specific styles here */
 </style>
-
-

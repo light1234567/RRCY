@@ -20,6 +20,7 @@ export default {
             colors: {
                 'customBlue': 'rgb(6, 18, 56)', // Define your custom RGB color
                 'customglue': '#202A4D',
+                'lighterBlue': '#f8fbff',
              
             },
             
