@@ -12,6 +12,7 @@ import CICL from '@/Pages/CICL.vue'; // Assuming you have a CICL component
 import MainTab from '@/Pages/MainTab.vue'; // Corrected import path for Edit component
 import NewClient from '@/Pages/NewClient.vue'; // Adjust the path as necessary
 
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 const routes = [

@@ -1,7 +1,11 @@
 <template>
   <AppLayout>
     <template #header>
-      <h1 class="text-lg ml-12 font-bold text-red-800">CICL Information</h1>
+      <div class="flex items-center">
+        <div class="w-2 h-6 bg-gray-400 mr-3"></div>
+        <i class="fa fa-users  text-black text-2xl ml-6"></i> 
+        <h1 class="text-lg ml-4 font-bold text-red-800">CICL Information</h1>
+      </div>
     </template>
 
     <div v-if="loading" class="text-center py-4">Loading client data...</div>

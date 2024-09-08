@@ -1,8 +1,11 @@
 <template>
   <AppLayout title="New Client">
     <template #header>
-      <h1 class="ml-12 text-lg font-bold text-red-800">ADMISSION FORM/NEW CLIENT</h1>
-    </template>
+  <div class="flex items-center">
+    <i class="fa fa-user-plus ml-12 text-xl mr-2"></i> <!-- FontAwesome icon -->
+    <h1 class="ml-2 text-lg font-bold text-red-800">Admission Form/New Client</h1>
+  </div>
+</template>
 
     <div class="">
       <h1 class="text-lg p-1 text-customBlue ml-10 font-bold mb-4"></h1>
