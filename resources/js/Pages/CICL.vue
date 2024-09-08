@@ -32,34 +32,32 @@
             class="mb-2 p-2 pl-10 border border-gray-300 rounded-md w-full text-sm"
           />
         </div>
-        <!-- Filter Button -->
-        <button
-          @click="toggleFilterMenu"
-          class="ml-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-        >
-          Filters
-        </button>
-      </div>
 
-      <!-- Filter Menu (Dropdown) -->
-      <div v-if="showFilters" class="mb-4 ml-6 bg-gray-100 p-4 rounded-lg">
-        <label class="block mb-2 font-bold text-sm text-gray-700">Case Status</label>
-        <select v-model="selectedCaseStatus" class="mb-4 p-2 border border-gray-300 rounded-md w-full">
-          <option value="">All</option>
-          <option value="open">Open</option>
-          <option value="closed">Closed</option>
-        </select>
+        <!-- Case Status Filter -->
+        <div class="relative -mr-2 w-80 ml-auto">
+          <select v-model="selectedCaseStatus" class="mb-2 p-2 border border-gray-300 rounded-md w-full text-sm">
+            <option value="">Select Case Status</option>
+            <option value="On trial">On trial</option>
+            <option value="Suspended sentence">Suspended sentence</option>
+            <option value="Acquitted">Acquitted</option>
+            <option value="Dismissed">Dismissed</option>
+            <option value="Provisionally Dismissed">Provisionally Dismissed</option>
+            <option value="Rehabilitation">Rehabilitation</option>
+            <option value="Diversion">Diversion</option>
+            <option value="Disposition Measure">Disposition Measure</option>
+            <option value="Child-at-risk (CAR)">Child-at-risk (CAR)</option>
+          </select>
+        </div>
 
-        <label class="block mb-2 font-bold text-sm text-gray-700">Child Status</label>
-        <select v-model="selectedChildStatus" class="mb-4 p-2 border border-gray-300 rounded-md w-full">
-          <option value="">All</option>
-          <option value="admitted">Admitted</option>
-          <option value="discharged">Discharged</option>
-        </select>
-
-        <button @click="applyFilters" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-          Apply Filters
-        </button>
+        <!-- Child Status Filter -->
+        <div class="relative -mr-2 w-80 ml-auto">
+          <select v-model="selectedChildStatus" class="mb-2 p-2 border border-gray-300 rounded-md w-full text-sm">
+            <option value="">Select Child Status</option>
+            <option value="Still at the Center (SATC)">Still at the Center (SATC)</option>
+            <option value="Discharge">Discharge</option>
+            <option value="Leave without Permission (LWOP)">Leave without Permission (LWOP)</option>
+          </select>
+        </div>
       </div>
 
       <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -123,9 +121,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const clients = ref([]);
 const searchQuery = ref('');
-const showFilters = ref(false);
-const selectedCaseStatus = ref('');
-const selectedChildStatus = ref('');
+const selectedCaseStatus = ref(''); // Case status filter
+const selectedChildStatus = ref(''); // Child status filter
 
 // Fetch clients from the API
 const fetchClients = async () => {
@@ -156,24 +153,14 @@ onMounted(fetchClients);
 const getChildStatusClass = (childStatus) => {
   switch (childStatus) {
     case 'Still at the Center (SATC)':
-      return ' text-green-600'; // Green background for SATC
+      return ' text-green-600'; // Green text for SATC
     case 'Discharge':
-      return 'text-orange-600'; // Blue background for Discharge
+      return 'text-orange-600'; // Orange text for Discharge
     case 'Leave without Permission (LWOP)':
-      return 'text-red-800'; // Red background for LWOP
+      return 'text-red-800'; // Red text for LWOP
     default:
-      return ' text-black'; // Default background for no match
+      return ' text-black'; // Default black text
   }
-};
-
-// Toggle filter menu visibility
-const toggleFilterMenu = () => {
-  showFilters.value = !showFilters.value;
-};
-
-// Apply filters based on case_status and child_status
-const applyFilters = () => {
-  showFilters.value = false; // Hide filter menu after applying filters
 };
 
 // Computed property to filter clients
