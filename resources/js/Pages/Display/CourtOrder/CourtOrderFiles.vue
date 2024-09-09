@@ -47,51 +47,52 @@
       </div>
   
       <!-- Folder Contents -->
-      <div v-if="openFolder !== null" class="folder-content mb-4">
-        <h3 class="text-lg font-semibold mb-2">Files in {{ openFolder.name }}:</h3>
-        <div class="folder-actions flex justify-between mb-4">
-          <input type="file" @change="onFileChange($event, openFolder.id)" class="hidden" ref="fileInput" />
-          <button @click="triggerFileInput(true)" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-            <i class="fas fa-file-upload"></i> Upload
-          </button>
-          <button @click="deleteFolder(openFolder.id)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-            <i class="fas fa-trash"></i> Delete Folder
-          </button>
-        </div>
-        <ul class="space-y-2">
-          <li v-for="(file, i) in openFolder.files" :key="i" class="file-item flex justify-between items-center">
-            <i class="fas fa-file-alt"></i>
-            <a :href="`/storage/${file.filename}`" target="_blank" class="text-blue-600 hover:underline">{{ file.filename }}</a> <!-- View file link -->
-            <div class="file-actions flex space-x-2">
-              <button @click="deleteFile(openFolder.id, file.filename)" class="text-red-500">
-                <i class="fas fa-trash"></i> Delete
-              </button>
-              <button @click="openMoveDialog(file.filename)" class="text-blue-500"> <!-- Open move dialog -->
-                <i class="fas fa-exchange-alt"></i> Move
-              </button>
-            </div>
-          </li>
-        </ul>
+<div v-if="openFolder !== null" class="folder-content mb-4">
+  <h3 class="text-lg font-semibold mb-2">Files in {{ openFolder.name }}:</h3>
+  <div class="folder-actions flex justify-between mb-4">
+    <input type="file" @change="onFileChange($event, openFolder.id)" class="hidden" ref="fileInput" />
+    <button @click="triggerFileInput(true)" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+      <i class="fas fa-file-upload"></i> Upload
+    </button>
+    <button @click="deleteFolder(openFolder.id)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+      <i class="fas fa-trash"></i> Delete Folder
+    </button>
+  </div>
+  <ul class="space-y-2">
+    <li v-for="(file, i) in openFolder.files" :key="i" class="file-item flex justify-between items-center">
+      <i class="fas fa-file-alt"></i>
+      <a :href="`/storage/${file.filename}`" target="_blank" class="text-blue-600 hover:underline">{{ file.filename }}</a> <!-- View file link -->
+      <div class="file-actions flex space-x-2">
+        <button @click="deleteFile(openFolder.id, file.filename)" class="text-red-500">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+        <button @click="openMoveDialog(file.filename)" class="text-blue-500"> <!-- Fix here -->
+          <i class="fas fa-exchange-alt"></i> Move
+        </button>
       </div>
-  
-      <!-- Unsorted Files -->
-      <div v-if="files.length && openFolder === null" class="unsorted-files">
-        <h3 class="text-lg font-semibold mb-2">Unsorted Files:</h3>
-        <ul class="space-y-2">
-          <li v-for="(file, index) in files" :key="index" class="file-item flex justify-between items-center">
-            <i class="fas fa-file-alt"></i>
-            <a :href="`/storage/${file.filename}`" target="_blank" class="text-blue-600 hover:underline">{{ file.filename }}</a> <!-- View file link -->
-            <div class="file-actions flex space-x-2">
-              <button @click="deleteFile(null, file.filename)" class="text-red-500">
-                <i class="fas fa-trash"></i> Delete
-              </button>
-              <button @click="openMoveDialog(file.filename)" class="text-blue-500"> <!-- Open move dialog -->
-                <i class="fas fa-exchange-alt"></i> Move
-              </button>
-            </div>
-          </li>
-        </ul>
+    </li>
+  </ul>
+</div>
+
+<!-- Unsorted Files -->
+<div v-if="files.length && openFolder === null" class="unsorted-files">
+  <h3 class="text-lg font-semibold mb-2">Unsorted Files:</h3>
+  <ul class="space-y-2">
+    <li v-for="(file, index) in files" :key="index" class="file-item flex justify-between items-center">
+      <i class="fas fa-file-alt"></i>
+      <a :href="`/storage/${file.filename}`" target="_blank" class="text-blue-600 hover:underline">{{ file.filename }}</a> <!-- View file link -->
+      <div class="file-actions flex space-x-2">
+        <button @click="deleteFile(null, file.filename)" class="text-red-500">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+        <button @click="openMoveDialog(file.filename)" class="text-blue-500"> <!-- Fix here -->
+          <i class="fas fa-exchange-alt"></i> Move
+        </button>
       </div>
+    </li>
+  </ul>
+</div>
+
   
       <!-- File Move Dialog -->
       <div v-if="moveDialogVisible" class="move-dialog">
@@ -116,197 +117,208 @@
   </template>
   
   <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return {
-        clientId: null,
-        folders: [],
-        files: [],
-        newFolderName: '',
-        openFolder: null,
-        moveDialogVisible: false,
-        fileToMove: '',
-        destinationFolder: '',
-        pdfFile: null,
-        errorMessage: '',
-        successMessage: '',
-      };
-    },
-    mounted() {
-      const clientId = this.$route.params.id || localStorage.getItem('clientId');
-      if (clientId) {
-        this.clientId = clientId;
-        localStorage.setItem('clientId', clientId);
-        this.fetchFoldersAndFiles();
-      } else {
-        this.errorMessage = 'Client ID is missing from the URL.';
-      }
-    },
-    methods: {
-      async fetchFoldersAndFiles() {
-        try {
-          const response = await axios.get(`/api/folders-and-files/${this.clientId}`);
-          this.folders = response.data.folders;
-          this.files = response.data.files;
-          this.errorMessage = '';
-          this.successMessage = '';
-        } catch (error) {
-          this.errorMessage = 'Error fetching folders and files: ' + (error.response?.data?.message || error.message);
-        }
-      },
-      triggerFileInput(isFolder = false) {
-        if (isFolder && this.openFolder) {
-          this.$refs.fileInput.click();
-        } else if (!isFolder) {
-          this.$refs.mainFileInput.click();
-        }
-      },
-      toggleFolder(folder) {
-        this.openFolder = this.openFolder && this.openFolder.id === folder.id ? null : folder;
-      },
-      async createFolder() {
-        if (!this.newFolderName) {
-          this.errorMessage = 'Folder name cannot be empty.';
-          return;
-        }
-        try {
-          await axios.post('/api/create-folder', {
-            name: this.newFolderName,
-            client_id: this.clientId,
-          });
-          this.newFolderName = '';
-          this.fetchFoldersAndFiles();
-          this.successMessage = 'Folder created successfully!';
-          this.errorMessage = '';
-          this.resetMessage();
-        } catch (error) {
-          this.errorMessage = 'Error creating folder: ' + (error.response?.data?.message || error.message);
-        }
-      },
-      async deleteFolder(folderId) {
-        try {
-          await axios.post('/api/delete-folder', {
-            id: folderId,
-            client_id: this.clientId,
-          });
-          this.fetchFoldersAndFiles();
-          this.successMessage = 'Folder deleted successfully!';
-          this.errorMessage = '';
-          this.resetMessage();
-        } catch (error) {
-          this.errorMessage = 'Error deleting folder: ' + (error.response?.data?.message || error.message);
-        }
-      },
-      async deleteFile(folderId, fileName) {
-        try {
-          await axios.post('/api/delete-file', {
-            folderId,
-            fileName,
-            client_id: this.clientId,
-          });
-          this.fetchFoldersAndFiles();
-          this.successMessage = 'File deleted successfully!';
-          this.errorMessage = '';
-          this.resetMessage();
-        } catch (error) {
-          this.errorMessage = 'Error deleting file: ' + (error.response?.data?.message || error.message);
-        }
-      },
-      onFileChange(e, folderId = null) {
-        this.pdfFile = e.target.files[0];
-        this.uploadFile(folderId);
-      },
-      async uploadFile(folderId) {
-  if (!this.pdfFile) {
-    this.errorMessage = 'Please select a file to upload.';
-    return;
-  }
-  let formData = new FormData();
-  formData.append('pdf', this.pdfFile);
-  formData.append('client_id', this.clientId);
-  if (folderId) {
-    formData.append('folder_id', folderId);
-  }
-  try {
-    const response = await axios.post('/api/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      clientId: null,
+      folders: [],
+      files: [],
+      newFolderName: '',
+      openFolder: null,
+      moveDialogVisible: false,
+      fileToMove: '',
+      destinationFolder: '',
+      pdfFile: null,
+      errorMessage: '',
+      successMessage: '',
+    };
+  },
+  mounted() {
+    // Use route params to get clientId
+    this.clientId = this.$route.params.id;
     
-    // If folderId is provided, add the file to the folder's file list
-    if (folderId) {
-      const folder = this.folders.find(folder => folder.id === folderId);
-      if (folder) {
-        folder.files.push({ filename: response.data.filename });
+    if (this.clientId) {
+      this.fetchFoldersAndFiles();
+    } 
+  },
+  watch: {
+    // Watch for route param changes and refetch data if clientId changes
+    '$route.params.id': function(newId) {
+      this.clientId = newId;
+      if (this.clientId) {
+        this.fetchFoldersAndFiles();
       }
-    } else {
-      // Otherwise, add it to the unsorted files
-      this.files.push({ filename: response.data.filename });
     }
-
-    this.successMessage = 'File uploaded successfully!';
-    this.errorMessage = '';
-    this.resetMessage(); // Call to reset messages after timeout
-  } catch (error) {
-    this.errorMessage = 'Error uploading file: ' + (error.response?.data?.message || error.message);
-  }
-}
-,
-      openMoveDialog(fileName) {
-        this.fileToMove = fileName;
-        this.moveDialogVisible = true;
-      },
-      async confirmMove() {
-  if (!this.destinationFolder) {
-    this.errorMessage = 'Please select a destination folder.';
-    return;
-  }
-  try {
-    await axios.post('/api/move-file', {
-      fileName: this.fileToMove,
-      destinationFolder: this.destinationFolder,
-      client_id: this.clientId,
-    });
-
-    // Find the old folder and remove the file from it
-    const oldFolder = this.folders.find(folder => folder.id === this.openFolder.id);
-    if (oldFolder) {
-      oldFolder.files = oldFolder.files.filter(file => file.filename !== this.fileToMove);
-    }
-
-    // Find the destination folder and add the file to it
-    const newFolder = this.folders.find(folder => folder.id === this.destinationFolder);
-    if (newFolder) {
-      newFolder.files.push({ filename: this.fileToMove });
-    }
-
-    this.cancelMove(); // Close the move dialog
-    this.successMessage = 'File moved successfully!';
-    this.errorMessage = '';
-    this.resetMessage(); // Call to reset messages after timeout
-  } catch (error) {
-    this.errorMessage = 'Error moving file: ' + (error.response?.data?.message || error.message);
-  }
-}
-,
-      cancelMove() {
-        this.moveDialogVisible = false;
-        this.fileToMove = '';
-        this.destinationFolder = '';
-      },
-      resetMessage() {
-  setTimeout(() => {
-    this.successMessage = '';
-    this.errorMessage = '';
-  },5000); // Resets messages after 3 seconds
-}
-,
+  },
+  methods: {
+    async fetchFoldersAndFiles() {
+      try {
+        const response = await axios.get(`/api/folders-and-files/${this.clientId}`);
+        this.folders = response.data.folders;
+        this.files = response.data.files;
+        this.errorMessage = '';
+        this.successMessage = '';
+      } catch (error) {
+        this.errorMessage = 'Error fetching folders and files: ' + (error.response?.data?.message || error.message);
+      }
     },
-  };
-  </script>
+    triggerFileInput(isFolder = false) {
+      if (isFolder && this.openFolder) {
+        this.$refs.fileInput.click();
+      } else if (!isFolder) {
+        this.$refs.mainFileInput.click();
+      }
+    },
+    toggleFolder(folder) {
+      this.openFolder = this.openFolder && this.openFolder.id === folder.id ? null : folder;
+    },
+    async createFolder() {
+      if (!this.newFolderName) {
+        this.errorMessage = 'Folder name cannot be empty.';
+        return;
+      }
+      try {
+        await axios.post('/api/create-folder', {
+          name: this.newFolderName,
+          client_id: this.clientId,
+        });
+        this.newFolderName = '';
+        this.fetchFoldersAndFiles();
+        this.successMessage = 'Folder created successfully!';
+        this.errorMessage = '';
+        this.resetMessage();
+      } catch (error) {
+        this.errorMessage = 'Error creating folder: ' + (error.response?.data?.message || error.message);
+      }
+    },
+    async deleteFolder(folderId) {
+      try {
+        await axios.post('/api/delete-folder', {
+          id: folderId,
+          client_id: this.clientId,
+        });
+        this.fetchFoldersAndFiles();
+        this.successMessage = 'Folder deleted successfully!';
+        this.errorMessage = '';
+        this.resetMessage();
+      } catch (error) {
+        this.errorMessage = 'Error deleting folder: ' + (error.response?.data?.message || error.message);
+      }
+    },
+    async deleteFile(folderId, fileName) {
+      try {
+        await axios.post('/api/delete-file', {
+          folderId,
+          fileName,
+          client_id: this.clientId,
+        });
+        this.fetchFoldersAndFiles();
+        this.successMessage = 'File deleted successfully!';
+        this.errorMessage = '';
+        this.resetMessage();
+      } catch (error) {
+        this.errorMessage = 'Error deleting file: ' + (error.response?.data?.message || error.message);
+      }
+    },
+    onFileChange(e, folderId = null) {
+      this.pdfFile = e.target.files[0];
+      this.uploadFile(folderId);
+    },
+    async uploadFile(folderId) {
+      if (!this.pdfFile) {
+        this.errorMessage = 'Please select a file to upload.';
+        return;
+      }
+      let formData = new FormData();
+      formData.append('pdf', this.pdfFile);
+      formData.append('client_id', this.clientId);
+      if (folderId) {
+        formData.append('folder_id', folderId);
+      }
+      try {
+        const response = await axios.post('/api/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        // If folderId is provided, add the file to the folder's file list
+        if (folderId) {
+          const folder = this.folders.find(folder => folder.id === folderId);
+          if (folder) {
+            folder.files.push({ filename: response.data.filename });
+          }
+        } else {
+          // Otherwise, add it to the unsorted files
+          this.files.push({ filename: response.data.filename });
+        }
+
+        this.successMessage = 'File uploaded successfully!';
+        this.errorMessage = '';
+        this.resetMessage(); // Call to reset messages after timeout
+      } catch (error) {
+        this.errorMessage = 'Error uploading file: ' + (error.response?.data?.message || error.message);
+      }
+    },
+    openMoveDialog(fileName) {
+      this.fileToMove = fileName;
+      this.moveDialogVisible = true;
+    },
+    async confirmMove() {
+      if (!this.destinationFolder) {
+        this.errorMessage = 'Please select a destination folder.';
+        return;
+      }
+
+      try {
+        await axios.post('/api/move-file', {
+          fileName: this.fileToMove,
+          destinationFolder: this.destinationFolder,
+          client_id: this.clientId,
+        });
+
+        // If the file is unsorted, remove it from unsorted files
+        if (this.openFolder === null) {
+          this.files = this.files.filter(file => file.filename !== this.fileToMove);
+        } else {
+          // Find the old folder and remove the file from it
+          const oldFolder = this.folders.find(folder => folder.id === this.openFolder.id);
+          if (oldFolder) {
+            oldFolder.files = oldFolder.files.filter(file => file.filename !== this.fileToMove);
+          }
+        }
+
+        // Find the destination folder and add the file to it
+        const newFolder = this.folders.find(folder => folder.id === this.destinationFolder);
+        if (newFolder) {
+          newFolder.files.push({ filename: this.fileToMove });
+        }
+
+        this.cancelMove(); // Close the move dialog
+        this.successMessage = 'File moved successfully!';
+        this.errorMessage = '';
+        this.resetMessage(); // Call to reset messages after timeout
+      } catch (error) {
+        this.errorMessage = 'Error moving file: ' + (error.response?.data?.message || error.message);
+      }
+    },
+    cancelMove() {
+      this.moveDialogVisible = false;
+      this.fileToMove = '';
+      this.destinationFolder = '';
+    },
+    resetMessage() {
+      setTimeout(() => {
+        this.successMessage = '';
+        this.errorMessage = '';
+      }, 5000); // Resets messages after 3 seconds
+    },
+  },
+};
+</script>
+
   
   <style scoped>
   .file-manager {
