@@ -589,10 +589,10 @@
                   
                   <tr>
                     
-              <td class="py-2 px-4 border border-black" rowspan="6">Spiritual</td>
-              <td class="py-2 px-4 border border-black">Has low self-confidence which causes him or her to find meaning only in negative thoughts; always makes self-deprecating comments and statements which devalue his/her own worth</td>
-              <td class="py-2 px-4 border border-black">Sometimes tends to be overly critical of self but manages to overcome feelings of inadequacy and finds meaning in life through other positive activities</td>
-              <td class="py-2 px-4 border border-black">Recognizes and accepts his/her limitations but strives to improve self and find meaning in life through positive self-affirmation and involvement in community/ religious activities</td>
+                    <td class="py-2 px-4 border border-black" rowspan="6">Spiritual</td>
+              <td class="py-2 px-4 border border-black">Blames God for his or her crises or failures in life which results to lingering hopelessness and other negative emotions</td>
+              <td class="py-2 px-4 border border-black">Does not blame God for his or her crises and failures in life but doubts whether God cares for him or her at all</td>
+              <td class="py-2 px-4 border border-black">Recognizes that God cares for him or her and is ready to provide needed strength to cope with the crisis and failures in life</td>
               <td class="py-2 px-4 border border-black">
                 <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_raw_score1" :readonly="!editMode" @input="validateRawScore('spiritual_raw_score1')">
               </td>

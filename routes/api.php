@@ -29,6 +29,8 @@ use App\Http\Controllers\PerformanceObservationReportController;
 use App\Http\Controllers\TrainingNeedsAssessmentController;
 use App\Http\Controllers\LearnerAcademicBehavioralFormController;
 use App\Http\Controllers\LearnerAssessmentFormController;
+use App\Http\Controllers\FileController;
+
 
 Route::post('/check-email', [UserController::class, 'checkEmail']);
 Route::post('/validate-password', [UserController::class, 'validatePassword']);
@@ -206,3 +208,13 @@ Route::post('/learner-academic-behavioral-forms', [LearnerAcademicBehavioralForm
 
 Route::get('/learner-assessment-forms/{client_id}', [LearnerAssessmentFormController::class, 'show']);
 Route::post('/learner-assessment-forms', [LearnerAssessmentFormController::class, 'storeOrUpdate']);
+
+
+// File and Folder Operations with clientId
+Route::get('/folders-and-files/{clientId}', [FileController::class, 'index']);
+Route::post('/create-folder', [FileController::class, 'createFolder']);
+Route::post('/upload', [FileController::class, 'uploadFile']);
+Route::post('/move-file', [FileController::class, 'moveFile']);
+Route::post('/delete-folder', [FileController::class, 'deleteFolder']);
+Route::post('/delete-file', [FileController::class, 'deleteFile']);
+
