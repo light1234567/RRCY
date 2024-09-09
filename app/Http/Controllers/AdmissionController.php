@@ -52,6 +52,19 @@ class AdmissionController extends Controller
             $validated['client']['suffix'] = '';
         }
 
+        // Check if the client with the same first name, last name, and date admitted exists
+        $clientExists = Client::where('first_name', $validated['client']['first_name'])
+            ->where('last_name', $validated['client']['last_name'])
+            ->whereHas('admissions', function ($query) use ($validated) {
+                $query->where('date_admitted', $validated['admission']['date_admitted']);
+            })
+            ->exists();
+
+        if ($clientExists) {
+            // If a client with the same details exists, return an error response
+            return response()->json(['error' => 'Client with the same first name, last name, and date admitted already exists.'], 400);
+        }
+
         try {
             // Create the client
             $client = Client::create($validated['client']);

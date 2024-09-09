@@ -1,11 +1,11 @@
 <template>
   <AppLayout title="New Client">
     <template #header>
-  <div class="flex items-center">
-    <i class="fa fa-user-plus ml-12 text-xl mr-2"></i> <!-- FontAwesome icon -->
-    <h1 class="ml-2 text-lg font-bold text-red-800">Admission Form/New Client</h1>
-  </div>
-</template>
+      <div class="flex items-center">
+        <i class="fa fa-user-plus ml-12 text-xl mr-2"></i>
+        <h1 class="ml-2 text-lg font-bold text-red-800">Admission Form/New Client</h1>
+      </div>
+    </template>
 
     <div class="">
       <h1 class="text-lg p-1 text-customBlue ml-10 font-bold mb-4"></h1>
@@ -69,23 +69,22 @@
               </div>
             </div>
 
-
-          <!-- Date of Birth, Place of Birth, Sex, and Child Status -->
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
-            <div class="mb-2">
-              <label for="clientDob" class="block mb-1 text-sm">
-                Date of Birth: <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="date"
-                id="clientDob"
-                v-model="form.client.date_of_birth"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-                :max="form.client.maxDateOfBirth"
-                :min="form.client.minDateOfBirth"
-                required
-              />
-            </div>
+            <!-- Date of Birth, Place of Birth, Sex, and Child Status -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
+              <div class="mb-2">
+                <label for="clientDob" class="block mb-1 text-sm">
+                  Date of Birth: <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="clientDob"
+                  v-model="form.client.date_of_birth"
+                  class="w-full px-2 py-1 border rounded-md text-sm"
+                  :max="form.client.maxDateOfBirth"
+                  :min="form.client.minDateOfBirth"
+                  required
+                />
+              </div>
               <div class="mb-2">
                 <label for="clientPlaceOfBirth" class="block mb-1 text-sm">
                   Place of Birth: <span class="text-red-500">*</span>
@@ -100,7 +99,6 @@
                 />
               </div>
 
-              
               <div class="mb-2">
                 <label for="child_status" class="block mb-1 text-sm">
                   Child Status <span class="text-red-500">*</span>
@@ -132,7 +130,6 @@
                 />
               </div>
             </div>
-
 
             <!-- Address Breakdown with Cascading Dropdowns -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
@@ -279,7 +276,6 @@
          <fieldset class="border shadow-md bg-white p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">ADMISSION DETAILS</legend>
          
-
           <div class="grid grid-cols-1 gap-2">
             <div class="mb-2 col-span-1">
               <label for="committingCourt" class="block mb-1 text-sm">
@@ -382,7 +378,6 @@
             </div>
           </div>
         </fieldset>
-
 
         <!-- Documents Submitted -->
         <fieldset class="border bg-white shadow-md p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
@@ -514,8 +509,9 @@
     </div>
   </AppLayout>
 </template>
+
 <script setup>
-import { ref, watch, onMounted, computed } from 'vue'; // Added necessary imports
+import { ref, watch, onMounted, computed } from 'vue';
 import axios from 'axios';
 import NotificationModal from '@/Components/NotificationModal.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
@@ -616,27 +612,39 @@ const onCityChange = async () => {
 };
 
 // Save form data
+// Function to save the form data
 const saveForm = async () => {
-  console.log('Form Data:', form.value);
-  
   try {
+    // Submit the form data to the backend
     const response = await axios.post('/api/save-admission', form.value);
+
+    // If successful, show success modal
     modalType.value = 'success';
     modalMessage.value = 'Form saved successfully!';
     showModal.value = true;
-    resetForm(); // Reset the form after successful save
+
+    // Optionally reset form if needed
+    resetForm();
   } catch (error) {
-    if (error.response && error.response.data && error.response.data.errors) {
-      console.error('Validation errors:', error.response.data.errors);
+    // Handle error based on response
+    if (error.response && error.response.status === 400) {
+      if (error.response.data.error === 'Client with the same first name, last name, and date admitted already exists.') {
+        // Specific error handling for existing CICL
+        modalType.value = 'error';
+        modalMessage.value = 'CICL is already existed!';
+      } else {
+        // General error handling for 400 response
+        modalType.value = 'error';
+        modalMessage.value = 'An error occurred while saving the form. Please try again.';
+      }
     } else {
-      console.error('Error saving form:', error);
+      // General error handling
+      modalType.value = 'error';
+      modalMessage.value = 'An unexpected error occurred. Please try again.';
     }
-    modalType.value = 'error';
-    modalMessage.value = 'Failed to save form. Please try again.';
     showModal.value = true;
   }
 };
-
 // Set the min and max dates for the date of birth
 onMounted(() => {
   const today = new Date();
