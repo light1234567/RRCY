@@ -15,7 +15,7 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Arimo', ...defaultTheme.fontFamily.sans],
+                sans: ['Arial', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 'customBlue': 'rgb(6, 18, 56)', // Define your custom RGB color

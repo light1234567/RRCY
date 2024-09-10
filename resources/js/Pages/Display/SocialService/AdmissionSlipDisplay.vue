@@ -4,216 +4,194 @@
       Export to PDF
     </button>
   
-    <div ref="pdfContent" class="p-6  shadow-xl rounded-lg max-w-3xl mx-auto my-8 ">
+    <div ref="pdfContent" class="p-6 border border-gray-400 shadow-xs rounded-lg max-w-3xl mx-auto my-8 ">
       <div class=" relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="ml-4 h-32 w-64 relative z-10">
-        <p class="text-xs mr-6">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="text-[10.7px] mb-10 font mr-6" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+
       </div>
 
-      <h1 class="text-2xl font-bold mb-2 text-center text-black">ADMISSION SLIP</h1>
+      <h1 class="text-[21.33px] font-bold mb-2 text-center text-black">ADMISSION SLIP</h1>
 
       <div v-if="clients.length > 0" v-for="client in clients" :key="client.id" class="mb-12 p-6 rounded-lg text-xs">
         <div class="flex items-center">
-          <div class="flex-grow flex items-center mr-2">
-            <label class=" font-semibold text-gray-700 mr-2 flex items-center h-full">Name:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 w-full text-xs" :value="client.first_name + ' ' + client.middle_name + ' ' + client.last_name" readonly>
+          <div class="flex-grow text-[15px] flex items-center mr-2">
+            <label class="mb-3  text-black   mr-2 flex items-center h-full">Name:</label>
+            <input type="text" class="underline-input  w-full" :value="client.first_name + ' ' + client.middle_name + ' ' + client.last_name" readonly>
           </div>
-          <div class="flex items-center w-1/4">
-            <label class="block font-semibold text-gray-700 mr-2 flex items-center h-full">Sex:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 w-full  text-xs" :value="client.sex" readonly>
+          <div class="flex text-[15px]  items-center w-1/4">
+            <label class="mb-3   text-black mr-2 flex items-center h-full p-0">Sex:</label>
+            <input type="text" class="underline-input bg-transparent mt-1 w-full" :value="client.sex" readonly>
           </div>
-          <div class="flex items-center w-1/4">
-            <label class="block font-semibold text-gray-700 mr-2">Religion:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 w-full mb-6 text-xs" :value="client.religion" readonly>
+          <div class="flex text-[15px] items-center w-1/4">
+            <label class="mb-3 block ml-2    text-black mr-2">Religion:</label>
+            <input type="text" class="underline-input bg-transparent mt-1 w-full mb-6 " :value="client.religion" readonly>
           </div>  
         </div>
 
         <div class="flex items-center">
-          <div class="flex-grow flex items-center mr-2">
-            <label class="block font-semibold text-gray-700 mr-2">Address:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 w-full mb-6 text-xs" :value="client.province + ', ' + client.city + ', ' + client.barangay + ', ' + client.street" readonly>
+          <div class="flex-grow flex text-[15px] items-center mr-2">
+            <label class="mb-3 block     text-black mr-2">Address:</label>
+            <input type="text" class="underline-input bg-transparent w-full mb-24" :value="client.province + ', ' + client.city + ', ' + client.barangay + ', ' + client.street" readonly>
           </div>
         </div>
 
-        <div class="flex items-center">
-          <label class="block font-semibold text-gray-700 mr-2">Date/Place of Birth:</label>
+        <div class="text-[15px] flex items-center">
+          <label class="mb-3 block    text-black mr-2 whitespace-nowrap">Date/Place of Birth:</label>
           <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.date_of_birth + ' / ' + client.place_of_birth" readonly>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
-          <div class="flex items-center">
-            <label class="block font-semibold text-gray-700 mr-2">Committing Court:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.committing_court" readonly>
+          <div class="flex items-center text-[15px] ">
+              <label class="mb-3    text-black mr-2 whitespace-nowrap">Committing Court:</label>
+              <input type="text" class="underline-input bg-transparent text-xs w-full" :value="client.admissions[0]?.committing_court" readonly>
           </div>
-          <div class="flex items-center">
-            <label class="block font-semibold text-gray-700 mr-2">Crim. Case #:</label>
+          <div class="text-[15px] flex items-center">
+            <label class="mb-3 block    text-black ml-2  mr-2 whitespace-nowrap">Crim. Case #:</label>
             <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.crim_case_number" readonly>
           </div>
         </div>
 
         <div class="flex items-center">
-          <div class="flex items-center w-1/2">
-            <label class="block font-semibold text-gray-700 mr-2">Offense Committed:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.offense_committed" readonly>
-          </div>
-          <div class="flex items-center w-1/2">
-            <label class="block font-semibold text-gray-700 ml-4 mr-2">Date admitted to Center:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.date_admitted" readonly>
-          </div>
+        <!-- Offense Committed Section -->
+        <div class="text-[15px] flex items-center w-1/2">
+          <label class="mb-3    text-black mr-2 whitespace-nowrap">Offense Committed:</label>
+          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.offense_committed" readonly>
         </div>
 
+        <!-- Date Admitted Section -->
+        <div class="text-[15px] flex items-center w-1/2">
+          <label class="mb-3    text-black mr-2 whitespace-nowrap ml-4">Date admitted to Center:</label>
+          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.date_admitted" readonly>
+        </div>
+      </div>
+
         <div class="flex items-center">
-          <div class="flex items-center w-1/2">
-            <label class="block font-semibold text-gray-700 mr-2">No. of Days in Jail:</label>
+          <div class="flex items-center text-[15px] w-1/2">
+            <label class="mb-3 block    text-black whitespace-nowrap mr-2">No. of Days in Jail:</label>
             <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.days_in_jail" readonly>
           </div>
-          <div class="flex items-center w-1/2">
-            <label class="block font-semibold text-gray-700 mr-2 ml-4">No. of Days in Detention Center:</label>
+          <div class="flex items-center text-[15px] w-1/2">
+            <label class="mb-3 block    text-black ml-4 whitespace-nowrap mr-2">No. of Days in Detention Center:</label>
             <input type="text" class="underline-input w-1/4 bg-transparent mt-1  mb-6 flex-grow text-xs" :value="client.admissions[0]?.days_in_detention_center" readonly>
           </div>
         </div>
-
         <div class="mb-2">
-          <label class="mt-2 block font-bold text-gray-700">DISTINGUISHING MARKS:</label>
-          <div class="grid grid-cols-2 gap-4 pl-4">
-            <div class="flex items-center">
-              <label class="block font-semibold text-gray-700 mr-4">a. Tattoo/Scars:</label>
-              <input type="text" class="underline-input bg-transparent -mt-8 flex-grow text-xs" :value="client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars" readonly>
+          <label class="mt-2 text-[15px] mb-4 block font-bold text-black">DISTINGUISHING MARKS:</label>
+          <div class="flex flex-wrap items-center gap-x-8">
+            <!-- Tattoo/Scars -->
+            <div class="flex items-center text-[15px]">
+              <label class="mb-3 block    text-black mr-2">a. Tattoo/Scars:</label>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars" readonly>
             </div>
-            <div class="flex items-center">
-              <label class="block font-semibold text-gray-700 mr-4">b. Height:</label>
-              <input type="text" class="underline-input bg-transparent  flex-grow text-xs" :value="client.admissions[0]?.distinguishing_marks[0]?.height" readonly>
+
+            <!-- Height -->
+            <div class="flex items-center text-[15px]">
+              <label class="mb-3 block    text-black mr-2">b. Height:</label>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.height" readonly>
             </div>
-            <div class="flex -mt-4 items-center">
-              <label class="block font-semibold text-gray-700 mr-4">c. Weight:</label>
-              <input type="text" class="underline-input bg-transparent mt-8 flex-grow text-xs" :value="client.admissions[0]?.distinguishing_marks[0]?.weight" readonly>
+
+            <!-- Weight -->
+            <div class="flex items-center text-[15px]">
+              <label class="mb-3 block    text-black mr-2">c. Weight:</label>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.weight" readonly>
             </div>
-            <div class="flex -mt-4 items-center">
-              <label class="block font-semibold text-gray-700 mr-4">d. Colour of Eye:</label>
-              <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye" readonly>
+
+            <!-- Colour of Eye -->
+            <div class="flex items-center text-[15px]">
+              <label class="mb-3    text-black mr-2">d. Colour of Eye:</label>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye" readonly>
             </div>
-            <div class="flex -mt-4 items-center">
-              <label class="block font-semibold text-gray-700 mr-4">e. Skin:</label>
-              <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.distinguishing_marks[0]?.skin_colour" readonly>
+
+            <!-- Skin -->
+            <div class="flex items-center text-[15px]">
+              <label class="mb-3    text-black mr-2">e. Skin:</label>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.skin_colour" readonly>
             </div>
           </div>
         </div>
 
-        <!-- Put on Documents Submitted -->
-<div class="mb-4">
-  <label class="block mb-2 font-semibold text-gray-700">Put on Documents Submitted:</label>
-  <div class="pl-4">
-    <div class="flex flex-wrap mb-2">
-      <label class="block font-semibold text-gray-700 mr-48">
-        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'SCSR')" disabled> SCSR
-      </label>
-      <label class="block font-semibold text-gray-700 mr-40">
-        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'Court Order')" disabled> Court Order
-      </label>
-      <label class="block font-semibold text-gray-700">
-        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'Medical Certificates')" disabled> Medical Certificates
-      </label>
-    </div>
-    <div class="flex flex-wrap">
-      <label class="block font-semibold text-gray-700 mr-24">
-        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'Consent from Parents')" disabled> Consent from Parents
-      </label>
-      <label class="block font-semibold text-gray-700 mr-36">
-        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'School Records')" disabled> School Records
-      </label>
-      <label class="block font-semibold text-gray-700">
-        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'Others')" disabled> Others
-      </label>
-      <span v-if="getOtherDocumentName(client)" class="block font-semibold text-gray-700 ml-2">
-        ({{ getOtherDocumentName(client) }})
-      </span>
-    </div>
-  </div>
-</div>
-
-
 
         <div class="mb-4">
-          <label class="block font-semibold mb-2 text-gray-700">General impression upon admission:</label>
-          <textarea class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-xs leading-relaxed" style="line-height: 1.5;" :value="client.admissions[0]?.general_impression" readonly></textarea>
+          <label class="text-[15px] block mb-2  font-semibold  text-black">Put on Documents Submitted:</label>
+          <div class="pl-4">
+            <div class="text-[15px] flex flex-wrap mb-2 gap-x-20">
+              <!-- First Row -->
+              <label class="block    text-black">
+                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[0]?.submitted" disabled> SCSR
+              </label>
+              <label class="ml-20 block    text-black">
+                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[1]?.submitted" disabled> Court Order
+              </label>
+              <label class="ml-0.5block    text-black">
+                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[2]?.submitted" disabled> Medical Certificates
+              </label>
+            </div>
+            <div class="text-[15px] flex flex-wrap gap-x-14">
+              <!-- Second Row -->
+              <label class="block    text-black">
+                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[3]?.submitted" disabled> Consent from Parents
+              </label>
+              <label class="block    text-black">
+                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[4]?.submitted" disabled> School Records
+              </label>
+              <label class="block    text-black">
+                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[5]?.submitted" disabled> Others
+              </label>
+            </div>
+          </div>
         </div>
 
-        <div class="mb-4">
-          <label class="block font-semibold mb-2 text-gray-700">Action Taken:</label>
-          <textarea class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-xs leading-relaxed" style="line-height: 1.5;" :value="client.admissions[0]?.action_taken" readonly></textarea>
+
+        <div class="text-[15px] mb-4">
+          <label class="block font-semibold  mb-2 text-black">General impression upon admission:</label>
+          <textarea class="mt-1 block w-full border-gray-300 rounded-md shadow-sm leading-relaxed" style="line-height: 1.5;" :value="client.admissions[0]?.general_impression" readonly></textarea>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-4">
-  <div>
-    <input 
-      type="text" 
-      class="underline-input mt-1 w-full text-xs" 
-      :value="client.admissions[0]?.referring_party_name" 
-      readonly
-    >
-    <label class="block font-semibold text-gray-700">Name & Signature of Referring Party</label>
-  </div>
-  <div>
-    <input 
-      type="text" 
-      class="underline-input mt-1 w-full text-xs" 
-      :value="client.admissions[0]?.admitting_officer" 
-      readonly
-    >
-    <label class="block font-semibold text-gray-700">Admitting Officer</label>
-  </div>
-</div>
+        <div class="text-[15px] mb-4">
+          <label class="block    mb-2 text-black">Action Taken:</label>
+          <textarea class="text-[15px] mt-1 block w-full border-gray-300 rounded-md shadow-sm text-xs leading-relaxed" style="line-height: 1.5;" :value="client.admissions[0]?.action_taken" readonly></textarea>
+        </div>
 
-<div class="grid grid-cols-2 gap-4 mb-4">
-  <div>
-    <input 
-      type="text" 
-      class="underline-input mt-1 w-full text-xs" 
-      :value="client.admissions[0]?.designation_id_contact" 
-      readonly
-    >
-    <label class="block font-semibold text-gray-700">Designation / ID No. / Contact #</label>
-  </div>
-  <div>
-    <input 
-      type="text" 
-      class="underline-input mt-1 w-full text-xs" 
-      :value="client.admissions[0]?.designation" 
-      readonly
-    >
-    <label class="block font-semibold text-gray-700">Designation</label>
-  </div>
-</div>
+        <div class="text-[15px] grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
+            <label class="block    text-black">Name & Signature of Referring Party</label>
+          </div>
+          <div>
+            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
+            <label class="block    text-black">Admitting Officer</label>
+          </div>
+        </div>
 
-<div class="grid grid-cols-2 gap-4 mb-4">
-  <div>
-    <input 
-      type="text" 
-      class="underline-input mt-1 w-full text-xs" 
-      :value="client.admissions[0]?.office_address" 
-      readonly
-    >
-    <label class="block font-semibold text-gray-700">Complete Address/Office Address</label>
-  </div>
-  <div>
-    <input 
-      type="text" 
-      class="underline-input mt-1 w-full text-xs" 
-      :value="formatDateTime(client.admissions[0]?.date_time)" 
-      readonly
-    >
-    <label class="block font-semibold text-gray-700">Date/Time</label>
-  </div>
-</div>
+        <div class="text-[15px] grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
+            <label class="block    text-black">Designation / ID No. / Contact #</label>
+          </div>
+          <div>
+            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
+            <label class="block    text-black">Designation</label>
+          </div>
+        </div>
 
+        <div class="text-[15px] grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
+            <label class="block    text-black">Complete Address/Office Address</label>
+          </div>
+          <div>
+            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
+            <label class="block    text-black">Date/Time</label>
+          </div>
+        </div>
 
-        <!-- NOTED BY -->
-<div class="border-gray-300 pt-4 text-center text-xs">
-  <p class="font-semibold mb-4 text-[12px]">Noted By:</p>
-  <p class="font-bold text-[12px]">{{ client.admissions[0]?.noted_by || 'No noted by information available' }}</p>
-  <p class="text-xs">Center Head/SWO IV</p>
-</div>
-
+        <!--NOTED BY-->
+        <div class="text-[15px] border-gray-300 pt-4 text-center">
+          <p class="   mb-4 mt-4 ">Noted By:</p>
+          <p class="font-bold ">ANGELIC B. PAÑA, RSW, MSSW</p>
+          <p class="">Center Head/SWO IV</p>
+        </div>
       </div>
       <div v-else>
         <p>Loading data...</p>
@@ -238,8 +216,10 @@
 <script>
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
+import '../../../fonts/arial-normal.js'; 
+import '../../../fonts/times-normal.js'; 
 
-export default {
+export default {  
   name: 'ClientList',
   data() {
     return {
@@ -258,36 +238,6 @@ export default {
     },
   },
   methods: {
-
-    formatDateTime(dateTime) {
-      if (!dateTime) return '';
-      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-      return new Date(dateTime).toLocaleDateString('en-US', options);
-    },
-
-// Check if a document has been submitted
-isDocumentSubmitted(client, documentName) {
-      const documents = client.admissions[0]?.documents[0]?.document_name.split(', ');
-      if (!documents) return false;
-
-      // Check if the document exists in the list
-      return documents.includes(documentName);
-    },
-
-    // Get the specific "Others" document name
-    getOtherDocumentName(client) {
-      const documents = client.admissions[0]?.documents[0]?.document_name.split(', ');
-      if (!documents) return null;
-
-      // Find the "Others" document and return the name if available
-      const othersIndex = documents.indexOf('Others');
-      if (othersIndex === -1 && documents.length > othersIndex + 1) {
-        return documents[documents.length - 1]; // Return the last item if it's "Others"
-      }
-
-      return null; // No "Others" document found
-    },
-
     async fetchClientsData() {
       try {
         const response = await axios.get(`/api/clients-data/${this.id}`);
@@ -299,28 +249,42 @@ isDocumentSubmitted(client, documentName) {
         console.error('Error fetching client data:', error);
       }
     },
-    async exportToPdf() {
+  async exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
+  // Add and set Times New Roman font
+  pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic'); // Loads the Times New Roman italic font
+  pdf.setFont('TimesNewRoman', 'italic'); // Sets Times New Roman as the italic font
+
   // Set default font properties
-  pdf.setFont('helvetica', 'normal'); // Use 'helvetica' which is similar to Arial
   pdf.setFontSize(11);
   pdf.setLineHeightFactor(1.5);
 
   const imgData = '/images/headerlogo2.png'; // Ensure this is accessible or use base64
-  pdf.addImage(imgData, 'PNG', 15, 10, 75, 35); // Increase width to 100 and height to 50
+  pdf.addImage(imgData, 'PNG', 15, 10, 75, 35); // Adjust the size as needed
 
   // Add the header below the image
-  pdf.setFontSize(10); // Set the font size to 10
-  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 30);
+  pdf.setFontSize(8); 
+  pdf.setFont('italic'); // Set font to italic
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 152, 24);
 
-  // Add the title
-  pdf.setFont('helvetica', 'bold'); // Set font to Arial and make it bold
+  // Load and set Arial font
+  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+  pdf.setFont('Arial', 'normal'); // Set Arial as the default font  
   pdf.setFontSize(18);
-  pdf.text('ADMISSION SLIP', 108, 60, null, null, 'center');
+
+  
+  pdf.setTextColor(0, 0, 0); // RGB values for black
+
+  // Mimic bold by drawing the text multiple times with slight offsets
+  pdf.text('ADMISSION SLIP', 108, 60, null, null, 'center'); // First pass
+  pdf.text('ADMISSION SLIP', 108.2, 60, null, null, 'center'); // Slight offset
+  pdf.text('ADMISSION SLIP', 107.8, 60, null, null, 'center'); // Slight offset
 
 
-  pdf.setFont('helvetica', 'normal');
+
+  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+  pdf.setFont('Arial', 'normal'); // Set Arial as the default font
   pdf.setFontSize(11); // Reset font size to 12 for content
 
   // Loop through clients and add their data
@@ -330,48 +294,48 @@ isDocumentSubmitted(client, documentName) {
     // Add client details with margins and underline
     pdf.text(`Name:`, 20, offset);
     pdf.text(`${client.first_name} ${client.middle_name} ${client.last_name}`, 35, offset);
-    pdf.line(35, offset + 2, 95, offset + 2); // Draw underline from start to end of data
+    pdf.line(35, offset + 1, 95, offset + 1); // Draw underline from start to end of data
 
     pdf.text(`Sex:`, 100, offset);
     pdf.text(`${client.sex}`, 110, offset);
-    pdf.line(110, offset + 2, 140, offset + 2); // Draw underline for sex
+    pdf.line(110, offset + 1, 140, offset + 1); // Draw underline for sex
 
     pdf.text(`Religion:`, 145, offset  );
-    pdf.text(`${client.religion}`, 165, offset );
-    pdf.line(165, offset + 2, 200, offset + 2); // Draw underline for religion
+    pdf.text(`${client.religion}`, 162, offset );
+    pdf.line(162, offset + 1, 200, offset + 1); // Draw underline for religion
 
     pdf.text(`Address:`, 20, offset + 10);
     pdf.text(`${client.province}, ${client.city}, ${client.barangay}, ${client.street}`, 40, offset + 10);
-    pdf.line(40, offset + 12, 200, offset + 12); // Draw underline for address
+    pdf.line(40, offset + 11, 200, offset + 11); // Draw underline for address
 
     pdf.text(`Date/Place of Birth:`, 20, offset + 20);
-    pdf.text(`${client.date_of_birth} / ${client.place_of_birth}`, 60, offset + 20);
-    pdf.line(60, offset + 22, 200, offset + 22); // Draw underline for birth details
+    pdf.text(`${client.date_of_birth} / ${client.place_of_birth}`, 58, offset + 20);
+    pdf.line(58, offset + 21, 200, offset + 21); // Draw underline for birth details
 
    
     pdf.text(`Committing Court:`, 20, offset + 30);
-    pdf.text(`${client.admissions[0]?.committing_court}`, 60, offset + 30);
-    pdf.line(60, offset + 32, 110, offset + 32); // Draw underline for committing court
+    pdf.text(`${client.admissions[0]?.committing_court}`, 56, offset + 30);
+    pdf.line(56, offset + 31, 110, offset + 31); // Draw underline for committing court
 
     pdf.text(`Crim. Case #:`, 115, offset + 30);
     pdf.text(`${client.admissions[0]?.crim_case_number}`, 143, offset + 30);
-    pdf.line(143, offset + 32, 200, offset + 32); // Draw underline for criminal case number
+    pdf.line(143, offset + 31, 200, offset + 31); // Draw underline for criminal case number
 
     pdf.text(`Offense Committed:`, 20, offset + 40);
-    pdf.text(`${client.admissions[0]?.offense_committed}`, 60, offset + 40);
-    pdf.line(60, offset + 42, 110, offset + 42); // Draw underline for offense
+    pdf.text(`${client.admissions[0]?.offense_committed}`, 58, offset + 40);
+    pdf.line(58, offset + 41, 110, offset + 41); // Draw underline for offense
 
     pdf.text(`Date admitted to Center:`, 115, offset + 40);
     pdf.text(`${client.admissions[0]?.date_admitted}`, 160, offset + 40);
-    pdf.line(160, offset + 42, 200, offset + 42); // Draw underline for date admitted
+    pdf.line(160, offset + 41, 200, offset + 41); // Draw underline for date admitted
 
     pdf.text(`No. of Days in Jail:`, 20, offset + 50);
-    pdf.text(`${client.admissions[0]?.days_in_jail}`, 60, offset + 50);
-    pdf.line(60, offset + 52, 110, offset + 52); // Draw underline for days in jail
+    pdf.text(`${client.admissions[0]?.days_in_jail}`, 57, offset + 50);
+    pdf.line(57, offset + 51, 110, offset + 51); // Draw underline for days in jail
 
     pdf.text(`No. of Days in Detention Center:`, 115, offset + 50);
     pdf.text(`${client.admissions[0]?.days_in_detention_center}`, 175, offset + 50);
-    pdf.line(175, offset + 52, 200, offset + 52); // Draw underline for days in detention center
+    pdf.line(175, offset + 51, 200, offset + 51); // Draw underline for days in detention center
 
     pdf.setFont('helvetica', 'bold'); // Set font to Arial and make it bold
     pdf.text(`Distinguishing Marks:`, 20, offset + 60);
@@ -379,24 +343,24 @@ isDocumentSubmitted(client, documentName) {
 
 
     pdf.text(`a. Tattoo/Scars:`, 20, offset + 70);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars}`, 60, offset + 70);
-    pdf.line(60, offset + 72, 110, offset + 72); // Draw underline for tattoo/scars
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars}`, 51, offset + 70);
+    pdf.line(51, offset + 71, 110, offset + 71); // Draw underline for tattoo/scars
 
     pdf.text(`b. Height:`, 115, offset + 70);
     pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.height}`, 138, offset + 70);
-    pdf.line(138, offset + 72, 200, offset + 72); // Draw underline for height
+    pdf.line(138, offset + 71, 200, offset + 71); // Draw underline for height
 
     pdf.text(`c. Weight:`, 20, offset + 80);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight}`, 60, offset + 80);
-    pdf.line(60, offset + 82, 110, offset + 82); // Draw underline for weight
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight}`, 40, offset + 80);
+    pdf.line(40, offset + 81, 110, offset + 81); // Draw underline for weight
 
     pdf.text(`d. Colour of Eye:`, 115, offset + 80);
     pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye}`, 150, offset + 80);
-    pdf.line(150, offset + 82, 200, offset + 82); // Draw underline for eye color
+    pdf.line(150, offset + 81, 200, offset + 81); // Draw underline for eye color
 
     pdf.text(`e. Skin:`, 20, offset + 90);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour}`, 60, offset + 90);
-    pdf.line(60, offset + 92, 110, offset + 92); // Draw underline for skin color
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour}`, 36, offset + 90);
+    pdf.line(36, offset + 91, 110, offset + 91); // Draw underline for skin color
 
     // Add the "Put on Documents Submitted" section with checkboxes
     pdf.setFont('helvetica', 'bold'); // Set font to Arial and make it bold
@@ -455,8 +419,8 @@ isDocumentSubmitted(client, documentName) {
       }
 
       // Others
-      pdf.rect(180, offset + 116, 4, 4); // Draw a square for the checkbox
-      pdf.text(`Others`, 188, offset + 120); // Position the label text next to the checkbox
+      pdf.rect(157, offset + 116, 4, 4); // Draw a square for the checkbox
+      pdf.text(`Others`, 165, offset + 120); // Position the label text next to the checkbox
       if (client.admissions[0]?.documents[5]?.submitted) {
           fillCheckboxWithCheck(pdf, 180, offset + 116); // Fill the checkbox and draw the checkmark
       }
@@ -466,14 +430,14 @@ isDocumentSubmitted(client, documentName) {
     pdf.setFont('helvetica', 'normal'); // Reset font to normal for the following text
 
     pdf.text(client.admissions[0]?.general_impression || '', 20, offset + 140, { maxWidth: 170 });
-    pdf.line(20, offset + 142, 200, offset + 142); // Draw underline for general impression
+    pdf.line(20, offset + 141, 200, offset + 141); // Draw underline for general impression
 
     pdf.setFont('helvetica', 'bold'); // Set font to Arial and make it bold
     pdf.text(`Action Taken:`, 20, offset + 150);
     pdf.setFont('helvetica', 'normal'); // Reset font to normal for the following text
 
     pdf.text(client.admissions[0]?.action_taken || '', 20, offset + 160, { maxWidth: 170 });
-    pdf.line(20, offset + 162, 200, offset + 162); // Draw underline for action taken
+    pdf.line(20, offset + 161, 200, offset + 161); // Draw underline for action taken
 
     if (index < this.clients.length - 1) {
       pdf.addPage(); // Add a new page for the next client if more clients exist
@@ -527,15 +491,15 @@ isDocumentSubmitted(client, documentName) {
 
     offset += 30; // Move down for footer
 
-    // Footer
-    pdf.setFont('Times');
-    pdf.setFontSize(10);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('PAGE 1 of 1', 108, offset + 3, null, null, 'center');
-    pdf.setFont('helvetica', 'normal');
+    // Add and set Times New Roman font
+    pdf.setFont('TimesNewRoman', 'bold'); // Use the normal font but increase size for bold effect
+pdf.setFontSize(12); // Increase the font size to simulate bold
+pdf.text('PAGE 1 of 1', 108, offset + 3, null, null, 'center');
     pdf.setLineWidth(0.5);
+    pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic'); // Loads the Times New Roman italic font
+    pdf.setFont('TimesNewRoman', 'italic'); // Sets Times New Roman as the italic font
     pdf.line(20, offset + 5, 210 - 30, offset + 5); // Draw a line
-    pdf.setFontSize(8);
+    pdf.setFontSize(9);
     pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
     pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
 
@@ -557,11 +521,26 @@ isDocumentSubmitted(client, documentName) {
   border: none;
   border-bottom:  1px solid black;
   padding: 0;
-  margin: 0;
-  line-height: 2.5;
+  width: 100%;
+  margin-bottom: 14px;
+  line-height: 0;
+  box-sizing: border-box;
   vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
   font-size: inherit; /* Ensure consistent font size */
 }
+.underline-input1 {
+  border: none;
+  border-bottom:  1px solid black;
+  padding: 0;
+  margin-bottom: 14px;
+  line-height: 0;
+  box-sizing: border-box;
+  vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
+  font-size: inherit; /* Ensure consistent font size */
+}
+
+
+
 /* Ensure the form fits within Legal size dimensions for printing */
 @media print {
   .max-w-7xl {

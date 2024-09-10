@@ -1,61 +1,63 @@
 <template>
   <div class="p-8 bg-white max-w-screen-md mx-auto border border-gray-300 rounded-lg shadow-lg">
-    <!-- Edit and Save Buttons -->
-    <div class="flex justify-end space-x-4 mb-4">
-      <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-        <span v-if="!editMode">Edit</span>
-        <span v-else>Cancel</span>
-      </button>
-      <button v-if="editMode" @click="saveData" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-        Save
-      </button>
-    </div>
-
     <!-- Header Section -->
     <div class="text-center border-b pb-2 mb-4">
       <div class="flex justify-between items-center">
-        <img src="path-to-your-logo.png" alt="DSWD Logo" class="h-12">
-        <div>
-          <h1 class="text-lg font-bold">REGIONAL REHABILITATION CENTER FOR YOUTH</h1>
-          <h2 class="text-md">RRCY/FIELD OFFICE XI</h2>
-          <h3 class="text-sm">DSWD-GF-010 | REV 01 | 17 AUG 2022</h3>
-        </div>
-        <img src="path-to-your-logo.png" alt="DSWD Logo" class="h-12">
+  <!-- Stretch the image -->
+  <img src="/images/headerlogo3.png" alt="DSWD Logo" class="h-20 w-auto"> 
+  <div class="text-right">
+    <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
+    <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
+    <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
+    <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+  </div>
       </div>
       <h1 class="text-xl font-bold mt-2">NURSING CARE SERVICE</h1>
     </div>
 
-    <!-- Client Information Section -->
-    <div class="grid grid-cols-3 gap-4 mb-4">
-      <div class="col-span-1">
-        <label class="block font-bold">CLIENT'S NAME:</label>
-        <input type="text" v-model="form.client_name" class="w-full border p-1" readonly>
-      </div>
-      <div class="col-span-1">
-        <label class="block font-bold">BIRTHDATE:</label>
-        <input type="date" v-model="form.birthdate" class="w-full border p-1" readonly>
-      </div>
-      <div class="col-span-1">
-        <label class="block font-bold">AGE:</label>
-        <input type="number" v-model="form.age" class="w-full border p-1" readonly>
-      </div>
-      <div class="col-span-1">
-        <label class="block font-bold">CURRENT MEDICAL STATUS:</label>
-        <input type="text" v-model="form.current_medical_status" class="w-full border p-1" :readonly="!editMode">
-      </div>
-      <div class="col-span-1">
-        <label class="block font-bold">RELIGION:</label>
-        <input type="text" v-model="form.religion" class="w-full border p-1" readonly>
-      </div>
-      <div class="col-span-1">
-        <label class="block font-bold">ADDRESS:</label>
-        <input type="text" v-model="form.address" class="w-full border p-1" readonly>
-      </div>
-      <div class="col-span-2">
-        <label class="block font-bold">DATE OF ADMISSION:</label>
-        <input type="date" v-model="form.date_of_admission" class="w-full border p-1" readonly>
-      </div>
-    </div>
+    <div class="grid grid-cols-4 gap-2 mb-2">
+  <!-- Row 1: Name and B-Day -->
+  <div class=" w-50 col-span-2">
+    <label class=" border flex items-center block font-bold text-xs">CLIENTS NAME:
+    <input type="text" v-model="form.client_name" class="w-75 border-none p-1 text-xs" readonly>
+  </label>
+  </div>
+  <div class="col-span-2">
+    <label class="border flex items-center block font-bold text-xs">BIRTHDATE:
+    <input type="date" v-model="form.birthdate" class="w-full border-none p-1 text-xs" readonly>
+  </label>
+  </div>
+
+  <!-- Row 2: Age, Medical Status, Religion -->
+  <div class="col-span-1">
+    <label class="border flex items-center block font-bold text-xs">AGE:
+    <input type="number" v-model="form.age" class="w-full border-none p-1 text-xs" readonly>
+  </label>
+  </div>
+  <div class="col-span-2">
+    <label class="border flex items-center block font-bold text-xs">CURRENT MEDICAL STATUS:
+    <input type="text" v-model="form.current_medical_status" class="w-50 border-none p-1 text-xs" :readonly="!editMode">
+  </label>
+  </div>
+  <div class="col-span-1">
+    <label class="border flex items-center block font-bold text-xs">RELIGION:
+    <input type="text" v-model="form.religion" class="w-full border-none p-1 text-xs" readonly>
+  </label>
+  </div>
+
+  <!-- Row 3: Address and Date of Admission -->
+  <div class="col-span-3">
+    <label class="border flex items-center block font-bold text-xs">ADDRESS:
+    <input type="text" v-model="form.address" class="w-full border-none p-1 text-xs" readonly>
+  </label>
+  </div>
+  <div class="col-span-1">
+    <label class="border-black flex items-center w-60 block font-bold text-xs">DATE ADMITTED:
+    <input type="date" v-model="form.date_of_admission" class="w-20 border-none p-1 text-xs" readonly>
+  </label>
+  </div>
+</div>
+
 
     <!-- BMI Monitoring Table -->
     <div class="text-center border-b pb-2 mb-4">
@@ -64,43 +66,43 @@
 
     <table class="w-full border-collapse border mb-4">
       <thead>
-        <tr class="bg-gray-100">
+        <tr class="bg-gray-100 text-base">
           <th class="border p-2">VITAL SIGNS / BMI</th>
           <th class="border p-2">APRIL</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="border p-2">TEMPERATURE</td>
-          <td class="border p-2"><input type="number" v-model="form.temperature" class="w-full border p-1" :readonly="!editMode"></td>
+          <td class="border text-base p-2">TEMPERATURE</td>
+          <td class="border p-2"><input type="number" v-model="form.temperature" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
           <td class="border p-2">PULSE RATE</td>
-          <td class="border p-2"><input type="number" v-model="form.pulse_rate" class="w-full border p-1" :readonly="!editMode"></td>
+          <td class="border p-2"><input type="number" v-model="form.pulse_rate" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
           <td class="border p-2">RESPIRATORY RATE</td>
-          <td class="border p-2"><input type="number" v-model="form.respiratory_rate" class="w-full border p-1" :readonly="!editMode"></td>
+          <td class="border p-2"><input type="number" v-model="form.respiratory_rate" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
           <td class="border p-2">BLOOD PRESSURE</td>
-          <td class="border p-2"><input type="text" v-model="form.blood_pressure" class="w-full border p-1" :readonly="!editMode"></td>
+          <td class="border p-2"><input type="text" v-model="form.blood_pressure" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
           <td class="border p-2">HEIGHT (cm)</td>
-          <td class="border p-2"><input type="number" v-model="form.height_cm" @input="computeBMI" class="w-full border p-1" :readonly="!editMode"></td>
+          <td class="border p-2"><input type="number" v-model="form.height_cm" @input="computeBMI" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
           <td class="border p-2">WEIGHT (kg)</td>
-          <td class="border p-2"><input type="number" v-model="form.weight_kg" @input="computeBMI" class="w-full border p-1" :readonly="!editMode"></td>
+          <td class="border p-2"><input type="number" v-model="form.weight_kg" @input="computeBMI" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
           <td class="border p-2">BODY MASS INDEX (BMI)</td>
-          <td class="border p-2"><input type="number" v-model="form.bmi" class="w-full border p-1" readonly></td>
+          <td class="border p-2"><input type="number" v-model="form.bmi" class="w-full border-none p-1" readonly></td>
         </tr>
         <tr>
           <td class="border p-2">BMI REMARKS</td>
-          <td class="border p-2"><input type="text" v-model="form.bmi_remarks" class="w-full border p-1" :readonly="!editMode"></td>
+          <td class="border p-2"><input type="text" v-model="form.bmi_remarks" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
       </tbody>
     </table>
@@ -111,67 +113,118 @@
     </div>
 
     <div class="flex mb-4">
-      <div class="w-2/3">
-        <table class="w-full border-collapse border">
-          <tbody>
-            <tr>
-              <td class="border p-2">EYES:</td>
-              <td class="border p-2"><input type="text" v-model="form.eyes_status" class="w-full border p-1" :readonly="!editMode"></td>
-              <td class="border p-2">SKIN:</td>
-              <td class="border p-2"><input type="text" v-model="form.skin_status" class="w-full border p-1" :readonly="!editMode"></td>
-            </tr>
-            <tr>
-              <td class="border p-2">NAILS:</td>
-              <td class="border p-2"><input type="text" v-model="form.nails_status" class="w-full border p-1" :readonly="!editMode"></td>
-              <td class="border p-2">MOUTH & TEETH:</td>
-              <td class="border p-2"><input type="text" v-model="form.mouth_teeth_status" class="w-full border p-1" :readonly="!editMode"></td>
-            </tr>
-            <tr>
-              <td class="border p-2">EARS:</td>
-              <td class="border p-2"><input type="text" v-model="form.ears_status" class="w-full border p-1" :readonly="!editMode"></td>
-              <td class="border p-2">HAIR:</td>
-              <td class="border p-2"><input type="text" v-model="form.hair_status" class="w-full border p-1" :readonly="!editMode"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="w-1/3 flex justify-center items-center">
-        <div class="w-32 h-32 border border-gray-300 rounded-full overflow-hidden relative">
-          <!-- Profile picture should go here -->
-          <img :src="profileImageUrl" alt="Profile Picture" class="w-full h-full object-cover">
-          <!-- Hidden file input for uploading the image -->
-          <input type="file" @change="handleFileUpload" ref="fileInput" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer" style="display: none;">
-          <!-- Clickable overlay to trigger file input -->
-          <div v-if="editMode" @click="triggerFileInput" class="absolute inset-0 cursor-pointer bg-black bg-opacity-25 flex items-center justify-center">
-            <span class="text-white">Change Photo</span>
-          </div>
-        </div>
-      </div>
+  <!-- Table with health status information -->
+  <div class="w-full">
+    <table class="w-full border-collapse border">
+      <tbody>
+        <!-- Row 1: Eyes and Skin -->
+        <tr>
+          <td class="border p-2 font-bold text-base	">
+            EYES:
+            <input type="text" v-model="form.eyes_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
+          </td>
+          <td class="border p-2 font-bold text-base	">
+            NAILS:
+            <input type="text" v-model="form.nails_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
+          </td>
+        </tr>
+        
+        <!-- Row 2: Ears and Skin -->
+        <tr>
+          <td class="border p-2 font-bold text-base	">
+            EARS:
+            <input type="text" v-model="form.ears_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
+          </td>
+          <td class="border p-2 font-bold text-base	">
+            SKIN:
+            <input type="text" v-model="form.skin_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
+          </td>
+        </tr>
+
+        <!-- Row 3: Mouth & Teeth and Hair -->
+        <tr>
+          <td class="border p-2 font-bold text-base	">
+            MOUTH & TEETH:
+            <input type="text" v-model="form.mouth_teeth_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
+          </td>
+          <td class="border p-2 font-bold text-base	">
+            HAIR:
+            <input type="text" v-model="form.hair_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+    
+    <div class="grid grid-cols-3 gap-4 mb-4">
+  <!-- Left Column: Services Given and Remarks -->
+  <div class="col-span-2">
+    <!-- Services Given Section -->
+    <div class="mb-4">
+      <label class=" font-bold text-base">SERVICES GIVEN:</label>
+      <textarea v-model="form.services_given" rows="5" class="w-full p-1 border-none text-base mb-2"></textarea>
     </div>
 
-    <!-- Services Given -->
-    <div class="border-b pb-2 mb-4">
-      <h2 class="text-lg font-bold">SERVICES GIVEN:</h2>
-      <textarea v-model="form.services_given" class="w-full border p-2" rows="3" :readonly="!editMode"></textarea>
+    <!-- Remarks Section -->
+    <div class="mb-4">
+      <label class=" font-bold text-base">REMARKS:</label>
+      <textarea v-model="form.remarks" rows="5" class="w-full p-1 border-none text-base mb-2"></textarea>
     </div>
+  </div>
 
-    <!-- Remarks -->
-    <div class="border-b pb-2 mb-4">
-      <h2 class="text-lg font-bold">REMARKS:</h2>
-      <textarea v-model="form.remarks" class="w-full border p-2" rows="3" :readonly="!editMode"></textarea>
+  <!-- Right Column: Profile Picture -->
+  <div class="col-span-1 flex justify-center items-center">
+    <div class="w-48 h-48 border flex justify-center items-center">
+      <img src="/path/to/profile-picture.png" alt="Profile Picture" class="h-full w-full object-cover">
     </div>
+  </div>
+</div>
 
-    <!-- Prepared and Noted By -->
-    <div class="flex justify-between items-center">
-      <div class="w-1/2">
-        <h2 class="text-lg font-bold">PREPARED BY:</h2>
-        <input type="text" v-model="form.prepared_by" class="w-full border p-1" :readonly="!editMode">
-      </div>
-      <div class="w-1/2">
-        <h2 class="text-lg font-bold">NOTED BY:</h2>
-        <input type="text" v-model="form.noted_by" class="w-full border p-1" :readonly="!editMode">
-      </div>
+
+<!-- Signatures Section -->
+<div class="flex gap-4 mb-6 border p-4">
+  <!-- Prepared by Signature -->
+  <div class="w-1/2 border-r pr-4">
+    <label class="block text-sm font-bold">PREPARED BY:</label>
+    <div class="flex items-center">
+      <input
+        type="text"
+        value="PHILIP ROY D. COTIANGCO, RN"
+        class=" w-full mt-1 border-none shadow-none"
+        readonly
+      >
     </div>
+    <div class="flex items-center">
+      <input
+        type="text"
+        value="CARL BRIAN T. BAUZON, RN"
+        class="w-full mt-1 underline-input shadow-none"
+        readonly
+      >
+    </div>
+    <p class="text-sm mt-2 font-bold">RESIDENT NURSES RRCY</p>
+  </div>
+
+  <!-- Noted by Signature -->
+  <div class="w-1/2 pl-4">
+    <label class="block text-sm font-bold">NOTED BY:</label>
+    <div class="flex items-center">
+      <input
+        type="text"
+        value="ANGELIC B. PAÑA, RSW"
+        class="w-full mt-1 underline-input shadow-none"
+        readonly
+      >
+    </div>
+    <p class="text-sm mt-2 font-bold">SWO IV/Center Head</p>
+  </div>
+</div>
+
+
   </div>
 </template>
 
@@ -373,3 +426,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.underline-input {
+  border: none;
+  border-bottom:  1px solid black;
+  padding: 0;
+  margin: 0;
+  line-height: 2.5;
+  vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
+  font-size: inherit; /* Ensure consistent font size */
+}
+</style>
