@@ -32,12 +32,18 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('/user', function () {
         return Inertia::render('User');
-      })->name('user')->middleware(\App\Http\Middleware\CheckAdminRole::class);
+    })->name('user')->middleware(\App\Http\Middleware\CheckAdminRole::class);
     
     // Route for the main edit page with an id parameter
     Route::get('/maintab/{id}', function ($id) {
         return Inertia::render('MainTab', ['id' => $id]);
     })->name('maintab');
+
+    // Route for the Case page (new addition)
+    Route::get('/case/{id}', function ($id) {
+        return Inertia::render('Case', ['id' => $id]);
+    })->name('case'); // Changed route name from 'maintab' to 'case'
+    
 });
 
 // OTP Verification Routes

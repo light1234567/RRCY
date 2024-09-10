@@ -1,6 +1,4 @@
 <?php
-
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdmissionController;
@@ -34,10 +32,7 @@ use App\Http\Controllers\FileController;
 
 Route::post('/check-email', [UserController::class, 'checkEmail']);
 Route::post('/validate-password', [UserController::class, 'validatePassword']);
-
 Route::post('/user-role', [UserController::class, 'getUserRole']);
-// Existing Routes
-// User Role Routes
 Route::middleware('auth:sanctum')->get('/user-role', [UserController::class, 'getUserRole']);
 
 // Admin Routes
@@ -57,6 +52,7 @@ Route::get('/admissions/client/{client_id}', [AdmissionController::class, 'getAd
 Route::get('/clients-data', [AdmissionController::class, 'getAllData']);
 Route::post('/save-admission', [AdmissionController::class, 'saveForm']);
 Route::get('/clients-data/{id}', [AdmissionController::class, 'getAllData']);
+Route::get('/test', [AdmissionController::class, 'getClientsByName']);
 
 // Checklist Routes
 Route::get('/checklist/{id}', [ChecklistController::class, 'index']);

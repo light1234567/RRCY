@@ -9,6 +9,7 @@
     </template>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+      <!-- Filter and Search section -->
       <div class="p-4 rounded-lg flex flex-col md:flex-row justify-between items-center bg-gray-100 shadow-sm space-y-4 md:space-y-0">
         <div class="text-md font-semibold text-gray-500">
           Total number of CICL: <span class="text-gray-900">{{ totalCICL }}</span>
@@ -133,19 +134,6 @@
         </button>
       </div>
     </div>
-
-    <!-- Modal for Old Case Warning -->
-    <transition name="fade">
-      <div v-if="showModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg shadow-lg">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">{{ modalMessage }}</h3>
-          <div class="flex justify-end space-x-4">
-            <button @click="confirmProceed" class="px-4 py-2 bg-blue-500 text-white rounded-lg">Yes</button>
-            <button @click="cancelProceed" class="px-4 py-2 bg-gray-500 text-white rounded-lg">No</button>
-          </div>
-        </div>
-      </div>
-    </transition>
   </AppLayout>
 </template>
 
@@ -163,10 +151,7 @@ const selectedChildStatus = ref('');
 const currentPage = ref(1);
 const clientsPerPage = 10;
 const isDropdownOpen = ref(false);
-const showModal = ref(false);
-const modalMessage = ref('');
 const isNavigating = ref(false);
-let clientToProceed = null;
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
@@ -176,27 +161,57 @@ const caseStatuses = ["On trial", "Suspended sentence", "Acquitted", "Dismissed"
 
 const childStatuses = ["Still at the Center (SATC)", "Discharge", "Leave without Permission (LWOP)"];
 
+// Function to fetch clients and select only the latest admission for each client
+// Function to fetch clients and select only the latest admission for each client
 const fetchClients = async () => {
   try {
     const response = await axios.get('/api/clients-data');
-    clients.value = response.data.map(client => {
-      const { first_name, last_name, date_of_birth } = client;
-      const admission = client.admissions[0];
-      const age = new Date().getFullYear() - new Date(date_of_birth).getFullYear();
+    
+    const groupedClients = response.data.reduce((acc, client) => {
+      const { first_name, last_name, date_of_birth, admissions } = client;
+      
+      // Accurate age calculation
+      const birthDate = new Date(date_of_birth);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      
+      // Adjust the age if the birth date hasn't occurred yet this year
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
 
-      return {
+      const latestAdmission = admissions.sort((a, b) => new Date(b.date_admitted) - new Date(a.date_admitted))[0];
+
+      const clientInfo = {
         id: client.id,
         name: `${first_name} ${last_name}`,
+        date_of_birth: birthDate.toISOString().split('T')[0],  // Save date of birth for comparison
         age: age,
-        case_status: admission?.case_status || 'N/A',
+        case_status: latestAdmission?.case_status || 'N/A',
         child_status: client.child_status,
-        date_admitted: admission?.date_admitted || 'N/A',
+        date_admitted: latestAdmission?.date_admitted || 'N/A',
       };
-    });
+
+      // Now the check includes both name and date_of_birth
+      const existingClient = acc.find(c => c.name === clientInfo.name && c.date_of_birth === clientInfo.date_of_birth);
+
+      if (!existingClient || new Date(clientInfo.date_admitted) > new Date(existingClient.date_admitted)) {
+        // Remove old entry if it exists
+        acc = acc.filter(c => !(c.name === clientInfo.name && c.date_of_birth === clientInfo.date_of_birth));
+        acc.push(clientInfo);
+      }
+
+      return acc;
+    }, []);
+
+    clients.value = groupedClients;
   } catch (error) {
     console.error('Error fetching clients:', error);
   }
 };
+
+
 
 onMounted(fetchClients);
 
@@ -226,18 +241,9 @@ const getChildStatusClass = (childStatus) => {
 const totalPages = computed(() => Math.ceil(filteredClients.value.length / clientsPerPage));
 
 const sortedClients = computed(() => {
-  let grouped = groupByName(filteredClients.value);
+  let filtered = filteredClients.value;
 
-  let flattened = [];
-  for (let name in grouped) {
-    let cases = grouped[name];
-    cases.forEach((client, index) => {
-      client.case_label = index === 0 ? "New Case" : "Old Case";
-      flattened.push(client);
-    });
-  }
-
-  const sorted = flattened.sort((a, b) => {
+  const sorted = filtered.sort((a, b) => {
     const statusOrder = {
       'Still at the Center (SATC)': 0,
       'Leave without Permission (LWOP)': 1,
@@ -246,18 +252,10 @@ const sortedClients = computed(() => {
 
     return statusOrder[a.child_status] - statusOrder[b.child_status];
   });
+
   const start = (currentPage.value - 1) * clientsPerPage;
   return sorted.slice(start, start + clientsPerPage);
 });
-
-const groupByName = (clients) => {
-  return clients.reduce((acc, client) => {
-    if (!acc[client.name]) acc[client.name] = [];
-    acc[client.name].push(client);
-    acc[client.name].sort((a, b) => new Date(b.date_admitted) - new Date(a.date_admitted));
-    return acc;
-  }, {});
-};
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) currentPage.value += 1;
@@ -292,40 +290,15 @@ const formatDate = (date) => {
   return new Date(date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
 };
 
-const navigateToEditPage = (id) => {
-  const resolvedRoute = router.resolve({ name: 'maintab', params: { id: id } });
+// Function to navigate to case route instead of maintab
+const navigateToCases = (id) => {
+  const resolvedRoute = router.resolve({ name: 'case', params: { id: id } });
   window.location.href = resolvedRoute.href;
 };
 
 const handleRowClick = (client) => {
   if (isNavigating.value) return;
   isNavigating.value = true;
-
-  if (client.case_label === 'Old Case') {
-    modalMessage.value = `This is the old case of ${client.name}. Do you want to proceed?`;
-    clientToProceed = client;
-    showModal.value = true;
-  } else {
-    navigateToEditPage(client.id);
-  }
-};
-
-const confirmProceed = () => {
-  showModal.value = false;
-  navigateToEditPage(clientToProceed.id);
-};
-
-const cancelProceed = () => {
-  showModal.value = false;
-  isNavigating.value = false;
+  navigateToCases(client.id);
 };
 </script>
-
-<style>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-</style>

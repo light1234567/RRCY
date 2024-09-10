@@ -176,4 +176,30 @@ class AdmissionController extends Controller
 
         return response()->json($admission);
     }
-}
+    public function getClientsByName(Request $request)
+    {
+        $first_name = $request->query('first_name');
+        $last_name = $request->query('last_name');
+        $date_of_birth = $request->query('date_of_birth'); // Added date_of_birth to query parameters
+    
+        // Check if required query parameters are provided
+        if (!$first_name || !$last_name || !$date_of_birth) {
+            return response()->json(['error' => 'Missing first_name, last_name, or date_of_birth query parameter'], 400);
+        }
+    
+        // Fetch clients with the same first name, last name, and date of birth, and eager load related admissions and associated distinguishingMarks and documents
+        $clients = Client::where('first_name', $first_name)
+                         ->where('last_name', $last_name)
+                         ->where('date_of_birth', $date_of_birth)
+                         ->with([
+                             'admissions.distinguishingMarks',
+                             'admissions.documents'
+                         ])
+                         ->get();
+    
+        return response()->json($clients);
+    }
+    
+    
+    
+    }

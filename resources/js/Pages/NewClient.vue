@@ -80,8 +80,8 @@
                   id="clientDob"
                   v-model="form.client.date_of_birth"
                   class="w-full px-2 py-1 border rounded-md text-sm"
-                  :max="form.client.maxDateOfBirth"
-                  :min="form.client.minDateOfBirth"
+                  :max="form.client.maxDateOfBirth" 
+                  :min="form.client.minDateOfBirth" 
                   required
                 />
               </div>
@@ -416,6 +416,15 @@
                 <div class="flex items-center">
                   <input
                     type="checkbox"
+                    value="Commitment Order"
+                    v-model="form.documents_submitted.documents"
+                    class="mr-1"
+                  />
+                  <span class="text-sm">Commitment Order</span>
+                </div>
+                <div class="flex items-center">
+                  <input
+                    type="checkbox"
                     value="Consent from Parents"
                     v-model="form.documents_submitted.documents"
                     class="mr-1"
@@ -480,96 +489,7 @@
               />
             </div>
           </div>
-
-           <!-- New Fields for Referring Party and Admitting Officer -->
-           <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-      <div class="mb-2">
-        <label for="referringParty" class="block mb-1 text-sm">Name & Signature of Referring Party:</label>
-        <input
-          type="text"
-          id="referringParty"
-          v-model="form.admission.referring_party_name"
-          class="w-full px-2 py-1 border rounded-md text-sm"
-        />
-        <input
-          type="file"
-          @change="handleFileUpload($event, 'referring_party_signature')"
-          accept="image/png, image/jpeg, image/jpg"
-          ref="fileInputRef"
-          class="mt-2"
-        />
-      </div>
-
-      <div class="mb-2">
-        <label for="admittingOfficer" class="block mb-1 text-sm">Admitting Officer:</label>
-        <input
-          type="text"
-          id="admittingOfficer"
-          v-model="form.admission.admitting_officer"
-          class="w-full px-2 py-1 border rounded-md text-sm"
-        />
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-      <div class="mb-2">
-        <label for="designationContact" class="block mb-1 text-sm">Designation / ID No. / Contact #:</label>
-        <input
-          type="text"
-          id="designationContact"
-          v-model="form.admission.designation_id_contact"
-          class="w-full px-2 py-1 border rounded-md text-sm"
-        />
-      </div>
-
-      <div class="mb-2">
-        <label for="designation" class="block mb-1 text-sm">Designation:</label>
-        <input
-          type="text"
-          id="designation"
-          v-model="form.admission.designation"
-          class="w-full px-2 py-1 border rounded-md text-sm"
-        />
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-      <div class="mb-2">
-        <label for="officeAddress" class="block mb-1 text-sm">Complete Address/Office Address:</label>
-        <input
-          type="text"
-          id="officeAddress"
-          v-model="form.admission.office_address"
-          class="w-full px-2 py-1 border rounded-md text-sm"
-        />
-      </div>
-
-      <div class="mb-2">
-        <label for="dateTime" class="block mb-1 text-sm">Date/Time:</label>
-        <input
-          type="datetime-local"
-          id="dateTime"
-          v-model="form.admission.date_time"
-          class="w-full px-2 py-1 border rounded-md text-sm"
-        />
-      </div>
-    </div>
-
-    <div class="mb-2">
-        <label for="notedBy" class="block mb-1 text-sm">Noted by:</label>
-        <input
-          type="text"
-          id="notedBy"
-          v-model="form.admission.noted_by"
-          class="w-full px-2 py-1 border rounded-md text-sm"
-        />
-      </div>
-    
-
         </fieldset>
-
-       
-
 
         <!-- Submit Button -->
         <button
@@ -630,14 +550,7 @@ const form = ref({
     days_in_jail: '',
     days_in_detention_center: '',
     action_taken: '',
-    general_impression: '',
-    referring_party_name: '',
-    referring_party_signature: null,
-    admitting_officer: '',
-    designation_id_contact: '',
-    designation: '',
-    office_address: '',
-    date_time: '',
+    general_impression: ''
   },
   documents_submitted: {
     documents: [],
@@ -662,13 +575,6 @@ const fetchProvinces = async () => {
     console.error('Error fetching provinces:', error);
   }
 };
-
-// Handle file upload for signatures
-const handleFileUpload = (event, field) => {
-  const file = event.target.files[0];
-  form.value.admission[field] = file; // Ensure the file is being added to form.admission
-};
-
 
 // Handle province selection change
 const onProvinceChange = async () => {
@@ -709,47 +615,8 @@ const onCityChange = async () => {
 // Function to save the form data
 const saveForm = async () => {
   try {
-    const formData = new FormData();
-
-    // Append client data
-    Object.keys(form.value.client).forEach((key) => {
-      formData.append(`client[${key}]`, form.value.client[key]);
-    });
-
-    // Append admission data
-    Object.keys(form.value.admission).forEach((key) => {
-      if (key === 'referring_party_signature' && form.value.admission[key]) {
-        // Append the file if it's uploaded
-        formData.append(`admission[${key}]`, form.value.admission[key]);
-      } else {
-        formData.append(`admission[${key}]`, form.value.admission[key]);
-      }
-    });
-
-    // Append distinguishing marks data
-    Object.keys(form.value.distinguishing_marks).forEach((key) => {
-      formData.append(`distinguishing_marks[${key}]`, form.value.distinguishing_marks[key]);
-    });
-
-    // Append documents submitted data
-    form.value.documents_submitted.documents.forEach((doc, index) => {
-      formData.append(`documents_submitted[documents][${index}]`, doc);
-    });
-    
-    // Append other document fields
-    formData.append(`documents_submitted[others]`, form.value.documents_submitted.others);
-
-// Append the signature file if it exists
-if (form.value.admission.referring_party_signature) {
-    formData.append('referring_party_signature', form.value.admission.referring_party_signature);
-  }
-
-    // Send the form data as FormData, not JSON
-    const response = await axios.post('/api/save-admission', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    // Submit the form data to the backend
+    const response = await axios.post('/api/save-admission', form.value);
 
     // If successful, show success modal
     modalType.value = 'success';
@@ -758,7 +625,6 @@ if (form.value.admission.referring_party_signature) {
 
     // Optionally reset form if needed
     resetForm();
-
   } catch (error) {
     // Handle error based on response
     if (error.response && error.response.status === 400) {
@@ -779,21 +645,23 @@ if (form.value.admission.referring_party_signature) {
     showModal.value = true;
   }
 };
-
 // Set the min and max dates for the date of birth
 onMounted(() => {
   const today = new Date();
 
-  // Calculate the year when someone would be 10 years old today
+  // Max Date: Clients must be at least 10 years old
   const maxYear = today.getFullYear() - 10;
-  const maxDate = new Date(maxYear, 11, 31); // Set to December 31 of that year
-  form.value.client.maxDateOfBirth = maxDate.toISOString().split('T')[0];
+  const maxMonth = today.getMonth();
+  const maxDay = today.getDate();
+  const maxDate = new Date(maxYear, maxMonth, maxDay);
+  form.value.client.maxDateOfBirth = maxDate.toISOString().split('T')[0]; // Set the max date to 10 years ago from today
 
-  // Calculate the year when someone would be 25 years old today
+  // Min Date: Clients must not be older than 25 years
   const minYear = today.getFullYear() - 25;
-  const minDate = new Date(minYear, 0, 1); // Set to January 1 of that year
+  const minDate = new Date(minYear, 0, 1); // January 1st, 25 years ago
   form.value.client.minDateOfBirth = minDate.toISOString().split('T')[0];
 });
+
 
 // Watcher to limit height input to three digits
 watch(
@@ -834,8 +702,6 @@ const statusColorClass = computed(() => {
 });
 
 // Reset the form to initial state while keeping date of birth constraints
-const fileInputRef = ref(null); // Ref to track the file input element
-
 const resetForm = () => {
   form.value = {
     client: {
@@ -871,28 +737,14 @@ const resetForm = () => {
       days_in_jail: '',
       days_in_detention_center: '',
       action_taken: '',
-      general_impression: '',
-      referring_party_name: '',
-      referring_party_signature: null, // Set to null instead of ''
-      admitting_officer: '',
-      designation_id_contact: '',
-      designation: '',
-      office_address: '',
-      date_time: '',
-  
+      general_impression: ''
     },
     documents_submitted: {
       documents: [],
       others: ''
     }
   };
-
-  // Manually reset the file input field in the DOM
-  if (fileInputRef.value) {
-    fileInputRef.value.value = ''; // This will clear the file input element
-  }
 };
-
 
 // Function to handle "Other" document selection
 const toggleOtherDocuments = () => {

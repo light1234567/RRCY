@@ -1,8 +1,5 @@
 import './bootstrap';
 import '../css/app.css';
-import '@fortawesome/fontawesome-free/css/all.css';
-import '@fortawesome/fontawesome-free/js/all.js';
-
 
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -12,9 +9,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // Import components for routes
 import CICL from '@/Pages/CICL.vue'; // Assuming you have a CICL component
-import MainTab from '@/Pages/MainTab.vue'; // Corrected import path for Edit component
+import MainTab from '@/Pages/MainTab.vue'; // Corrected import path for MainTab component
 import NewClient from '@/Pages/NewClient.vue'; // Adjust the path as necessary
-
+import Case from '@/Pages/Case.vue'; // Import Case.vue component
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -22,7 +19,7 @@ const routes = [
     {
         path: '/cicl',
         name: 'CICL',
-        component: CICL
+        component: CICL,
     },
     {
         path: '/maintab/:id',
@@ -34,6 +31,11 @@ const routes = [
         name: 'NewClient',
         component: NewClient,
     },
+    {
+        path: '/case/:id',
+        name: 'case',
+        component: Case,
+    },
 ];
 
 const router = createRouter({
@@ -42,8 +44,8 @@ const router = createRouter({
 });
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
-    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    title: (title) => `${title} - ${appName}`, // Corrected string interpolation
+    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')), // Corrected file path interpolation
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)
