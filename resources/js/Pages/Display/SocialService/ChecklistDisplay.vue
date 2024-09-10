@@ -106,31 +106,51 @@
       {{ message }}
     </div>
     <table class="min-w-full bg-white border border-black mt-2 text-xs">
-      <thead>
-        <tr class="bg-green-400">
-          <th class="py-1 px-2 border border-black">No.</th>
-          <th class="py-1 px-2 border border-black">Documents</th>
-          <th class="py-1 px-2 border border-black w-16">Yes</th>
-          <th class="py-1 px-2 border border-black w-16">No</th>
-          <th class="py-1 px-2 border border-black w-96">Remarks</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in checklist" :key="index" class="hover:bg-gray-100">
-          <td class="py-1 px-2 border border-black">{{ index + 1 }}</td>
-          <td class="py-1 px-2 border border-black">{{ item.document }}</td>
-          <td class="py-1 px-2 border border-black">
-            <input type="checkbox" v-model="item.yes" :disabled="!editMode" @change="handleCheckboxChange(item, 'yes')" />
-          </td>
-          <td class="py-1 px-2 border border-black">
-            <input type="checkbox" v-model="item.no" :disabled="!editMode" @change="handleCheckboxChange(item, 'no')" />
-          </td>
-          <td class="py-1 px-2 border border-black">
-            <textarea v-model="item.remarks" class="w-full border border-transparent p-1 text-xs" :readonly="!editMode"></textarea>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <thead>
+    <tr class="bg-green-400">
+      <th class="py-1 px-2 border border-black">No.</th>
+      <th class="py-1 px-2 border border-black">Documents</th>
+      <th class="py-1 px-2 border border-black w-16">Yes</th>
+      <th class="py-1 px-2 border border-black w-16">No</th>
+      <th class="py-1 px-2 border border-black w-96">Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <template v-for="(item, index) in checklist" :key="index">
+      <!-- Only number the main items -->
+      <tr class="hover:bg-gray-100">
+        <td class="py-1 px-2 border border-black">{{ item.isSubItem ? '' : index + 1 }}</td>
+        <td class="py-1 px-2 border border-black">{{ item.document }}</td>
+        <td class="py-1 px-2 border border-black">
+          <input type="checkbox" v-model="item.yes" :disabled="!editMode" @change="handleCheckboxChange(item, 'yes')" />
+        </td>
+        <td class="py-1 px-2 border border-black">
+          <input type="checkbox" v-model="item.no" :disabled="!editMode" @change="handleCheckboxChange(item, 'no')" />
+        </td>
+        <td class="py-1 px-2 border border-black">
+          <textarea v-model="item.remarks" class="w-full border border-transparent p-1 text-xs" :readonly="!editMode"></textarea>
+        </td>
+      </tr>
+
+      <!-- Render sub-items if they exist -->
+      <tr v-if="item.subItems" v-for="(subItem, subIndex) in item.subItems" :key="subIndex" class="hover:bg-gray-100">
+        <td class="py-1 px-2 border border-black"></td> <!-- Empty for sub-items -->
+        <td class="py-1 px-2 border border-black">{{ subItem.document }}</td>
+        <td class="py-1 px-2 border border-black">
+          <input type="checkbox" v-model="subItem.yes" :disabled="!editMode" @change="handleCheckboxChange(subItem, 'yes')" />
+        </td>
+        <td class="py-1 px-2 border border-black">
+          <input type="checkbox" v-model="subItem.no" :disabled="!editMode" @change="handleCheckboxChange(subItem, 'no')" />
+        </td>
+        <td class="py-1 px-2 border border-black">
+          <textarea v-model="subItem.remarks" class="w-full border border-transparent p-1 text-xs" :readonly="!editMode"></textarea>
+        </td>
+      </tr>
+    </template>
+  </tbody>
+</table>
+
+
     <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
       <div class="flex justify-between items-center">
         <div class="flex flex-col">
@@ -175,10 +195,16 @@
       </tbody>
     </table>
     <div class="footer mt-4">
-      <p class="text-sm mb-4">Reviewed by:</p>
-      <p class="text-sm mb-4">_________________________<br>Admitting Officer</p>
-      <p class="text-sm mb-4">Received by:</p>
-      <p class="text-sm">_________________________<br>Case Manager</p>
+    <p class="text-sm mb-4">Reviewed by:</p>
+    <p class="text-sm mb-4">
+      <input v-model="admittingOfficer" class="w-full border border-black p-1 text-sm" :readonly="!editMode" />
+      <br>Admitting Officer
+    </p>
+    <p class="text-sm mb-4">Received by:</p>
+    <p class="text-sm">
+      <input v-model="caseManager" class="w-full border border-black p-1 text-sm" :readonly="!editMode" />
+      <br>Case Manager
+    </p>
 
       <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
         <div class="flex justify-between items-center">
@@ -209,6 +235,8 @@ export default {
   data() {
     return {
       editMode: false,
+      admittingOfficer: '',
+      caseManager: '',
       message: '',
       messageType: '',
       currentPage: 1,
@@ -225,17 +253,30 @@ export default {
   methods: {
     initializeForm() {
       this.checklist = [
-        { document: 'Commitment/Court Order', yes: false, no: false, remarks: '' },
-        { document: 'Referral Letter', yes: false, no: false, remarks: '' },
-        { document: 'Social Case Study Report', yes: false, no: false, remarks: '' },
-        { document: 'Medical Certificate', yes: false, no: false, remarks: '' },
-        { document: 'Negative RT-PCR COVID-19 Test Result', yes: false, no: false, remarks: '' },
-        { document: 'Laboratory Examination Result', yes: false, no: false, remarks: '' },
-        { document: 'Psychological Assessment and Evaluation', yes: false, no: false, remarks: '' },
-        { document: 'Birth Certificate/Baptismal Cert', yes: false, no: false, remarks: '' },
-        { document: 'School Documents (Form 137) if applicable', yes: false, no: false, remarks: '' },
-        { document: 'List of Belongings', yes: false, no: false, remarks: '' },
-      ];
+  { document: 'Commitment/Court Order', yes: false, no: false, remarks: '' },
+  { document: 'Referral Letter', yes: false, no: false, remarks: '' },
+  { document: 'Social Case Study Report', yes: false, no: false, remarks: '' },
+  { 
+    document: 'Medical Certificate', 
+    yes: false, 
+    no: false, 
+    remarks: '', 
+    subItems: [
+    { document: 'Negative RT-PCR COVID-19 Test Result', yes: false, no: false, remarks: '', isSubItem: true },
+    { document: 'Laboratory Examination Result', yes: false, no: false, remarks: '', isSubItem: true },
+      { document: 'a. Chest Xray', yes: false, no: false, remarks: '', isSubItem: true },
+      { document: 'b. Fecalysis', yes: false, no: false, remarks: '', isSubItem: true },
+      { document: 'c. Urinalysis', yes: false, no: false, remarks: '', isSubItem: true },
+      { document: 'd. Complete Blood Count (CBC)', yes: false, no: false, remarks: '', isSubItem: true }
+    ]
+  },
+  { document: 'Psychological Assessment and Evaluation', yes: false, no: false, remarks: '' },
+  { document: 'Birth Certificate/Baptismal Cert', yes: false, no: false, remarks: '' },
+  { document: 'School Documents (Form 137) if applicable', yes: false, no: false, remarks: '' },
+  { document: 'List of Belongings', yes: false, no: false, remarks: '' }
+];
+
+
 
       this.rrForms = [
         { form: 'Admission Slip', yes: false, no: false, remarks: '' },
@@ -252,39 +293,58 @@ export default {
       ];
     },
     async fetchData() {
-      try {
-        const response = await axios.get(`/api/checklist/${this.clientId}`);
-        const clientData = response.data;
+  try {
+    const response = await axios.get(`/api/checklist/${this.clientId}`);
+    const clientData = response.data;
 
-        this.initializeForm();
+    // Initialize default checklist structure
+    this.initializeForm();
 
-        clientData.checklist.forEach(item => {
-          const checklistItem = this.checklist.find(ch => ch.document === item.document);
-          if (checklistItem) {
-            checklistItem.yes = item.yes === 1;
-            checklistItem.no = item.no === 1;
-            checklistItem.remarks = item.remarks;
-          } else {
-            this.checklist.push({ document: item.document, yes: item.yes === 1, no: item.no === 1, remarks: item.remarks });
+    // Loop through the documents and map them into the checklist with sub-items
+    if (Array.isArray(clientData.documents)) {
+      clientData.documents.forEach(item => {
+        const checklistItem = this.checklist.find(ch => ch.document === item.document);
+        if (checklistItem) {
+          checklistItem.yes = item.yes === 1 || item.yes === true;  // Ensure boolean
+          checklistItem.no = item.no === 1 || item.no === true;     // Ensure boolean
+          checklistItem.remarks = item.remarks;
+
+          // Handle sub-items
+          if (item.subItems) {
+            checklistItem.subItems = item.subItems.map(subItem => ({
+              document: subItem.document,
+              yes: subItem.yes === 1 || subItem.yes === true, // Ensure boolean
+              no: subItem.no === 1 || subItem.no === true,    // Ensure boolean
+              remarks: subItem.remarks
+            }));
           }
-        });
+        }
+      });
+    }
 
-        clientData.rrForms.forEach(item => {
-          const rrFormItem = this.rrForms.find(rr => rr.form === item.form);
-          if (rrFormItem) {
-            rrFormItem.yes = item.yes === 1;
-            rrFormItem.no = item.no === 1;
-            rrFormItem.remarks = item.remarks;
-          } else {
-            this.rrForms.push({ form: item.form, yes: item.yes === 1, no: item.no === 1, remarks: item.remarks });
-          }
-        });
+    // Similarly, fetch and map rrForms
+    if (Array.isArray(clientData.rrcy_forms)) {
+      clientData.rrcy_forms.forEach(item => {
+        const rrFormItem = this.rrForms.find(rr => rr.form === item.form);
+        if (rrFormItem) {
+          rrFormItem.yes = item.yes === 1 || item.yes === true;
+          rrFormItem.no = item.no === 1 || item.no === true;
+          rrFormItem.remarks = item.remarks;
+        }
+      });
+    }
 
-        console.log('Fetched client ID:', this.clientId);
-      } catch (error) {
-        console.error('Error fetching client data:', error);
-      }
-    },
+    this.admittingOfficer = clientData.admitting_officer || '';
+    this.caseManager = clientData.case_manager || '';
+
+  } catch (error) {
+    console.error('Error fetching client data:', error);
+  }
+}
+
+
+
+,
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -310,38 +370,49 @@ export default {
       this.isSaveResultModalOpen = false;
     },
     saveData() {
-      if (!this.clientId) {
-        this.message = 'No client selected.';
-        this.messageType = 'error';
-        return;
-      }
+  if (!this.clientId) {
+    this.message = 'No client selected.';
+    this.messageType = 'error';
+    return;
+  }
 
-      const checklistWithClientId = this.checklist.map(item => ({
-        ...item,
-        client_id: this.clientId,
-      }));
+  const payload = {
+    client_id: this.clientId,
+    admitting_officer: this.admittingOfficer,
+    case_manager: this.caseManager,
+    documents: this.checklist.map(item => ({
+      document: item.document,
+      yes: item.yes ? 1 : 0,   // Convert to number for backend
+      no: item.no ? 1 : 0,     // Convert to number for backend
+      remarks: item.remarks,
+      subItems: item.subItems ? item.subItems.map(subItem => ({
+        document: subItem.document,
+        yes: subItem.yes ? 1 : 0,
+        no: subItem.no ? 1 : 0,
+        remarks: subItem.remarks
+      })) : []  // Add sub-items if present
+    })),
+    rrcy_forms: this.rrForms.map(item => ({
+      form: item.form,
+      yes: item.yes ? 1 : 0,   // Convert to number for backend
+      no: item.no ? 1 : 0,     // Convert to number for backend
+      remarks: item.remarks
+    })),
+  };
 
-      const rrFormsWithClientId = this.rrForms.map(item => ({
-        ...item,
-        client_id: this.clientId,
-      }));
+  axios.post('/api/checklist', payload)
+    .then(response => {
+      this.showSaveResultModal('Success', 'Checklist saved successfully.');
+      console.log('Checklist saved:', response.data);
+    })
+    .catch(error => {
+      this.showSaveResultModal('Error', 'Error saving checklist. Please try again.');
+      console.error('Error saving checklist:', error);
+    });
+}
 
-      const payload = {
-        checklist: checklistWithClientId,
-        rrForms: rrFormsWithClientId,
-      };
 
-      axios.post('/api/save-checklist', payload)
-        .then(response => {
-          this.showSaveResultModal('Success', 'Data saved successfully.');
-        })
-        .catch(error => {
-          this.message = error.response.data.message || 'Error saving data.';
-          this.messageType = 'error';
-          this.showSaveResultModal('Error', error.response.data.message || 'Error saving data.');
-          console.error('Error saving data:', error);
-        });
-    },
+,
     showSaveResultModal(title, message) {
       this.saveResultTitle = title;
       this.saveResultMessage = message;
@@ -425,6 +496,12 @@ export default {
         pdf.text(`${item.remarks}`, 180, offset);
       });
 
+      // Add Admitting Officer and Case Manager
+      pdf.text('Reviewed by: ' + this.admittingOfficer, 20, 250);
+      pdf.text('Admitting Officer', 20, 255);
+      pdf.text('Received by: ' + this.caseManager, 150, 250);
+      pdf.text('Case Manager', 150, 255);
+
       // Footer
       pdf.setFontSize(10);
       pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 105, 290, null, null, 'center');
@@ -439,7 +516,8 @@ export default {
   mounted() {
     this.clientId = this.$route.params.id;
     this.fetchData();
-  },
+}
+,
   watch: {
     '$route.params.id': function(newId) {
       this.clientId = newId;
@@ -448,6 +526,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .a4-container {

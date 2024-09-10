@@ -61,6 +61,11 @@ Route::get('/clients-data/{id}', [AdmissionController::class, 'getAllData']);
 // Checklist Routes
 Route::get('/checklist/{id}', [ChecklistController::class, 'index']);
 Route::post('/save-checklist', [ChecklistController::class, 'store']);
+Route::get('/checklist/{clientId}', [ChecklistController::class, 'index']);
+Route::post('/checklist', [ChecklistController::class, 'store']);
+Route::put('/checklist/{clientId}', [ChecklistController::class, 'update']);
+Route::delete('/checklist/{clientId}', [ChecklistController::class, 'destroy']);
+
 
 // Intervention Plan Routes
 Route::get('/intervention-plans', [InterventionPlanController::class, 'index']);

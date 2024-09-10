@@ -7,17 +7,18 @@ use Illuminate\Support\Facades\Schema;
 class CreateChecklistsTable extends Migration
 {
     public function up()
+    
     {
         Schema::create('checklists', function (Blueprint $table) {
-            // $table->id(); // Remove this line
+            $table->id();
             $table->unsignedBigInteger('client_id');
-            $table->string('document');
-            $table->boolean('yes')->default(false);
-            $table->boolean('no')->default(false);
-            $table->text('remarks')->nullable();
+            $table->string('admitting_officer')->nullable();
+            $table->string('case_manager')->nullable();
+            $table->json('documents')->nullable(); // Store the checklist of documents in JSON format
+            $table->json('rrcy_forms')->nullable(); // Store RRCY forms in JSON format
             $table->timestamps();
 
-            $table->primary(['client_id', 'document']);
+            // Foreign key constraint on client_id
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }

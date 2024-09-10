@@ -3,84 +3,124 @@
 namespace App\Http\Controllers;
 
 use App\Models\Checklist;
-use App\Models\RrcyForm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ChecklistController extends Controller
 {
     public function index($clientId)
-    {
-        $checklist = Checklist::where('client_id', $clientId)->get();
-        $rrForms = RrcyForm::where('client_id', $clientId)->get();
+{
+    Log::info("Fetching checklist for client ID: $clientId");
 
-        return response()->json([
-            'checklist' => $checklist,
-            'rrForms' => $rrForms
-        ]);
+    try {
+        $checklist = Checklist::where('client_id', $clientId)->first();
+
+        if (!$checklist) {
+            // Optionally create a blank checklist if none exists
+            $checklist = Checklist::create([
+                'client_id' => $clientId,
+                'admitting_officer' => '',
+                'case_manager' => '',
+                'documents' => json_encode([]), // Empty JSON for documents
+                'rrcy_forms' => json_encode([]), // Empty JSON for forms
+            ]);
+        }
+
+        // Decode JSON fields to ensure they are returned as arrays
+        $checklist->documents = json_decode($checklist->documents, true);
+        $checklist->rrcy_forms = json_decode($checklist->rrcy_forms, true);
+
+        return response()->json($checklist);
+    } catch (\Exception $e) {
+        Log::error('Error fetching checklist: ' . $e->getMessage());
+        return response()->json(['message' => 'Error fetching checklist', 'error' => $e->getMessage()], 500);
     }
+}
 
-    public function store(Request $request)
+
+
+public function store(Request $request)
+{
+    $validatedData = $request->validate([
+        'client_id' => 'required|exists:clients,id',
+        'admitting_officer' => 'nullable|string|max:255',
+        'case_manager' => 'nullable|string|max:255',
+        'documents' => 'nullable|array',
+        'documents.*.document' => 'nullable|string',
+        'documents.*.yes' => 'nullable|boolean',
+        'documents.*.no' => 'nullable|boolean',
+        'documents.*.remarks' => 'nullable|string',
+        'documents.*.subItems' => 'nullable|array',
+        'documents.*.subItems.*.document' => 'nullable|string',
+        'documents.*.subItems.*.yes' => 'nullable|boolean',
+        'documents.*.subItems.*.no' => 'nullable|boolean',
+        'documents.*.subItems.*.remarks' => 'nullable|string',
+        'rrcy_forms' => 'nullable|array',
+        'rrcy_forms.*.form' => 'nullable|string',
+        'rrcy_forms.*.yes' => 'nullable|boolean',
+        'rrcy_forms.*.no' => 'nullable|boolean',
+        'rrcy_forms.*.remarks' => 'nullable|string',
+    ]);
+
+    // Handling of the documents and their sub-items
+    $documents = array_map(function($document) {
+        if (isset($document['subItems']) && is_array($document['subItems'])) {
+            // Encode sub-items
+            $document['subItems'] = $document['subItems'];
+        }
+        return $document;
+    }, $validatedData['documents'] ?? []);
+
+    // Store the checklist in the database
+    $checklist = Checklist::updateOrCreate(
+        ['client_id' => $validatedData['client_id']],
+        [
+            'admitting_officer' => $validatedData['admitting_officer'],
+            'case_manager' => $validatedData['case_manager'],
+            'documents' => json_encode($documents),  // Store as JSON
+            'rrcy_forms' => json_encode($validatedData['rrcy_forms']),
+        ]
+    );
+
+    return response()->json(['message' => 'Checklist saved successfully', 'checklist' => $checklist], 201);
+}
+
+
+    public function update(Request $request, $clientId)
     {
+        $checklist = Checklist::where('client_id', $clientId)->first();
+
+        if (!$checklist) {
+            return response()->json(['message' => 'Checklist not found'], 404);
+        }
+
         $validatedData = $request->validate([
-            'checklist' => 'required|array',
-            'checklist.*.client_id' => 'required|exists:clients,id',
-            'checklist.*.document' => 'required|string|max:255',
-            'checklist.*.yes' => 'boolean',
-            'checklist.*.no' => 'boolean',
-            'checklist.*.remarks' => 'nullable|string',
-            'rrForms' => 'required|array',
-            'rrForms.*.client_id' => 'required|exists:clients,id',
-            'rrForms.*.form' => 'required|string|max:255',
-            'rrForms.*.yes' => 'boolean',
-            'rrForms.*.no' => 'boolean',
-            'rrForms.*.remarks' => 'nullable|string',
+            'admitting_officer' => 'nullable|string|max:255',
+            'case_manager' => 'nullable|string|max:255',
+            'documents' => 'nullable|array',
+            'rrcy_forms' => 'nullable|array',
         ]);
 
-        $checklistData = $validatedData['checklist'];
-        $rrFormsData = $validatedData['rrForms'];
-
-        foreach ($checklistData as $item) {
-            Checklist::updateOrCreate(
-                ['client_id' => $item['client_id'], 'document' => $item['document']],
-                ['yes' => $item['yes'], 'no' => $item['no'], 'remarks' => $item['remarks']]
-            );
-        }
-
-        foreach ($rrFormsData as $item) {
-            RrcyForm::updateOrCreate(
-                ['client_id' => $item['client_id'], 'form' => $item['form']],
-                ['yes' => $item['yes'], 'no' => $item['no'], 'remarks' => $item['remarks']]
-            );
-        }
-
-        return response()->json(['message' => 'Data saved successfully'], 201);
-    }
-
-    public function update(Request $request, $clientId, $document)
-    {
-        $validatedData = $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'document' => 'required|string|max:255',
-            'yes' => 'boolean',
-            'no' => 'boolean',
-            'remarks' => 'nullable|string',
+        $checklist->update([
+            'admitting_officer' => $validatedData['admitting_officer'] ?? $checklist->admitting_officer,
+            'case_manager' => $validatedData['case_manager'] ?? $checklist->case_manager,
+            'documents' => $validatedData['documents'] ? json_encode($validatedData['documents']) : $checklist->documents,
+            'rrcy_forms' => $validatedData['rrcy_forms'] ? json_encode($validatedData['rrcy_forms']) : $checklist->rrcy_forms,
         ]);
 
-        $checklist = Checklist::where('client_id', $clientId)->where('document', $document)->first();
-        if ($checklist) {
-            $checklist->update($validatedData);
-            return response()->json($checklist);
-        }
-        return response()->json(['message' => 'Not found'], 404);
+        return response()->json(['message' => 'Checklist updated successfully']);
     }
 
-    public function destroy($clientId, $document)
+    public function destroy($clientId)
     {
-        $checklist = Checklist::where('client_id', $clientId)->where('document', $document)->first();
-        if ($checklist) {
-            $checklist->delete();
-            return response()->json(['message' => 'Deleted successfully']);
+        $checklist = Checklist::where('client_id', $clientId)->first();
+
+        if (!$checklist) {
+            return response()->json(['message' => 'Checklist not found'], 404);
         }
-        return response()->json(['message' => 'Not found'], 404);
+
+        $checklist->delete();
+
+        return response()->json(['message' => 'Checklist deleted successfully']);
     }
 }
