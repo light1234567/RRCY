@@ -20,6 +20,14 @@ class CreateAdmissionsTable extends Migration
             $table->string('action_taken');
             $table->string('general_impression');
             $table->string('case_status');
+            $table->string('referring_party_name')->nullable();
+            $table->string('referring_party_signature')->nullable();
+            $table->string('admitting_officer')->nullable();
+            $table->string('designation_id_contact')->nullable();
+            $table->string('designation')->nullable();
+            $table->string('office_address')->nullable();
+            $table->dateTime('date_time')->nullable();
+            $table->string('noted_by')->nullable();
             $table->timestamps();
             
             // Foreign key definition

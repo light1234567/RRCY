@@ -99,33 +99,39 @@
           </div>
         </div>
 
-        <div class="mb-4">
-          <label class="block mb-2 font-semibold text-gray-700">Put on Documents Submitted:</label>
-          <div class="pl-4">
-            <div class="flex flex-wrap mb-2">
-              <label class="block font-semibold text-gray-700 mr-48">
-                <input type="checkbox" class="-mb-3 mr-2" :checked="client.admissions[0]?.documents[0]?.submitted" disabled> SCSR
-              </label>
-              <label class="block font-semibold text-gray-700 mr-40">
-                <input type="checkbox" class="-mb-3 mr-2" :checked="client.admissions[0]?.documents[1]?.submitted" disabled> Court Order
-              </label>
-              <label class="block font-semibold text-gray-700">
-                <input type="checkbox" class="-mb-3 mr-2" :checked="client.admissions[0]?.documents[2]?.submitted" disabled> Medical Certificates
-              </label>
-            </div>
-            <div class="flex flex-wrap">
-              <label class="block font-semibold text-gray-700 mr-24">
-                <input type="checkbox" class="-mb-3 mr-2" :checked="client.admissions[0]?.documents[3]?.submitted" disabled> Consent from Parents
-              </label>
-              <label class="block font-semibold text-gray-700 mr-36">
-                <input type="checkbox" class="-mb-3 mr-2" :checked="client.admissions[0]?.documents[4]?.submitted" disabled> School Records
-              </label>
-              <label class="block font-semibold text-gray-700">
-                <input type="checkbox" class="-mb-3 mr-2" :checked="client.admissions[0]?.documents[5]?.submitted" disabled> Others
-              </label>
-            </div>
-          </div>
-        </div>
+        <!-- Put on Documents Submitted -->
+<div class="mb-4">
+  <label class="block mb-2 font-semibold text-gray-700">Put on Documents Submitted:</label>
+  <div class="pl-4">
+    <div class="flex flex-wrap mb-2">
+      <label class="block font-semibold text-gray-700 mr-48">
+        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'SCSR')" disabled> SCSR
+      </label>
+      <label class="block font-semibold text-gray-700 mr-40">
+        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'Court Order')" disabled> Court Order
+      </label>
+      <label class="block font-semibold text-gray-700">
+        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'Medical Certificates')" disabled> Medical Certificates
+      </label>
+    </div>
+    <div class="flex flex-wrap">
+      <label class="block font-semibold text-gray-700 mr-24">
+        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'Consent from Parents')" disabled> Consent from Parents
+      </label>
+      <label class="block font-semibold text-gray-700 mr-36">
+        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'School Records')" disabled> School Records
+      </label>
+      <label class="block font-semibold text-gray-700">
+        <input type="checkbox" class="-mb-3 mr-2" :checked="isDocumentSubmitted(client, 'Others')" disabled> Others
+      </label>
+      <span v-if="getOtherDocumentName(client)" class="block font-semibold text-gray-700 ml-2">
+        ({{ getOtherDocumentName(client) }})
+      </span>
+    </div>
+  </div>
+</div>
+
+
 
         <div class="mb-4">
           <label class="block font-semibold mb-2 text-gray-700">General impression upon admission:</label>
@@ -138,44 +144,76 @@
         </div>
 
         <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block font-semibold text-gray-700">Name & Signature of Referring Party</label>
-          </div>
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block font-semibold text-gray-700">Admitting Officer</label>
-          </div>
-        </div>
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-xs" 
+      :value="client.admissions[0]?.referring_party_name" 
+      readonly
+    >
+    <label class="block font-semibold text-gray-700">Name & Signature of Referring Party</label>
+  </div>
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-xs" 
+      :value="client.admissions[0]?.admitting_officer" 
+      readonly
+    >
+    <label class="block font-semibold text-gray-700">Admitting Officer</label>
+  </div>
+</div>
 
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block font-semibold text-gray-700">Designation / ID No. / Contact #</label>
-          </div>
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block font-semibold text-gray-700">Designation</label>
-          </div>
-        </div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-xs" 
+      :value="client.admissions[0]?.designation_id_contact" 
+      readonly
+    >
+    <label class="block font-semibold text-gray-700">Designation / ID No. / Contact #</label>
+  </div>
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-xs" 
+      :value="client.admissions[0]?.designation" 
+      readonly
+    >
+    <label class="block font-semibold text-gray-700">Designation</label>
+  </div>
+</div>
 
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block font-semibold text-gray-700">Complete Address/Office Address</label>
-          </div>
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block font-semibold text-gray-700">Date/Time</label>
-          </div>
-        </div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-xs" 
+      :value="client.admissions[0]?.office_address" 
+      readonly
+    >
+    <label class="block font-semibold text-gray-700">Complete Address/Office Address</label>
+  </div>
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-xs" 
+      :value="formatDateTime(client.admissions[0]?.date_time)" 
+      readonly
+    >
+    <label class="block font-semibold text-gray-700">Date/Time</label>
+  </div>
+</div>
 
-        <!--NOTED BY-->
-        <div class="border-gray-300 pt-4 text-center text-xs">
-          <p class="font-semibold mb-4 text-[12px]">Noted By:</p>
-          <p class="font-bold text-[12px] ">ANGELIC B. PAÑA, RSW, MSSW</p>
-          <p class="text-xs">Center Head/SWO IV</p>
-        </div>
+
+        <!-- NOTED BY -->
+<div class="border-gray-300 pt-4 text-center text-xs">
+  <p class="font-semibold mb-4 text-[12px]">Noted By:</p>
+  <p class="font-bold text-[12px]">{{ client.admissions[0]?.noted_by || 'No noted by information available' }}</p>
+  <p class="text-xs">Center Head/SWO IV</p>
+</div>
+
       </div>
       <div v-else>
         <p>Loading data...</p>
@@ -220,6 +258,36 @@ export default {
     },
   },
   methods: {
+
+    formatDateTime(dateTime) {
+      if (!dateTime) return '';
+      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return new Date(dateTime).toLocaleDateString('en-US', options);
+    },
+
+// Check if a document has been submitted
+isDocumentSubmitted(client, documentName) {
+      const documents = client.admissions[0]?.documents[0]?.document_name.split(', ');
+      if (!documents) return false;
+
+      // Check if the document exists in the list
+      return documents.includes(documentName);
+    },
+
+    // Get the specific "Others" document name
+    getOtherDocumentName(client) {
+      const documents = client.admissions[0]?.documents[0]?.document_name.split(', ');
+      if (!documents) return null;
+
+      // Find the "Others" document and return the name if available
+      const othersIndex = documents.indexOf('Others');
+      if (othersIndex === -1 && documents.length > othersIndex + 1) {
+        return documents[documents.length - 1]; // Return the last item if it's "Others"
+      }
+
+      return null; // No "Others" document found
+    },
+
     async fetchClientsData() {
       try {
         const response = await axios.get(`/api/clients-data/${this.id}`);

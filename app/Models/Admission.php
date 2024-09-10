@@ -19,7 +19,16 @@ class Admission extends Model
         'days_in_detention_center',
         'action_taken',
         'general_impression',
-        'client_id'
+        'client_id',
+        'referring_party_name',
+        'referring_party_signature',
+        'admitting_officer',
+        'designation_id_contact',
+        'designation',
+        'office_address',
+        'date_time',
+        'noted_by'
+
     ];
 
     public function client()
