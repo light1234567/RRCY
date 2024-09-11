@@ -15,7 +15,9 @@ const props = defineProps({
 
 const form = useForm({
     _method: 'PUT',
-    name: props.user.name,
+    fname: props.user.fname,
+    middlename: props.user.middlename,
+    lname: props.user.lname,
     email: props.user.email,
     photo: null,
 });
@@ -128,19 +130,49 @@ const clearPhotoFileInput = () => {
                 <InputError :message="form.errors.photo" class="mt-2" />
             </div>
 
-            <!-- Name -->
+            <!-- First Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" value="First Name" />
                 <TextInput
-                    id="name"
-                    v-model="form.name"
+                    id="fname"
+                    v-model="form.fname"
                     type="text"
                     class="mt-1  block w-full"
                     required
                     autocomplete="name"
                 />
-                <InputError :message="form.errors.name" class="mt-2" />
+                <InputError :message="form.errors.fname" class="mt-2" />
             </div>
+
+            <!-- Middle Name -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="name" value="Middle Name" />
+                <TextInput
+                    id="midname"
+                    v-model="form.middlename"
+                    type="text"
+                    class="mt-1  block w-full"
+                    required
+                    autocomplete="name"
+                />
+                <InputError :message="form.errors.middlename" class="mt-2" />
+            </div>
+
+            <!-- Last Name -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="name" value="Last Name" />
+                <TextInput
+                    id="lname"
+                    v-model="form.lname"
+                    type="text"
+                    class="mt-1  block w-full"
+                    required
+                    autocomplete="name"
+                />
+                <InputError :message="form.errors.lname" class="mt-2" />
+            </div>
+
+
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">

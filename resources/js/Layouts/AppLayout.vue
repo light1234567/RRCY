@@ -282,7 +282,7 @@
         class="flex-1 transition-all duration-300"
       >
        <!-- Page Heading -->
-        <div class="w-full m-0 p-0">
+        <div class="ml-5 w-full m-0 p-0">
           <header class="w-full py-2 bg-white border shadow-md px-24 sm:px-8 lg:px-16 flex items-center">
             <slot name="header" v-if="$slots.header"></slot>
 
@@ -290,7 +290,7 @@
               <div class="h-full w-full bg-white rounded-full overflow-hidden">
                 <UserProfileImage 
                   :userImage="userImage"
-                  :userName="userName"
+                  :userName="userfName + userSName + usermidName + userSName + userlName"
                 />
               </div>
             </div>
@@ -301,7 +301,7 @@
             <div class="flex flex-col items-center -mr-2 mt-1/2 ml-2">
               <ApplicationMark
                 :isSidebarCollapsed="isSidebarCollapsed"
-                :userName="userName"
+                :userName="userfName + userSName + usermidName + userSName + userlName"
                 :userImage="userImage"
               />
             </div>
@@ -340,7 +340,10 @@ import axios from 'axios';
 const props = usePage().props;
 
 const userImage = ref(props.auth.user.profile_photo_url || 'images/default.jpg');
-const userName = ref(props.auth.user.name || 'Default Name');
+const userfName = ref(props.auth.user.fname || 'Default Name');
+const userSName = ref( ' ');
+const userlName = ref(props.auth.user.lname || 'Default Name');
+const usermidName = ref(props.auth.user.middlename || 'Default Name');
 const userRole = ref(props.auth.user.role || '(User)');
 
 // Load sidebar state from localStorage
