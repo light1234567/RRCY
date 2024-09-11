@@ -1,8 +1,100 @@
 <template>
   <div>
-    <button @click="exportToPdf" class="mt-4 px-4 py-2 bg-blue-600 rounded">
-      Export to PDF
-    </button>
+    <!-- Tabs for Actions -->
+    <div v-if="editMode" class="flex absolute p-6 -mt-2 space-x-4">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Back</span>
+      </button>
+    </div>
+
+    <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
+      <!-- Pagination Component -->
+      <Pagination :totalPages="totalPages" :currentPage="currentPage" @update:currentPage="currentPage = $event" />
+      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
+        </svg>
+        <span>Edit</span>
+      </button>
+
+      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Save</span>
+      </button>
+
+      <!-- Export to PDF Button -->
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Export to PDF</span>
+      </button>
+    </div>
+
+    <!-- Modal for Save Confirmation -->
+    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6">
+          <div class="flex items-center">
+            <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z" />
+            </svg>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+          </div>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+            Save
+          </button>
+          <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Save Result -->
+    <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6 text-center">
+          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+          </div>
+          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  
+     <!-- Form Content -->
   
     <div ref="pdfContent" class="p-6 border border-gray-400 shadow-xs rounded-lg max-w-3xl mx-auto my-8 ">
       <div class=" relative flex justify-between items-center mb-2">
@@ -17,38 +109,38 @@
         <div class="flex items-center">
           <div class="flex-grow text-[15px] flex items-center mr-2">
             <label class="mb-3  text-black   mr-2 flex items-center h-full">Name:</label>
-            <input type="text" class="underline-input  w-full" :value="client.first_name + ' ' + client.middle_name + ' ' + client.last_name" readonly>
+            <input type="text" class="underline-input  w-full" :value="client.first_name + ' ' + client.middle_name + ' ' + client.last_name" :readonly="!editMode">
           </div>
           <div class="flex text-[15px]  items-center w-1/4">
             <label class="mb-3   text-black mr-2 flex items-center h-full p-0">Sex:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 w-full" :value="client.sex" readonly>
+            <input type="text" class="underline-input bg-transparent mt-1 w-full" :value="client.sex" :readonly="!editMode">
           </div>
           <div class="flex text-[15px] items-center w-1/4">
             <label class="mb-3 block ml-2    text-black mr-2">Religion:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 w-full mb-6 " :value="client.religion" readonly>
+            <input type="text" class="underline-input bg-transparent mt-1 w-full mb-6 " :value="client.religion" :readonly="!editMode">
           </div>  
         </div>
 
         <div class="flex items-center">
           <div class="flex-grow flex text-[15px] items-center mr-2">
             <label class="mb-3 block     text-black mr-2">Address:</label>
-            <input type="text" class="underline-input bg-transparent w-full mb-24" :value="client.province + ', ' + client.city + ', ' + client.barangay + ', ' + client.street" readonly>
+            <input type="text" class="underline-input bg-transparent w-full mb-24" :value="client.province + ', ' + client.city + ', ' + client.barangay + ', ' + client.street" :readonly="!editMode">
           </div>
         </div>
 
         <div class="text-[15px] flex items-center">
           <label class="mb-3 block    text-black mr-2 whitespace-nowrap">Date/Place of Birth:</label>
-          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.date_of_birth + ' / ' + client.place_of_birth" readonly>
+          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.date_of_birth + ' / ' + client.place_of_birth" :readonly="!editMode">
         </div>
 
         <div class="grid grid-cols-2 gap-4">
           <div class="flex items-center text-[15px] ">
               <label class="mb-3    text-black mr-2 whitespace-nowrap">Committing Court:</label>
-              <input type="text" class="underline-input bg-transparent text-xs w-full" :value="client.admissions[0]?.committing_court" readonly>
+              <input type="text" class="underline-input bg-transparent text-xs w-full" :value="client.admissions[0]?.committing_court" :readonly="!editMode">
           </div>
           <div class="text-[15px] flex items-center">
             <label class="mb-3 block    text-black ml-2  mr-2 whitespace-nowrap">Crim. Case #:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.crim_case_number" readonly>
+            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.crim_case_number" :readonly="!editMode">
           </div>
         </div>
 
@@ -56,24 +148,24 @@
         <!-- Offense Committed Section -->
         <div class="text-[15px] flex items-center w-1/2">
           <label class="mb-3    text-black mr-2 whitespace-nowrap">Offense Committed:</label>
-          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.offense_committed" readonly>
+          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.offense_committed" :readonly="!editMode">
         </div>
 
         <!-- Date Admitted Section -->
         <div class="text-[15px] flex items-center w-1/2">
           <label class="mb-3    text-black mr-2 whitespace-nowrap ml-4">Date admitted to Center:</label>
-          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.date_admitted" readonly>
+          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.date_admitted" :readonly="!editMode">
         </div>
       </div>
 
         <div class="flex items-center">
           <div class="flex items-center text-[15px] w-1/2">
             <label class="mb-3 block    text-black whitespace-nowrap mr-2">No. of Days in Jail:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.days_in_jail" readonly>
+            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.days_in_jail" :readonly="!editMode">
           </div>
           <div class="flex items-center text-[15px] w-1/2">
             <label class="mb-3 block    text-black ml-4 whitespace-nowrap mr-2">No. of Days in Detention Center:</label>
-            <input type="text" class="underline-input w-1/4 bg-transparent mt-1  mb-6 flex-grow text-xs" :value="client.admissions[0]?.days_in_detention_center" readonly>
+            <input type="text" class="underline-input w-1/4 bg-transparent mt-1  mb-6 flex-grow text-xs" :value="client.admissions[0]?.days_in_detention_center" :readonly="!editMode">
           </div>
         </div>
         <div class="mb-2">
@@ -82,116 +174,179 @@
             <!-- Tattoo/Scars -->
             <div class="flex items-center text-[15px]">
               <label class="mb-3 block    text-black mr-2">a. Tattoo/Scars:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars" readonly>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars" :readonly="!editMode">
             </div>
 
             <!-- Height -->
             <div class="flex items-center text-[15px]">
               <label class="mb-3 block    text-black mr-2">b. Height:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.height" readonly>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.height" :readonly="!editMode">
             </div>
 
             <!-- Weight -->
             <div class="flex items-center text-[15px]">
               <label class="mb-3 block    text-black mr-2">c. Weight:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.weight" readonly>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.weight" :readonly="!editMode">
             </div>
 
             <!-- Colour of Eye -->
             <div class="flex items-center text-[15px]">
               <label class="mb-3    text-black mr-2">d. Colour of Eye:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye" readonly>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye" :readonly="!editMode">
             </div>
 
             <!-- Skin -->
             <div class="flex items-center text-[15px]">
               <label class="mb-3    text-black mr-2">e. Skin:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.skin_colour" readonly>
+              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.skin_colour" :readonly="!editMode">
             </div>
           </div>
         </div>
 
 
         <div class="mb-4">
-          <label class="text-[15px] block mb-2  font-semibold  text-black">Put on Documents Submitted:</label>
-          <div class="pl-4">
-            <div class="text-[15px] flex flex-wrap mb-2 gap-x-20">
-              <!-- First Row -->
-              <label class="block    text-black">
-                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[0]?.submitted" disabled> SCSR
-              </label>
-              <label class="ml-20 block    text-black">
-                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[1]?.submitted" disabled> Court Order
-              </label>
-              <label class="ml-0.5block    text-black">
-                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[2]?.submitted" disabled> Medical Certificates
-              </label>
-            </div>
-            <div class="text-[15px] flex flex-wrap gap-x-14">
-              <!-- Second Row -->
-              <label class="block    text-black">
-                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[3]?.submitted" disabled> Consent from Parents
-              </label>
-              <label class="block    text-black">
-                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[4]?.submitted" disabled> School Records
-              </label>
-              <label class="block    text-black">
-                <input type="checkbox" class="mr-2" :checked="client.admissions[0]?.documents[5]?.submitted" disabled> Others
-              </label>
-            </div>
-          </div>
-        </div>
+  <label class="text-[15px] block mb-2 font-semibold text-black">Put on Documents Submitted:</label>
+  <div class="pl-4">
+    <!-- Checklist with 3 columns -->
+    <div class="text-[15px] grid grid-cols-3 gap-x-10 gap-y-2">
+      <label class="block font-semibold text-gray-700">
+        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'SCSR')" disabled> SCSR
+      </label>
+      <label class="block font-semibold text-gray-700">
+        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'Court Order')" disabled> Court Order
+      </label>
+      <label class="block font-semibold text-gray-700">
+        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'Medical Certificates')" disabled> Medical Certificates
+      </label>
+      <label class="block font-semibold text-gray-700">
+        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'Consent from Parents')" disabled> Consent from Parents
+      </label>
+      <label class="block font-semibold text-gray-700">
+        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'School Records')" disabled> School Records
+      </label>
+      <label class="block font-semibold text-gray-700 flex items-center">
+        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'Others')" disabled> Others
+        <span v-if="getOtherDocumentName(client)" class="ml-2">
+          ({{ getOtherDocumentName(client) }})
+        </span>
+      </label>
+    </div>
+  </div>
+</div>
 
 
-        <div class="text-[15px] mb-4">
-          <label class="block font-semibold  mb-2 text-black">General impression upon admission:</label>
-          <textarea class="mt-1 block w-full border-gray-300 rounded-md shadow-sm leading-relaxed" style="line-height: 1.5;" :value="client.admissions[0]?.general_impression" readonly></textarea>
-        </div>
 
-        <div class="text-[15px] mb-4">
-          <label class="block    mb-2 text-black">Action Taken:</label>
-          <textarea class="text-[15px] mt-1 block w-full border-gray-300 rounded-md shadow-sm text-xs leading-relaxed" style="line-height: 1.5;" :value="client.admissions[0]?.action_taken" readonly></textarea>
-        </div>
+<div class="text-[15px] mb-4">
+  <label class="block font-semibold mb-2 text-black">General impression upon admission:</label>
+  <textarea 
+    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+    style="line-height: 1.5;" 
+    :value="client.admissions[0]?.general_impression" 
+    :readonly="!editMode">
+  </textarea>
+</div>
 
-        <div class="text-[15px] grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block    text-black">Name & Signature of Referring Party</label>
-          </div>
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block    text-black">Admitting Officer</label>
-          </div>
-        </div>
+<div class="text-[15px] mb-4">
+  <label class="block font-semibold mb-2 text-black">Action Taken:</label>
+  <textarea 
+    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+    style="line-height: 1.5;" 
+    :value="client.admissions[0]?.action_taken" 
+    :readonly="!editMode">
+  </textarea>
+</div>
 
-        <div class="text-[15px] grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block    text-black">Designation / ID No. / Contact #</label>
-          </div>
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block    text-black">Designation</label>
-          </div>
-        </div>
+<div class="grid grid-cols-2 gap-4 mb-4">
 
-        <div class="text-[15px] grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block    text-black">Complete Address/Office Address</label>
-          </div>
-          <div>
-            <input type="text" class="underline-input mt-1 w-full text-xs" readonly>
-            <label class="block    text-black">Date/Time</label>
-          </div>
-        </div>
+          
+  <!-- Referring Party Section -->
+  <div class="flex flex-col justify-end mb-4">
+  <div v-if="client.admissions[0]?.referring_party_signature">
+    <img
+      :src="'/storage/' + client.admissions[0]?.referring_party_signature"
+      alt="Referring Party Signature"
+      class="h-24 w-auto mb-2"
+    />
+  </div>
+  <input 
+    type="text" 
+    class="underline-input mt-1 w-full text-[15px]" 
+    :value="client.admissions[0]?.referring_party_name" 
+    :readonly="!editMode"
+  >
+  <label class="block font-semibold text-gray-700 mt-2">Name & Signature of Referring Party</label>
+</div>
 
-        <!--NOTED BY-->
-        <div class="text-[15px] border-gray-300 pt-4 text-center">
-          <p class="   mb-4 mt-4 ">Noted By:</p>
-          <p class="font-bold ">ANGELIC B. PAÑA, RSW, MSSW</p>
-          <p class="">Center Head/SWO IV</p>
-        </div>
+
+  <!-- Admitting Officer Section -->
+  <div class="flex flex-col justify-end mb-4">
+  <input 
+    type="text" 
+    class="underline-input mt-1 w-full text-[15px]" 
+    :value="client.admissions[0]?.admitting_officer" 
+    :readonly="!editMode"
+  >
+  <label class="block font-semibold text-gray-700 mt-2">Admitting Officer</label>
+</div>
+</div>
+
+<div class="grid grid-cols-2 gap-4 mb-4">
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-[15px]" 
+      :value="client.admissions[0]?.designation_id_contact" 
+      :readonly="!editMode"
+    >
+    <label class="block font-semibold text-gray-700 mt-2">Designation / ID No. / Contact #</label>
+  </div>
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-[15px]" 
+      :value="client.admissions[0]?.designation" 
+      :readonly="!editMode"
+    >
+    <label class="block font-semibold text-gray-700 mt-2">Designation</label>
+  </div>
+</div>
+
+<div class="grid grid-cols-2 gap-4 mb-4">
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-[15px]" 
+      :value="client.admissions[0]?.office_address" 
+      :readonly="!editMode"
+    >
+    <label class="block font-semibold text-gray-700 mt-2">Complete Address/Office Address</label>
+  </div>
+  <div>
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-[15px]" 
+      :value="formatDateTime(client.admissions[0]?.date_time)" 
+      :readonly="!editMode"
+    >
+    <label class="block font-semibold text-gray-700 mt-2">Date/Time</label>
+  </div>
+</div>
+
+<!-- Noted By Section -->
+<div class="border-gray-300 pt-4 text-center text-xs">
+  <p class="font-semibold mb-4 text-[12px]">Noted By:</p>
+  <input 
+    v-if="client.admissions[0]" 
+    type="text" 
+    class="underline-input mt-1 text-center text-[12px] font-bold"
+    v-model="client.admissions[0].noted_by" 
+    :readonly="!editMode"
+    style="width: 200px;" 
+  />
+  <p class="text-xs">Center Head/SWO IV</p>
+</div>
+
+
       </div>
       <div v-else>
         <p>Loading data...</p>
@@ -224,7 +379,14 @@ export default {
   data() {
     return {
       clients: [],
+      editMode: false,
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
       id: null,
+      totalPages: 1,
+      currentPage: 1,
     };
   },
   mounted() {
@@ -238,6 +400,86 @@ export default {
     },
   },
   methods: {
+    // Toggle between edit and view modes
+    toggleEdit() {
+      this.editMode = !this.editMode;
+    },
+
+    cancelEdit() {
+      this.editMode = false;
+    },
+
+    openModal() {
+      this.isModalOpen = true;
+    },
+
+    closeModal() {
+      this.isModalOpen = false;
+    },
+
+    confirmSave() {
+      this.saveForm();
+      this.closeModal();
+      this.editMode = false;
+    },
+
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+    },
+
+    formatDateTime(dateTime) {
+      if (!dateTime) return '';
+      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return new Date(dateTime).toLocaleDateString('en-US', options);
+    },
+
+// Check if a document has been submitted
+isDocumentSubmitted(client, documentName) {
+      const documents = client.admissions[0]?.documents[0]?.document_name.split(', ');
+      if (!documents) return false;
+
+      // Check if the document exists in the list
+      return documents.includes(documentName);
+    },
+
+    // Get the specific "Others" document name
+    getOtherDocumentName(client) {
+      const documents = client.admissions[0]?.documents[0]?.document_name.split(', ');
+      if (!documents) return null;
+
+      // Find the "Others" document and return the name if available
+      const othersIndex = documents.indexOf('Others');
+      if (othersIndex === -1 && documents.length > othersIndex + 1) {
+        return documents[documents.length - 1]; // Return the last item if it's "Others"
+      }
+
+      return null; // No "Others" document found
+    },
+
+    // Save form data
+    async saveForm() {
+   try {
+      const response = await axios.post('/api/save-admission', { clients: this.clients });
+      this.showSaveResultModal('Success', 'Form saved successfully.');
+      this.editMode = false;
+   } catch (error) {
+      if (error.response && error.response.status === 422) {
+         // Log detailed validation errors from the server
+         console.error('Validation error:', error.response.data.errors);
+      }
+      this.showSaveResultModal('Error', 'Error saving the form.');
+      console.error('Error saving form:', error);
+   }
+}
+
+,
+
+    showSaveResultModal(title, message) {
+      this.saveResultTitle = title;
+      this.saveResultMessage = message;
+      this.isSaveResultModalOpen = true;
+    },
+
     async fetchClientsData() {
       try {
         const response = await axios.get(`/api/clients-data/${this.id}`);
@@ -249,6 +491,7 @@ export default {
         console.error('Error fetching client data:', error);
       }
     },
+
   async exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
