@@ -17,7 +17,9 @@ class AdminController extends Controller
             'id',
             'role',
             'email',
-            'status'
+            'status',
+            'login_at', 
+            'logout_at'
         )->where('role', '<>', 'admin') // Exclude users with 'admin' role
         ->get();
 
@@ -32,7 +34,9 @@ class AdminController extends Controller
             'id',
             'role',
             'email',
-            'status'
+            'status',
+             'login_at', 
+            'logout_at'
         )->find($id);
 
         if (!$user) {
@@ -70,4 +74,21 @@ class AdminController extends Controller
 
         return response()->json(['message' => 'User verified successfully'], 200);
     }
+
+    // Add this method to AdminController
+
+public function toggleVerify(Request $request, $id)
+{
+    $user = User::find($id);
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    $user->status = $request->input('status');
+    $user->save();
+
+    return response()->json(['message' => 'User status updated successfully'], 200);
+}
+
 }

@@ -214,3 +214,6 @@ Route::post('/move-file', [FileController::class, 'moveFile']);
 Route::post('/delete-folder', [FileController::class, 'deleteFolder']);
 Route::post('/delete-file', [FileController::class, 'deleteFile']);
 
+Route::patch('/users/{id}/toggle-verify', [AdminController::class, 'toggleVerify']);
+
+

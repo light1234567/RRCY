@@ -28,6 +28,9 @@ class User extends Authenticatable
         'password',
         'role',
         'status', // Add this to enable mass assignment of the status field
+        'login_at', 
+        'logout_at',
+
     ];
 
     /**

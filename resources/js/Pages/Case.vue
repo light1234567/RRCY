@@ -5,13 +5,12 @@
       <!-- Main Client Information -->
       <div class="ml-12 flex">
         <img
-          :src="client.profile_image ? client.profile_image : defaultImage"
+          :src="client.profile_image ? `/storage/${client.profile_image}` : defaultImage"
           alt="Client Profile Image"
           class="w-32 h-32 rounded-full border mr-6"
         />
         <div>
           <h1 class="text-2xl font-bold text-gray-900">{{ client.first_name }} {{ client.last_name }}</h1>
-         
           <p class="text-lg text-gray-700">Age: {{ calculateAge(client.date_of_birth) }} years old</p>
           <p class="text-lg text-gray-700">Address: {{ formattedAddress }}</p>
         </div>
@@ -30,9 +29,8 @@
           >
             <!-- Display "Case X" based on the total length, oldest as Case 1 -->
             <p class="text-sm text-blue-600 font-bold mt-2">Case {{ matchingClients.length - index }}</p>
-           
-            <p class="text-sm text-gray-700">Child Status: {{ client.child_status }}</p>
             
+            <p class="text-sm text-gray-700">Child Status: {{ client.child_status }}</p>
             <p class="text-sm text-gray-700 mt-2">
               Case Status: {{ client.admissions.length ? client.admissions[0].case_status : 'N/A' }}
             </p>

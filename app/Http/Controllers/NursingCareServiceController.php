@@ -117,12 +117,14 @@ class NursingCareServiceController extends Controller
                 return response()->json([
                     'client' => $client,
                     'assessment' => $nursingCareService,
+                    'profile_image' => $client->profile_image,
                 ]);
             } else {
                 Log::warning('NursingCareService not found for client ID:', ['client_id' => $client->id]);
                 return response()->json([
                     'client' => $client,
                     'assessment' => null,
+                    'profile_image' => $client->profile_image,
                 ]);
             }
         } catch (\Exception $e) {

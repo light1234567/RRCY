@@ -18,12 +18,14 @@ return new class extends Migration
             $table->string('middlename')->nullable();
             $table->string('email')->unique();
             $table->string('role');
-            $table->string('status')->default('unverified'); // Add the status column with a default value
+            $table->string('status')->default('unverified'); // Default status
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
+            $table->timestamp('login_at')->nullable(); // Add login_at
+            $table->timestamp('logout_at')->nullable(); // Add logout_at
             $table->timestamps();
         });
 
