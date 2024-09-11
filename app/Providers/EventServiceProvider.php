@@ -10,3 +10,4 @@ Event::listen(Login::class, function ($event) {
 Event::listen(Logout::class, function ($event) {
     $event->user->update(['logout_at' => now()]);
 });
+\Log::info('Logout event triggered for user: ' . $event->user->id);

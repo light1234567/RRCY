@@ -6,3 +6,16 @@ const axiosInstance = axios.create({
 });
 
 export default axiosInstance;
+
+axios.post('/logout', {}, {
+  headers: {
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+  }
+})
+.then(response => {
+  showModal.value = false;
+  window.location.href = '/login'; // Redirect to login
+})
+.catch(error => {
+  console.log(error);
+});

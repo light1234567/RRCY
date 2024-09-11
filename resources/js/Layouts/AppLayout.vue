@@ -355,14 +355,16 @@ const toggleSidebar = () => {
 
 const logout = () => {
   axios.post('/logout')
-    .then(() => {
+    .then(response => {
       showModal.value = false;
-      window.location.href = '/login'; // Redirect to the login page or any other page after logout
+      console.log(response.data); // Optionally log the response or handle it
+      window.location.href = '/login'; // Redirect to the login page after logout
     })
     .catch(error => {
-      console.log(error);
+      console.error('Logout failed:', error); // Log the error
     });
 };
+
 
 const isSocialServices = computed(() => userRole.value === 'social services');
 const isAdmin = computed(() => userRole.value === 'admin');

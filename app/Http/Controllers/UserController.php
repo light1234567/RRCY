@@ -57,26 +57,35 @@ class UserController extends Controller
     /**
      * Log out the user and update the logout_at timestamp.
      */
-    public function logout(Request $request)
+    /**
+ * Log out the user and update the logout_at timestamp.
+ */
+public function logout(Request $request)
 {
-    $user = Auth::user();
+    $user = Auth::user();  // Get the currently authenticated user
 
     if ($user) {
-        \Log::info('Logging out user: ' . $user->email); // Log the email of the user being logged out
+        // Update the logout_at timestamp
+        $user->logout_at = now();
+        $user->save();  // Save the changes to the database
 
-        // Update logout_at timestamp
-        $user->update(['logout_at' => now()]);
-
-        // Perform logout
+        // Perform the logout
         Auth::logout();
 
-        return response()->json(['valid' => true]);
+        // Invalidate the session and regenerate the CSRF token
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'User logged out successfully.']);
+        return response()->json([
+            'message' => 'User logged out successfully.',
+            'logout_at' => $user->logout_at,  // Optionally return the updated logout_at timestamp
+        ]);
     }
 
     return response()->json(['message' => 'No authenticated user found.'], 401);
 }
+
+
 
 
     
