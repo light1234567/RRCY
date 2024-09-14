@@ -13,148 +13,151 @@ class AdmissionController extends Controller
 {
     public function saveForm(Request $request)
 {
+    // Log the start of the form saving process with all incoming request data
     Log::info('Incoming request data: ', $request->all());
 
-    // Validate the incoming request data
-    $validated = $request->validate([
-        'client.child_status' => 'required|string|max:255',
-        'client.first_name' => 'required|string|max:255',
-        'client.middle_name' => 'nullable|string|max:255',
-        'client.last_name' => 'required|string|max:255',
-        'client.suffix' => 'nullable|string|max:10',
-        'client.sex' => 'required|string|max:10',
-        'client.date_of_birth' => 'required|date',
-        'client.place_of_birth' => 'required|string|max:255',
-        'client.province' => 'required|string|max:255',
-        'client.city' => 'required|string|max:255',
-        'client.barangay' => 'required|string|max:255',
-        'client.street' => 'nullable|string|max:255',
-        'client.religion' => 'nullable|string|max:255',
-        'distinguishing_marks.tattoo_scars' => 'nullable|string|max:255',
-        'distinguishing_marks.height' => 'nullable|numeric',
-        'distinguishing_marks.weight' => 'nullable|numeric',
-        'distinguishing_marks.colour_of_eye' => 'nullable|string|max:255',
-        'distinguishing_marks.skin_colour' => 'nullable|string|max:255',
-        'admission.case_status' => 'required|string|max:255',
-        'admission.committing_court' => 'required|string|max:255',
-        'admission.crim_case_number' => 'required|string|max:255',
-        'admission.offense_committed' => 'required|string|max:255',
-        'admission.date_admitted' => 'required|date',
-        'admission.days_in_jail' => 'required|integer',
-        'admission.days_in_detention_center' => 'required|integer',
-        'admission.action_taken' => 'required|string|max:255',
-        'admission.general_impression' => 'required|string|max:255',
-        'documents_submitted.documents' => 'array',
-        'documents_submitted.documents.*' => 'string|max:255',
-        'documents_submitted.others' => 'nullable|string|max:255',
-        'admission.referring_party_name' => 'nullable|string|max:255',
-        'referring_party_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-        'admission.admitting_officer' => 'nullable|string|max:255',
-        'admission.designation_id_contact' => 'nullable|string|max:255',
-        'admission.designation' => 'nullable|string|max:255',
-        'admission.office_address' => 'nullable|string|max:255',
-        'admission.date_time' => 'nullable|date',
-        'admission.noted_by' => 'nullable|string|max:255',
-    ]);
-
-    Log::info('Validated data: ', $validated);
-
-    // Replace NULL values with empty strings for optional fields like suffix
-    $validated['client']['suffix'] = $validated['client']['suffix'] ?? '';
-
-    // Check if the client with the same first name, last name, and date admitted exists
-    $clientExists = Client::where('first_name', $validated['client']['first_name'])
-        ->where('last_name', $validated['client']['last_name'])
-        ->whereHas('admissions', function ($query) use ($validated) {
-            $query->where('date_admitted', $validated['admission']['date_admitted']);
-        })
-        ->exists();
-
-    Log::info('Client exists: ', ['exists' => $clientExists]);
-
-    if ($clientExists) {
-        return response()->json(['error' => 'Client with the same first name, last name, and date admitted already exists.'], 400);
-    }
-
     try {
-        // Create the client record
-        $client = Client::create($validated['client']);
-        Log::info('Client created: ', ['client_id' => $client->id]);
+        // Validate the request data
+        $validated = $request->validate([
+            'client.child_status' => 'required|string|max:255',
+            'client.first_name' => 'required|string|max:255',
+            'client.middle_name' => 'nullable|string|max:255',
+            'client.last_name' => 'required|string|max:255',
+            'client.suffix' => 'nullable|string|max:10',
+            'client.sex' => 'required|string|max:10',
+            'client.date_of_birth' => 'required|date',
+            'client.place_of_birth' => 'required|string|max:255',
+            'client.province' => 'required|string|max:255',
+            'client.city' => 'required|string|max:255',
+            'client.barangay' => 'required|string|max:255',
+            'client.street' => 'nullable|string|max:255',
+            'client.religion' => 'nullable|string|max:255',
+            'distinguishing_marks.tattoo_scars' => 'nullable|string|max:255',
+            'distinguishing_marks.height' => 'nullable|numeric',
+            'distinguishing_marks.weight' => 'nullable|numeric',
+            'distinguishing_marks.colour_of_eye' => 'nullable|string|max:255',
+            'distinguishing_marks.skin_colour' => 'nullable|string|max:255',
+            'admission.case_status' => 'required|string|max:255',
+            'admission.committing_court' => 'required|string|max:255',
+            'admission.crim_case_number' => 'required|string|max:255',
+            'admission.offense_committed' => 'required|string|max:255',
+            'admission.date_admitted' => 'required|date',
+            'admission.days_in_jail' => 'required|integer',
+            'admission.days_in_detention_center' => 'required|integer',
+            'admission.action_taken' => 'required|string|max:255',
+            'admission.general_impression' => 'required|string|max:255',
+            'documents_submitted.documents' => 'array',
+            'documents_submitted.documents.*' => 'string|max:255',
+            'documents_submitted.others' => 'nullable|string|max:255',
+            'admission.referring_party_name' => 'nullable|string|max:255',
+            'referring_party_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+            'admission.admitting_officer' => 'nullable|string|max:255',
+            'admission.designation_id_contact' => 'nullable|string|max:255',
+            'admission.designation' => 'nullable|string|max:255',
+            'admission.office_address' => 'nullable|string|max:255',
+            'admission.date_time' => 'nullable|date',
+            'admission.noted_by' => 'nullable|string|max:255',
+        ]);
 
-        // Prepare the admission data
+        Log::info('Validation passed. Validated data: ', $validated);
+
+        // Check if client_id is provided, update existing client or create a new one
+        $client = $request->client_id 
+            ? Client::find($request->client_id) 
+            : new Client();
+
+        if (!$client) {
+            return response()->json(['error' => 'Client not found.'], 404);
+        }
+
+        // Update or create the client record
+        $client->fill($validated['client']);
+        $client->save();
+
+        Log::info('Client record saved or updated: ', ['client_id' => $client->id]);
+
+        // Prepare admission data and link it to the client
         $admissionData = $validated['admission'];
         $admissionData['client_id'] = $client->id;
 
-        Log::info('Prepared admission data: ', $admissionData);
+        // Update or create the admission record
+        $admission = $request->admission_id 
+            ? Admission::where('id', $request->admission_id)->where('client_id', $client->id)->first()
+            : new Admission();
 
-        // Handle the referring party signature file if uploaded
-        if ($request->hasFile('referring_party_signature')) {
-            $file = $request->file('referring_party_signature');
-            
-            // Get the original filename
-            $originalFileName = $file->getClientOriginalName();
-            
-            // Optionally, you can add a timestamp or unique identifier to avoid overwriting files with the same name
-            $fileName = time() . '_' . $originalFileName;
-            
-            // Store the file with the original file name in the "signatures" directory
-            $signaturePath = $file->storeAs('signatures', $fileName, 'public');
-            
-            // Store the file path in the database
-            $admissionData['referring_party_signature'] = $signaturePath;
-        
-            Log::info('Signature uploaded with original name: ', ['signature_path' => $signaturePath]);
+        if (!$admission) {
+            $admission = new Admission();
+            $admission->fill($admissionData);
+            $admission->save();
+        } else {
+            $admission->fill($admissionData);
+            $admission->save();
         }
-        
 
-        // Create the admission record
-        $admission = Admission::create($admissionData);
-        Log::info('Admission created: ', ['admission_id' => $admission->id]);
+        Log::info('Admission record saved or updated: ', ['admission_id' => $admission->id]);
 
-        // Check if the admission fields were actually saved
-        $savedAdmission = Admission::find($admission->id);
-        Log::info('Saved Admission Details', [
-            'referring_party_name' => $savedAdmission->referring_party_name,
-            'admitting_officer' => $savedAdmission->admitting_officer,
-            'designation_id_contact' => $savedAdmission->designation_id_contact,
-            'designation' => $savedAdmission->designation,
-            'office_address' => $savedAdmission->office_address,
-            'date_time' => $savedAdmission->date_time,
-        ]);
+        // Handle signature file upload if exists
+        if ($request->hasFile('referring_party_signature')) {
+            Log::info('Uploading referring party signature.');
 
-        // Create distinguishing marks records
-        $distinguishingMarksData = $validated['distinguishing_marks'];
-        $distinguishingMarksData['admission_id'] = $admission->id;
-        DistinguishingMark::create($distinguishingMarksData);
-        Log::info('Distinguishing marks created: ', $distinguishingMarksData);
+            $file = $request->file('referring_party_signature');
+
+            // Check if the file is valid
+            if ($file && $file->isValid()) {
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $signaturePath = $file->storeAs('signatures', $fileName, 'public'); // Save to public storage
+
+                $admission->referring_party_signature = $signaturePath;
+                $admission->save();
+
+                Log::info('Referring party signature uploaded successfully: ', ['signature_path' => $signaturePath]);
+            } else {
+                Log::error('Referring party signature upload failed: Invalid file.');
+                return response()->json(['error' => 'Invalid file upload'], 422);
+            }
+        }
+
+        // Update or create distinguishing marks
+        DistinguishingMark::updateOrCreate(
+            ['admission_id' => $admission->id],
+            $validated['distinguishing_marks']
+        );
+        Log::info('Distinguishing marks saved or updated for admission ID: ', ['admission_id' => $admission->id]);
 
         // Process submitted documents
-        $documents = !empty($validated['documents_submitted']['documents'])
-            ? implode(', ', array_diff($validated['documents_submitted']['documents'], ['Others']))
-            : '';
-
-        // If 'Others' is specified, append it to the documents string
-        if (!empty($validated['documents_submitted']['others'])) {
-            $documents .= ($documents ? ', ' : '') . $validated['documents_submitted']['others'];
+        $documents = $validated['documents_submitted']['documents'] ?? [];
+        $others = $validated['documents_submitted']['others'] ?? null;
+        if ($others) {
+            if (!in_array($others, $documents)) { // Check if "Others" is already in the array
+                $documents[] = $others;
+            }
         }
+        Log::info('Documents to be saved for admission: ', ['documents' => $documents]);
 
-        Log::info('Processed documents: ', ['documents' => $documents]);
+        // Save or update the documents as a JSON array for the given admission_id
+        DocumentSubmitted::updateOrCreate(
+            ['admission_id' => $admission->id],
+            ['document_name' => json_encode($documents), 'submitted' => true]
+        );
 
-        // Create the documents submitted record
-        DocumentSubmitted::create([
-            'admission_id' => $admission->id,
-            'document_name' => $documents,
-            'submitted' => true,
-        ]);
+        Log::info('Documents submitted record saved or updated for admission ID: ', ['admission_id' => $admission->id]);
 
-        Log::info('Documents submitted: ', ['admission_id' => $admission->id, 'documents' => $documents]);
-
+        // Return success response
+        Log::info('Form save process completed successfully.');
         return response()->json(['message' => 'Form saved successfully!'], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        // Log validation errors
+        Log::error('Validation failed: ', ['errors' => $e->errors()]);
+        return response()->json(['error' => 'Validation failed', 'details' => $e->errors()], 422);
     } catch (\Exception $e) {
-        Log::error('Failed to save form: ', ['error' => $e->getMessage()]);
-        return response()->json(['error' => 'Failed to save form. Please try again.'], 500);
+        // Log any other errors
+        Log::error('Error saving form: ' . $e->getMessage(), ['stack_trace' => $e->getTraceAsString()]);
+        return response()->json(['error' => 'Failed to save form'], 500);
     }
 }
+
+
 
 
     public function getAllData()

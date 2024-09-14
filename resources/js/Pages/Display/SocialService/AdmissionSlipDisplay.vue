@@ -11,8 +11,7 @@
     </div>
 
     <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-      <!-- Pagination Component -->
-      <Pagination :totalPages="totalPages" :currentPage="currentPage" @update:currentPage="currentPage = $event" />
+
       <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
@@ -53,8 +52,9 @@
         </div>
         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
           <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-            Save
-          </button>
+    Save
+</button>
+
           <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">
             Cancel
           </button>
@@ -108,64 +108,109 @@
       <div v-if="clients.length > 0" v-for="client in clients" :key="client.id" class="mb-12 p-6 rounded-lg text-xs">
         <div class="flex items-center">
           <div class="flex-grow text-[15px] flex items-center mr-2">
-            <label class="mb-3  text-black   mr-2 flex items-center h-full">Name:</label>
-            <input type="text" class="underline-input  w-full" :value="client.first_name + ' ' + client.middle_name + ' ' + client.last_name" :readonly="!editMode">
-          </div>
-          <div class="flex text-[15px]  items-center w-1/4">
-            <label class="mb-3   text-black mr-2 flex items-center h-full p-0">Sex:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 w-full" :value="client.sex" :readonly="!editMode">
-          </div>
-          <div class="flex text-[15px] items-center w-1/4">
-            <label class="mb-3 block ml-2    text-black mr-2">Religion:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 w-full mb-6 " :value="client.religion" :readonly="!editMode">
-          </div>  
+  <label class="mb-3 text-black mr-2 flex items-center h-full">Name:</label>
+  <!-- When not in edit mode, show the concatenated value -->
+  <template v-if="!editMode">
+    <input type="text" class="underline-input w-full" :value="client.first_name + ' ' + client.middle_name + ' ' + client.last_name" readonly>
+  </template>
+
+  <!-- When in edit mode, show the separate fields for first, middle, and last name -->
+  <template v-else>
+    <input type="text" class="underline-input w-1/3 mr-1" v-model="client.first_name" placeholder="First Name">
+    <input type="text" class="underline-input w-1/3 mr-1" v-model="client.middle_name" placeholder="Middle Name">
+    <input type="text" class="underline-input w-1/3" v-model="client.last_name" placeholder="Last Name">
+  </template>
+</div>
+
+<div class="flex text-[15px] items-center w-1/4">
+          <label class="mb-3 text-black mr-2">Sex:</label>
+          <input type="text" class="underline-input bg-transparent mt-1 w-full" v-model="client.sex" :readonly="!editMode">
+        </div>
+        <div class="flex text-[15px] items-center w-1/4">
+          <label class="mb-3 text-black mr-2">Religion:</label>
+          <input type="text" class="underline-input bg-transparent mt-1 w-full" v-model="client.religion" :readonly="!editMode">
+        </div>
         </div>
 
         <div class="flex items-center">
           <div class="flex-grow flex text-[15px] items-center mr-2">
-            <label class="mb-3 block     text-black mr-2">Address:</label>
-            <input type="text" class="underline-input bg-transparent w-full mb-24" :value="client.province + ', ' + client.city + ', ' + client.barangay + ', ' + client.street" :readonly="!editMode">
-          </div>
+  <label class="mb-3 block text-black mr-2">Address:</label>
+  
+  <template v-if="!editMode">
+    <input type="text" class="underline-input w-full" :value="client.province + ', ' + client.city + ', ' + client.barangay + ', ' + client.street" readonly>
+  </template>
+  
+  <template v-else>
+    <input type="text" class="underline-input w-1/4 mr-1" v-model="client.province" placeholder="Province">
+    <input type="text" class="underline-input w-1/4 mr-1" v-model="client.city" placeholder="City">
+    <input type="text" class="underline-input w-1/4 mr-1" v-model="client.barangay" placeholder="Barangay">
+    <input type="text" class="underline-input w-1/4" v-model="client.street" placeholder="Street">
+  </template>
+</div>
+
         </div>
 
         <div class="text-[15px] flex items-center">
-          <label class="mb-3 block    text-black mr-2 whitespace-nowrap">Date/Place of Birth:</label>
-          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.date_of_birth + ' / ' + client.place_of_birth" :readonly="!editMode">
-        </div>
+  <label class="mb-3 block text-black mr-2 whitespace-nowrap">Date/Place of Birth:</label>
+  
+  <!-- Show the combined Date of Birth and Place of Birth when not in edit mode -->
+  <template v-if="!editMode">
+    <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.date_of_birth + ' / ' + client.place_of_birth" readonly>
+  </template>
+  
+  <!-- Show separate input fields for Date of Birth and Place of Birth in edit mode -->
+  <template v-else>
+    <input type="date" class="underline w-1/2 mr-1 text-xs" v-model="client.date_of_birth" placeholder="Date of Birth">
+    <input type="text" class="underline-input w-1/2 text-xs" v-model="client.place_of_birth" placeholder="Place of Birth">
+  </template>
+</div>
+
 
         <div class="grid grid-cols-2 gap-4">
           <div class="flex items-center text-[15px] ">
               <label class="mb-3    text-black mr-2 whitespace-nowrap">Committing Court:</label>
-              <input type="text" class="underline-input bg-transparent text-xs w-full" :value="client.admissions[0]?.committing_court" :readonly="!editMode">
+              <input type="text" class="underline-input bg-transparent text-xs w-full" v-model="client.admissions[0].committing_court" :readonly="!editMode">
           </div>
           <div class="text-[15px] flex items-center">
             <label class="mb-3 block    text-black ml-2  mr-2 whitespace-nowrap">Crim. Case #:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.crim_case_number" :readonly="!editMode">
-          </div>
+            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" v-model="client.admissions[0].crim_case_number" :readonly="!editMode"
+>            </div>
         </div>
 
         <div class="flex items-center">
         <!-- Offense Committed Section -->
         <div class="text-[15px] flex items-center w-1/2">
           <label class="mb-3    text-black mr-2 whitespace-nowrap">Offense Committed:</label>
-          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.offense_committed" :readonly="!editMode">
+          <input type="text" v-model="client.admissions[0].offense_committed" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs":readonly="!editMode"
+/>
         </div>
 
         <!-- Date Admitted Section -->
         <div class="text-[15px] flex items-center w-1/2">
-          <label class="mb-3    text-black mr-2 whitespace-nowrap ml-4">Date admitted to Center:</label>
-          <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.date_admitted" :readonly="!editMode">
-        </div>
+  <label class="mb-3 text-black mr-2 whitespace-nowrap ml-4">Date admitted to Center:</label>
+  
+  <!-- Show the date admitted in a readonly input when not in edit mode -->
+  <template v-if="!editMode">
+    <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.date_admitted" readonly>
+  </template>
+  
+  <!-- Show a date picker input field when in edit mode -->
+  <template v-else>
+    <input type="date" class="underline w-full text-xs" v-model="client.admissions[0].date_admitted" placeholder="Date Admitted">
+  </template>
+</div>
+
       </div>
 
         <div class="flex items-center">
           <div class="flex items-center text-[15px] w-1/2">
             <label class="mb-3 block    text-black whitespace-nowrap mr-2">No. of Days in Jail:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.admissions[0]?.days_in_jail" :readonly="!editMode">
+            <input type="text" v-model="client.admissions[0].days_in_jail" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :readonly="!editMode"
+/>
           </div>
           <div class="flex items-center text-[15px] w-1/2">
             <label class="mb-3 block    text-black ml-4 whitespace-nowrap mr-2">No. of Days in Detention Center:</label>
-            <input type="text" class="underline-input w-1/4 bg-transparent mt-1  mb-6 flex-grow text-xs" :value="client.admissions[0]?.days_in_detention_center" :readonly="!editMode">
+            <input type="text" class="underline-input w-1/4 bg-transparent mt-1  mb-6 flex-grow text-xs" v-model="client.admissions[0].days_in_detention_center" :readonly="!editMode">
           </div>
         </div>
         <div class="mb-2">
@@ -173,66 +218,144 @@
           <div class="flex flex-wrap items-center gap-x-8">
             <!-- Tattoo/Scars -->
             <div class="flex items-center text-[15px]">
-              <label class="mb-3 block    text-black mr-2">a. Tattoo/Scars:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars" :readonly="!editMode">
+              <label class="mb-3 block text-black mr-2">a.Tattoo/Scars:</label>
+              <input type="text" v-model="client.admissions[0].distinguishing_marks[0].tattoo_scars" class="underline-input bg-transparent flex-grow text-xs w-[100px]" :readonly="!editMode"
+/>
             </div>
 
             <!-- Height -->
             <div class="flex items-center text-[15px]">
-              <label class="mb-3 block    text-black mr-2">b. Height:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.height" :readonly="!editMode">
+              <label class="mb-3 block    text-black mr-2">b.Height:</label>
+              <input type="text" v-model="client.admissions[0].distinguishing_marks[0].height" class="underline-input bg-transparent flex-grow text-xs w-[100px]" :readonly="!editMode"
+/>
             </div>
 
             <!-- Weight -->
             <div class="flex items-center text-[15px]">
               <label class="mb-3 block    text-black mr-2">c. Weight:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.weight" :readonly="!editMode">
+              <div v-if="client.admissions[0]?.distinguishing_marks?.[0]">
+<input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" v-model="client.admissions[0].distinguishing_marks[0].weight" :readonly="!editMode"
+/>
+</div>
             </div>
 
             <!-- Colour of Eye -->
             <div class="flex items-center text-[15px]">
               <label class="mb-3    text-black mr-2">d. Colour of Eye:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye" :readonly="!editMode">
+              <div v-if="client.admissions[0]?.distinguishing_marks?.[0]">
+<input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" v-model="client.admissions[0].distinguishing_marks[0].colour_of_eye" :readonly="!editMode"
+/>
+</div>
             </div>
 
             <!-- Skin -->
             <div class="flex items-center text-[15px]">
               <label class="mb-3    text-black mr-2">e. Skin:</label>
-              <input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" :value="client.admissions[0]?.distinguishing_marks[0]?.skin_colour" :readonly="!editMode">
+              <div v-if="client.admissions[0]?.distinguishing_marks?.[0]">
+<input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" v-model="client.admissions[0].distinguishing_marks[0].skin_colour" :readonly="!editMode"
+/>
+</div>
             </div>
           </div>
         </div>
 
 
-        <div class="mb-4">
+ <!-- Checklist for Documents Submitted -->
+<div class="mb-4">
   <label class="text-[15px] block mb-2 font-semibold text-black">Put on Documents Submitted:</label>
   <div class="pl-4">
     <!-- Checklist with 3 columns -->
     <div class="text-[15px] grid grid-cols-3 gap-x-10 gap-y-2">
+      
+      <!-- SCSR Checkbox -->
       <label class="block font-semibold text-gray-700">
-        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'SCSR')" disabled> SCSR
+        <input 
+          type="checkbox" 
+          class="mr-2" 
+          :checked="isDocumentSubmitted(client, 'SCSR')" 
+          @change="toggleDocument(client, 'SCSR')" 
+          :disabled="!editMode"
+        > SCSR
       </label>
+
+      <!-- Court Order Checkbox -->
       <label class="block font-semibold text-gray-700">
-        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'Court Order')" disabled> Court Order
+        <input 
+          type="checkbox" 
+          class="mr-2" 
+          :checked="isDocumentSubmitted(client, 'Court Order')" 
+          @change="toggleDocument(client, 'Court Order')" 
+          :disabled="!editMode"
+        > Court Order
       </label>
+
+      <!-- Medical Certificates Checkbox -->
       <label class="block font-semibold text-gray-700">
-        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'Medical Certificates')" disabled> Medical Certificates
+        <input 
+          type="checkbox" 
+          class="mr-2" 
+          :checked="isDocumentSubmitted(client, 'Medical Certificates')" 
+          @change="toggleDocument(client, 'Medical Certificates')" 
+          :disabled="!editMode"
+        > Medical Certificates
       </label>
+
+      <!-- Consent from Parents Checkbox -->
       <label class="block font-semibold text-gray-700">
-        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'Consent from Parents')" disabled> Consent from Parents
+        <input 
+          type="checkbox" 
+          class="mr-2" 
+          :checked="isDocumentSubmitted(client, 'Consent from Parents')" 
+          @change="toggleDocument(client, 'Consent from Parents')" 
+          :disabled="!editMode"
+        > Consent from Parents
       </label>
+
+      <!-- School Records Checkbox -->
       <label class="block font-semibold text-gray-700">
-        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'School Records')" disabled> School Records
+        <input 
+          type="checkbox" 
+          class="mr-2" 
+          :checked="isDocumentSubmitted(client, 'School Records')" 
+          @change="toggleDocument(client, 'School Records')" 
+          :disabled="!editMode"
+        > School Records
       </label>
-      <label class="block font-semibold text-gray-700 flex items-center">
-        <input type="checkbox" class="mr-2" :checked="isDocumentSubmitted(client, 'Others')" disabled> Others
-        <span v-if="getOtherDocumentName(client)" class="ml-2">
-          ({{ getOtherDocumentName(client) }})
-        </span>
-      </label>
+
+     <!-- Others Checkbox with input -->
+<label class="block font-semibold text-gray-700 flex items-center">
+  <input 
+    type="checkbox" 
+    class="mr-2" 
+    :checked="isDocumentSubmitted(client, 'Others')" 
+    @change="toggleDocument(client, 'Others')" 
+    :disabled="!editMode"
+  > Others
+  
+  <!-- Show input for "Others" if it's checked -->
+  <input 
+    v-if="isDocumentSubmitted(client, 'Others') && editMode" 
+    type="text" 
+    v-model="othersDocumentName" 
+    placeholder="Specify Others" 
+    class="ml-2 underline-input bg-transparent flex-grow text-xs"
+    @input="handleOtherDocument(client, othersDocumentName)" 
+  >
+  
+  <!-- Display the "Others" document name if it exists and not in edit mode -->
+  <span v-if="getOthersDocument(client) && !editMode" class="ml-2">
+    ({{ getOthersDocument(client) }})
+  </span>
+</label>
+
+
+
     </div>
   </div>
 </div>
+
+
+
 
 
 
@@ -241,7 +364,7 @@
   <textarea 
     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
     style="line-height: 1.5;" 
-    :value="client.admissions[0]?.general_impression" 
+    v-model="client.admissions[0].general_impression" 
     :readonly="!editMode">
   </textarea>
 </div>
@@ -251,7 +374,7 @@
   <textarea 
     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
     style="line-height: 1.5;" 
-    :value="client.admissions[0]?.action_taken" 
+    v-model="client.admissions[0].action_taken" 
     :readonly="!editMode">
   </textarea>
 </div>
@@ -261,21 +384,33 @@
           
   <!-- Referring Party Section -->
   <div class="flex flex-col justify-end mb-4">
-  <div v-if="client.admissions[0]?.referring_party_signature">
+<!-- Display the current signature image if it exists or show a preview of the new uploaded image -->
+<div v-if="client.admissions[0]?.referring_party_signature || editMode" class="mb-4">
+  <label class="block mb-2 text-sm font-medium text-gray-700">
+    Upload or Update Referring Party Signature:
+  </label>
+
+  <!-- Show image preview if available -->
+  <div v-if="signaturePreview || client.admissions[0]?.referring_party_signature">
     <img
-      :src="'/storage/' + client.admissions[0]?.referring_party_signature"
+      :src="signaturePreview || getSignatureUrl(client.admissions[0]?.referring_party_signature)"
       alt="Referring Party Signature"
       class="h-24 w-auto mb-2"
     />
   </div>
-  <input 
-    type="text" 
-    class="underline-input mt-1 w-full text-[15px]" 
-    :value="client.admissions[0]?.referring_party_name" 
-    :readonly="!editMode"
-  >
-  <label class="block font-semibold text-gray-700 mt-2">Name & Signature of Referring Party</label>
 </div>
+
+<!-- Text input for the referring party name -->
+<input 
+  type="text" 
+  class="underline-input mt-1 w-full text-[15px]" 
+  v-model="client.admissions[0].referring_party_name" 
+  :readonly="!editMode"
+>
+
+<label class="block font-semibold text-gray-700 mt-2">Name & Signature of Referring Party</label>
+</div>
+
 
 
   <!-- Admitting Officer Section -->
@@ -283,7 +418,7 @@
   <input 
     type="text" 
     class="underline-input mt-1 w-full text-[15px]" 
-    :value="client.admissions[0]?.admitting_officer" 
+    v-model="client.admissions[0].admitting_officer" 
     :readonly="!editMode"
   >
   <label class="block font-semibold text-gray-700 mt-2">Admitting Officer</label>
@@ -295,7 +430,7 @@
     <input 
       type="text" 
       class="underline-input mt-1 w-full text-[15px]" 
-      :value="client.admissions[0]?.designation_id_contact" 
+      v-model="client.admissions[0].designation_id_contact" 
       :readonly="!editMode"
     >
     <label class="block font-semibold text-gray-700 mt-2">Designation / ID No. / Contact #</label>
@@ -304,7 +439,7 @@
     <input 
       type="text" 
       class="underline-input mt-1 w-full text-[15px]" 
-      :value="client.admissions[0]?.designation" 
+      v-model="client.admissions[0].designation" 
       :readonly="!editMode"
     >
     <label class="block font-semibold text-gray-700 mt-2">Designation</label>
@@ -316,20 +451,37 @@
     <input 
       type="text" 
       class="underline-input mt-1 w-full text-[15px]" 
-      :value="client.admissions[0]?.office_address" 
+      v-model="client.admissions[0].office_address" 
       :readonly="!editMode"
     >
     <label class="block font-semibold text-gray-700 mt-2">Complete Address/Office Address</label>
   </div>
+  
   <div>
+  <!-- When not in edit mode, show the combined Date/Time as a single read-only field -->
+  <template v-if="!editMode">
     <input 
       type="text" 
       class="underline-input mt-1 w-full text-[15px]" 
       :value="formatDateTime(client.admissions[0]?.date_time)" 
-      :readonly="!editMode"
+      readonly
     >
-    <label class="block font-semibold text-gray-700 mt-2">Date/Time</label>
-  </div>
+  </template>
+
+  <!-- When in edit mode, show a single input for both date and time -->
+  <template v-else>
+    <input 
+      type="datetime-local"  
+      class="underline mt-1 w-full text-[15px]" 
+      v-model="client.admissions[0].date_time"  
+      placeholder="Select Date and Time"
+    >
+  </template>
+
+  <label class="block font-semibold text-gray-700 mt-2">Date/Time</label>
+</div>
+
+
 </div>
 
 <!-- Noted By Section -->
@@ -379,16 +531,65 @@ export default {
   data() {
     return {
       clients: [],
+      admission_id: null, // Admission ID used for update logic
       editMode: false,
       isModalOpen: false,
       isSaveResultModalOpen: false,
       saveResultTitle: '',
       saveResultMessage: '',
-      id: null,
-      totalPages: 1,
-      currentPage: 1,
-    };
-  },
+      id: null, // Current client or admission ID
+      signaturePreview: null,
+      othersDocumentName: '',
+      form: {
+        client: {
+          first_name: '',
+          middle_name: '',
+          last_name: '',
+          suffix: '',
+          sex: '',
+          date_of_birth: '',
+          place_of_birth: '',
+          province: '',
+          city: '',
+          barangay: '',
+          street: '',
+          religion: '',
+      },
+      admission: {
+          case_status: '',
+          committing_court: '',
+          crim_case_number: '',
+          offense_committed: '',
+          date_admitted: '',
+          days_in_jail: 0,
+          days_in_detention_center: 0,
+          action_taken: '',
+          general_impression: '',
+          referring_party_name: '',
+          admitting_officer: '',
+          designation_id_contact: '',
+          designation: '',
+          office_address: '',
+          date_time: '',
+          noted_by: '',
+          referring_party_signature: null,
+        },
+        distinguishing_marks: {
+          tattoo_scars: '',
+          height: null,
+          weight: null,
+          colour_of_eye: '',
+          skin_colour: '',
+        },
+        documents_submitted: {
+          documents: [],
+          others: '',
+        },
+    },
+
+  };
+},
+
   mounted() {
     this.id = this.$route.params.id;
     this.fetchClientsData();
@@ -400,6 +601,11 @@ export default {
     },
   },
   methods: {
+
+    knownDocuments() {
+    return ["SCSR", "Court Order", "Medical Certificates", "Consent from Parents", "School Records"];
+  },
+
     // Toggle between edit and view modes
     toggleEdit() {
       this.editMode = !this.editMode;
@@ -418,61 +624,218 @@ export default {
     },
 
     confirmSave() {
-      this.saveForm();
-      this.closeModal();
-      this.editMode = false;
+    if (this.clients[0]?.admissions[0]?.id) {
+        this.saveForm(this.clients[0].admissions[0].id);
+    } else {
+        this.saveForm();
+    }
+    this.closeModal();
+    this.editMode = false;
+},
+
+
+getSignatureUrl(signaturePath) {
+      // Append /storage/ to signature path if it's a relative path
+      if (signaturePath && !signaturePath.startsWith('http')) {
+        return `/storage/${signaturePath}`;
+      }
+      return signaturePath;
     },
 
+
+    // Update form data (for existing admissions)
+    async saveForm(admissionId = null) {
+  try {
+    const client = this.clients[0]; // Assuming you're using the first client in the list
+    const admission = client.admissions[0]; // Assuming you're using the first admission in the list
+
+    // Convert documents_submitted.documents from string to array if it's a stringified JSON
+    let documentsSubmitted = admission.documents?.[0]?.document_name;
+    if (typeof documentsSubmitted === 'string') {
+      try {
+        documentsSubmitted = JSON.parse(documentsSubmitted);
+      } catch (e) {
+        console.error("Failed to parse documents_submitted:", e);
+        documentsSubmitted = []; // Set to an empty array if parsing fails
+      }
+    }
+
+    const data = {
+      client: {
+        id: client.id || '', // Include the client ID to update the existing client
+        first_name: client.first_name || '',
+        middle_name: client.middle_name || '',
+        last_name: client.last_name || '',
+        sex: client.sex || '',
+        religion: client.religion || '',
+        date_of_birth: client.date_of_birth || '',
+        place_of_birth: client.place_of_birth || '',
+        province: client.province || '',
+        city: client.city || '',
+        barangay: client.barangay || '',
+        street: client.street || '',
+        child_status: client.child_status || ''
+      },
+      admission: {
+        id: admission.id || '', // Include the admission ID to update the existing admission
+        case_status: admission.case_status || '',
+        committing_court: admission.committing_court || '',
+        crim_case_number: admission.crim_case_number || '',
+        offense_committed: admission.offense_committed || '',
+        date_admitted: admission.date_admitted || '',
+        days_in_jail: admission.days_in_jail || '',
+        days_in_detention_center: admission.days_in_detention_center || '',
+        action_taken: admission.action_taken || '',
+        general_impression: admission.general_impression || '',
+        referring_party_name: admission.referring_party_name || '',
+        admitting_officer: admission.admitting_officer || '',
+        designation_id_contact: admission.designation_id_contact || '',
+        designation: admission.designation || '',
+        office_address: admission.office_address || '',
+        date_time: admission.date_time || '',
+        noted_by: admission.noted_by || ''
+      },
+      distinguishing_marks: {
+        tattoo_scars: admission.distinguishing_marks?.[0]?.tattoo_scars || '',
+        height: admission.distinguishing_marks?.[0]?.height || '',
+        weight: admission.distinguishing_marks?.[0]?.weight || '',
+        colour_of_eye: admission.distinguishing_marks?.[0]?.colour_of_eye || '',
+        skin_colour: admission.distinguishing_marks?.[0]?.skin_colour || ''
+      },
+      documents_submitted: {
+        documents: documentsSubmitted, // Ensure this is an array, not a string
+        others: admission.documents?.[0]?.others || ''
+      },
+      client_id: client.id || '', // Pass client_id for identification
+      admission_id: admission.id || '' // Pass admission_id for identification
+    };
+
+    // Log the data being sent for debugging
+    console.log("Data to be sent:", data);
+
+    // Decide if it's a PUT (update) or POST (new entry)
+    const method = admissionId ? 'put' : 'post';
+    const url = admissionId ? `/api/admission/${admissionId}` : '/api/admission';
+
+    // Send the request
+    const response = await axios({
+      method,
+      url,
+      data
+    });
+
+    console.log("Response received:", response); // Log the response from the server
+
+    if (response.status === 200) {
+      this.showSaveResultModal('Success', 'Form saved successfully.');
+    } else {
+      throw new Error('Unexpected response');
+    }
+  } catch (error) {
+    // Log the error details for debugging
+    console.error("Error saving form:", error.response?.data || error.message);
+    console.error("Full error details:", error); // Log the full error object
+    this.showSaveResultModal('Error', 'An error occurred while saving.');
+  }
+}
+,
     closeSaveResultModal() {
       this.isSaveResultModalOpen = false;
     },
 
     formatDateTime(dateTime) {
       if (!dateTime) return '';
-      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-      return new Date(dateTime).toLocaleDateString('en-US', options);
+      const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true 
+      };
+      return new Date(dateTime).toLocaleString('en-US', options);  // Use toLocaleString for combined DateTime format
     },
 
 // Check if a document has been submitted
 isDocumentSubmitted(client, documentName) {
-      const documents = client.admissions[0]?.documents[0]?.document_name.split(', ');
-      if (!documents) return false;
+    if (!client.admissions || !client.admissions[0] || !client.admissions[0].documents || !client.admissions[0].documents[0]) {
+      return false;
+    }
 
-      // Check if the document exists in the list
-      return documents.includes(documentName);
-    },
+    const document = client.admissions[0].documents[0];
+    let documentNames = [];
 
-    // Get the specific "Others" document name
-    getOtherDocumentName(client) {
-      const documents = client.admissions[0]?.documents[0]?.document_name.split(', ');
-      if (!documents) return null;
-
-      // Find the "Others" document and return the name if available
-      const othersIndex = documents.indexOf('Others');
-      if (othersIndex === -1 && documents.length > othersIndex + 1) {
-        return documents[documents.length - 1]; // Return the last item if it's "Others"
+    try {
+      if (document.document_name) {
+        documentNames = JSON.parse(document.document_name);
       }
+    } catch (e) {
+      console.error("Error parsing document_name:", e);
+    }
 
-      return null; // No "Others" document found
-    },
+    // If checking for "Others", return true if any document is not in the known list
+    if (documentName === 'Others') {
+      return documentNames.some(doc => !this.knownDocuments().includes(doc));
+    } else {
+      return documentNames.includes(documentName);
+    }
+  },
 
-    // Save form data
-    async saveForm() {
-   try {
-      const response = await axios.post('/api/save-admission', { clients: this.clients });
-      this.showSaveResultModal('Success', 'Form saved successfully.');
-      this.editMode = false;
-   } catch (error) {
-      if (error.response && error.response.status === 422) {
-         // Log detailed validation errors from the server
-         console.error('Validation error:', error.response.data.errors);
+  getOthersDocument(client) {
+    if (!client.admissions || !client.admissions[0] || !client.admissions[0].documents || !client.admissions[0].documents[0]) {
+      return '';
+    }
+
+    const document = client.admissions[0].documents[0];
+    let documentNames = [];
+
+    try {
+      if (document.document_name) {
+        documentNames = JSON.parse(document.document_name);
       }
-      this.showSaveResultModal('Error', 'Error saving the form.');
-      console.error('Error saving form:', error);
-   }
-}
+    } catch (e) {
+      console.error("Error parsing document_name:", e);
+    }
 
-,
+    // Return the name of the "Others" document (the document not in the known list)
+    const othersDocument = documentNames.find(doc => !this.knownDocuments().includes(doc));
+    return othersDocument || '';
+  },
+
+// Toggle document in the documents_submitted array
+toggleDocument(client, documentName) {
+    if (!client.admissions || !client.admissions[0].documents) {
+      client.admissions[0].documents = [{ document_name: JSON.stringify([]), submitted: false }];
+    }
+
+    let document = client.admissions[0].documents[0];
+    let documentNames = [];
+
+    try {
+      documentNames = JSON.parse(document.document_name || '[]');
+    } catch (e) {
+      console.error("Error parsing document_name:", e);
+    }
+
+    // If toggling "Others", handle unknown documents
+    if (documentName === 'Others') {
+      if (!this.isDocumentSubmitted(client, 'Others')) {
+        documentNames.push(this.othersDocumentName);
+      } else {
+        documentNames = documentNames.filter(doc => this.knownDocuments().includes(doc));
+      }
+    } else {
+      const documentIndex = documentNames.indexOf(documentName);
+      if (documentIndex === -1) {
+        documentNames.push(documentName);
+      } else {
+        documentNames.splice(documentIndex, 1);
+      }
+    }
+
+    // Save the updated array as a JSON string
+    client.admissions[0].documents[0].document_name = JSON.stringify(documentNames);
+  },
 
     showSaveResultModal(title, message) {
       this.saveResultTitle = title;
@@ -480,17 +843,89 @@ isDocumentSubmitted(client, documentName) {
       this.isSaveResultModalOpen = true;
     },
 
+    handleOtherDocument(client, otherDocumentName) {
+    if (!client.admissions || !client.admissions[0] || !client.admissions[0].documents) {
+      return;
+    }
+
+    const document = client.admissions[0].documents[0];
+
+    let documentNames = [];
+    try {
+      documentNames = JSON.parse(document.document_name);
+    } catch (e) {
+      console.error("Error parsing document_name:", e);
+    }
+
+    // Remove existing "Others" value to prevent duplication
+    documentNames = documentNames.filter(doc => this.knownDocuments().includes(doc));
+
+    // Add the new "Others" value if it's not already in the array
+    if (otherDocumentName && !documentNames.includes(otherDocumentName)) {
+      documentNames.push(otherDocumentName);
+    }
+
+    // Update the document_name and others field
+    client.admissions[0].documents[0].document_name = JSON.stringify(documentNames);
+    client.admissions[0].documents[0].others = otherDocumentName; 
+  }
+,
+
     async fetchClientsData() {
-      try {
-        const response = await axios.get(`/api/clients-data/${this.id}`);
-        this.clients = response.data.filter(
-          (client) => client.id === parseInt(this.id)
-        );
-        console.log(this.clients); // Check if data is being fetched correctly
-      } catch (error) {
-        console.error('Error fetching client data:', error);
-      }
-    },
+  try {
+    console.log(`Fetching data for client with ID: ${this.id}`);
+
+    // Fetch the data from the server
+    const response = await axios.get(`/api/clients-data/${this.id}`);
+    
+    // Log the entire response for inspection
+    console.log('Full API response:', response.data);
+
+    // Filter and get the specific client by ID
+    this.clients = response.data.filter(client => client.id === parseInt(this.id));
+
+    // Check if any client data was found
+    if (this.clients.length === 0) {
+      console.warn(`No client found with ID: ${this.id}`);
+    } else {
+      console.log(`Client found:`, this.clients[0]);
+    }
+
+    // Iterate over clients and admissions to ensure proper structure
+    this.clients.forEach(client => {
+      console.log(`Processing client with ID: ${client.id}`);
+      client.admissions.forEach(admission => {
+        console.log(`Processing admission with ID: ${admission.id}`);
+
+        // Ensure documents exists and is correctly structured
+        if (!admission.documents) {
+          console.warn(`No documents found for admission ID: ${admission.id}`);
+          admission.documents = []; // Initialize the documents array if it doesn't exist
+        } else {
+          console.log(`Documents submitted for admission ID ${admission.id}:`, admission.documents);
+
+          // Ensure documents is an array
+          if (!Array.isArray(admission.documents)) {
+            console.warn(`Documents is not an array for admission ID: ${admission.id}`);
+            admission.documents = []; // Convert to array if not already
+          }
+        }
+
+        // Ensure others field is present
+        if (!admission.others) {
+          admission.others = ''; // Initialize others as an empty string if it doesn't exist
+        }
+      });
+    });
+
+    console.log('Processed client data:', this.clients);
+
+  } catch (error) {
+    console.error('Error fetching client data:', error);
+  }
+}
+
+,
 
   async exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
@@ -799,4 +1234,4 @@ pdf.text('PAGE 1 of 1', 108, offset + 3, null, null, 'center');
     border-top: 1px solid #d2d2d2;
   }
 }
-</style>
+</style>"

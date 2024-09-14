@@ -51,12 +51,15 @@ Route::post('/admission', [AdmissionController::class, 'store']);
 Route::get('/admissions/client/{client_id}', [AdmissionController::class, 'getAdmissionByClientId']);
 Route::get('/clients-data', [AdmissionController::class, 'getAllData']);
 Route::post('/save-admission', [AdmissionController::class, 'saveForm']);
+Route::put('/admission/{id}', [AdmissionController::class, 'saveForm']);
 Route::get('/clients-data/{id}', [AdmissionController::class, 'getAllData']);
 Route::get('/test', [AdmissionController::class, 'getClientsByName']);
+Route::post('/admission', [AdmissionController::class, 'saveForm']); 
 
 // Checklist Routes
 Route::get('/checklist/{id}', [ChecklistController::class, 'index']);
 Route::post('/save-checklist', [ChecklistController::class, 'store']);
+Route::post('/checklist', [ChecklistController::class, 'store']);
 
 // Intervention Plan Routes
 Route::get('/intervention-plans', [InterventionPlanController::class, 'index']);
@@ -85,6 +88,8 @@ Route::get('/second-intake-sheets/{id}', [SecondIntakeSheetController::class, 's
 Route::post('/second-intake-sheets', [SecondIntakeSheetController::class, 'store']);
 Route::put('/second-intake-sheets/{id}', [SecondIntakeSheetController::class, 'update']);
 Route::delete('/second-intake-sheets/{id}', [SecondIntakeSheetController::class, 'destroy']);
+Route::get('/second-intake-sheets/{client_id}', [SecondIntakeSheetController::class, 'show']);
+
 
 // Kasabutan Routes
 Route::get('/kasabutan', [KasabutanController::class, 'index']);
@@ -213,7 +218,4 @@ Route::post('/upload', [FileController::class, 'uploadFile']);
 Route::post('/move-file', [FileController::class, 'moveFile']);
 Route::post('/delete-folder', [FileController::class, 'deleteFolder']);
 Route::post('/delete-file', [FileController::class, 'deleteFile']);
-
-Route::patch('/users/{id}/toggle-verify', [AdminController::class, 'toggleVerify']);
-
 

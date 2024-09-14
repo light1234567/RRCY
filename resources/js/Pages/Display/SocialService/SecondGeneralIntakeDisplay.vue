@@ -326,34 +326,28 @@ export default {
   },
   methods: {
     async fetchClientData(id) {
-      try {
-        const response = await axios.get(`/api/clients/${id}`);
-        const client = response.data;
+   try {
+     const clientResponse = await axios.get(`/api/clients/${id}`);
+     const client = clientResponse.data;
 
-        this.sheet.name = `${client.first_name} ${client.last_name}`;
-        this.sheet.age = this.calculateAge(client.date_of_birth);
-        this.sheet.sex = client.sex;
-        this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
-        this.sheet.date_of_birth = client.date_of_birth;
-        this.sheet.place_of_birth = client.place_of_birth;
-        this.sheet.religion = client.religion;
+     this.sheet.name = `${client.first_name} ${client.last_name}`;
+     this.sheet.age = this.calculateAge(client.date_of_birth);
+     this.sheet.sex = client.sex;
+     this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
+     this.sheet.date_of_birth = client.date_of_birth;
+     this.sheet.place_of_birth = client.place_of_birth;
+     this.sheet.religion = client.religion;
 
-        const firstIntakeResponse = await axios.get(`/api/general-intake-sheets/${id}?intake=first`);
-        const firstIntake = firstIntakeResponse.data;
+     // Ensure you're calling the correct intake sheet route
+     const secondIntakeResponse = await axios.get(`/api/second-intake-sheets/${id}`);
+     const secondIntake = secondIntakeResponse.data;
 
-        this.sheet.occupation = firstIntake.occupation;
-        this.sheet.highest_educ_att = firstIntake.highest_educ_att;
-        this.sheet.school_name = firstIntake.school_name;
-        this.sheet.class_adviser = firstIntake.class_adviser;
+     Object.assign(this.sheet, secondIntake);
+   } catch (error) {
+     console.error('Error fetching client data:', error);
+   }
+ },
 
-        const secondIntakeResponse = await axios.get(`/api/second-intake-sheets/${id}`);
-        const secondIntake = secondIntakeResponse.data;
-
-        Object.assign(this.sheet, secondIntake);
-      } catch (error) {
-        console.error('Error fetching client data:', error);
-      }
-    },
     calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);

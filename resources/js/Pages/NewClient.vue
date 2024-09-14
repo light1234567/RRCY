@@ -80,8 +80,8 @@
                   id="clientDob"
                   v-model="form.client.date_of_birth"
                   class="w-full px-2 py-1 border rounded-md text-sm"
-                  :max="form.client.maxDateOfBirth" 
-                  :min="form.client.minDateOfBirth" 
+                  :max="form.client.maxDateOfBirth"
+                  :min="form.client.minDateOfBirth"
                   required
                 />
               </div>
@@ -416,15 +416,6 @@
                 <div class="flex items-center">
                   <input
                     type="checkbox"
-                    value="Commitment Order"
-                    v-model="form.documents_submitted.documents"
-                    class="mr-1"
-                  />
-                  <span class="text-sm">Commitment Order</span>
-                </div>
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
                     value="Consent from Parents"
                     v-model="form.documents_submitted.documents"
                     class="mr-1"
@@ -489,7 +480,89 @@
               />
             </div>
           </div>
+
+           <!-- New Fields for Referring Party and Admitting Officer -->
+           <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+      <div class="mb-2">
+        <label for="referringParty" class="block mb-1 text-sm">Name & Signature of Referring Party:</label>
+        <input
+          type="text"
+          id="referringParty"
+          v-model="form.admission.referring_party_name"
+          class="w-full px-2 py-1 border rounded-md text-sm"
+        />
+      </div>
+
+      <div class="mb-2">
+        <label for="admittingOfficer" class="block mb-1 text-sm">Admitting Officer:</label>
+        <input
+          type="text"
+          id="admittingOfficer"
+          v-model="form.admission.admitting_officer"
+          class="w-full px-2 py-1 border rounded-md text-sm"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+      <div class="mb-2">
+        <label for="designationContact" class="block mb-1 text-sm">Designation / ID No. / Contact #:</label>
+        <input
+          type="text"
+          id="designationContact"
+          v-model="form.admission.designation_id_contact"
+          class="w-full px-2 py-1 border rounded-md text-sm"
+        />
+      </div>
+
+      <div class="mb-2">
+        <label for="designation" class="block mb-1 text-sm">Designation:</label>
+        <input
+          type="text"
+          id="designation"
+          v-model="form.admission.designation"
+          class="w-full px-2 py-1 border rounded-md text-sm"
+        />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+      <div class="mb-2">
+        <label for="officeAddress" class="block mb-1 text-sm">Complete Address/Office Address:</label>
+        <input
+          type="text"
+          id="officeAddress"
+          v-model="form.admission.office_address"
+          class="w-full px-2 py-1 border rounded-md text-sm"
+        />
+      </div>
+
+      <div class="mb-2">
+        <label for="dateTime" class="block mb-1 text-sm">Date/Time:</label>
+        <input
+          type="datetime-local"
+          id="dateTime"
+          v-model="form.admission.date_time"
+          class="w-full px-2 py-1 border rounded-md text-sm"
+        />
+      </div>
+    </div>
+
+    <div class="mb-2">
+        <label for="notedBy" class="block mb-1 text-sm">Noted by:</label>
+        <input
+          type="text"
+          id="notedBy"
+          v-model="form.admission.noted_by"
+          class="w-full px-2 py-1 border rounded-md text-sm"
+        />
+      </div>
+    
+
         </fieldset>
+
+       
+
 
         <!-- Submit Button -->
         <button
@@ -550,7 +623,13 @@ const form = ref({
     days_in_jail: '',
     days_in_detention_center: '',
     action_taken: '',
-    general_impression: ''
+    general_impression: '',
+    referring_party_name: '',
+    admitting_officer: '',
+    designation_id_contact: '',
+    designation: '',
+    office_address: '',
+    date_time: '',
   },
   documents_submitted: {
     documents: [],
@@ -615,53 +694,84 @@ const onCityChange = async () => {
 // Function to save the form data
 const saveForm = async () => {
   try {
-    // Submit the form data to the backend
-    const response = await axios.post('/api/save-admission', form.value);
+    const formData = new FormData();
 
-    // If successful, show success modal
+    // Append client data
+    Object.keys(form.value.client).forEach((key) => {
+      formData.append(`client[${key}]`, form.value.client[key]);
+    });
+
+    // Append admission data
+    Object.keys(form.value.admission).forEach((key) => {
+        formData.append(`admission[${key}]`, form.value.admission[key]);
+      
+    });
+
+    // Append distinguishing marks data
+    Object.keys(form.value.distinguishing_marks).forEach((key) => {
+      formData.append(`distinguishing_marks[${key}]`, form.value.distinguishing_marks[key]);
+    });
+
+    // Prepare documents array without the "Others" literal value
+    const documentsWithoutOthers = form.value.documents_submitted.documents.filter(doc => doc !== 'Others');
+
+    // Append documents submitted data (excluding "Others")
+    documentsWithoutOthers.forEach((doc, index) => {
+      formData.append(`documents_submitted[documents][${index}]`, doc);
+    });
+
+    // Append the "Others" document field if it exists
+    if (form.value.documents_submitted.others) {
+      formData.append(`documents_submitted[others]`, form.value.documents_submitted.others);
+    }
+
+    // Send the form data as FormData
+    const response = await axios.post('/api/save-admission', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    // Show success message
     modalType.value = 'success';
     modalMessage.value = 'Form saved successfully!';
     showModal.value = true;
 
-    // Optionally reset form if needed
+    // Optionally reset form after successful save
     resetForm();
+
   } catch (error) {
-    // Handle error based on response
+    // Handle errors
     if (error.response && error.response.status === 400) {
       if (error.response.data.error === 'Client with the same first name, last name, and date admitted already exists.') {
-        // Specific error handling for existing CICL
         modalType.value = 'error';
         modalMessage.value = 'CICL is already existed!';
       } else {
-        // General error handling for 400 response
         modalType.value = 'error';
         modalMessage.value = 'An error occurred while saving the form. Please try again.';
       }
     } else {
-      // General error handling
       modalType.value = 'error';
       modalMessage.value = 'An unexpected error occurred. Please try again.';
     }
     showModal.value = true;
   }
 };
+
 // Set the min and max dates for the date of birth
 onMounted(() => {
   const today = new Date();
 
-  // Max Date: Clients must be at least 10 years old
+  // Calculate the year when someone would be 10 years old today
   const maxYear = today.getFullYear() - 10;
-  const maxMonth = today.getMonth();
-  const maxDay = today.getDate();
-  const maxDate = new Date(maxYear, maxMonth, maxDay);
-  form.value.client.maxDateOfBirth = maxDate.toISOString().split('T')[0]; // Set the max date to 10 years ago from today
+  const maxDate = new Date(maxYear, 11, 31); // Set to December 31 of that year
+  form.value.client.maxDateOfBirth = maxDate.toISOString().split('T')[0];
 
-  // Min Date: Clients must not be older than 25 years
+  // Calculate the year when someone would be 25 years old today
   const minYear = today.getFullYear() - 25;
-  const minDate = new Date(minYear, 0, 1); // January 1st, 25 years ago
+  const minDate = new Date(minYear, 0, 1); // Set to January 1 of that year
   form.value.client.minDateOfBirth = minDate.toISOString().split('T')[0];
 });
-
 
 // Watcher to limit height input to three digits
 watch(
@@ -737,14 +847,23 @@ const resetForm = () => {
       days_in_jail: '',
       days_in_detention_center: '',
       action_taken: '',
-      general_impression: ''
+      general_impression: '',
+      referring_party_name: '',
+      admitting_officer: '',
+      designation_id_contact: '',
+      designation: '',
+      office_address: '',
+      date_time: '',
+  
     },
     documents_submitted: {
       documents: [],
       others: ''
     }
   };
+
 };
+
 
 // Function to handle "Other" document selection
 const toggleOtherDocuments = () => {
