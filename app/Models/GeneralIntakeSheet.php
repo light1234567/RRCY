@@ -55,4 +55,9 @@ class GeneralIntakeSheet extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function generalIntakeSheet()
+    {
+        return $this->belongsTo(GeneralIntakeSheet::class, 'general_intake_id');
+    }
 }

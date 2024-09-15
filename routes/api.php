@@ -88,7 +88,6 @@ Route::get('/second-intake-sheets/{id}', [SecondIntakeSheetController::class, 's
 Route::post('/second-intake-sheets', [SecondIntakeSheetController::class, 'store']);
 Route::put('/second-intake-sheets/{id}', [SecondIntakeSheetController::class, 'update']);
 Route::delete('/second-intake-sheets/{id}', [SecondIntakeSheetController::class, 'destroy']);
-Route::get('/second-intake-sheets/{client_id}', [SecondIntakeSheetController::class, 'show']);
 
 
 // Kasabutan Routes

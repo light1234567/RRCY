@@ -11,11 +11,8 @@ class SecondIntakeSheet extends Model
 
     protected $fillable = [
         'client_id',
+        'general_intake_id',
         'date',
-        'occupation',
-        'highest_educ_att',
-        'school_name',
-        'class_adviser',
         'vices',
         'school_activities_achievement',
         'occupation_of_mother',
@@ -37,4 +34,10 @@ class SecondIntakeSheet extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function generalIntakeSheet()
+    {
+        return $this->belongsTo(GeneralIntakeSheet::class, 'general_intake_id');
+    }
+    
 }

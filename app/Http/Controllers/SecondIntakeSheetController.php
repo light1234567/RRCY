@@ -4,59 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Models\SecondIntakeSheet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SecondIntakeSheetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sheets = SecondIntakeSheet::all();
-        return response()->json($sheets);
+        try {
+            if ($request->has('admission_id')) {
+                // Search second intake sheets by admission_id if provided
+                $sheets = SecondIntakeSheet::where('admission_id', $request->admission_id)->get();
+            } else {
+                $sheets = SecondIntakeSheet::all();
+            }
+            
+            return response()->json($sheets);
+        } catch (\Exception $e) {
+            Log::error("Error fetching second intake sheets: " . $e->getMessage());
+            return response()->json(['message' => 'Server Error'], 500);
+        }
     }
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'client_id' => 'required|exists:clients,id',
-            'date' => 'nullable|date',
-            'occupation' => 'nullable|string|max:255',
-            'highest_educ_att' => 'nullable|string|max:255',
-            'school_name' => 'nullable|string|max:255',
-            'class_adviser' => 'nullable|string|max:255',
-            'vices' => 'nullable|array',
-            'school_activities_achievement' => 'nullable|string',
-            'occupation_of_mother' => 'nullable|string|max:255',
-            'occupation_of_father' => 'nullable|string|max:255',
-            'siblings' => 'nullable|array',
-            'responsible_for_households_chores' => 'nullable|string|max:255',
-            'detention_days' => 'nullable|string|max:255',
-            'community' => 'nullable|array',
-            'house_made_of' => 'nullable|string|max:255',
-        ]);
+        Log::info('Storing new second intake sheet. Request data:', $request->all());
 
-        $sheet = SecondIntakeSheet::create($validatedData);
-        return response()->json($sheet, 201);
-    }
-
-    public function show($id)
-    {
-        $sheet = SecondIntakeSheet::find($id);
-        if ($sheet) {
-            return response()->json($sheet);
-        }
-        return response()->json(['message' => 'Not found'], 404);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $sheet = SecondIntakeSheet::find($id);
-        if ($sheet) {
+        try {
+            // Validate request data
             $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
+                'general_intake_id' => 'nullable|exists:general_intake_sheets,id',
                 'date' => 'nullable|date',
-                'occupation' => 'nullable|string|max:255',
-                'highest_educ_att' => 'nullable|string|max:255',
-                'school_name' => 'nullable|string|max:255',
-                'class_adviser' => 'nullable|string|max:255',
                 'vices' => 'nullable|array',
                 'school_activities_achievement' => 'nullable|string',
                 'occupation_of_mother' => 'nullable|string|max:255',
@@ -68,19 +46,94 @@ class SecondIntakeSheetController extends Controller
                 'house_made_of' => 'nullable|string|max:255',
             ]);
 
-            $sheet->update($validatedData);
+            Log::info('Validated data for second intake sheet:', $validatedData);
+
+            // Store the second intake sheet
+            $sheet = SecondIntakeSheet::create($validatedData);
+
+            Log::info('Second intake sheet created successfully:', $sheet->toArray());
+
+            return response()->json($sheet, 201);
+        } catch (\Exception $e) {
+            Log::error("Error storing second intake sheet: " . $e->getMessage());
+            return response()->json(['message' => 'Server Error'], 500);
+        }
+    }
+
+    public function show($id)
+{
+    try {
+        // Fetch the second intake sheet using general_intake_id
+        $sheet = SecondIntakeSheet::where('general_intake_id', $id)->first();
+        if ($sheet) {
+            Log::info('Second intake sheet found:', $sheet->toArray());
             return response()->json($sheet);
         }
+        Log::warning('Second intake sheet not found with general_intake_id: ' . $id);
         return response()->json(['message' => 'Not found'], 404);
+    } catch (\Exception $e) {
+        Log::error("Error fetching second intake sheet: " . $e->getMessage());
+        return response()->json(['message' => 'Server Error'], 500);
     }
+}
+
+
+    public function update(Request $request, $id)
+{
+    Log::info('Updating second intake sheet with ID: ' . $id);
+
+    try {
+        // Find the second intake sheet by the correct ID
+        $sheet = SecondIntakeSheet::find($id);
+        if ($sheet) {
+            $validatedData = $request->validate([
+                'client_id' => 'required|exists:clients,id',
+                'general_intake_id' => 'nullable|exists:general_intake_sheets,id',
+                'date' => 'nullable|date',
+                'vices' => 'nullable|array',
+                'school_activities_achievement' => 'nullable|string',
+                'occupation_of_mother' => 'nullable|string|max:255',
+                'occupation_of_father' => 'nullable|string|max:255',
+                'siblings' => 'nullable|array',
+                'responsible_for_households_chores' => 'nullable|string|max:255',
+                'detention_days' => 'nullable|string|max:255',
+                'community' => 'nullable|array',
+                'house_made_of' => 'nullable|string|max:255',
+            ]);
+
+            Log::info('Validated data for update:', $validatedData);
+
+            // Update the second intake sheet
+            $sheet->update($validatedData);
+
+            Log::info('Second intake sheet updated successfully:', $sheet->toArray());
+
+            return response()->json($sheet);
+        }
+
+        Log::warning('Second intake sheet not found for update with ID: ' . $id);
+        return response()->json(['message' => 'Not found'], 404);
+    } catch (\Exception $e) {
+        Log::error("Error updating second intake sheet: " . $e->getMessage());
+        return response()->json(['message' => 'Server Error'], 500);
+    }
+}
+
 
     public function destroy($id)
     {
-        $sheet = SecondIntakeSheet::find($id);
-        if ($sheet) {
-            $sheet->delete();
-            return response()->json(['message' => 'Deleted successfully']);
+        try {
+            $sheet = SecondIntakeSheet::find($id);
+            if ($sheet) {
+                $sheet->delete();
+                Log::info('Second intake sheet deleted successfully with ID: ' . $id);
+                return response()->json(['message' => 'Deleted successfully']);
+            }
+            Log::warning('Second intake sheet not found for deletion with ID: ' . $id);
+            return response()->json(['message' => 'Not found'], 404);
+        } catch (\Exception $e) {
+            Log::error("Error deleting second intake sheet: " . $e->getMessage());
+            return response()->json(['message' => 'Server Error'], 500);
         }
-        return response()->json(['message' => 'Not found'], 404);
     }
 }

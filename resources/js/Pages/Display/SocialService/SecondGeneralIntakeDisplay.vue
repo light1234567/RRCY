@@ -326,27 +326,71 @@ export default {
   },
   methods: {
     async fetchClientData(id) {
-   try {
-     const clientResponse = await axios.get(`/api/clients/${id}`);
-     const client = clientResponse.data;
+  try {
+    // Fetch client data based on client_id
+    const clientResponse = await axios.get(`/api/clients/${id}`);
+    const client = clientResponse.data;
 
-     this.sheet.name = `${client.first_name} ${client.last_name}`;
-     this.sheet.age = this.calculateAge(client.date_of_birth);
-     this.sheet.sex = client.sex;
-     this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
-     this.sheet.date_of_birth = client.date_of_birth;
-     this.sheet.place_of_birth = client.place_of_birth;
-     this.sheet.religion = client.religion;
+    // Populate client-related fields
+    this.sheet.name = `${client.first_name} ${client.last_name}`;
+    this.sheet.age = this.calculateAge(client.date_of_birth);
+    this.sheet.sex = client.sex;
+    this.sheet.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
+    this.sheet.date_of_birth = client.date_of_birth;
+    this.sheet.place_of_birth = client.place_of_birth;
+    this.sheet.religion = client.religion;
 
-     // Ensure you're calling the correct intake sheet route
-     const secondIntakeResponse = await axios.get(`/api/second-intake-sheets/${id}`);
-     const secondIntake = secondIntakeResponse.data;
+    console.log('Client data mapped to sheet:', this.sheet);
 
-     Object.assign(this.sheet, secondIntake);
-   } catch (error) {
-     console.error('Error fetching client data:', error);
-   }
- },
+    // Fetch general intake sheet data based on client_id
+    try {
+      const generalIntakeResponse = await axios.get(`/api/general-intake-sheets?client_id=${id}`);
+      const generalIntake = generalIntakeResponse.data[0]; // Assuming first sheet is the correct one
+
+      // Populate general intake sheet fields
+      this.sheet.occupation = generalIntake.occupation;
+      this.sheet.highest_educ_att = generalIntake.highest_educ_att;
+      this.sheet.school_name = generalIntake.school_name;
+      this.sheet.class_adviser = generalIntake.class_adviser;
+
+      // Store general intake ID for further use
+      this.sheet.general_intake_id = generalIntake.id;
+
+      console.log('General Intake data mapped to sheet:', this.sheet);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.warn('General Intake Sheet not found. Proceeding without it.');
+      } else {
+        console.error('Error fetching general intake sheet:', error);
+      }
+    }
+
+    // Fetch second intake sheet data using the general_intake_id
+    if (this.sheet.general_intake_id) {
+      try {
+        const secondIntakeResponse = await axios.get(`/api/second-intake-sheets?general_intake_id=${this.sheet.general_intake_id}`);
+        if (secondIntakeResponse.data.length > 0) {
+          const secondIntake = secondIntakeResponse.data[0]; // Assuming first record is the correct one
+
+          // Map second intake sheet data to the sheet object
+          Object.assign(this.sheet, secondIntake);
+          this.sheet.id = secondIntake.id; // Set second intake sheet ID
+
+          console.log('Second Intake data mapped to sheet:', this.sheet);
+        } else {
+          console.log('No second intake sheet found for this general intake.');
+        }
+      } catch (error) {
+        console.error('Error fetching second intake sheet:', error);
+      }
+    }
+
+  } catch (error) {
+    console.error('Error fetching client data:', error);
+  }
+}
+
+,
 
     calculateAge(birthDate) {
       const today = new Date();
@@ -380,38 +424,82 @@ export default {
       this.editMode = false;
     },
     saveData() {
-      if (!this.clientId) {
-        this.message = 'No client selected.';
-        this.messageType = 'error';
-        this.clearNotification();
-        return;
+  if (!this.clientId) {
+    this.message = 'No client selected.';
+    this.messageType = 'error';
+    this.clearNotification();
+    return;
+  }
+
+  // Prepare data for general intake sheet
+  const generalIntakePayload = {
+    client_id: this.clientId,
+    occupation: this.sheet.occupation,
+    highest_educ_att: this.sheet.highest_educ_att,
+    school_name: this.sheet.school_name,
+    class_adviser: this.sheet.class_adviser,
+    // Add other general intake fields here if needed
+  };
+
+  // Prepare data for second intake sheet
+  const secondIntakePayload = {
+    client_id: this.clientId,
+    general_intake_id: this.sheet.general_intake_id || null,
+    vices: this.sheet.vices,
+    school_activities_achievement: this.sheet.school_activities_achievement,
+    occupation_of_mother: this.sheet.occupation_of_mother,
+    occupation_of_father: this.sheet.occupation_of_father,
+    siblings: this.sheet.siblings,
+    responsible_for_households_chores: this.sheet.responsible_for_households_chores,
+    detention_days: this.sheet.detention_days,
+    community: this.sheet.community,
+    house_made_of: this.sheet.house_made_of,
+  };
+
+  // Save or update general intake sheet first
+  let generalIntakeMethod, generalIntakeUrl;
+  if (this.sheet.general_intake_id) {
+    generalIntakeMethod = 'put';
+    generalIntakeUrl = `/api/general-intake-sheets/${this.sheet.general_intake_id}`;
+  } else {
+    generalIntakeMethod = 'post';
+    generalIntakeUrl = `/api/general-intake-sheets`;
+  }
+
+  axios[generalIntakeMethod](generalIntakeUrl, generalIntakePayload)
+    .then(response => {
+      this.sheet.general_intake_id = response.data.id;  // Store the new or updated general intake ID
+
+      // Now save or update the second intake sheet
+      let secondIntakeMethod, secondIntakeUrl;
+      if (this.sheet.id) {
+        secondIntakeMethod = 'put';
+        secondIntakeUrl = `/api/second-intake-sheets/${this.sheet.id}`;
+      } else {
+        secondIntakeMethod = 'post';
+        secondIntakeUrl = `/api/second-intake-sheets`;
       }
 
-      const payload = {
-        client_id: this.clientId,
-        ...this.sheet
-      };
+      return axios[secondIntakeMethod](secondIntakeUrl, secondIntakePayload);
+    })
+    .then(response => {
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data saved successfully.';
+      if (!this.sheet.id) this.sheet.id = response.data.id;  // Set the new second intake sheet ID
+      this.editMode = false;
+    })
+    .catch(error => {
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = error.response.data.message || 'Error saving data.';
+      console.error('Error saving data:', error);
+    })
+    .finally(() => {
+      this.isModalOpen = false;
+      this.isSaveResultModalOpen = true;
+    });
+}
 
-      const method = this.sheet.id ? 'put' : 'post';
-      const url = `/api/second-intake-sheets${this.sheet.id ? '/' + this.sheet.id : ''}`;
-
-      axios[method](url, payload)
-        .then(response => {
-          this.saveResultTitle = 'Success';
-          this.saveResultMessage = 'Data saved successfully.';
-          if (!this.sheet.id) this.sheet.id = response.data.id;
-          this.editMode = false;
-        })
-        .catch(error => {
-          this.saveResultTitle = 'Error';
-          this.saveResultMessage = error.response.data.message || 'Error saving data.';
-          console.error('Error saving data:', error);
-        })
-        .finally(() => {
-          this.isModalOpen = false;
-          this.isSaveResultModalOpen = true;
-        });
-    },
+,
     closeSaveResultModal() {
       this.isSaveResultModalOpen = false;
       this.saveResultTitle = '';

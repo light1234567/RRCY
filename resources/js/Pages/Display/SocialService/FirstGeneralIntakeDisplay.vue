@@ -225,8 +225,7 @@
   <h2 class="text-lg font-semibold">A. Major life Events:</h2>
   <div class="grid grid-cols-2 gap-4">
     <div>
-      <label><input type="checkbox" v-model="sheet.major_life_event.death_of_parents" :disabled="!editMode" /> Death of Parents</label><br />
-      <label><input type="checkbox" v-model="sheet.major_life_event.separation_from_family" :disabled="!editMode" /> Separation from the family</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.death_of_parents" :disabled="!editMode" /> Death of Parents</label><br />      <label><input type="checkbox" v-model="sheet.major_life_event.separation_from_family" :disabled="!editMode" /> Separation from the family</label><br />
       <label><input type="checkbox" v-model="sheet.major_life_event.natural_disaster" :disabled="!editMode" /> Victim of natural / manmade disaster</label><br />
       <label><input type="checkbox" v-model="sheet.major_life_event.apprehension" :disabled="!editMode" /> Victim of apprehension</label><br />
       <label><input type="checkbox" v-model="sheet.major_life_event.physical_abuse" :disabled="!editMode" /> Victim of physical abuse</label><br />
@@ -303,6 +302,10 @@
         <input type="checkbox" v-model="sheet.life_transition.beginning_parents_romantic_relationship" :disabled="!editMode" />
         <span class="ml-2">Beginning romantic relationship of parents</span>
       </label>
+      <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.life_transition.others" :disabled="!editMode" />
+        <span class="ml-2">other (pls. specify)</span>
+      </label>
     </div>
   </div>
 </div>
@@ -345,7 +348,6 @@
         <span class="ml-2">Legality/law enforcement (weak)</span>
       </label>
       <label class="flex items-center whitespace-nowrap">
-        <input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" />
         <span class="ml-2">Availability of:</span>
       </label>
       <div class="ml-16">
@@ -481,7 +483,7 @@
  
     <div>
       <label class="flex items-center whitespace-nowrap">
-        <input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" />
+        <input type="checkbox" v-model="sheet.normalization.feelingsItems" :disabled="!editMode" />
         <span class="ml-2">Feelings</span>
       </label>
       <div class="grid grid-cols-2 gap-x-8">
@@ -538,8 +540,8 @@
            <label><input type="checkbox" v-model="sheet.attachments.aunt" :disabled="!editMode" /> Aunt</label><br />
            <label><input type="checkbox" v-model="sheet.attachments.neighbour" :disabled="!editMode" /> Neighbour</label><br />
            <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Cousin</label><br />
-           <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Teacher</label><br />
-           <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Othe</label><br />
+           <label><input type="checkbox" v-model="sheet.attachments.teacher" :disabled="!editMode" /> Teacher</label><br />
+           <label><input type="checkbox" v-model="sheet.attachments.others" :disabled="!editMode" /> Others</label><br />
          </div>
          <div>
            <label><input type="checkbox" v-model="sheet.attachments.father" :disabled="!editMode" /> father</label><br />
@@ -921,6 +923,8 @@ export default {
           grandmother: false,
           aunt: false,
           neighbour: false,
+          teacher: false,
+          others: false,
           cousin: false,
           father: false,
           grandfather: false,
@@ -997,26 +1001,202 @@ export default {
   },
   methods: {
     async fetchClientData(id) {
-      try {
-        const response = await axios.get(`/api/clients/${id}`);
-        const client = response.data;
+  try {
+    // Start a loading state if applicable
+    this.isLoading = true;
+    console.log(`Fetching data for client ID: ${id}`);
 
-        this.sheet.name = `${client.first_name} ${client.last_name}`;
-        this.sheet.age = this.calculateAge(client.date_of_birth);
-        this.sheet.sex = client.sex;
-        this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
-        this.sheet.date_of_birth = client.date_of_birth;
-        this.sheet.place_of_birth = client.place_of_birth;
-        this.sheet.religion = client.religion;
+    // Fetch client data
+    const clientResponse = await axios.get(`/api/clients/${id}`);
+    console.log('Client data response:', clientResponse.data);
 
-        const sheetResponse = await axios.get(`/api/general-intake-sheets/${id}`);
-        const clientSheet = sheetResponse.data;
+    const client = clientResponse.data;
 
-        Object.assign(this.sheet, clientSheet);
-      } catch (error) {
-        console.error('Error fetching client data:', error);
+    // Map client data to the sheet object
+    this.sheet.name = `${client.first_name} ${client.last_name}`;
+    this.sheet.age = this.calculateAge(client.date_of_birth);
+    this.sheet.sex = client.sex;
+    this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
+    this.sheet.date_of_birth = client.date_of_birth;
+    this.sheet.place_of_birth = client.place_of_birth;
+    this.sheet.religion = client.religion;
+
+    console.log('Mapped client data to sheet:', this.sheet);
+
+    // Fetch intake sheet data using client ID
+    const sheetResponse = await axios.get(`/api/general-intake-sheets?client_id=${id}`);
+    console.log('Intake sheet data response:', sheetResponse.data);
+
+    if (sheetResponse.data && sheetResponse.data.length > 0) {
+      const clientSheet = sheetResponse.data[0]; 
+      Object.assign(this.sheet, clientSheet);
+
+      if (!this.sheet.major_life_event) {
+        this.sheet.major_life_event = {
+          death_of_parents: false,
+          separation_from_family: false,
+          natural_disaster: false,
+          apprehension: false,
+          physical_abuse: false,
+          suicidal_tendencies: false,
+          mistaken_identity: false,
+          abandonment: false,
+          serious_accident: false,
+          demolition: false,
+          sexual_abuse: false,
+          verbal_abuse: false,
+          disability: false,
+          others: false,
+        };
       }
-    },
+   if (!this.sheet.enduring_life_strain) {
+        this.sheet.enduring_life_strain = {
+          poverty: false,
+          physical_illness: false,
+          lack_recreational_facilities: false,
+          exclusion_from_peers: false,
+          other: false,
+          constant_need_to_earn: false,
+          lack_education_opportunity: false,
+          exclusion_from_school: false,
+          disability: false,
+        };
+      }
+  if (!this.sheet.life_transition) {
+  this.sheet.life_transition = {
+    moving_neighbour: false,
+    changing_peer_group: false,
+    moving_due_to_demolition: false,
+    moving_due_to_disaster: false,
+    kinship_foster_placement: false,
+    beginning_romantic_relationship: false,
+    beginning_parents_romantic_relationship: false,
+    others: false
+  };
+}
+if (!this.sheet.development_changes) {
+  this.sheet.development_changes = {
+    early_childhood: false,
+    school_age: false,
+    adolescence: false,
+  };
+}
+if (!this.sheet.normalization) {
+  this.sheet.normalization = {
+    legality_law_enforcement: false,
+    commercial_sex: false,
+    substance_illegal_drugs: false,
+    pornography_materials: false,
+    red_houses: false,
+    price_least_expensive: false,
+    advertisement_media: false,
+    advertisement_promoting_liquors: false,
+    television_shows: false,
+    movies: false,
+    printed_materials: false,
+    community_acceptance: false,
+    source_of_income: false,
+    involve_in_trade: false,
+    role_of_culture: false,
+    smoking: false,
+    abuse: false,
+    illicit_relationship: false,
+    incest_relationship: false,
+    begging: false,
+    rugby_sniffing: false,
+  };
+}
+if (!this.sheet.behaviour_towards_incident) {
+  this.sheet.behaviour_towards_incident = {
+    stow_away: false,
+    irritable: false,
+    delinquent_behaviour: false,
+    stealing: false,
+    begging: false,
+    others: false,
+    withdrawal: false,
+    unresponsive_passive: false,
+    indulge_in_illegal_substance: false,
+    snatching: false,
+    staying_in_street: false,
+  };
+}
+
+if (!this.sheet.attachments) {
+  this.sheet.attachments = {
+    mother: false,
+    grandmother: false,
+    aunt: false,
+    neighbour: false,
+    cousin: false,
+    father: false,
+    grandfather: false,
+    uncle: false,
+    peer: false,
+    schoolmate: false,
+    classmate: false,
+    others: false,
+  };
+}
+if (!this.sheet.skills) {
+  this.sheet.skills = {
+    problem_solving: false,
+    interpersonal_relationship: false,
+    communication_skills: false,
+    vocational_skills: false,
+    critical_thinking: false,
+    others: false,
+    coping_skills: false,
+    survival_skills: false,
+    decision_making_skills: false,
+    comprehension: false,
+    self_awareness: false,
+  };
+}
+if (!this.sheet.resources) {
+  this.sheet.resources = {
+    internal: false,
+    intelligence: false,
+    spirituality: false,
+    resourceful: false,
+    obedient: false,
+    others: false,
+    external: false,
+    family: false,
+    peers: false,
+    health_services: false,
+    recreational_services: false,
+    ngos: false,
+    civic_organization: false,
+    others_external: false,
+  };
+}
+if (!this.sheet.source_of_income_in_street) {
+  this.sheet.source_of_income_in_street = {
+    vending: false,
+    car_wash_boy: false,
+    rugby_user: false,
+    porter: false,
+    barker: false,
+  };
+}
+
+
+
+
+      console.log('Mapped intake sheet data to sheet:', this.sheet);
+    } else {
+      console.log('No intake sheet found for this client.');
+    }
+  } catch (error) {
+    console.error('Error fetching client data or intake sheet:', error);
+    this.messageType = 'error';
+  } finally {
+    // Stop the loading state if applicable
+    this.isLoading = false;
+  }
+}
+,
     exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
@@ -1217,6 +1397,7 @@ export default {
       { label: 'Moving from biological family to a kinship/foster placement', value: this.sheet.life_transition.kinship_foster_placement, x: 20, y: sectionStartY + 50 },
       { label: 'Beginning romantic relationship', value: this.sheet.life_transition.beginning_romantic_relationship, x: 20, y: sectionStartY + 60 },
       { label: 'Beginning romantic relationship of parents', value: this.sheet.life_transition.beginning_parents_romantic_relationship, x: 20, y: sectionStartY + 70 },
+      { label: 'Beginning romantic relationship of parents', value: this.sheet.life_transition.others, x: 20, y: sectionStartY + 70 },
       { label: 'Others (pls. specify)', value: this.sheet.life_transition.others, x: 20, y: sectionStartY + 80 }
   ];
 
@@ -1372,6 +1553,8 @@ export default {
         { label: 'Aunt', value: this.sheet.attachments.aunt, x: 20, y: attachmentsStartY + 30 },
         { label: 'Neighbour', value: this.sheet.attachments.neighbour, x: 20, y: attachmentsStartY + 40 },
         { label: 'Cousin', value: this.sheet.attachments.cousin, x: 90, y: attachmentsStartY + 10 },
+        { label: 'Cousin', value: this.sheet.attachments.teacher, x: 90, y: attachmentsStartY + 10 },
+        { label: 'Cousin', value: this.sheet.attachments.others, x: 90, y: attachmentsStartY + 10 },
         { label: 'father', value: this.sheet.attachments.father, x: 90, y: attachmentsStartY + 20 },
         { label: 'grand father', value: this.sheet.attachments.grandfather, x: 90, y: attachmentsStartY + 30 },
         { label: 'uncle', value: this.sheet.attachments.uncle, x: 90, y: attachmentsStartY + 40 },
