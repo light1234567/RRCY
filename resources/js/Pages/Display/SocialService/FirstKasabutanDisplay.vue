@@ -122,21 +122,21 @@
         <div class="space-y-12">
           <div>
             <input type="text" v-model="form.client_resident" 
-              class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none mt-2 shadow-sm w-1/3 px-2 text-xs" 
+              class="underline-input w-1/3 px-2 text-xs" 
               :readonly="!editMode"/>
-            <label class="block text-base font-semibold text-gray-700 -mt-1">Client/Resident</label>
+            <label class="block text-base -mt-1">Client/Resident</label>
           </div>
           <div>
             <input type="text" v-model="form.parent_guardian" 
-              class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 text-xs" 
+              class="underline-input w-1/3 px-2 mt-12 text-xs" 
               :readonly="!editMode"/>
-            <label class="block text-base font-semibold text-gray-700 -mt-1">Pangalan/Pirma sa Ginikanan/Guardian</label>
+            <label class="block text-base -mt-1">Pangalan/Pirma sa Ginikanan/Guardian</label>
           </div>
           <div>
             <input type="text" v-model="form.case_manager" 
-              class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 py-1 text-xs" 
+              class="underline-input w-1/3 px-2 mt-12 py-1 text-xs" 
               :readonly="!editMode"/>
-            <label class="block text-base font-semibold text-gray-700 -mt-1">Case Manager</label>
+            <label class="block text-base -mt-1">Case Manager</label>
           </div>
         </div>
       </div>
@@ -278,104 +278,172 @@ export default {
       this.saveResultMessage = '';
     },
     exportToPdf() {
-      const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
-      pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(11);
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
 
-      // Add header
-      const imgData = '/images/headerlogo2.png'; 
-      pdf.addImage(imgData, 'PNG', 15, 10, 50, 30); 
-      pdf.setFontSize(10);
-      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 30);
+  // Header section with the logo and text
+  const imgData = '/images/headerlogo2.png'; 
+  pdf.addImage(imgData, 'PNG', 15, 10, 50, 30); // DSWD logo
+  pdf.setFontSize(10);
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 30);
 
-      // Add title
-      pdf.setFont('helvetica', 'bold');
-      pdf.setFontSize(18);
-      pdf.text('KASABUTAN', 105, 60, null, null, 'center');
+  // Title ("KASABUTAN")
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(30);
+  pdf.setTextColor(0, 0, 0); // Black text for title
+  pdf.text('KASABUTAN', 105, 60, null, null, 'center'); // Centered title
 
-      pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(11);
+  // Main Content: Adjust positioning and apply bold/underline styles
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(12);
+  
+  let contentYPos = 80; // Start below the title
 
-      // Add content
-      pdf.text(`Ako si ${this.clientName} usa ka residente diri sa DSWD-RRCY.`, 20, 80);
-      pdf.text(`Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center.`, 20, 90);
-      pdf.text(`Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court`, 20, 100);
-      pdf.text(`kung dili "COLOR RED" and akong Performance equivalent to "OUTSTANDING".`, 20, 110);
-      pdf.text(`Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY`, 20, 120);
-      pdf.text(`hangtud na ako moabot sa 21 anyos.`, 20, 130);
+// Adjust starting position
+// Increase the starting X-position to move the text to the right
+// Use let or const for variable declaration in JavaScript
 
-      pdf.text(`Client/Resident: ${this.form.client_resident}`, 20, 160);
-      pdf.text(`Pangalan/Pirma sa Ginikanan/Guardian: ${this.form.parent_guardian}`, 20, 170);
-      pdf.text(`Case Manager: ${this.form.case_manager}`, 20, 180);
+let initialX = 20;  // Adjust this value to shift the text further right as needed
 
-      pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 20, 220);
-      pdf.text('Center Head/SWO IV', 20, 230);
+// First line
+pdf.setFont('helvetica', 'normal');
+pdf.setFontSize(13);
+pdf.text('Ako si ', initialX, contentYPos); // Normal text for 'Ako si'
 
-      // Footer
-      pdf.setFontSize(10);
-      pdf.setFont('helvetica', 'normal');
-      pdf.text('PAGE 1 of 1', 105, 290, null, null, 'center');
-      pdf.line(20, 292, 190, 292);
-      pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 105, 297, null, null, 'center');
-      pdf.text('Email: rrxy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 302, null, null, 'center');
+// Bold and underline the client's name
+pdf.setFont('helvetica', 'bold');
+pdf.setFontSize(12);
+pdf.line(33, contentYPos+1, 97, contentYPos+1); // Underline first (left aligned)
+pdf.textWithLink(this.clientName, initialX + pdf.getTextWidth('Ako si '), contentYPos, { underline: true }); // Bold and underlined client's name
 
-      const footerImgData = '/images/footerimg.png';
-      pdf.addImage(footerImgData, 'PNG', 160, 285, 30, 15);
+// Continue with normal text
+pdf.setFont('helvetica', 'normal');
+pdf.text(' usa ka residente diri sa DSWD-RRCY. Ako', initialX + pdf.getTextWidth('Ako si ' + this.clientName) + 6, contentYPos);
 
-      pdf.save(`kasabutan-${this.form.client_id}.pdf`);
-    },
-    printContent() {
-      const originalContent = document.body.innerHTML;
-      
-      // Base64 encoded image for header logo (replace with actual Base64 data)
-      const headerLogoBase64 = 'data:image/png;base64,...'; // Replace with your Base64 encoded image string
+// Second line of the paragraph
+contentYPos += 7; // Move to the next line
+pdf.text('maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako', initialX, contentYPos);
 
-      // Base64 encoded image for footer (replace with actual Base64 data)
-      const footerImgBase64 = 'data:image/png;base64,...'; // Replace with your Base64 encoded image string
+// Third line, adding bold text for "COLOR RED"
+contentYPos += 8; // Move to the next line
+pdf.text('mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili ', initialX, contentYPos); // Normal text before bold
+pdf.setFont('helvetica', 'bold');
+pdf.text('"COLOR', 170, contentYPos);
 
-      document.body.innerHTML = `
-        <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px;">
-          <div class="content">
-            <div class="header" style="text-align: center;">
-              <img src="${headerLogoBase64}" style="width: 200px; margin-bottom: 20px;" alt="Logo">
-              <p style="font-size: 10px;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
-            </div>
+// Third line, adding bold text for "COLOR RED"
+contentYPos += 8; // Move to the next line
+pdf.setFont('helvetica', 'bold');
+pdf.text('RED”', 20, contentYPos); // Normal text before bold
+pdf.setFont('helvetica', 'normal');
+pdf.text('and akong Performance equivalent to', 32, contentYPos); // Normal text before bold
+pdf.setFont('helvetica', 'bold');
+pdf.text('"OUTSTANDING”',103 , contentYPos); // Normal text before bold
 
-            <h1 style="text-align: center; font-size: 28px; margin-bottom: 40px; font-weight: bold;">KASABUTAN</h1>
 
-            <div style="text-align: justify; margin-bottom: 16px;">
-              <p><span style="margin-left: 32px;">Ako</span> si <span style="font-weight: bold; text-decoration: underline;">${this.clientName}</span> usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili <strong>“COLOR RED”</strong> and akong Performance equivalent to <strong>“OUTSTANDING”</strong>.</p>
-              <p style="margin-left: 32px;">Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.</p>
-            </div>
+pdf.setFont('helvetica', 'normal');
+// Second paragraph
 
-            <div style="margin-bottom: 32px;">
-              <p>Client/Resident: <span style="border-bottom: 2px solid black;">${this.form.client_resident}</span></p>
-              <p>Pangalan/Pirma sa Ginikanan/Guardian: <span style="border-bottom: 2px solid black;">${this.form.parent_guardian}</span></p>
-              <p>Case Manager: <span style="border-bottom: 2px solid black;">${this.form.case_manager}</span></p>
-            </div>
+contentYPos += 11;
+pdf.text('Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY', 28, contentYPos);
 
-            <div style="text-align: left; margin-top: 64px;">
-              <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
-              <p>Center Head/SWO IV</p>
-            </div>
-          </div>
+contentYPos += 5;
+pdf.text('hangtud na ako moabot sa 21 anyos.', 20, contentYPos);
 
-          <div style="text-align: center; font-size: 10px; position: fixed; bottom: 20px; left: 0; right: 0;">
-            <p>DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)</p>
-            <p>Email: rrxy.fo11@dswd.gov.ph | Tel. No.: 293-0306</p>
-          </div>
+  // Underlined sections for Client/Resident, Guardian, and Case Manager
+contentYPos += 1;
 
-          <div style="position: absolute; bottom: 0; right: 20px; font-size: 10px;">
-            PAGE 1 of 1
-          </div>
+// Client/Resident underline and label
+contentYPos += 20;
+pdf.line(20, contentYPos, 70, contentYPos); // Underline first (left aligned)
+contentYPos += 5; // Move Y position down for the text
+pdf.text('Client/Resident', 20, contentYPos); // Label below the underline
+
+// Guardian underline and label
+contentYPos += 30; 
+pdf.line(20, contentYPos, 70, contentYPos); // Underline first (left aligned)
+contentYPos += 5; // Move Y position down for the text
+pdf.text('Pangalan/Pirma sa Ginikanan/Guardian', 20, contentYPos); // Label below the underline
+
+// Case Manager underline and label
+contentYPos += 30;
+pdf.line(20, contentYPos, 70, contentYPos); // Underline first (left aligned)
+contentYPos += 5; // Move Y position down for the text
+pdf.text('Case Manager', 20, contentYPos); // Label below the underline
+
+// Signature Section
+  contentYPos += 25;
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 20, contentYPos);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Center Head/SWO IV', 20, contentYPos + 6);
+  contentYPos += 1;
+  pdf.line(20, contentYPos, 87, contentYPos); // Underline first (left aligned)
+  
+// Footer Section - Adjusted Y positions to move higher
+contentYPos += 10;
+pdf.setFontSize(9);
+pdf.setFont('helvetica', 'bold');
+pdf.text('PAGE 1 of 1', 105, 280, null, null, 'center'); // Moved higher (was 290)
+pdf.line(35, 282, 170, 282); // Footer line moved higher (was 292)
+pdf.setFont('helvetica', 'normal');
+pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 105, 287, null, null, 'center'); // Moved higher (was 297)
+pdf.text('Email: rrxy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, null, null, 'center'); // Moved higher (was 302)
+
+const footerImgData = '/images/footerimg.png';
+pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Moved left (was 180), made smaller (was 30x15)
+
+  // Save the PDF
+  pdf.save(`kasabutan-${this.form.client_id}.pdf`);
+},
+printContent() {
+  const originalContent = document.body.innerHTML;
+
+  // Base64 encoded image for header logo (replace with actual Base64 data)
+  const headerLogoBase64 = 'data:image/png;base64,...'; // Replace with your Base64 encoded image string
+  const footerImgBase64 = 'data:image/png;base64,...'; // Replace with your Base64 encoded image string
+
+  document.body.innerHTML = `
+    <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px;">
+      <div class="content">
+        <div class="header" style="text-align: center;">
+          <img src="${headerLogoBase64}" style="width: 200px; margin-bottom: 20px;" alt="Logo">
+          <p style="font-size: 10px;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
         </div>
-      `;
 
-      window.print(); // Trigger the print dialog
+        <h1 style="text-align: center; font-size: 28px; margin-bottom: 40px; font-weight: bold;">KASABUTAN</h1>
 
-      document.body.innerHTML = originalContent; // Restore the original content of the page
-      window.location.reload(); // Reload the page to restore any event listeners and state
-    },
+        <div style="text-align: justify; margin-bottom: 16px;">
+          <p><span style="margin-left: 32px;">Ako</span> si <span style="font-weight: bold; text-decoration: underline;">${this.clientName}</span> usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili <strong>“COLOR RED”</strong> and akong Performance equivalent to <strong>“OUTSTANDING”</strong>.</p>
+          <p style="margin-left: 32px;">Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.</p>
+        </div>
+
+        <div style="margin-bottom: 32px;">
+          <p>Client/Resident: <span style="border-bottom: 2px solid black;">${this.form.client_resident}</span></p>
+          <p>Pangalan/Pirma sa Ginikanan/Guardian: <span style="border-bottom: 2px solid black;">${this.form.parent_guardian}</span></p>
+          <p>Case Manager: <span style="border-bottom: 2px solid black;">${this.form.case_manager}</span></p>
+        </div>
+
+        <div style="text-align: left; margin-top: 64px;">
+          <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
+          <p>Center Head/SWO IV</p>
+        </div>
+      </div>
+
+      <div style="text-align: center; font-size: 10px; position: fixed; bottom: 20px; left: 0; right: 0;">
+        <p>DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)</p>
+        <p>Email: rrxy.fo11@dswd.gov.ph | Tel. No.: 293-0306</p>
+      </div>
+
+      <div style="position: absolute; bottom: 0; right: 20px; font-size: 10px;">
+        PAGE 1 of 1
+      </div>
+    </div>
+  `;
+
+  window.print(); // Trigger the print dialog
+
+  document.body.innerHTML = originalContent; // Restore the original content of the page
+  window.location.reload(); // Reload the page to restore any event listeners and state
+},
   },
 };
 </script>
@@ -389,5 +457,12 @@ button:hover {
 }
 .bg-green-500:hover {
   background-color: #38a169;
+}
+.underline-input {
+  border: none;
+  border-bottom:  1px solid black;
+  padding: 0;
+  margin: 0;
+  vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
 }
 </style>

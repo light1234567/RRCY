@@ -29,6 +29,14 @@
       </svg>
       <span>Save</span>
     </button>
+
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M8 16h8M8 12h8M8 8h8M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <span>Download PDF</span>
+    </button>
   </div>
 
   <!-- Modal for Save Confirmation -->
@@ -87,75 +95,75 @@
 
   <!-- Main Content -->
   <div >
-  <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
-    <div class=" p-8 rounded">
-      <div class="relative flex justify-between items-center mb-2">
-        <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-        <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
-      </div>
+    <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+      <div class=" p-8 rounded">
+        <div class="relative flex justify-between items-center mb-2">
+          <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
+          <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        </div>
 
-      <div class="text-center mb-8">
-        <h1 class="text-[35px] font-bold">KASABUTAN</h1>
-      </div>
+        <div class="text-center mb-8">
+          <h1 class="text-[35px] font-bold">KASABUTAN</h1>
+        </div>
 
-      <div v-if="message" :class="`p-4 mt-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
-        {{ message }}
-      </div>
+        <div v-if="message" :class="`p-4 mt-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
+          {{ message }}
+        </div>
 
-      <div class="mb-8">
-        <p class="text-justify">
-          <span class="ml-8 inline-block">Ako</span> si <span class="font-bold underline">{{ clientName }}</span> nagapanumpa ug naga saad na unsa man ang mahitabo sa akoan bahin niini <strong>PAGAPATAOD UG BOLITAS SA AKONG KINATAWO/OTIN</strong>, walay tulubagon ang DSWD-RRCY tungod kini maoy akong kabubut-on.
-        </p>
-      </div>
+        <div class="mb-8">
+          <p class="text-justify">
+            <span class="ml-8 inline-block">Ako</span> si <span class="font-bold underline">{{ clientName }}</span> nagapanumpa ug naga saad na unsa man ang mahitabo sa akoan bahin niini <strong>PAGAPATAOD UG BOLITAS SA AKONG KINATAWO/OTIN</strong>, walay tulubagon ang DSWD-RRCY tungod kini maoy akong kabubut-on.
+          </p>
+        </div>
 
-      <div class="mb-8">
-        <div class="space-y-12">
-          <div>
-            <input type="text" v-model="form.client_resident" 
-              class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none mt-2 shadow-sm w-1/3 px-2 text-xs" 
-              :readonly="!editMode"/>
-            <label class="block text-base font-semibold text-gray-700 -mt-1">Client/Resident</label>
+        <div class="mb-8">
+          <div class="space-y-12">
+            <div>
+              <input type="text" v-model="form.client_resident" 
+                class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none mt-2 shadow-sm w-1/3 px-2 text-xs" 
+                :readonly="!editMode"/>
+              <label class="block text-base font-semibold text-gray-700 -mt-1">Client/Resident</label>
+            </div>
+            <div>
+              <input type="text" v-model="form.parent_guardian" 
+                class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 text-xs" 
+                :readonly="!editMode"/>
+              <label class="block text-base font-semibold text-gray-700 -mt-1">Pangalan/Pirma sa Ginikanan/Guardian</label>
+            </div>
+            <div>
+              <input type="text" v-model="form.case_manager" 
+                class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 py-1 text-xs" 
+                :readonly="!editMode"/>
+              <label class="block text-base font-semibold text-gray-700 -mt-1">Case Manager</label>
+            </div>
           </div>
-          <div>
-            <input type="text" v-model="form.parent_guardian" 
-              class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 text-xs" 
-              :readonly="!editMode"/>
-            <label class="block text-base font-semibold text-gray-700 -mt-1">Pangalan/Pirma sa Ginikanan/Guardian</label>
+        </div>
+        <div class=" mt-16">
+          <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
+          <p class="-mt-1">Center Head/SWO IV</p>
+        </div>
+      </div>
+
+      <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
+            <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
-          <div>
-            <input type="text" v-model="form.case_manager" 
-              class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 py-1 text-xs" 
-              :readonly="!editMode"/>
-            <label class="block text-base font-semibold text-gray-700 -mt-1">Case Manager</label>
+          <div class="ml-4">
+            <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
           </div>
         </div>
       </div>
-      <div class=" mt-16">
-        <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
-        <p class="-mt-1">Center Head/SWO IV</p>
-      </div>
-
-    
     </div>
-    <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-         <div class="flex justify-between items-center">
-           <div class="flex flex-col">
-             <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
-             <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-             <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-           </div>
-           <div class="ml-4">
-             <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-           </div>
-         </div>
-       </div>
-  </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
+import { jsPDF } from 'jspdf'; // Import jsPDF
 
 export default {
   components: {
@@ -185,14 +193,12 @@ export default {
   },
   mounted() {
     const clientId = this.$route.params.id;
-    console.log('Client ID fetched:', clientId); // Console log showing client ID
     if (clientId) {
       this.fetchClientData(clientId);
     }
   },
   watch: {
     '$route.params.id': function(newId) {
-      console.log('Client ID changed:', newId); // Console log showing updated client ID
       if (newId) {
         this.fetchClientData(newId);
       }
@@ -204,17 +210,16 @@ export default {
         const clientResponse = await axios.get(`/api/clients/${clientId}`);
         const client = clientResponse.data;
         this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
-        this.form.client_id = client.id; // Set the client ID in the form
+        this.form.client_id = client.id;
 
         const kasabutanResponse = await axios.get(`/api/kasabutan/${clientId}`);
         const kasabutan = kasabutanResponse.data;
         this.form.client_resident = kasabutan.client_resident || '';
         this.form.parent_guardian = kasabutan.parent_guardian || '';
         this.form.case_manager = kasabutan.case_manager || '';
-        this.form.id = kasabutan.id; // Capture the kasabutan id if it exists
+        this.form.id = kasabutan.id;
       } catch (error) {
         this.errorMessage = 'Error fetching client data.';
-        console.error('Error fetching client data:', error);
       }
     },
     toggleEdit() {
@@ -234,16 +239,15 @@ export default {
         this.isSaveResultModalOpen = true;
 
         if (!this.form.id) {
-          this.form.id = response.data.id; // Update id if new record created
+          this.form.id = response.data.id;
         }
 
-        this.errorMessage = ''; // Clear any previous error messages
-        this.editMode = false; // Switch back to view mode after saving
+        this.errorMessage = '';
+        this.editMode = false;
       } catch (error) {
         this.saveResultTitle = 'Error';
         this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
         this.isSaveResultModalOpen = true;
-        console.error('Error saving data:', error);
       } finally {
         this.closeModal();
       }
@@ -255,7 +259,113 @@ export default {
     },
     cancelEdit() {
       this.editMode = false;
-    }
+    },
+    exportToPdf() {
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+
+  // Header section with the logo and text
+  const imgData = '/images/headerlogo2.png'; 
+  pdf.addImage(imgData, 'PNG', 15, 10, 50, 30); // DSWD logo
+  pdf.setFontSize(10);
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 30);
+
+  // Title ("KASABUTAN")
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(30);
+  pdf.setTextColor(0, 0, 0); // Black text for title
+  pdf.text('KASABUTAN', 105, 60, null, null, 'center'); // Centered title
+
+  // Main Content: Adjust positioning and apply bold/underline styles
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(12);
+  
+  let contentYPos = 80; // Start below the title
+
+// Adjust starting position
+// Increase the starting X-position to move the text to the right
+// Use let or const for variable declaration in JavaScript
+let initialX = 20;  // Adjust this value to shift the text further right as needed
+
+// First line
+pdf.setFont('helvetica', 'normal');
+pdf.setFontSize(13);
+pdf.text('Ako si ', initialX, contentYPos); // Normal text for 'Ako si'
+
+// Bold and underline the client's name
+pdf.setFont('helvetica', 'bold');
+pdf.setFontSize(12);
+pdf.line(33, contentYPos + 1, 97, contentYPos+1); // Adjust the Y position downward by 10 units
+
+pdf.textWithLink(this.clientName, initialX + pdf.getTextWidth('Ako si '), contentYPos, { underline: true }); // Bold and underlined client's name
+
+// Continue with normal text
+pdf.setFont('helvetica', 'normal');
+pdf.text('nagapanumpa ug naga saad na unsa man', initialX + pdf.getTextWidth('Ako si ' + this.clientName) + 7, contentYPos);
+
+// Second line of the paragraph
+contentYPos += 7; // Move to the next line
+pdf.text('ang mahitabo sa akoan bahin niini', initialX, contentYPos);
+pdf.setFont('helvetica', 'bold');
+pdf.text('PAGAPATAOD UG BOLITAS SA AKONG', 88, contentYPos);
+
+// Third line, adding bold text for "COLOR RED"
+contentYPos += 8; // Move to the next line
+pdf.setFont('helvetica', 'bold');
+pdf.text('KINATAWO/OTIN,', 20, contentYPos); // Normal text before bold
+pdf.setFont('helvetica', 'normal');
+pdf.text('walay tulubagon ang DSWD-RRCY tungod kini maoy akong kabubut-',58, contentYPos); // Normal text before bold
+
+// Third line, adding bold text for "COLOR RED"
+contentYPos += 8; // Move to the next line
+pdf.setFont('helvetica', 'normal');
+pdf.text('on', 20, contentYPos); // Normal text before bold
+
+
+  // Underlined sections for Client/Resident, Guardian, and Case Manager
+contentYPos += 1;
+
+// Client/Resident underline and label
+contentYPos += 20;
+pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
+contentYPos += 5; // Move Y position down for the text
+pdf.text('Client/Resident', 20, contentYPos); // Label below the underline
+
+// Guardian underline and label
+contentYPos += 30; 
+pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
+contentYPos += 5; // Move Y position down for the text
+pdf.text('Pangalan/Pirma sa Ginikanan/Guardian', 20, contentYPos); // Label below the underline
+
+// Case Manager underline and label
+contentYPos += 30;
+pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
+contentYPos += 5; // Move Y position down for the text
+pdf.text('Case Manager', 20, contentYPos); // Label below the underline
+
+// Signature Section
+contentYPos += 25;
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 20, contentYPos);
+  pdf.setFont('helvetica', 'normal');
+  pdf.text('Center Head/SWO IV', 20, contentYPos + 6);
+  contentYPos += 1;
+  pdf.line(20, contentYPos, 87, contentYPos); // Underline first (left aligned)
+  
+// Footer Section - Adjusted Y positions to move higher
+pdf.setFontSize(9);
+pdf.setFont('helvetica', 'bold');
+pdf.text('PAGE 1 of 1', 105, 280, null, null, 'center'); // Moved higher (was 290)
+pdf.line(35, 282, 170, 282); // Footer line moved higher (was 292)
+pdf.setFont('helvetica', 'normal');
+pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 105, 287, null, null, 'center'); // Moved higher (was 297)
+pdf.text('Email: rrxy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, null, null, 'center'); // Moved higher (was 302)
+
+const footerImgData = '/images/footerimg.png';
+pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Moved left (was 180), made smaller (was 30x15)
+
+  // Save the PDF
+  pdf.save(`kasabutan-${this.form.client_id}.pdf`);
+},
   }
 };
 </script>
