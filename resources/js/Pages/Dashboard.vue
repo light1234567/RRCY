@@ -2,7 +2,7 @@
   <AppLayout title="Dashboard">
     <template #header>
       <div class="flex items-center justify-center">
-        <div class="w-2 h-6 bg-gray-400 mr-3"></div>
+        <div class="ml-5 w-2 h-6 bg-gray-400 mr-3"></div>
         <svg
           class="ml-6"  
           width="24"
@@ -244,10 +244,10 @@ const fetchClients = async () => {
 
 onMounted(fetchClients);
 
-// Calculate average age
+// Calculate average age without decimals
 const averageAge = computed(() => {
   const totalAge = clients.value.reduce((sum, client) => sum + client.age, 0);
-  return (totalAge / clients.value.length).toFixed(1);
+  return Math.floor(totalAge / clients.value.length); // Rounding down to the nearest whole number
 });
 
 // Total number of clients
@@ -361,7 +361,6 @@ const ageData = computed(() => {
     ],
   };
 });
-
 
 // Offense Committed Data for Pareto Chart with DSWD colors
 const paretoData = computed(() => {

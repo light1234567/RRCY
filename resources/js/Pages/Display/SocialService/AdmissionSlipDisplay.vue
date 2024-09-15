@@ -977,7 +977,7 @@ async exportToPdf() {
 
   // Loop through clients and add their data
   this.clients.forEach((client, index) => {
-    const offset = index * 160 + 80; // Adjust offset for each client's data
+    let offset = index * 160 + 80; // Adjust offset for each client's data
 
     // Add client details with margins and underline
     pdf.text('Name:', 20, offset);
@@ -992,65 +992,77 @@ async exportToPdf() {
     pdf.text(String(client.religion), 162, offset);
     pdf.line(162, offset + 1, 200, offset + 1); // Draw underline for religion
 
+    // Handle address with text wrapping
     pdf.text('Address:', 20, offset + 10);
-    pdf.text(String(client.province) + ', ' + String(client.city) + ', ' + String(client.barangay) + ', ' + String(client.street), 40, offset + 10);
-    pdf.line(40, offset + 11, 200, offset + 11); // Draw underline for address
+    const addressText = String(client.province) + ', ' + String(client.city) + ', ' + String(client.barangay) + ', ' + String(client.street);
+    const wrappedAddress = pdf.splitTextToSize(addressText, 150); // 150mm width for wrapping
 
-    pdf.text('Date/Place of Birth:', 20, offset + 20);
-    pdf.text(String(client.date_of_birth) + ' / ' + String(client.place_of_birth), 58, offset + 20);
-    pdf.line(58, offset + 21, 200, offset + 21); // Draw underline for birth details
+    wrappedAddress.forEach((line, i) => {
+        const lineX = i === 0 ? 40 : 20; // First line starts at 40, subsequent lines at 20
+        const lineY = offset + 10 + i * 8; // 5mm height per line
+        pdf.text(line, lineX, lineY); // Print the wrapped line
+        pdf.line(lineX, lineY + 1, 200, lineY + 1); // Draw the underline for each line
+    });
 
-    pdf.text('Committing Court:', 20, offset + 30);
-    pdf.text(String(client.admissions[0]?.committing_court), 56, offset + 30);
-    pdf.line(56, offset + 31, 110, offset + 31); // Draw underline for committing court
+    const addressHeight = wrappedAddress.length * 5; // Adjust height based on number of lines (5mm per line)
+    offset += addressHeight + 6; // Adjust offset to account for wrapped text
 
-    pdf.text('Crim. Case #:', 115, offset + 30);
-    pdf.text(String(client.admissions[0]?.crim_case_number), 143, offset + 30);
-    pdf.line(143, offset + 31, 200, offset + 31); // Draw underline for criminal case number
 
-    pdf.text('Offense Committed:', 20, offset + 40);
-    pdf.text(String(client.admissions[0]?.offense_committed), 58, offset + 40);
-    pdf.line(58, offset + 41, 110, offset + 41); // Draw underline for offense
+    pdf.text('Date/Place of Birth:', 20, offset + 10);
+    pdf.text(String(client.date_of_birth) + ' / ' + String(client.place_of_birth), 58, offset + 10);
+    pdf.line(58, offset + 11, 200, offset + 11); // Draw underline for birth details
 
-    pdf.text('Date admitted to Center:', 115, offset + 40);
-    pdf.text(String(client.admissions[0]?.date_admitted), 160, offset + 40);
-    pdf.line(160, offset + 41, 200, offset + 41); // Draw underline for date admitted
+    pdf.text('Committing Court:', 20, offset + 20);
+    pdf.text(String(client.admissions[0]?.committing_court), 56, offset + 20);
+    pdf.line(56, offset + 21, 110, offset + 21); // Draw underline for committing court
 
-    pdf.text('No. of Days in Jail:', 20, offset + 50);
-    pdf.text(String(client.admissions[0]?.days_in_jail), 57, offset + 50);
-    pdf.line(57, offset + 51, 110, offset + 51); // Draw underline for days in jail
+    pdf.text('Crim. Case #:', 115, offset + 20);
+    pdf.text(String(client.admissions[0]?.crim_case_number), 143, offset + 20);
+    pdf.line(143, offset + 21, 200, offset + 21); // Draw underline for criminal case number
 
-    pdf.text('No. of Days in Detention Center:', 115, offset + 50);
-    pdf.text(String(client.admissions[0]?.days_in_detention_center), 175, offset + 50);
-    pdf.line(175, offset + 51, 200, offset + 51); // Draw underline for days in detention center
+    pdf.text('Offense Committed:', 20, offset + 30);
+    pdf.text(String(client.admissions[0]?.offense_committed), 58, offset + 30);
+    pdf.line(58, offset + 31, 110, offset + 31); // Draw underline for offense
+
+    pdf.text('Date admitted to Center:', 115, offset + 30);
+    pdf.text(String(client.admissions[0]?.date_admitted), 160, offset + 30);
+    pdf.line(160, offset + 31, 200, offset + 31); // Draw underline for date admitted
+
+    pdf.text('No. of Days in Jail:', 20, offset + 40);
+    pdf.text(String(client.admissions[0]?.days_in_jail), 57, offset + 40);
+    pdf.line(57, offset + 41, 110, offset + 41); // Draw underline for days in jail
+
+    pdf.text('No. of Days in Detention Center:', 115, offset + 40);
+    pdf.text(String(client.admissions[0]?.days_in_detention_center), 175, offset + 40);
+    pdf.line(175, offset + 41, 200, offset + 41); // Draw underline for days in detention center
 
     pdf.setFont('helvetica', 'bold');
-    pdf.text('Distinguishing Marks:', 20, offset + 60);
+    pdf.text('Distinguishing Marks:', 20, offset + 50);
     pdf.setFont('helvetica', 'normal');
 
-    pdf.text('a. Tattoo/Scars:', 20, offset + 70);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars), 51, offset + 70);
-    pdf.line(51, offset + 71, 110, offset + 71); // Draw underline for tattoo/scars
+    pdf.text('a. Tattoo/Scars:', 20, offset + 60);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars), 51, offset + 60);
+    pdf.line(51, offset + 61, 110, offset + 61); // Draw underline for tattoo/scars
 
-    pdf.text('b. Height:', 115, offset + 70);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.height), 138, offset + 70);
-    pdf.line(138, offset + 71, 200, offset + 71); // Draw underline for height
+    pdf.text('b. Height:', 115, offset + 60);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.height), 138, offset + 60);
+    pdf.line(138, offset + 61, 200, offset + 61); // Draw underline for height
 
-    pdf.text('c. Weight:', 20, offset + 80);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.weight), 40, offset + 80);
-    pdf.line(40, offset + 81, 110, offset + 81); // Draw underline for weight
+    pdf.text('c. Weight:', 20, offset + 70);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.weight), 40, offset + 70);
+    pdf.line(40, offset + 71, 110, offset + 71); // Draw underline for weight
 
-    pdf.text('d. Colour of Eye:', 115, offset + 80);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye), 150, offset + 80);
-    pdf.line(150, offset + 81, 200, offset + 81); // Draw underline for eye color
+    pdf.text('d. Colour of Eye:', 115, offset + 70);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye), 150, offset + 70);
+    pdf.line(150, offset + 71, 200, offset + 71); // Draw underline for eye color
 
-    pdf.text('e. Skin:', 20, offset + 90);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.skin_colour), 36, offset + 90);
-    pdf.line(36, offset + 91, 110, offset + 91); // Draw underline for skin color
+    pdf.text('e. Skin:', 20, offset + 80);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.skin_colour), 36, offset + 80);
+    pdf.line(36, offset + 81, 110, offset + 81); // Draw underline for skin color
 
     // Add the "Put on Documents Submitted" section with checkboxes
     pdf.setFont('helvetica', 'bold');
-    pdf.text('Put on Documents Submitted:', 20, offset + 100);
+    pdf.text('Put on Documents Submitted:', 20, offset + 90);
     pdf.setFont('helvetica', 'normal');
 
     const documents = [
@@ -1064,23 +1076,23 @@ async exportToPdf() {
 
     documents.forEach((doc, i) => {
       const x = i < 3 ? 20 + i * 70 : 20 + (i - 3) * 70;
-      const y = i < 3 ? offset + 106 : offset + 116;
+      const y = i < 3 ? offset + 96 : offset + 106;
       pdf.rect(x, y, 4, 4);
       pdf.text(doc.label, x + 8, y + 4);
       if (doc.checked) fillCheckboxWithCheck(pdf, x, y);
     });
 
     pdf.setFont('helvetica', 'bold');
-    pdf.text('General impression upon admission:', 20, offset + 130);
+    pdf.text('General impression upon admission:', 20, offset + 120);
     pdf.setFont('helvetica', 'normal');
-    pdf.text(String(client.admissions[0]?.general_impression || ''), 20, offset + 140, { maxWidth: 170 });
-    pdf.line(20, offset + 141, 200, offset + 141); // Draw underline for general impression
+    pdf.text(String(client.admissions[0]?.general_impression || ''), 20, offset + 130, { maxWidth: 170 });
+    pdf.line(20, offset + 131, 200, offset + 131); // Draw underline for general impression
 
     pdf.setFont('helvetica', 'bold');
-    pdf.text('Action Taken:', 20, offset + 150);
+    pdf.text('Action Taken:', 20, offset + 140);
     pdf.setFont('helvetica', 'normal');
-    pdf.text(String(client.admissions[0]?.action_taken || ''), 20, offset + 160, { maxWidth: 170 });
-    pdf.line(20, offset + 161, 200, offset + 161); // Draw underline for action taken
+    pdf.text(String(client.admissions[0]?.action_taken || ''), 20, offset + 150, { maxWidth: 170 });
+    pdf.line(20, offset + 151, 200, offset + 151); // Draw underline for action taken
 
     if (index < this.clients.length - 1) {
       pdf.addPage(); // Add a new page for the next client if more clients exist
@@ -1125,18 +1137,20 @@ async exportToPdf() {
 
   // Footer
   pdf.setFont('TimesNewRoman', 'bold');
-  pdf.setFontSize(12);
-  pdf.text('PAGE 1 of 1', 108, offset + 3, null, null, 'center');
-  pdf.setLineWidth(0.5);
-  pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic');
-  pdf.setFont('TimesNewRoman', 'italic');
-  pdf.line(20, offset + 5, 180, offset + 5);
   pdf.setFontSize(9);
-  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 100, offset + 10, null, null, 'center');
-  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
+  pdf.text(`PAGE 1 of 1`, 108, offset + 8, null, null, 'center');
+  pdf.setLineWidth(0.5);
+  pdf.line(18, offset + 10, 174, offset + 10); // Horizontal line
 
-  const footerImgData = '/images/footerimg.png'; // Path to your footer image
-  pdf.addImage(footerImgData, 'PNG', 182, offset, 20, 10); // Adjust the position and size
+  // Footer content for the first page
+  pdf.setFont('TimesNewRoman', 'normal');
+  pdf.setFontSize(9);
+  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 96, offset + 15, null, null, 'center');
+  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 20, null, null, 'center');
+
+  // Add the footer image
+  const footerImgData = '/images/footerimg.png'; // Make sure the image is correctly loaded
+  pdf.addImage(footerImgData, 'PNG', 175, offset + 5, 25, 15); // Adjust the position and size as needed
 
   // Save the PDF
   pdf.save(`admission-slip-${this.id}.pdf`);

@@ -13,10 +13,12 @@ defineProps({
 <template>
     <AppLayout title="Profile">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Profile
-            </h2>
-        </template>
+      <div class="flex items-center">
+        <div class="ml-5 w-2 h-6 bg-gray-400 mr-3"></div>
+        <i class="ml-4 fa fa-user fa-lg mr-2"></i>
+        <h1 class="text-lg ml-2 font-bold text-red-800">Profile</h1>
+      </div>
+    </template>
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 -mt-4 lg:px-8">

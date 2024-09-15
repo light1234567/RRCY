@@ -277,7 +277,7 @@
         class="flex-1 transition-all duration-300"
       >
        <!-- Page Heading -->
-        <div class="ml-5 w-full m-0 p-0">
+        <div class="w-full m-0 p-0">
           <header class="w-full py-2 bg-white border shadow-md px-24 sm:px-8 lg:px-16 flex items-center">
             <slot name="header" v-if="$slots.header"></slot>
 
@@ -285,7 +285,7 @@
               <div class="h-full w-full bg-white rounded-full overflow-hidden">
                 <UserProfileImage 
                   :userImage="userImage"
-                  :userName="userfName + userSName + usermidName + userSName + userlName"
+                  :userName="userfName + userSName + userlName"
                 />
               </div>
             </div>
@@ -296,7 +296,7 @@
             <div class="flex flex-col items-center -mr-2 mt-1/2 ml-2">
               <ApplicationMark
                 :isSidebarCollapsed="isSidebarCollapsed"
-                :userName="userfName + userSName + usermidName + userSName + userlName"
+                :userName="userfName + userSName +  userlName"
                 :userImage="userImage"
               />
             </div>

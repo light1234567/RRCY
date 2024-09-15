@@ -2,7 +2,7 @@
   <AppLayout>
     <template #header>
       <div class="flex items-center">
-        <div class="w-2 h-6 bg-gray-400 mr-3"></div>
+        <div class="ml-5 w-2 h-6 bg-gray-400 mr-3"></div>
         <i class="fa fa-users  text-black text-2xl ml-6"></i> 
         <h1 class="text-lg ml-4 font-bold text-red-800">CICL Information</h1>
       </div>

@@ -1,6 +1,7 @@
 <template>
   <AppLayout title="Users">
     <template #header>
+      <div class="ml-5 w-2 h-6 bg-gray-400 mr-3"></div>
       <h1 class="ml-5 text-lg font-bold text-red-800">User Verification</h1>
     </template>
     <div v-if="loading" class="flex justify-center items-center py-10">Loading...</div>

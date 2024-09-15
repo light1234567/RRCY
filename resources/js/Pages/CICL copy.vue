@@ -2,13 +2,13 @@
   <AppLayout title="CICL">
     <template #header>
       <div class="flex items-center">
-        <div class="ml-5 w-2 h-6 bg-gray-400 mr-3"></div>
-        <i class="fa fa-users text-black text-2xl ml-6"></i>
+        <div class="w-2 h-6 bg-gray-400 mr-3"></div>
+        <i class="fa fa-users  text-black text-2xl ml-6"></i> 
         <h1 class="text-lg ml-4 font-bold text-red-800">CICL LIST</h1>
       </div>
     </template>
 
-    <div class="ml-5 max-w-8xl mx-auto px-4 -mr-4 sm:px-6 lg:px-8 mt-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
       <!-- Filter and Search section -->
       <div class="p-4 rounded-lg flex flex-col md:flex-row justify-between items-center bg-gray-100 shadow-sm space-y-4 md:space-y-0">
         <div class="text-md font-semibold text-gray-500">
@@ -107,6 +107,14 @@
                   <div class="p-6 bg-red-100 text-red-700 border border-red-400 rounded-md">
                     <p class="text-lg font-semibold">No clients found</p>
                     <p class="text-sm text-gray-500">Try adjusting your search or filters.</p>
+                    <div class="mt-4 flex justify-center space-x-2">
+                      <button @click="previousPage" :disabled="currentPage === 1" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50">
+                        Previous
+                      </button>
+                      <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 disabled:opacity-50">
+                        Next
+                      </button>
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -115,43 +123,16 @@
         </div>
       </div>
 
-     <!-- Pagination Controls -->
-      <div class="mt-4 mb-8 flex justify-center space-x-2">
-        <!-- First Page Button (Disabled if on the first page) -->
-        <button @click="firstPage" :disabled="currentPage === 1" 
-                class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-          «
+      <!-- Pagination Controls -->
+      <div class="mt-4 flex justify-center">
+        <button @click="previousPage" :disabled="currentPage === 1" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md mr-2 hover:bg-gray-300">
+          Previous
         </button>
-
-        <!-- Previous Page Button (Disabled if on the first page) -->
-        <button @click="previousPage" :disabled="currentPage === 1" 
-                class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-          ‹
-        </button>
-
-        <!-- Page Numbers -->
-        <button v-for="page in totalPages" :key="page"
-                @click.stop="goToPage(page)" 
-                :class="{
-                  'px-3 py-1 border-2 border-blue-500 text-blue-500 rounded-md': currentPage === page,
-                  'px-3 py-1 bg-white border-2 border-gray-200 text-black rounded-md hover:bg-gray-100': currentPage !== page
-                }">
-          {{ page }}
-        </button>
-
-        <!-- Next Page Button (Disabled if on the last page) -->
-        <button @click="nextPage" :disabled="currentPage === totalPages" 
-                class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-          ›
-        </button>
-
-        <!-- Last Page Button (Disabled if on the last page) -->
-        <button @click="lastPage" :disabled="currentPage === totalPages" 
-                class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-          »
+        <span class="px-3 py-1">{{ currentPage }} / {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md ml-2 hover:bg-gray-300">
+          Next
         </button>
       </div>
-
     </div>
   </AppLayout>
 </template>
@@ -180,6 +161,7 @@ const caseStatuses = ["On trial", "Suspended sentence", "Acquitted", "Dismissed"
 
 const childStatuses = ["Still at the Center (SATC)", "Discharge", "Leave without Permission (LWOP)"];
 
+// Function to fetch clients and select only the latest admission for each client
 // Function to fetch clients and select only the latest admission for each client
 const fetchClients = async () => {
   try {
@@ -228,6 +210,8 @@ const fetchClients = async () => {
     console.error('Error fetching clients:', error);
   }
 };
+
+
 
 onMounted(fetchClients);
 
@@ -279,18 +263,6 @@ const nextPage = () => {
 
 const previousPage = () => {
   if (currentPage.value > 1) currentPage.value -= 1;
-};
-
-const firstPage = () => {
-  currentPage.value = 1;
-};
-
-const lastPage = () => {
-  currentPage.value = totalPages.value;
-};
-
-const goToPage = (page) => {
-  currentPage.value = page;
 };
 
 const filteredClients = computed(() => {
