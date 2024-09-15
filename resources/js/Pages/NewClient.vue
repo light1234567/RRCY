@@ -2,8 +2,9 @@
   <AppLayout title="New Client">
     <template #header>
       <div class="flex items-center">
-        <i class="fa fa-user-plus ml-12 text-xl mr-2"></i>
-        <h1 class="ml-2 text-lg font-bold text-red-800">Admission Form/New Client</h1>
+        <div class="w-2 h-6 bg-gray-400 mr-3"></div>
+        <i class="fa fa-user-plus ml-6 text-xl mr-2"></i>
+        <h1 class="ml-4 text-lg font-bold text-red-800">Admission Form/New Client</h1>
       </div>
     </template>
 

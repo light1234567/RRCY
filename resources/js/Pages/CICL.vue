@@ -1,10 +1,10 @@
 <template>
   <AppLayout title="CICL">
     <template #header>
-      <div class="flex items-center mb-4">
-        <div class="w-2 h-6 bg-gray-500 mr-3"></div>
-        <i class="fa fa-users text-gray-800 text-2xl ml-6"></i>
-        <h1 class="text-xl ml-4 font-bold text-indigo-800">CICL Management</h1>
+      <div class="flex items-center">
+        <div class="w-2 h-6 bg-gray-400 mr-3"></div>
+        <i class="fa fa-users  text-black text-2xl ml-6"></i> 
+        <h1 class="text-lg ml-4 font-bold text-red-800">CICL LIST</h1>
       </div>
     </template>
 

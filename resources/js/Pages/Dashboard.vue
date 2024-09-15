@@ -2,8 +2,9 @@
   <AppLayout title="Dashboard">
     <template #header>
       <div class="flex items-center justify-center">
+        <div class="w-2 h-6 bg-gray-400 mr-3"></div>
         <svg
-          class="ml-12"  
+          class="ml-6"  
           width="24"
           height="24"
           fill="none"

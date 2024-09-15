@@ -927,12 +927,12 @@ toggleDocument(client, documentName) {
 
 ,
 
-  async exportToPdf() {
+async exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
   // Add and set Times New Roman font
-  pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic'); // Loads the Times New Roman italic font
-  pdf.setFont('TimesNewRoman', 'italic'); // Sets Times New Roman as the italic font
+  pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic'); // Load the Times New Roman italic font
+  pdf.setFont('TimesNewRoman', 'italic'); // Set Times New Roman as the italic font
 
   // Set default font properties
   pdf.setFontSize(11);
@@ -951,7 +951,6 @@ toggleDocument(client, documentName) {
   pdf.setFont('Arial', 'normal'); // Set Arial as the default font  
   pdf.setFontSize(18);
 
-  
   pdf.setTextColor(0, 0, 0); // RGB values for black
 
   // Mimic bold by drawing the text multiple times with slight offsets
@@ -959,238 +958,196 @@ toggleDocument(client, documentName) {
   pdf.text('ADMISSION SLIP', 108.2, 60, null, null, 'center'); // Slight offset
   pdf.text('ADMISSION SLIP', 107.8, 60, null, null, 'center'); // Slight offset
 
-
-
-  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
   pdf.setFont('Arial', 'normal'); // Set Arial as the default font
-  pdf.setFontSize(11); // Reset font size to 12 for content
+  pdf.setFontSize(11); // Reset font size for content
+
+  // Function to draw a custom checkmark inside the checkbox
+  function drawCheckmark(pdf, x, y) {
+    pdf.setLineWidth(0.1);
+    pdf.line(x, y + 1, x + 1, y + 2.5); // First line of the checkmark
+    pdf.line(x + 1, y + 2.5, x + 3, y - 0.5); // Second line of the checkmark
+  }
+
+  // Function to fill the checkbox and draw the checkmark
+  function fillCheckboxWithCheck(pdf, x, y) {
+    pdf.setFillColor(169, 169, 169); // Set a light gray color
+    pdf.rect(x, y, 4, 4, 'F'); // Draw and fill the rectangle
+    drawCheckmark(pdf, x, y + 2); // Draw the checkmark on top
+  }
 
   // Loop through clients and add their data
   this.clients.forEach((client, index) => {
     const offset = index * 160 + 80; // Adjust offset for each client's data
 
     // Add client details with margins and underline
-    pdf.text(`Name:`, 20, offset);
-    pdf.text(`${client.first_name} ${client.middle_name} ${client.last_name}`, 35, offset);
-    pdf.line(35, offset + 1, 95, offset + 1); // Draw underline from start to end of data
+    pdf.text('Name:', 20, offset);
+    pdf.text(String(client.first_name) + ' ' + String(client.middle_name) + ' ' + String(client.last_name), 35, offset);
+    pdf.line(35, offset + 1, 95, offset + 1); // Draw underline for name
 
-    pdf.text(`Sex:`, 100, offset);
-    pdf.text(`${client.sex}`, 110, offset);
+    pdf.text('Sex:', 100, offset);
+    pdf.text(String(client.sex), 110, offset);
     pdf.line(110, offset + 1, 140, offset + 1); // Draw underline for sex
 
-    pdf.text(`Religion:`, 145, offset  );
-    pdf.text(`${client.religion}`, 162, offset );
+    pdf.text('Religion:', 145, offset);
+    pdf.text(String(client.religion), 162, offset);
     pdf.line(162, offset + 1, 200, offset + 1); // Draw underline for religion
 
-    pdf.text(`Address:`, 20, offset + 10);
-    pdf.text(`${client.province}, ${client.city}, ${client.barangay}, ${client.street}`, 40, offset + 10);
+    pdf.text('Address:', 20, offset + 10);
+    pdf.text(String(client.province) + ', ' + String(client.city) + ', ' + String(client.barangay) + ', ' + String(client.street), 40, offset + 10);
     pdf.line(40, offset + 11, 200, offset + 11); // Draw underline for address
 
-    pdf.text(`Date/Place of Birth:`, 20, offset + 20);
-    pdf.text(`${client.date_of_birth} / ${client.place_of_birth}`, 58, offset + 20);
+    pdf.text('Date/Place of Birth:', 20, offset + 20);
+    pdf.text(String(client.date_of_birth) + ' / ' + String(client.place_of_birth), 58, offset + 20);
     pdf.line(58, offset + 21, 200, offset + 21); // Draw underline for birth details
 
-   
-    pdf.text(`Committing Court:`, 20, offset + 30);
-    pdf.text(`${client.admissions[0]?.committing_court}`, 56, offset + 30);
+    pdf.text('Committing Court:', 20, offset + 30);
+    pdf.text(String(client.admissions[0]?.committing_court), 56, offset + 30);
     pdf.line(56, offset + 31, 110, offset + 31); // Draw underline for committing court
 
-    pdf.text(`Crim. Case #:`, 115, offset + 30);
-    pdf.text(`${client.admissions[0]?.crim_case_number}`, 143, offset + 30);
+    pdf.text('Crim. Case #:', 115, offset + 30);
+    pdf.text(String(client.admissions[0]?.crim_case_number), 143, offset + 30);
     pdf.line(143, offset + 31, 200, offset + 31); // Draw underline for criminal case number
 
-    pdf.text(`Offense Committed:`, 20, offset + 40);
-    pdf.text(`${client.admissions[0]?.offense_committed}`, 58, offset + 40);
+    pdf.text('Offense Committed:', 20, offset + 40);
+    pdf.text(String(client.admissions[0]?.offense_committed), 58, offset + 40);
     pdf.line(58, offset + 41, 110, offset + 41); // Draw underline for offense
 
-    pdf.text(`Date admitted to Center:`, 115, offset + 40);
-    pdf.text(`${client.admissions[0]?.date_admitted}`, 160, offset + 40);
+    pdf.text('Date admitted to Center:', 115, offset + 40);
+    pdf.text(String(client.admissions[0]?.date_admitted), 160, offset + 40);
     pdf.line(160, offset + 41, 200, offset + 41); // Draw underline for date admitted
 
-    pdf.text(`No. of Days in Jail:`, 20, offset + 50);
-    pdf.text(`${client.admissions[0]?.days_in_jail}`, 57, offset + 50);
+    pdf.text('No. of Days in Jail:', 20, offset + 50);
+    pdf.text(String(client.admissions[0]?.days_in_jail), 57, offset + 50);
     pdf.line(57, offset + 51, 110, offset + 51); // Draw underline for days in jail
 
-    pdf.text(`No. of Days in Detention Center:`, 115, offset + 50);
-    pdf.text(`${client.admissions[0]?.days_in_detention_center}`, 175, offset + 50);
+    pdf.text('No. of Days in Detention Center:', 115, offset + 50);
+    pdf.text(String(client.admissions[0]?.days_in_detention_center), 175, offset + 50);
     pdf.line(175, offset + 51, 200, offset + 51); // Draw underline for days in detention center
 
-    pdf.setFont('helvetica', 'bold'); // Set font to Arial and make it bold
-    pdf.text(`Distinguishing Marks:`, 20, offset + 60);
-    pdf.setFont('helvetica', 'normal'); // Reset font to normal for the following text
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Distinguishing Marks:', 20, offset + 60);
+    pdf.setFont('helvetica', 'normal');
 
-
-    pdf.text(`a. Tattoo/Scars:`, 20, offset + 70);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars}`, 51, offset + 70);
+    pdf.text('a. Tattoo/Scars:', 20, offset + 70);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars), 51, offset + 70);
     pdf.line(51, offset + 71, 110, offset + 71); // Draw underline for tattoo/scars
 
-    pdf.text(`b. Height:`, 115, offset + 70);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.height}`, 138, offset + 70);
+    pdf.text('b. Height:', 115, offset + 70);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.height), 138, offset + 70);
     pdf.line(138, offset + 71, 200, offset + 71); // Draw underline for height
 
-    pdf.text(`c. Weight:`, 20, offset + 80);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight}`, 40, offset + 80);
+    pdf.text('c. Weight:', 20, offset + 80);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.weight), 40, offset + 80);
     pdf.line(40, offset + 81, 110, offset + 81); // Draw underline for weight
 
-    pdf.text(`d. Colour of Eye:`, 115, offset + 80);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye}`, 150, offset + 80);
+    pdf.text('d. Colour of Eye:', 115, offset + 80);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye), 150, offset + 80);
     pdf.line(150, offset + 81, 200, offset + 81); // Draw underline for eye color
 
-    pdf.text(`e. Skin:`, 20, offset + 90);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour}`, 36, offset + 90);
+    pdf.text('e. Skin:', 20, offset + 90);
+    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.skin_colour), 36, offset + 90);
     pdf.line(36, offset + 91, 110, offset + 91); // Draw underline for skin color
 
     // Add the "Put on Documents Submitted" section with checkboxes
-    pdf.setFont('helvetica', 'bold'); // Set font to Arial and make it bold
-    pdf.text(`Put on Documents Submitted:`, 20, offset + 100);
-    pdf.setFont('helvetica', 'normal'); // Reset font to normal for the following text
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Put on Documents Submitted:', 20, offset + 100);
+    pdf.setFont('helvetica', 'normal');
 
-    // Function to draw a custom checkmark inside the checkbox
-      function drawCheckmark(pdf, x, y) {
-          pdf.setLineWidth(0.1);
-          pdf.line(x, y + 1, x + 1, y + 2.5); // Adjust the first line of the checkmark
-          pdf.line(x + 1, y + 2.5, x + 3, y - 0.5); // Adjust the second line of the checkmark
-      }
+    const documents = [
+      { label: 'SCSR', checked: client.admissions[0]?.documents[0]?.submitted },
+      { label: 'Court Order', checked: client.admissions[0]?.documents[1]?.submitted },
+      { label: 'Medical Certificates', checked: client.admissions[0]?.documents[2]?.submitted },
+      { label: 'Consent from Parents', checked: client.admissions[0]?.documents[3]?.submitted },
+      { label: 'School Records', checked: client.admissions[0]?.documents[4]?.submitted },
+      { label: 'Others', checked: client.admissions[0]?.documents[5]?.submitted },
+    ];
 
-      // Function to fill the checkbox and draw the checkmark
-      function fillCheckboxWithCheck(pdf, x, y) {
-          pdf.setFillColor(169, 169, 169); // Set a light gray color
-          pdf.rect(x, y, 4, 4, 'F'); // Draw and fill the rectangle
-          drawCheckmark(pdf, x, y + 2); // Draw the checkmark on top
-      }
+    documents.forEach((doc, i) => {
+      const x = i < 3 ? 20 + i * 70 : 20 + (i - 3) * 70;
+      const y = i < 3 ? offset + 106 : offset + 116;
+      pdf.rect(x, y, 4, 4);
+      pdf.text(doc.label, x + 8, y + 4);
+      if (doc.checked) fillCheckboxWithCheck(pdf, x, y);
+    });
 
-      // Example usage in your PDF generation code:
-
-      // SCSR
-      pdf.rect(20, offset + 106, 4, 4); // Draw a square for the checkbox
-      pdf.text(`SCSR`, 28, offset + 110); // Position the label text next to the checkbox
-      if (client.admissions[0]?.documents[0]?.submitted) {
-          fillCheckboxWithCheck(pdf, 20, offset + 106); // Fill the checkbox and draw the checkmark
-      }
-
-      // Court Order
-      pdf.rect(90, offset + 106, 4, 4); // Draw a square for the checkbox
-      pdf.text(`Court Order`, 98, offset + 110); // Position the label text next to the checkbox
-      if (client.admissions[0]?.documents[1]?.submitted) {
-          fillCheckboxWithCheck(pdf, 90, offset + 106); // Fill the checkbox and draw the checkmark
-      }
-
-      // Medical Certificates
-      pdf.rect(157, offset + 106, 4, 4); // Draw a square for the checkbox
-      pdf.text(`Medical Certificates`, 165, offset + 110); // Position the label text next to the checkbox
-      if (client.admissions[0]?.documents[2]?.submitted) {
-          fillCheckboxWithCheck(pdf, 157, offset + 106); // Fill the checkbox and draw the checkmark
-      }
-
-      // Consent from Parents
-      pdf.rect(20, offset + 116, 4, 4); // Draw a square for the checkbox
-      pdf.text(`Consent from Parents`, 28, offset + 120); // Position the label text next to the checkbox
-      if (client.admissions[0]?.documents[3]?.submitted) {
-          fillCheckboxWithCheck(pdf, 20, offset + 116); // Fill the checkbox and draw the checkmark
-      }
-
-      // School Records
-      pdf.rect(90, offset + 116, 4, 4); // Draw a square for the checkbox
-      pdf.text(`School Records`, 98, offset + 120); // Position the label text next to the checkbox
-      if (client.admissions[0]?.documents[4]?.submitted) {
-          fillCheckboxWithCheck(pdf, 90, offset + 116); // Fill the checkbox and draw the checkmark
-      }
-
-      // Others
-      pdf.rect(157, offset + 116, 4, 4); // Draw a square for the checkbox
-      pdf.text(`Others`, 165, offset + 120); // Position the label text next to the checkbox
-      if (client.admissions[0]?.documents[5]?.submitted) {
-          fillCheckboxWithCheck(pdf, 180, offset + 116); // Fill the checkbox and draw the checkmark
-      }
-
-    pdf.setFont('helvetica', 'bold'); // Set font to Arial and make it bold
-    pdf.text(`General impression upon admission:`, 20, offset + 130);
-    pdf.setFont('helvetica', 'normal'); // Reset font to normal for the following text
-
-    pdf.text(client.admissions[0]?.general_impression || '', 20, offset + 140, { maxWidth: 170 });
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('General impression upon admission:', 20, offset + 130);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(String(client.admissions[0]?.general_impression || ''), 20, offset + 140, { maxWidth: 170 });
     pdf.line(20, offset + 141, 200, offset + 141); // Draw underline for general impression
 
-    pdf.setFont('helvetica', 'bold'); // Set font to Arial and make it bold
-    pdf.text(`Action Taken:`, 20, offset + 150);
-    pdf.setFont('helvetica', 'normal'); // Reset font to normal for the following text
-
-    pdf.text(client.admissions[0]?.action_taken || '', 20, offset + 160, { maxWidth: 170 });
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Action Taken:', 20, offset + 150);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(String(client.admissions[0]?.action_taken || ''), 20, offset + 160, { maxWidth: 170 });
     pdf.line(20, offset + 161, 200, offset + 161); // Draw underline for action taken
 
     if (index < this.clients.length - 1) {
       pdf.addPage(); // Add a new page for the next client if more clients exist
     }
   });
-    // Add the new section content
-    let offset = 253; // Assuming we are continuing from a previous offset
 
-    // Grid: Name & Signature of Referring Party / Admitting Officer
-   
-        // Name & Signature of Referring Party / Admitting Officer
-    pdf.line(20, offset, 85, offset); // Underline for Referring Party
-    pdf.text('Name & Signature of Referring Party', 20, offset + 4); // Text below the line
-    pdf.line(130, offset, 200, offset); // Underline for Admitting Officer
-    pdf.text('Admitting Officer', 130, offset + 4); // Text below the line
+  let offset = 253; // Assuming we are continuing from a previous offset
 
-    offset += 10; // Move down
+  // Name & Signature of Referring Party / Admitting Officer
+  pdf.line(20, offset, 85, offset);
+  pdf.text('Name & Signature of Referring Party', 20, offset + 4);
+  pdf.line(130, offset, 200, offset);
+  pdf.text('Admitting Officer', 130, offset + 4);
 
-    // Grid: Designation / ID No. / Contact # / Designation
-    pdf.line(20, offset, 85, offset); // Underline for Designation / ID No. / Contact #
-    pdf.text('Designation / ID No. / Contact #', 20, offset + 4); // Text below the line
-    pdf.line(130, offset, 200, offset); // Underline for Designation
-    pdf.text('Designation', 130, offset + 4); // Text below the line
+  offset += 10;
 
-    offset += 10; // Move down
+  // Designation / ID No. / Contact # / Designation
+  pdf.line(20, offset, 85, offset);
+  pdf.text('Designation / ID No. / Contact #', 20, offset + 4);
+  pdf.line(130, offset, 200, offset);
+  pdf.text('Designation', 130, offset + 4);
 
-    // Grid: Complete Address/Office Address / Date/Time
-    pdf.line(20, offset, 85, offset); // Underline for Complete Address/Office Address
-    pdf.text('Complete Address/Office Address', 20, offset + 4); // Text below the line
-    pdf.line(130, offset, 200, offset); // Underline for Date/Time
-    pdf.text('Date/Time', 130, offset + 4); // Text below the line
+  offset += 10;
 
-    offset += 20; // Move down for "Noted By" section
+  // Complete Address/Office Address / Date/Time
+  pdf.line(20, offset, 85, offset);
+  pdf.text('Complete Address/Office Address', 20, offset + 4);
+  pdf.line(130, offset, 200, offset);
+  pdf.text('Date/Time', 130, offset + 4);
 
-    // Noted By section
-    pdf.setFontSize(11);
-    pdf.text('Noted By:', 108, offset - 5, null, null, 'center');
+  offset += 20;
 
-    pdf.setFontSize(11);
-    pdf.setFont('helvetica', 'bold');
-    // Centered text with the underline above
-    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center'); // Text below the line
-    pdf.setFont('helvetica', 'normal');
-      // Draw the underline above the text
-      
+  // Noted By section
+  pdf.setFontSize(11);
+  pdf.text('Noted By:', 108, offset - 5, null, null, 'center');
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center');
+  pdf.line(78, offset + 7, 140, offset + 7);
+  pdf.text('Center Head/SWO IV', 108, offset + 12, null, null, 'center');
 
-    pdf.line(78, offset + 7, 140, offset + 7); // Adjust the line length and position for centering
+  offset += 30;
 
-    // Centered text with the underline above
-    pdf.text('Center Head/SWO IV', 108, offset + 12, null, null, 'center'); // Text below the line
+  // Footer
+  pdf.setFont('TimesNewRoman', 'bold');
+  pdf.setFontSize(12);
+  pdf.text('PAGE 1 of 1', 108, offset + 3, null, null, 'center');
+  pdf.setLineWidth(0.5);
+  pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic');
+  pdf.setFont('TimesNewRoman', 'italic');
+  pdf.line(20, offset + 5, 180, offset + 5);
+  pdf.setFontSize(9);
+  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 100, offset + 10, null, null, 'center');
+  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
 
-    offset += 30; // Move down for footer
+  const footerImgData = '/images/footerimg.png'; // Path to your footer image
+  pdf.addImage(footerImgData, 'PNG', 182, offset, 20, 10); // Adjust the position and size
 
-    // Add and set Times New Roman font
-    pdf.setFont('TimesNewRoman', 'bold'); // Use the normal font but increase size for bold effect
-pdf.setFontSize(12); // Increase the font size to simulate bold
-pdf.text('PAGE 1 of 1', 108, offset + 3, null, null, 'center');
-    pdf.setLineWidth(0.5);
-    pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic'); // Loads the Times New Roman italic font
-    pdf.setFont('TimesNewRoman', 'italic'); // Sets Times New Roman as the italic font
-    pdf.line(20, offset + 5, 210 - 30, offset + 5); // Draw a line
-    pdf.setFontSize(9);
-    pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
-    pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
+  // Save the PDF
+  pdf.save(`admission-slip-${this.id}.pdf`);
+}
 
-     // Add the footer image
-     const footerImgData = '/images/footerimg.png'; // Path to your footer image
-    pdf.addImage(footerImgData, 'PNG', 182, offset, 20, 10); // Adjust the position and size as needed
-
-    // Save the PDF
-    pdf.save(`admission-slip-${this.id}.pdf`);
-    }
 
   },
 };
+
+
+
 </script>
 
 <style scoped>

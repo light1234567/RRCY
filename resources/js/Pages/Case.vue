@@ -1,7 +1,14 @@
 <template>
   <AppLayout>
+    <template #header>
+      <div class="flex items-center">
+        <div class="w-2 h-6 bg-gray-400 mr-3"></div>
+        <i class="fa fa-users  text-black text-2xl ml-6"></i> 
+        <h1 class="text-lg ml-4 font-bold text-red-800">CICL Cases</h1>
+      </div>
+    </template>
     <!-- Container for Main Client Information -->
-    <div class="w-full max-w-5xl mx-auto mt-6 space-y-6">
+    <div class="w-full max-w-6xl mx-auto mt-6 space-y-6">
       <!-- Main Client Information -->
       <div
         v-if="client"
@@ -68,6 +75,8 @@
 <script>
 import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout.vue';
+import '@fortawesome/fontawesome-free/css/all.css';
+
 
 export default {
   name: 'ClientDetail',

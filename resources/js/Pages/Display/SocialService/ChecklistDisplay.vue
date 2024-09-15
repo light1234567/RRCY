@@ -227,6 +227,9 @@
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
 import { jsPDF } from 'jspdf';
+import '../../../fonts/arial-normal.js'; 
+import '../../../fonts/times-normal.js'; 
+import '../../../fonts/arialbd-bold.js'; 
 
 export default {
   components: {
@@ -426,92 +429,364 @@ export default {
       }
     },
     exportToPdf() {
-      const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
-      pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(11);
+  const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
-      // Add header
-      const imgData = '/images/headerlogo2.png'; 
-      pdf.addImage(imgData, 'PNG', 15, 10, 50, 30); 
-      pdf.setFontSize(10);
-      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 30);
+  // Add header and title
+  pdf.setFont('TimesNewRoman', 'italic');
+  pdf.setFontSize(11);
+  pdf.setLineHeightFactor(1.5);
+  const imgData = '/images/headerlogo2.png'; 
+  pdf.addImage(imgData, 'PNG', 15, 10, 75, 35);
+  pdf.setFontSize(8); 
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 152, 24);
+  pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(18);
+  pdf.text('Checklist Requirements During Admission', (pdf.internal.pageSize.width / 2) - 60, 54);
 
-      // Page 1 content
-      pdf.setFont('helvetica', 'bold');
-      pdf.setFontSize(18);
-      pdf.text('Checklist of Requirements during Admission', 105, 60, null, null, 'center');
+  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+  pdf.setFont('Arial', 'normal'); 
+  pdf.setFontSize(11); 
 
-      pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(11);
+  // Function to draw a checkmark
+  function drawCheckmark(pdf, x, y, boxSize) {
+    pdf.setLineWidth(0.2); 
+    pdf.setDrawColor(0, 0, 0); 
+    pdf.line(x, y + (boxSize / 2) - 1, x + (boxSize / 3) - 3, y + boxSize - 2);
+    pdf.line(x + (boxSize / 3) - 3, y + boxSize - 2, x + boxSize - 3, y + 1);
+  }
 
-      // Table headers
-      pdf.text('No.', 20, 80);
-      pdf.text('Documents', 40, 80);
-      pdf.text('Yes', 140, 80);
-      pdf.text('No', 160, 80);
-      pdf.text('Remarks', 180, 80);
+  function drawCheckedBox(pdf, x, y, boxSize) {
+    drawCheckmark(pdf, x, y, boxSize); 
+  }
 
-      // Table content for checklist
-      this.checklist.forEach((item, index) => {
-        const offset = 90 + (index * 10);
-        pdf.text(`${index + 1}`, 20, offset);
-        pdf.text(`${item.document}`, 40, offset);
-        if (item.yes) {
-          pdf.text('✔', 140, offset);
-        }
-        if (item.no) {
-          pdf.text('✔', 160, offset);
-        }
-        pdf.text(`${item.remarks}`, 180, offset);
-      });
+// Footer function for the first page
+function addFirstPageFooter(pdf, totalPages) {
+  const offset = 330; // Adjust according to the layout
+  pdf.setFont('TimesNewRoman', 'bold');
+  pdf.setFontSize(9);
+  pdf.text(`PAGE 1 of ${totalPages}`, 108, offset + 8, null, null, 'center');
+  pdf.setLineWidth(0.5);
+  pdf.line(18, offset + 10, 174, offset + 10); // Horizontal line
 
-      pdf.addPage(); // Add a new page for Page 2
+  // Footer content for the first page
+  pdf.setFont('TimesNewRoman', 'normal');
+  pdf.setFontSize(9);
+  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 96, offset + 15, null, null, 'center');
+  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 20, null, null, 'center');
 
-      // Page 2 content
-      pdf.setFont('helvetica', 'bold');
-      pdf.setFontSize(18);
-      pdf.text('RRCY Forms', 105, 20, null, null, 'center');
+  // Add the footer image
+  const footerImgData = '/images/footerimg.png'; // Make sure the image is correctly loaded
+  pdf.addImage(footerImgData, 'PNG', 175, offset + 5, 25, 15); // Adjust the position and size as needed
+}
 
-      pdf.setFont('helvetica', 'normal');
-      pdf.setFontSize(11);
+// Footer function for pages 2 and beyond
+function addOtherPagesFooter(pdf, pageNumber, totalPages) {
+  const offset = 330; // Adjust according to the layout
+  pdf.setFont('TimesNewRoman', 'bold');
+  pdf.setFontSize(9);
+  pdf.text(`PAGE ${pageNumber} of ${totalPages}`, 108, offset + 8, null, null, 'center');
+  pdf.setLineWidth(0.5);
+  pdf.line(18, offset + 10, 198, offset + 10); // Horizontal line
 
-      // Table headers
-      pdf.text('No.', 20, 40);
-      pdf.text('Forms', 40, 40);
-      pdf.text('Yes', 140, 40);
-      pdf.text('No', 160, 40);
-      pdf.text('Remarks', 180, 40);
+  // Simple footer for other pages
+  pdf.setFont('TimesNewRoman');
+  pdf.setFontSize(9);
+  pdf.text('DSWD | FIELD OFFICE XI | ADMINISTRATIVE DIVISION', 108, offset + 15, null, null, 'center');
+}
 
-      // Table content for RRCY forms
-      this.rrForms.forEach((item, index) => {
-        const offset = 50 + (index * 10);
-        pdf.text(`${index + 1}`, 20, offset);
-        pdf.text(`${item.form}`, 40, offset);
-        if (item.yes) {
-          pdf.text('✔', 140, offset);
-        }
-        if (item.no) {
-          pdf.text('✔', 160, offset);
-        }
-        pdf.text(`${item.remarks}`, 180, offset);
-      });
-
-      // Add Admitting Officer and Case Manager
-      pdf.text('Reviewed by: ' + this.admittingOfficer, 20, 250);
-      pdf.text('Admitting Officer', 20, 255);
-      pdf.text('Received by: ' + this.caseManager, 150, 250);
-      pdf.text('Case Manager', 150, 255);
-
-      // Footer
-      pdf.setFontSize(10);
-      pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 105, 290, null, null, 'center');
-      pdf.text('Email: rrxy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 295, null, null, 'center');
-
-      const footerImgData = '/images/footerimg.png';
-      pdf.addImage(footerImgData, 'PNG', 160, 285, 30, 15);
-
-      pdf.save(`checklist-rrcy-forms-${this.clientId}.pdf`);
+// Function to apply footers based on page number
+function addAllFooters(pdf) {
+  const totalPages = pdf.internal.getNumberOfPages(); // Get the total number of pages
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    if (i === 1) {
+      // First page footer
+      addFirstPageFooter(pdf, totalPages);
+    } else {
+      // Other pages footer
+      addOtherPagesFooter(pdf, i, totalPages);
     }
+  }
+}
+
+  // Table setup
+  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+  pdf.setFont('Arial', 'normal'); 
+  const tableStartX = 18;
+  let tableStartY = 68; 
+  const colWidths = [12, 85, 12, 12, 65]; 
+  const rowHeight = 10; 
+  const checkBoxSize = 8; 
+  const rightMarginX = 198; 
+  const tableWidth = rightMarginX - tableStartX;
+  const colWidthAdjustment = tableWidth - colWidths.reduce((acc, width) => acc + width, 0);
+  colWidths[4] += colWidthAdjustment; 
+
+  pdf.setLineWidth(0.2); 
+  pdf.setDrawColor(50, 50, 50); 
+
+  // Table Header
+  pdf.setFillColor(0, 128, 0); 
+  pdf.rect(tableStartX, tableStartY, tableWidth, rowHeight, 'F'); 
+  pdf.setTextColor(255, 255, 255); 
+  pdf.setFontSize(12);
+
+  // Table Header content
+  pdf.setFillColor(184, 231, 192);
+  pdf.rect(tableStartX, tableStartY, colWidths[0], rowHeight, 'FD'); 
+  pdf.rect(tableStartX + colWidths[0], tableStartY, colWidths[1], rowHeight, 'FD'); 
+  pdf.rect(tableStartX + colWidths[0] + colWidths[1], tableStartY, colWidths[2], rowHeight, 'FD'); 
+  pdf.rect(tableStartX + colWidths[0] + colWidths[1] + colWidths[2], tableStartY, colWidths[3], rowHeight, 'FD'); 
+  pdf.rect(tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3], tableStartY, colWidths[4], rowHeight, 'FD'); 
+
+  // Header Text
+  pdf.setTextColor(0, 0, 0); 
+  pdf.setFontSize(12);
+  pdf.text('No.', tableStartX + 3, tableStartY + 7);
+  pdf.text('DOCUMENTS', tableStartX + colWidths[0] + 5, tableStartY + 7);
+  pdf.text('YES', tableStartX + colWidths[0] + colWidths[1] + 2, tableStartY + 7); 
+  pdf.text('NO', tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + 2, tableStartY + 7); 
+  pdf.text('REMARKS', tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3] + 5, tableStartY + 7);
+
+  pdf.setTextColor(0, 0, 0); 
+  let y = tableStartY + rowHeight;
+  let numberIndex = 1;
+
+  // Max content height per page
+  const maxPageContentHeight = 310;
+
+  // Page break handler
+  function handlePageBreak() {
+  if (y + rowHeight > maxPageContentHeight) {
+    pdf.addPage();
+    pdf.setFontSize(8); 
+    pdf.setFont('TimesNewRoman', 'italic'); 
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
+    y = 30; // Reset y position after adding a new page
+    pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+    pdf.setFont('Arial', 'normal'); 
+    pdf.setFontSize(11);
+  }
+}
+
+  // Render remarks
+  function renderRemarksAcrossPages(pdf, remarks, xPos, rowY, colWidths, tableStartX) {
+  const splitRemarks = pdf.splitTextToSize(remarks, colWidths[4] - 4);
+  let remainingRemarks = splitRemarks.slice(); 
+  let currentPageContentHeight = maxPageContentHeight - y;
+
+  const lineHeight = 7; // Approximate line height in mm
+
+  while (remainingRemarks.length > 0) {
+    if (currentPageContentHeight < rowHeight) {
+      handlePageBreak(); 
+      currentPageContentHeight = maxPageContentHeight - y; 
+    }
+
+    const linesToFit = Math.floor(currentPageContentHeight / lineHeight); // Number of lines that can fit in the remaining space
+    const remarksToRender = remainingRemarks.splice(0, linesToFit);
+
+    let remarksY = y + 7;
+    remarksToRender.forEach(line => {
+      pdf.text(line, xPos, remarksY);
+      remarksY += lineHeight;
+    });
+
+    const calculatedHeight = remarksToRender.length * lineHeight;
+
+    // Render the table row
+    pdf.rect(tableStartX, y, colWidths[0], calculatedHeight + 10); 
+    pdf.rect(tableStartX + colWidths[0], y, colWidths[1], calculatedHeight + 10); 
+    pdf.rect(tableStartX + colWidths[0] + colWidths[1], y, colWidths[2], calculatedHeight + 10); 
+    pdf.rect(tableStartX + colWidths[0] + colWidths[1] + colWidths[2], y, colWidths[3], calculatedHeight + 10); 
+    pdf.rect(tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3], y, colWidths[4], calculatedHeight + 10); 
+
+    y += calculatedHeight;
+    currentPageContentHeight -= calculatedHeight;
+  }
+}
+
+
+  // Main Row Loop
+  this.checklist.forEach((item, index) => {
+    handlePageBreak(); 
+
+    const splitDocument = pdf.splitTextToSize(item.document, colWidths[1] - 4); 
+    const documentLines = splitDocument.length;
+    const calculatedHeight = Math.max(rowHeight, documentLines * 7); 
+
+
+    pdf.text(String(numberIndex), tableStartX + 3, y + 7); 
+    numberIndex++;
+
+  
+    let textY = y + 7; 
+    splitDocument.forEach(line => {
+      pdf.text(line, tableStartX + colWidths[0] + 2, textY); 
+      textY += 5; 
+    });
+
+
+    if (item.yes) {
+      drawCheckedBox(pdf, tableStartX + colWidths[0] + colWidths[1] + 4, y + 3, checkBoxSize); 
+    }
+
+  
+    if (item.no) {
+      drawCheckedBox(pdf, tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + 4, y + 3, checkBoxSize); 
+    }
+
+    renderRemarksAcrossPages(pdf, item.remarks || '', tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3] + 2, y, colWidths, tableStartX);
+
+    y += calculatedHeight;
+
+    // Handle sub-items like "a. Chest Xray" or "b. Fecalysis"
+    if (item.subItems && item.subItems.length > 0) {
+      item.subItems.forEach((subItem) => {
+        handlePageBreak();
+        const subSplitDocument = pdf.splitTextToSize(subItem.document, colWidths[1] - 4);
+        const subDocumentLines = subSplitDocument.length;
+        const subCalculatedHeight = Math.max(rowHeight, subDocumentLines * 7);
+
+        pdf.text('', tableStartX + 3, y + 7); // Sub-items get a "-" marker instead of a number
+
+      
+        let subTextY = y + 7;
+        subSplitDocument.forEach(line => {
+          pdf.text(line, tableStartX + colWidths[0] + 2, subTextY);
+          subTextY += 5;
+        });
+
+      
+        if (subItem.yes) {
+          drawCheckedBox(pdf, tableStartX + colWidths[0] + colWidths[1] + 4, y + 3, checkBoxSize); 
+        }
+
+      
+        if (subItem.no) {
+          drawCheckedBox(pdf, tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + 4, y + 3, checkBoxSize); 
+        }
+
+        renderRemarksAcrossPages(pdf, subItem.remarks || '', tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3] + 2, y, colWidths, tableStartX);
+
+        y += subCalculatedHeight;
+      });
+    }
+  });
+
+  let rrFormsIndex = 1;
+  pdf.setFont('Arial', 'normal'); 
+  pdf.rect(tableStartX, y, tableWidth, rowHeight); 
+  pdf.setFont('arialbd', 'bold'); 
+  const text = 'RRCY FORMS';
+  pdf.text(text, tableStartX - 15 + colWidths[0] + colWidths[1], y + 7); 
+  pdf.setFont('Arial', 'normal'); 
+  y += rowHeight;
+
+  this.rrForms.forEach((form, index) => {
+    handlePageBreak(); 
+
+    pdf.text(String(rrFormsIndex), tableStartX + 3, y + 7); 
+    rrFormsIndex++;
+
+    pdf.text(form.form, tableStartX + colWidths[0] + 5, y + 7); 
+
+    if (form.yes) {
+      drawCheckedBox(pdf, tableStartX + colWidths[0] + colWidths[1] + 4, y + 3, checkBoxSize); 
+    }
+
+    if (form.no) {
+      drawCheckedBox(pdf, tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + 4, y + 3, checkBoxSize); 
+    }
+
+
+    // Render remarks for the form
+    renderRemarksAcrossPages(pdf, form.remarks || '', tableStartX + colWidths[0] + colWidths[1] + colWidths[2] + colWidths[3] + 2, y, colWidths, tableStartX);
+
+    y += rowHeight; 
+  });
+
+// Ensure there's space for the signature section, otherwise add a page
+const signatureHeight = 1; // Approximate height required for each signature section (Admitting Officer or Case Manager)
+
+// First, check if there's space for the "Admitting Officer" section
+if (y + signatureHeight > maxPageContentHeight) {
+  // Add a new page if there's not enough space
+  pdf.addPage();
+  // Reset the y position after adding a new page
+  pdf.setFontSize(8); 
+  pdf.setFont('TimesNewRoman', 'italic'); 
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
+  y = 30;
+  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+  pdf.setFont('Arial', 'normal'); 
+  pdf.setFontSize(11);
+}
+
+// "Admitting Officer" Section
+y += 10;
+pdf.setFontSize(12);
+pdf.text('Reviewed by:', 18, y);
+y += 10; // Adjust y position for input box
+
+// Draw underline and text for the 'Reviewed by' section (Admitting Officer)
+const admittingOfficerText = this.admittingOfficer || ''; // Use officer's name if available, otherwise blank
+const admittingOfficerWidth = pdf.getTextWidth(admittingOfficerText); // Get the width of the name text
+
+// If admittingOfficer name exists, draw it in bold and underline
+if (admittingOfficerText) {
+  pdf.setFont('arialbd', 'bold'); // Set font to bold for officer name
+  pdf.text(admittingOfficerText, 18, y); // Display officer's name
+  pdf.line(18, y + 1, 18 + admittingOfficerWidth, y + 1); // Draw underline according to text width
+}
+
+// Label "Admitting Officer" below the underline, separated from the name
+pdf.setFont('Arial', 'normal'); // Revert font to normal for label
+pdf.text('Admitting Officer', 18, y + 6); // Display "Admitting Officer" label below the line
+y += 25; // Add space after the signature
+
+// Check if there's space for the "Case Manager" section
+if (y + signatureHeight > maxPageContentHeight) {
+  // Add a new page if there's not enough space
+  pdf.addPage();
+  // Reset the y position after adding a new page
+  pdf.setFontSize(8); 
+  pdf.setFont('TimesNewRoman', 'italic'); 
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
+  y = 30;
+  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+  pdf.setFont('Arial', 'normal'); 
+  pdf.setFontSize(11);
+}
+
+// "Case Manager" Section
+y += -5;
+pdf.text('Received by:', 18, y);
+y += 10; // Adjust y position for input box
+
+// Draw underline and text for the 'Received by' section (Case Manager)
+const caseManagerText = this.caseManager || ''; // Use manager's name if available, otherwise blank
+const caseManagerWidth = pdf.getTextWidth(caseManagerText); // Get the width of the name text
+
+// If caseManager name exists, draw it in bold and underline
+if (caseManagerText) {
+  pdf.setFont('arialbd', 'bold'); // Set font to bold for manager name
+  pdf.text(caseManagerText, 18, y); // Display manager's name
+  pdf.line(18, y + 1, 18 + caseManagerWidth, y + 1); // Draw underline according to text width
+}
+
+// Label "Case Manager" below the underline, separated from the name
+pdf.setFont('Arial', 'normal'); // Revert font to normal for label
+pdf.text('Case Manager', 18, y + 6); // Display "Case Manager" label below the line
+y += 25; // Add space after the signature
+
+  addAllFooters(pdf);
+  pdf.save(`checklist-rrcy-forms-${this.clientId}.pdf`);
+},
+
+
+
   },
   mounted() {
     this.clientId = this.$route.params.id;
