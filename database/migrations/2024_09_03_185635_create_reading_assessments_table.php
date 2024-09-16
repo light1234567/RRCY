@@ -15,6 +15,7 @@ class CreateReadingAssessmentsTable extends Migration
             $table->string('fluency_remarks', 100)->nullable();
             $table->string('punctuation_remarks', 100)->nullable();
             $table->string('advance_remarks', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

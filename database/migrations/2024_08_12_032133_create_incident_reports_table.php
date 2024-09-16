@@ -23,6 +23,7 @@ class CreateIncidentReportsTable extends Migration
             $table->string('prepared_by', 100)->nullable();
             $table->string('reviewed_by', 100)->nullable();
             $table->string('approved_by', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

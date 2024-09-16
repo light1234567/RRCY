@@ -14,6 +14,7 @@ class CreateKasabutansTable extends Migration
             $table->string('client_resident', 100)->nullable(); 
             $table->string('parent_guardian', 100)->nullable(); 
             $table->string('case_manager', 100)->nullable(); 
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
     
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

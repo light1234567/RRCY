@@ -28,6 +28,7 @@ class CreateInitialPsychologicalAssessmentsTable extends Migration
             $table->text('plan_of_action')->nullable();
             $table->string('prepared_by', 100)->nullable();
             $table->string('noted_by', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

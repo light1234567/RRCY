@@ -14,6 +14,7 @@ class CreateTrainingsAttendedTable extends Migration
             $table->string('title', 150);
             $table->date('date_of_attendance')->nullable();
             $table->string('status', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

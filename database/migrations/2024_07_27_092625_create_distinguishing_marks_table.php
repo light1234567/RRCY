@@ -16,6 +16,7 @@ class CreateDistinguishingMarksTable extends Migration
             $table->decimal('weight', 5, 2)->nullable();
             $table->string('colour_of_eye', 50)->nullable();
             $table->string('skin_colour', 50)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
 
             $table->foreign('admission_id')->references('id')->on('admissions')->onDelete('cascade');

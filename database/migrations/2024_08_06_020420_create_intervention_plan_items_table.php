@@ -17,6 +17,7 @@ class CreateInterventionPlanItemsTable extends Migration
             $table->string('responsible_person', 100); 
             $table->string('expected_outcome', 255); 
             $table->string('remarks', 255)->nullable(); 
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         
             $table->foreign('plan_id')->references('id')->on('intervention_plans')->onDelete('cascade');

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('category_adviser_signature', 100)->nullable();
             $table->string('educational_section_head_signature', 100)->nullable();
             $table->string('center_head_signature', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
         

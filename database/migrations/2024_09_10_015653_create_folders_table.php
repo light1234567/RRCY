@@ -12,6 +12,7 @@ class CreateFoldersTable extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained()->onDelete('cascade'); // Foreign key to clients table
             $table->string('name');
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });
     }

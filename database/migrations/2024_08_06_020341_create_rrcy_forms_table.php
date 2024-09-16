@@ -15,6 +15,7 @@ class CreateRrcyFormsTable extends Migration
             $table->boolean('yes')->default(false);
             $table->boolean('no')->default(false);
             $table->text('remarks', 255)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
 
             $table->primary(['client_id', 'form']);

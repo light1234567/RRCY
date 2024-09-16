@@ -13,6 +13,7 @@ class CreateDocumentsSubmittedTable extends Migration
             $table->unsignedBigInteger('admission_id'); 
             $table->json('document_name')->nullable(); 
             $table->boolean('submitted')->default(false); 
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps(); 
 
             // Adding the foreign key constraint

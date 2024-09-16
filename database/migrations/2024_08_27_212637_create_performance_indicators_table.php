@@ -19,6 +19,7 @@ class CreatePerformanceIndicatorsTable extends Migration
             $table->string('description');
             $table->integer('self_rating')->nullable();
             $table->integer('mdo_rating')->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
 
             // Define the foreign key constraint

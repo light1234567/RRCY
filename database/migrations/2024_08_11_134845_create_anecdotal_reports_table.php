@@ -26,6 +26,7 @@ class CreateAnecdotalReportsTable extends Migration
             $table->string('house_parents_signature')->nullable();
             $table->string('residents', 100)->nullable();
             $table->string('residents_signature')->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

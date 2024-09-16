@@ -14,6 +14,7 @@ class CreatePerformanceSectionsTable extends Migration
             $table->string('title', 150);
             $table->integer('sub_total')->nullable();
             $table->string('remarks', 255)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

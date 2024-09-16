@@ -13,6 +13,7 @@ class CreateEducationDetailsTable extends Migration
             $table->foreignId('training_needs_assessment_id')->constrained('training_needs_assessments')->onDelete('cascade');
             $table->string('education_level', 100);
             $table->string('year_or_grade', 50)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

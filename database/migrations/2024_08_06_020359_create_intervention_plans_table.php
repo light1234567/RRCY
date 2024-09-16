@@ -16,6 +16,7 @@ class CreateInterventionPlansTable extends Migration
             $table->string('prepared_by', 100)->nullable(); 
             $table->string('conformed_by', 100)->nullable(); 
             $table->string('noted_by', 100)->nullable(); 
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

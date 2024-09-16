@@ -20,6 +20,7 @@ class CreateInventoryItemsTable extends Migration
             $table->string('old', 50)->nullable();
             $table->string('new', 50)->nullable();
             $table->string('remarks', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

@@ -44,6 +44,7 @@ class CreateIndicatorsOfSocialFunctioningTable extends Migration
             $table->text('interpretation')->nullable();
             $table->string('prepared_by', 100)->nullable();
             $table->string('discussed_with', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

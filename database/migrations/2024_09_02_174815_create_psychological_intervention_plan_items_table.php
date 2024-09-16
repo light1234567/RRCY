@@ -17,6 +17,7 @@ class CreatePsychologicalInterventionPlanItemsTable extends Migration
             $table->string('time_frame', 50)->nullable();
             $table->text('expected_output')->nullable();
             $table->text('progress')->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         
             $table->foreign('plan_id')->references('id')->on('psychological_intervention_plans')->onDelete('cascade');

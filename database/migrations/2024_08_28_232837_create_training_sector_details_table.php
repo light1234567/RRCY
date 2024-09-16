@@ -15,6 +15,7 @@ class CreateTrainingSectorDetailsTable extends Migration
             $table->string('name', 100);
             $table->integer('rank')->nullable();
             $table->text('remarks')->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

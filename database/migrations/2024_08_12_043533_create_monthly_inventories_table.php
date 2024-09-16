@@ -15,6 +15,7 @@ class CreateMonthlyInventoriesTable extends Migration
             $table->string('drn', 50)->nullable();
             $table->string('resident_name', 100)->nullable();
             $table->string('houseparent_name', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

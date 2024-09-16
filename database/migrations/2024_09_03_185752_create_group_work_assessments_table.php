@@ -23,6 +23,7 @@ class CreateGroupWorkAssessmentsTable extends Migration
             $table->string('ideas_remarks', 100)->nullable();
             $table->json('feedback')->nullable();
             $table->string('feedback_remarks', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

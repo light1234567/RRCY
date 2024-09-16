@@ -22,6 +22,7 @@ class CreateSecondIntakeSheetsTable extends Migration
             $table->string('detention_days', 50)->nullable(); 
             $table->json('community')->nullable();
             $table->string('house_made_of', 100)->nullable(); 
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         
             // Foreign key constraints

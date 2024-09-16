@@ -21,6 +21,7 @@ class CreateWritingAssessmentsTable extends Migration
             $table->string('content_ideas_remarks', 100)->nullable();
             $table->json('spelling')->nullable();
             $table->string('spelling_remarks', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

@@ -26,6 +26,7 @@ class CreateSwappingFormsTable extends Migration
             $table->string('accepted_by', 100)->nullable();
             $table->string('noted_by', 100)->default('VAN M. DE LEON');
             $table->string('approved_by', 100)->default('ANGELIC B. PAÑA');
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

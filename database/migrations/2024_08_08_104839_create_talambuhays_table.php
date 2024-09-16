@@ -16,6 +16,7 @@ class CreateTalambuhaysTable extends Migration
             $table->text('about_my_case')->nullable();
             $table->string('case_manager', 100)->nullable();
             $table->date('date')->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

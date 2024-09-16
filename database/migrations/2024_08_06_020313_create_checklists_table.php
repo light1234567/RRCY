@@ -16,6 +16,7 @@ class CreateChecklistsTable extends Migration
             $table->string('case_manager', 100)->nullable(); 
             $table->json('documents')->nullable(); 
             $table->json('rrcy_forms')->nullable(); 
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
 
             // Foreign key constraint on client_id

@@ -15,6 +15,7 @@ class CreateTrainingDetailsTable extends Migration
             $table->string('duration', 50)->nullable();
             $table->string('location_outside', 100)->nullable();
             $table->string('location_inside', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

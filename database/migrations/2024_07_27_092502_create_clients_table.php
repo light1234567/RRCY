@@ -23,6 +23,7 @@ class CreateClientsTable extends Migration
             $table->string('street', 100)->nullable(); 
             $table->string('religion', 100)->nullable(); 
             $table->string('child_status', 50)->nullable(); 
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });
     }

@@ -12,6 +12,7 @@ class CreateNumeracyAssessmentsTable extends Migration
             $table->id();
             $table->foreignId('learner_assessment_form_id')->constrained()->onDelete('cascade');
             $table->string('advance_remarks', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }

@@ -14,6 +14,7 @@ class CreateDataPrivacyConsentsTable extends Migration
             $table->string('client_signature', 100)->nullable();
             $table->date('date')->nullable();
             $table->string('guardian_signature', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

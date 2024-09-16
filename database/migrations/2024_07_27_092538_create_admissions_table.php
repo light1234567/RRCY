@@ -28,6 +28,7 @@ class CreateAdmissionsTable extends Migration
             $table->string('office_address', 255)->nullable();
             $table->dateTime('date_time')->nullable();
             $table->string('noted_by', 100)->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
             
             // Foreign key definition

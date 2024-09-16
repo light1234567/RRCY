@@ -20,6 +20,7 @@ class CreateTrainingNeedsAssessmentsTable extends Migration
             $table->string('center_duration', 50)->nullable();
             $table->string('for_the', 50)->nullable();
             $table->date('date_of_admission')->nullable();
+            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         });        
     }
