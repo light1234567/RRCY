@@ -57,16 +57,22 @@
               </div>
               <div class="mb-2">
                 <label for="clientSuffix" class="block mb-1 text-sm">
-                  Suffix: 
+                  Suffix:
                 </label>
-                <input
-                  type="text"
+                <select
                   id="clientSuffix"
                   v-model="form.client.suffix"
-                  @input="removeNumbers('suffix')"
                   class="w-full px-2 py-1 border rounded-md text-sm"
-                  placeholder="e.g., Jr."
                 >
+                  <option value="">Select Suffix</option>
+                  <option value="Jr.">Jr.</option>
+                  <option value="I">I</option>
+                  <option value="II">II</option>
+                  <option value="III">III</option>
+                  <option value="IV">IV</option>
+                  <option value="V">V</option>
+                  
+                </select>
               </div>
             </div>
 
@@ -199,20 +205,42 @@
 
             <!-- Religion -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <div class="mb-2">
-                <label for="clientReligion" class="block mb-1 text-sm">
-                  Religion: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="clientReligion"
-                  v-model="form.client.religion"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                  placeholder="Enter Religion"
-                />
-              </div>
-            </div>
+  <div class="mb-2">
+    <label for="clientReligion" class="block mb-1 text-sm">
+      Religion: <span class="text-red-500">*</span>
+    </label>
+    <select
+      id="clientReligion"
+      v-model="form.client.religion"
+      class="w-full px-2 py-1 border rounded-md text-sm"
+      required
+    >
+      <option value="">Select Religion</option>
+      <option value="Christianity">Christianity</option>
+      <option value="Islam">Islam</option>
+      <option value="Buddhism">Buddhism</option>
+      <option value="Hinduism">Hinduism</option>
+      <option value="Judaism">Judaism</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+
+  <!-- Conditional text input when 'Other' is selected -->
+  <div class="mb-2" v-if="form.client.religion === 'Other'">
+    <label for="customReligion" class="block mb-1 text-sm">
+      Please specify: <span class="text-red-500">*</span>
+    </label>
+    <input
+      type="text"
+      id="customReligion"
+      v-model="form.client.customReligion"
+      class="w-full px-2 py-1 border rounded-md text-sm"
+      placeholder="Enter your religion"
+      required
+    />
+  </div>
+</div>
+
           </div>
         </fieldset>
 
@@ -252,23 +280,39 @@
                   max="999" 
                 />
               </div>
-            <div class="mb-2">
+              <div class="mb-2">
               <label for="colourOfEye" class="block mb-1 text-sm">Colour of Eye:</label>
-              <input
-                type="text"
+              <select
                 id="colourOfEye"
                 v-model="form.distinguishing_marks.colour_of_eye"
                 class="w-full px-2 py-1 border rounded-md text-sm"
-              />
+              >
+                <option value="">Select Colour</option>
+                <option value="Brown">Brown</option>
+                <option value="Blue">Blue</option>
+                <option value="Green">Green</option>
+                <option value="Hazel">Black</option>
+                <option value="Gray">Gray</option>
+                <option value="Amber">Amber</option>
+                
+              </select>
             </div>
             <div class="mb-2">
               <label for="skinColour" class="block mb-1 text-sm">Skin Colour:</label>
-              <input
-                type="text"
+              <select
                 id="skinColour"
                 v-model="form.distinguishing_marks.skin_colour"
                 class="w-full px-2 py-1 border rounded-md text-sm"
-              />
+              >
+                <option value="">Select Skin Colour</option>
+                <option value="Light">Light</option>
+                <option value="Fair">Fair</option>
+                <option value="Medium">Medium</option>
+                <option value="Olive">Olive</option>
+                <option value="Brown">Brown</option>
+                <option value="Dark">Dark</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
         </fieldset>
@@ -279,17 +323,45 @@
          
           <div class="grid grid-cols-1 gap-2">
             <div class="mb-2 col-span-1">
-              <label for="committingCourt" class="block mb-1 text-sm">
-                Committing Court: <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="committingCourt"
-                v-model="form.admission.committing_court"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-                required
-              />
-            </div>
+          <label for="committingCourt" class="block mb-1 text-sm">
+            Committing Court: <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="committingCourt"
+            v-model="form.admission.committing_court"
+            class="w-full px-2 py-1 border rounded-md text-sm"
+            required
+          >
+            <option value="">Select Committing Court</option>
+            <option value="Supreme Court of the Philippines">Supreme Court of the Philippines</option>
+            <option value="Court of Appeals">Court of Appeals</option>
+            <option value="Sandiganbayan">Sandiganbayan</option>
+            <option value="Court of Tax Appeals">Court of Tax Appeals</option>
+            <option value="Regional Trial Court">Regional Trial Court</option>
+            <option value="Metropolitan Trial Court">Metropolitan Trial Court</option>
+            <option value="Municipal Trial Court">Municipal Trial Court</option>
+            <option value="Municipal Circuit Trial Court">Municipal Circuit Trial Court</option>
+            <option value="Shari'a District Court">Shari'a District Court</option>
+            <option value="Shari'a Circuit Court">Shari'a Circuit Court</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <!-- Optional custom input for 'Other' court -->
+        <div class="mb-2 col-span-1" v-if="form.admission.committing_court === 'Other'">
+          <label for="customCommittingCourt" class="block mb-1 text-sm">
+            Specify Committing Court: <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="customCommittingCourt"
+            v-model="form.admission.custom_committing_court"
+            class="w-full px-2 py-1 border rounded-md text-sm"
+            placeholder="Enter court name"
+            required
+          />
+        </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
               <div class="mb-2">
                 <label for="crimCaseNumber" class="block mb-1 text-sm">
@@ -595,7 +667,7 @@ const form = ref({
     first_name: '',
     middle_name: '',
     last_name: '',
-    suffix: '',
+    suffix: ' ',
     sex: 'Male',
     date_of_birth: '',
     place_of_birth: '',
