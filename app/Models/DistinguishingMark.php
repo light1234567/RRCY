@@ -18,6 +18,7 @@ class DistinguishingMark extends Model
         'colour_of_eye',
         'skin_colour',
         'admission_id',
+        'updated_by'
         
     ];
 
@@ -25,9 +26,28 @@ class DistinguishingMark extends Model
     {
         return $this->belongsTo(Admission::class);
     }
+    // Automatically update the 'updated_by' field when the model is created or updated
     protected static function boot()
     {
         parent::boot();
+
+        static::creating(function ($model) {
+            // Log the entire session data for debugging
+            Log::info('Session Data', Session::all());
+
+            // Get the user's first name from the session
+            $userFname = Session::get('user_fname');
+
+            // Log the specific 'user_fname' from the session
+            Log::info('Creating Admission', ['user_fname' => $userFname]);
+
+            // Set the 'updated_by' field to the user's first name from the session
+            if ($userFname) {
+                $model->updated_by = $userFname;
+            } else {
+                Log::warning('User first name not found in session during creation');
+            }
+        });
 
         static::updating(function ($model) {
             // Log the entire session data for debugging
@@ -37,13 +57,13 @@ class DistinguishingMark extends Model
             $userFname = Session::get('user_fname');
 
             // Log the specific 'user_fname' from the session
-            Log::info('Updating Checklist', ['user_fname' => $userFname]);
+            Log::info('Updating Admission', ['user_fname' => $userFname]);
 
             // Set the 'updated_by' field to the user's first name from the session
             if ($userFname) {
                 $model->updated_by = $userFname;
             } else {
-                Log::warning('User first name not found in session');
+                Log::warning('User first name not found in session during update');
             }
         });
     }
