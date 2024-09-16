@@ -6,6 +6,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { createRouter, createWebHistory } from 'vue-router';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 // Import components for routes
 import CICL from '@/Pages/CICL.vue'; // Assuming you have a CICL component

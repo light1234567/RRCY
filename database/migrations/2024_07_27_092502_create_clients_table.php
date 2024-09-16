@@ -9,20 +9,20 @@ class CreateClientsTable extends Migration
     public function up()
     {
         Schema::create('clients', function (Blueprint $table) {
-            $table->id(); // Automatically creates an 'id' column
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->string('last_name');
-            $table->string('suffix')->nullable();
-            $table->string('sex');
+            $table->id();
+            $table->string('first_name', 50); 
+            $table->string('middle_name', 50)->nullable(); 
+            $table->string('last_name', 50); 
+            $table->string('suffix', 10)->nullable(); 
+            $table->string('sex', 20); 
             $table->date('date_of_birth');
-            $table->string('place_of_birth');
-            $table->string('province');
-            $table->string('city');
-            $table->string('barangay');
-            $table->string('street')->nullable();
-            $table->string('religion')->nullable();
-            $table->string('child_status')->nullable();
+            $table->string('place_of_birth', 100); 
+            $table->string('province', 50); 
+            $table->string('city', 50); 
+            $table->string('barangay', 50); 
+            $table->string('street', 100)->nullable(); 
+            $table->string('religion', 100)->nullable(); 
+            $table->string('child_status', 50)->nullable(); 
             $table->timestamps();
         });
     }

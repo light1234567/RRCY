@@ -17,10 +17,10 @@ class PerformanceObservationReportController extends Controller
             // Validate the incoming request data
             $validatedData = $request->validate([
                 'assessment_date' => 'required|date',
-                'trainings_attended' => 'nullable|string|max:255',
+                'trainings_attended' => 'nullable|string|max:100',
                 'general_remarks' => 'nullable|string',
-                'prepared_by' => 'nullable|string|max:255',
-                'noted_by' => 'nullable|string|max:255',
+                'prepared_by' => 'nullable|string|max:100',
+                'noted_by' => 'nullable|string|max:100',
                 'sections' => 'array',
                 'sections.*.title' => 'nullable|string',
                 'sections.*.sub_total' => 'nullable|integer',
@@ -32,8 +32,8 @@ class PerformanceObservationReportController extends Controller
                 'trainings' => 'array',
                 'trainings.*.title' => 'nullable|string',
                 'trainings.*.date_of_attendance' => 'nullable|date',
-                'trainings.*.status' => 'nullable|string|max:255',
-            ]);
+                'trainings.*.status' => 'nullable|string|max:100',
+            ]);            
 
             // Fetch or create the report
             $report = PerformanceObservationReport::updateOrCreate(

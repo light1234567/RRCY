@@ -13,14 +13,14 @@ class CreatePsychologicalInterventionPlanItemsTable extends Migration
             $table->unsignedBigInteger('plan_id');
             $table->text('objectives')->nullable();
             $table->text('activities')->nullable();
-            $table->string('responsible_person')->nullable();
-            $table->string('time_frame')->nullable();
+            $table->string('responsible_person', 100)->nullable();
+            $table->string('time_frame', 50)->nullable();
             $table->text('expected_output')->nullable();
             $table->text('progress')->nullable();
             $table->timestamps();
-
+        
             $table->foreign('plan_id')->references('id')->on('psychological_intervention_plans')->onDelete('cascade');
-        });
+        });        
     }
 
     public function down()

@@ -11,18 +11,18 @@ class CreateWritingAssessmentsTable extends Migration
         Schema::create('writing_assessments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('learner_assessment_form_id')->constrained()->onDelete('cascade');
-            $table->json('punctuation')->nullable(); // Stores [Excellent, Good, Fair, Needs Improvement] as JSON
-            $table->string('punctuation_remarks')->nullable();
+            $table->json('punctuation')->nullable();
+            $table->string('punctuation_remarks', 100)->nullable();
             $table->json('capitalization')->nullable();
-            $table->string('capitalization_remarks')->nullable();
+            $table->string('capitalization_remarks', 100)->nullable();
             $table->json('grammar')->nullable();
-            $table->string('grammar_remarks')->nullable();
+            $table->string('grammar_remarks', 100)->nullable();
             $table->json('content_ideas')->nullable();
-            $table->string('content_ideas_remarks')->nullable();
+            $table->string('content_ideas_remarks', 100)->nullable();
             $table->json('spelling')->nullable();
-            $table->string('spelling_remarks')->nullable();
+            $table->string('spelling_remarks', 100)->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

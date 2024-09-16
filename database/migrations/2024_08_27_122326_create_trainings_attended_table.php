@@ -11,11 +11,11 @@ class CreateTrainingsAttendedTable extends Migration
         Schema::create('trainings_attended', function (Blueprint $table) {
             $table->id();
             $table->foreignId('report_id')->constrained('performance_observation_reports')->onDelete('cascade');
-            $table->string('title');
+            $table->string('title', 150);
             $table->date('date_of_attendance')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status', 100)->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

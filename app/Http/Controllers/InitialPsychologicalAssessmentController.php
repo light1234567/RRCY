@@ -22,7 +22,7 @@ class InitialPsychologicalAssessmentController extends Controller
     $validatedData = $request->validate([
         'client_id' => 'required|exists:clients,id',
         'admission_id' => 'required|exists:admissions,id',
-        'nickname' => 'nullable|string|max:255',
+        'nickname' => 'nullable|string|max:100',
         'reason_for_referral' => 'nullable|string',
         'family_history' => 'nullable|string',
         'sexual_development' => 'nullable|string',
@@ -36,9 +36,9 @@ class InitialPsychologicalAssessmentController extends Controller
         'test_result' => 'nullable|string',
         'clinical_impression' => 'nullable|string',
         'plan_of_action' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:255',
-        'noted_by' => 'nullable|string|max:255',
-    ]);
+        'prepared_by' => 'nullable|string|max:100',
+        'noted_by' => 'nullable|string|max:100',
+    ]);    
 
     try {
         // Use updateOrCreate to either update an existing record or create a new one
@@ -85,7 +85,7 @@ class InitialPsychologicalAssessmentController extends Controller
 {
     $validatedData = $request->validate([
         'admission_id' => 'required|exists:admissions,id',
-        'nickname' => 'nullable|string|max:255',
+        'nickname' => 'nullable|string|max:100',
         'reason_for_referral' => 'nullable|string',
         'family_history' => 'nullable|string',
         'sexual_development' => 'nullable|string',
@@ -99,10 +99,9 @@ class InitialPsychologicalAssessmentController extends Controller
         'test_result' => 'nullable|string',
         'clinical_impression' => 'nullable|string',
         'plan_of_action' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:255',
-        'noted_by' => 'nullable|string|max:255',
-        'educational_attainment' => 'nullable|string|max:255', // Educational attainment from General Intake
-    ]);
+        'prepared_by' => 'nullable|string|max:100',
+        'noted_by' => 'nullable|string|max:100',
+    ]);    
 
     try {
         // Update or create InitialPsychologicalAssessment

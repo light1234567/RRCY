@@ -19,11 +19,11 @@ class InterventionPlanItemController extends Controller
             'plan_id' => 'required|exists:intervention_plans,id',
             'objectives' => 'required|string|max:255',
             'activities' => 'required|string|max:255',
-            'time_frame' => 'required|string|max:255',
-            'responsible_person' => 'required|string|max:255',
+            'time_frame' => 'required|string|max:100', 
+            'responsible_person' => 'required|string|max:100',
             'expected_outcome' => 'required|string|max:255',
-            'remarks' => 'nullable|string',
-        ]);
+            'remarks' => 'nullable|string|max:255',
+        ]);        
 
         $item = InterventionPlanItem::create($validatedData);
         return response()->json($item, 201);
@@ -46,10 +46,10 @@ class InterventionPlanItemController extends Controller
                 'plan_id' => 'required|exists:intervention_plans,id',
                 'objectives' => 'required|string|max:255',
                 'activities' => 'required|string|max:255',
-                'time_frame' => 'required|string|max:255',
-                'responsible_person' => 'required|string|max:255',
+                'time_frame' => 'required|string|max:100', 
+                'responsible_person' => 'required|string|max:100',
                 'expected_outcome' => 'required|string|max:255',
-                'remarks' => 'nullable|string',
+                'remarks' => 'nullable|string|max:255',
             ]);
 
             $item->update($validatedData);

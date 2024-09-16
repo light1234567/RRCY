@@ -19,22 +19,22 @@ class SwappingFormController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'drn' => 'nullable|string|max:255',
+            'drn' => 'nullable|string|max:100',
             'date_of_filing' => 'nullable|date',
-            'requesting_party_name' => 'nullable|string|max:255',
-            'requesting_party_position' => 'nullable|string|max:255',
+            'requesting_party_name' => 'nullable|string|max:100',
+            'requesting_party_position' => 'nullable|string|max:100',
             'date_of_duty' => 'nullable|date',
             'time_of_duty' => 'nullable|date_format:H:i',
-            'sod_name' => 'nullable|string|max:255',
+            'sod_name' => 'nullable|string|max:100',
             'sod_date_of_duty' => 'nullable|date',
-            'sod_position' => 'nullable|string|max:255',
-            'sod_shift_time' => 'nullable|string|max:255',
+            'sod_position' => 'nullable|string|max:100',
+            'sod_shift_time' => 'nullable|string|max:50',
             'purpose' => 'nullable|string',
-            'requested_by' => 'nullable|string|max:255',
-            'accepted_by' => 'nullable|string|max:255',
-            'noted_by' => 'nullable|string|max:255',
-            'approved_by' => 'nullable|string|max:255',
-        ]);
+            'requested_by' => 'nullable|string|max:100',
+            'accepted_by' => 'nullable|string|max:100',
+            'noted_by' => 'nullable|string|max:100',
+            'approved_by' => 'nullable|string|max:100',
+        ]);        
 
         try {
             $form = SwappingForm::updateOrCreate(
@@ -73,21 +73,21 @@ class SwappingFormController extends Controller
     public function update(Request $request, $client_id)
     {
         $validatedData = $request->validate([
-            'drn' => 'nullable|string|max:255',
+            'drn' => 'nullable|string|max:100',
             'date_of_filing' => 'nullable|date',
-            'requesting_party_name' => 'nullable|string|max:255',
-            'requesting_party_position' => 'nullable|string|max:255',
+            'requesting_party_name' => 'nullable|string|max:100',
+            'requesting_party_position' => 'nullable|string|max:100',
             'date_of_duty' => 'nullable|date',
             'time_of_duty' => 'nullable|date_format:H:i',
-            'sod_name' => 'nullable|string|max:255',
+            'sod_name' => 'nullable|string|max:100',
             'sod_date_of_duty' => 'nullable|date',
-            'sod_position' => 'nullable|string|max:255',
-            'sod_shift_time' => 'nullable|string|max:255',
+            'sod_position' => 'nullable|string|max:100',
+            'sod_shift_time' => 'nullable|string|max:50',
             'purpose' => 'nullable|string',
-            'requested_by' => 'nullable|string|max:255',
-            'accepted_by' => 'nullable|string|max:255',
-            'noted_by' => 'nullable|string|max:255',
-            'approved_by' => 'nullable|string|max:255',
+            'requested_by' => 'nullable|string|max:100',
+            'accepted_by' => 'nullable|string|max:100',
+            'noted_by' => 'nullable|string|max:100',
+            'approved_by' => 'nullable|string|max:100',
         ]);
     
         try {

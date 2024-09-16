@@ -37,14 +37,14 @@ class SecondIntakeSheetController extends Controller
                 'date' => 'nullable|date',
                 'vices' => 'nullable|array',
                 'school_activities_achievement' => 'nullable|string',
-                'occupation_of_mother' => 'nullable|string|max:255',
-                'occupation_of_father' => 'nullable|string|max:255',
+                'occupation_of_mother' => 'nullable|string|max:100', 
+                'occupation_of_father' => 'nullable|string|max:100', 
                 'siblings' => 'nullable|array',
-                'responsible_for_households_chores' => 'nullable|string|max:255',
-                'detention_days' => 'nullable|string|max:255',
+                'responsible_for_households_chores' => 'nullable|string|max:100', 
+                'detention_days' => 'nullable|string|max:50', 
                 'community' => 'nullable|array',
-                'house_made_of' => 'nullable|string|max:255',
-            ]);
+                'house_made_of' => 'nullable|string|max:100', 
+            ]);            
 
             Log::info('Validated data for second intake sheet:', $validatedData);
 
@@ -92,14 +92,14 @@ class SecondIntakeSheetController extends Controller
                 'date' => 'nullable|date',
                 'vices' => 'nullable|array',
                 'school_activities_achievement' => 'nullable|string',
-                'occupation_of_mother' => 'nullable|string|max:255',
-                'occupation_of_father' => 'nullable|string|max:255',
+                'occupation_of_mother' => 'nullable|string|max:100', 
+                'occupation_of_father' => 'nullable|string|max:100', 
                 'siblings' => 'nullable|array',
-                'responsible_for_households_chores' => 'nullable|string|max:255',
-                'detention_days' => 'nullable|string|max:255',
+                'responsible_for_households_chores' => 'nullable|string|max:100', 
+                'detention_days' => 'nullable|string|max:50', 
                 'community' => 'nullable|array',
-                'house_made_of' => 'nullable|string|max:255',
-            ]);
+                'house_made_of' => 'nullable|string|max:100', 
+            ]); 
 
             Log::info('Validated data for update:', $validatedData);
 

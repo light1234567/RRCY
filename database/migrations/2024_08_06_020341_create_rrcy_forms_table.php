@@ -11,10 +11,10 @@ class CreateRrcyFormsTable extends Migration
         Schema::create('rrcy_forms', function (Blueprint $table) {
             // $table->id(); // Remove this line
             $table->unsignedBigInteger('client_id');
-            $table->string('form');
+            $table->string('form', 255);
             $table->boolean('yes')->default(false);
             $table->boolean('no')->default(false);
-            $table->text('remarks')->nullable();
+            $table->text('remarks', 255)->nullable();
             $table->timestamps();
 
             $table->primary(['client_id', 'form']);

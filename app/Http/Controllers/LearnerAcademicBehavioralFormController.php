@@ -28,19 +28,19 @@ class LearnerAcademicBehavioralFormController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'month' => 'nullable|string|max:255',
-            'school_year' => 'nullable|string|max:255',
-            'learner_name' => 'nullable|string|max:255',
-            'grade' => 'nullable|string|max:255',
-            'lrn' => 'nullable|string|max:255',
-            'status' => 'nullable|string|max:255',
+            'month' => 'nullable|string|max:50',
+            'school_year' => 'nullable|string|max:50',
+            'learner_name' => 'nullable|string|max:100',
+            'grade' => 'nullable|string|max:20',
+            'lrn' => 'nullable|string|max:20',
+            'status' => 'nullable|string|max:50',
             'skills' => 'nullable|array',
             'observation_feedback' => 'nullable|string',
-            'learner_signature' => 'nullable|string|max:255',
-            'category_adviser_signature' => 'nullable|string|max:255',
-            'center_head_signature' => 'nullable|string|max:255',
-            'educational_section_head_signature' => 'nullable|string|max:255',
-        ]);
+            'learner_signature' => 'nullable|string|max:100',
+            'category_adviser_signature' => 'nullable|string|max:100',
+            'center_head_signature' => 'nullable|string|max:100',
+            'educational_section_head_signature' => 'nullable|string|max:100',
+        ]);        
 
         $form = LearnerAcademicBehavioralForm::updateOrCreate(
             [

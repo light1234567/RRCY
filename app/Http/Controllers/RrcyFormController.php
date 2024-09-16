@@ -20,7 +20,7 @@ class RrcyFormController extends Controller
             'form' => 'required|string|max:255',
             'yes' => 'boolean',
             'no' => 'boolean',
-            'remarks' => 'nullable|string',
+            'remarks' => 'nullable|string|max:255',
         ]);
 
         $rrcyForm = RrcyForm::create($validatedData);
@@ -45,7 +45,7 @@ class RrcyFormController extends Controller
                 'form' => 'required|string|max:255',
                 'yes' => 'boolean',
                 'no' => 'boolean',
-                'remarks' => 'nullable|string',
+                'remarks' => 'nullable|string|max:255',
             ]);
 
             $rrcyForm->update($validatedData);

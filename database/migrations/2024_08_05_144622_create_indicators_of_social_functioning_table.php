@@ -42,8 +42,8 @@ class CreateIndicatorsOfSocialFunctioningTable extends Migration
             $table->decimal('economic_score_per_area')->nullable();
             $table->decimal('general_score')->nullable();
             $table->text('interpretation')->nullable();
-            $table->string('prepared_by')->nullable();
-            $table->string('discussed_with')->nullable();
+            $table->string('prepared_by', 100)->nullable();
+            $table->string('discussed_with', 100)->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

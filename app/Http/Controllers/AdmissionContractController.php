@@ -17,13 +17,13 @@ class AdmissionContractController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'nullable|exists:clients,id',
-            'signed_day' => 'nullable|string|max:2',
-            'signed_month' => 'nullable|string|max:20',
-            'parent_custodian_name' => 'nullable|string|max:255',
-            'lgu_worker_name' => 'nullable|string|max:255',
-            'rrcy_officer' => 'nullable|string|max:255',
-            'houseparent_on_duty' => 'nullable|string|max:255',
-        ]);
+            'signed_day' => 'nullable|string|max:2', 
+            'signed_month' => 'nullable|string|max:20', 
+            'parent_custodian_name' => 'nullable|string|max:100', 
+            'lgu_worker_name' => 'nullable|string|max:100',
+            'rrcy_officer' => 'nullable|string|max:100', 
+            'houseparent_on_duty' => 'nullable|string|max:100', 
+        ]);  
 
         $admissionContract = AdmissionContract::create($validatedData);
         return response()->json($admissionContract, 201);
@@ -44,13 +44,13 @@ class AdmissionContractController extends Controller
         if ($admissionContract) {
             $validatedData = $request->validate([
                 'client_id' => 'nullable|exists:clients,id',
-                'signed_day' => 'nullable|string|max:2',
-                'signed_month' => 'nullable|string|max:20',
-                'parent_custodian_name' => 'nullable|string|max:255',
-                'lgu_worker_name' => 'nullable|string|max:255',
-                'rrcy_officer' => 'nullable|string|max:255',
-                'houseparent_on_duty' => 'nullable|string|max:255',
-            ]);
+                'signed_day' => 'nullable|string|max:2', 
+                'signed_month' => 'nullable|string|max:20', 
+                'parent_custodian_name' => 'nullable|string|max:150', 
+                'lgu_worker_name' => 'nullable|string|max:150',
+                'rrcy_officer' => 'nullable|string|max:150', 
+                'houseparent_on_duty' => 'nullable|string|max:150', 
+            ]);            
 
             $admissionContract->update($validatedData);
             return response()->json($admissionContract);

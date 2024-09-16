@@ -12,14 +12,14 @@ class CreateCiclProgressNotesTable extends Migration
             $table->id();
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
             $table->foreignId('admission_id')->constrained('admissions')->onDelete('cascade');
-            $table->string('intervention_period')->nullable();
+            $table->string('intervention_period', 100)->nullable();
             $table->text('problem_behavior_log')->nullable();
             $table->text('interventions_conducted')->nullable();
             $table->text('progress_notes')->nullable();
-            $table->string('prepared_by')->nullable();
-            $table->string('noted_by')->nullable();
+            $table->string('prepared_by', 100)->nullable();
+            $table->string('noted_by', 100)->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

@@ -38,27 +38,27 @@ class TrainingNeedsAssessmentController extends Controller
     // Validate input data
     $validatedData = $request->validate([
         'education' => 'nullable|array',
-        'education.*.level' => 'required|string|max:255',  // Ensure level is required
-        'education.*.year_or_grade' => 'nullable|string|max:255',
+        'education.*.level' => 'required|string|max:100',
+        'education.*.year_or_grade' => 'nullable|string|max:50',
         'trainings' => 'nullable|array',
-        'trainings.*.title' => 'nullable|string|max:255',
-        'trainings.*.duration' => 'nullable|string|max:255',
-        'trainings.*.location_outside' => 'nullable|string|max:255',
-        'trainings.*.location_inside' => 'nullable|string|max:255',
-        'social_worker' => 'nullable|string|max:255',
-        'houseparent' => 'nullable|string|max:255',
-        'father' => 'nullable|string|max:255',
-        'mother' => 'nullable|string|max:255',
+        'trainings.*.title' => 'nullable|string|max:150',
+        'trainings.*.duration' => 'nullable|string|max:50',
+        'trainings.*.location_outside' => 'nullable|string|max:100',
+        'trainings.*.location_inside' => 'nullable|string|max:100',
+        'social_worker' => 'nullable|string|max:100',
+        'houseparent' => 'nullable|string|max:100',
+        'father' => 'nullable|string|max:100',
+        'mother' => 'nullable|string|max:100',
         'address' => 'nullable|string|max:255',
-        'center_duration' => 'nullable|string|max:255',
-        'for_the' => 'nullable|string|max:255',
+        'center_duration' => 'nullable|string|max:50',
+        'for_the' => 'nullable|string|max:50',
         'date_of_admission' => 'nullable|date',
         'training_sectors' => 'nullable|array',
-        'training_sectors.*.sector' => 'required|string|max:255',
-        'training_sectors.*.name' => 'required|string|max:255',
+        'training_sectors.*.sector' => 'required|string|max:100',
+        'training_sectors.*.name' => 'required|string|max:100',
         'training_sectors.*.rank' => 'nullable|integer',
-        'training_sectors.*.remarks' => 'nullable|string'
-    ]);
+        'training_sectors.*.remarks' => 'nullable|string|max:255'
+    ]);    
 
     try {
         // Ensure the client exists

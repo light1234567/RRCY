@@ -21,21 +21,21 @@ class MonthlyInventoryController extends Controller
     $validatedData = $request->validate([
         'id' => 'nullable|exists:monthly_inventories,id',
         'client_id' => 'required|exists:clients,id',
-        'month' => 'nullable|string|max:255',
-        'drn' => 'nullable|string|max:255',
-        'resident_name' => 'nullable|string|max:255',
-        'houseparent_name' => 'nullable|string|max:255',
+        'month' => 'nullable|string|max:50',
+        'drn' => 'nullable|string|max:50',
+        'resident_name' => 'nullable|string|max:100',
+        'houseparent_name' => 'nullable|string|max:100',
         'items' => 'required|array',
-        'items.*.name' => 'required|string|max:255',
-        'items.*.description' => 'nullable|string|max:255',
+        'items.*.name' => 'required|string|max:100',
+        'items.*.description' => 'nullable|string|max:100',
         'items.*.qty' => 'nullable|integer',
-        'items.*.brand' => 'nullable|string|max:255',
-        'items.*.size' => 'nullable|string|max:255',
-        'items.*.color' => 'nullable|string|max:255',
-        'items.*.old' => 'nullable|string|max:255',
-        'items.*.new' => 'nullable|string|max:255',
-        'items.*.remarks' => 'nullable|string|max:255',
-    ]);
+        'items.*.brand' => 'nullable|string|max:50',
+        'items.*.size' => 'nullable|string|max:50',
+        'items.*.color' => 'nullable|string|max:50',
+        'items.*.old' => 'nullable|string|max:50',
+        'items.*.new' => 'nullable|string|max:50',
+        'items.*.remarks' => 'nullable|string|max:100',
+    ]);    
 
     try {
         // Check if `id` is provided to determine if it is an update
@@ -97,19 +97,19 @@ class MonthlyInventoryController extends Controller
         $validatedData = $request->validate([
             'month' => 'nullable|string|max:255',
             'drn' => 'nullable|string|max:255',
-            'resident_name' => 'nullable|string|max:255',
-            'houseparent_name' => 'nullable|string|max:255',
-            'items' => 'array',
-            'items.*.id' => 'nullable|exists:inventory_items,id', // ID for existing items
-            'items.*.name' => 'required|string|max:255',
-            'items.*.description' => 'nullable|string|max:255',
+            'drn' => 'nullable|string|max:50',
+            'resident_name' => 'nullable|string|max:100',
+            'houseparent_name' => 'nullable|string|max:100',
+            'items' => 'required|array',
+            'items.*.name' => 'required|string|max:100',
+            'items.*.description' => 'nullable|string|max:100',
             'items.*.qty' => 'nullable|integer',
-            'items.*.brand' => 'nullable|string|max:255',
-            'items.*.size' => 'nullable|string|max:255',
-            'items.*.color' => 'nullable|string|max:255',
-            'items.*.old' => 'nullable|string|max:255',
-            'items.*.new' => 'nullable|string|max:255',
-            'items.*.remarks' => 'nullable|string|max:255',
+            'items.*.brand' => 'nullable|string|max:50',
+            'items.*.size' => 'nullable|string|max:50',
+            'items.*.color' => 'nullable|string|max:50',
+            'items.*.old' => 'nullable|string|max:50',
+            'items.*.new' => 'nullable|string|max:50',
+            'items.*.remarks' => 'nullable|string|max:100',
         ]);
 
         try {

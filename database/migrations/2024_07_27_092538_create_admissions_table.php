@@ -9,25 +9,25 @@ class CreateAdmissionsTable extends Migration
     public function up()
     {
         Schema::create('admissions', function (Blueprint $table) {
-            $table->id(); // Automatically creates an 'id' column
+                        $table->id();
             $table->unsignedBigInteger('client_id');
-            $table->string('committing_court');
-            $table->string('crim_case_number');
-            $table->string('offense_committed');
+            $table->string('committing_court', 100);
+            $table->string('crim_case_number', 100);
+            $table->string('offense_committed', 100);
             $table->date('date_admitted');
             $table->integer('days_in_jail');
             $table->integer('days_in_detention_center');
-            $table->string('action_taken');
-            $table->string('general_impression');
-            $table->string('case_status');
-            $table->string('referring_party_name')->nullable();
-            $table->string('referring_party_signature')->nullable();
-            $table->string('admitting_officer')->nullable();
-            $table->string('designation_id_contact')->nullable();
-            $table->string('designation')->nullable();
-            $table->string('office_address')->nullable();
+            $table->string('action_taken', 255);
+            $table->text('general_impression');
+            $table->string('case_status', 100);
+            $table->string('referring_party_name', 100)->nullable();
+            //$table->string('referring_party_signature')->nullable();
+            $table->string('admitting_officer', 100)->nullable();
+            $table->string('designation_id_contact', 100)->nullable();
+            $table->string('designation', 100)->nullable();
+            $table->string('office_address', 255)->nullable();
             $table->dateTime('date_time')->nullable();
-            $table->string('noted_by')->nullable();
+            $table->string('noted_by', 100)->nullable();
             $table->timestamps();
             
             // Foreign key definition
@@ -50,7 +50,5 @@ class CreateAdmissionsTable extends Migration
 
     Schema::enableForeignKeyConstraints();
 }
-
-
 
 }

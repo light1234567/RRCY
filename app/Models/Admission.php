@@ -46,4 +46,3 @@ class Admission extends Model
         return $this->hasMany(DocumentSubmitted::class);
     }
 }
-

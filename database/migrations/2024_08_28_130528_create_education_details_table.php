@@ -11,10 +11,10 @@ class CreateEducationDetailsTable extends Migration
         Schema::create('education_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('training_needs_assessment_id')->constrained('training_needs_assessments')->onDelete('cascade');
-            $table->string('education_level');
-            $table->string('year_or_grade')->nullable();
+            $table->string('education_level', 100);
+            $table->string('year_or_grade', 50)->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

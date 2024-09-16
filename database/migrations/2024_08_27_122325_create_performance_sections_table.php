@@ -9,13 +9,13 @@ class CreatePerformanceSectionsTable extends Migration
     public function up()
     {
         Schema::create('performance_sections', function (Blueprint $table) {
-            $table->id(); // This is an unsignedBigInteger by default
+            $table->id();
             $table->foreignId('report_id')->constrained('performance_observation_reports')->onDelete('cascade');
-            $table->string('title');
+            $table->string('title', 150);
             $table->integer('sub_total')->nullable();
-            $table->text('remarks')->nullable();
+            $table->string('remarks', 255)->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

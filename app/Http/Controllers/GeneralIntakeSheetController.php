@@ -23,10 +23,10 @@ class GeneralIntakeSheetController extends Controller
     $validatedData = $request->validate([
         'client_id' => 'required|exists:clients,id',
         'date' => 'nullable|date',
-        'occupation' => 'nullable|string|max:255',
-        'highest_educ_att' => 'nullable|string|max:255',
-        'school_name' => 'nullable|string|max:255',
-        'class_adviser' => 'nullable|string|max:255',
+        'occupation' => 'nullable|string|max:100',
+        'highest_educ_att' => 'nullable|string|max:150',
+        'school_name' => 'nullable|string|max:100',
+        'class_adviser' => 'nullable|string|max:100',
         'problem_presented' => 'nullable|string',
         'brief_physical_description' => 'nullable|string',
         'major_life_event' => 'nullable|array',
@@ -38,16 +38,16 @@ class GeneralIntakeSheetController extends Controller
         'attachments' => 'nullable|array',
         'skills' => 'nullable|array',
         'resources' => 'nullable|array',
-        'earnings_income' => 'nullable|string|max:255',
+        'earnings_income' => 'nullable|string|max:100',
         'source_of_income_in_street' => 'nullable|array',
-        'hrs_stay_in_street' => 'nullable|string|max:255',
-        'length_stay_in_street' => 'nullable|string|max:255',
-        'common_substance_used' => 'nullable|string|max:255',
-        'initial_assessment' => 'nullable|string|max:255',
-        'recommendations' => 'nullable|string|max:255',
-        'prepared_by' => 'nullable|string|max:255',
-        'reviewed_by' => 'nullable|string|max:255',
-    ]);
+        'hrs_stay_in_street' => 'nullable|string|max:50',
+        'length_stay_in_street' => 'nullable|string|max:50',
+        'common_substance_used' => 'nullable|string|max:100',
+        'initial_assessment' => 'nullable|string',
+        'recommendations' => 'nullable|string',
+        'prepared_by' => 'nullable|string|max:100',
+        'reviewed_by' => 'nullable|string|max:100',
+    ]);    
 
     try {
         // Check if a General Intake Sheet already exists for this client
@@ -97,10 +97,10 @@ public function update(Request $request, $id)
         $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
                 'date' => 'nullable|date',
-                'occupation' => 'nullable|string|max:255',
-                'highest_educ_att' => 'nullable|string|max:255',
-                'school_name' => 'nullable|string|max:255',
-                'class_adviser' => 'nullable|string|max:255',
+                'occupation' => 'nullable|string|max:100',
+                'highest_educ_att' => 'nullable|string|max:150',
+                'school_name' => 'nullable|string|max:100',
+                'class_adviser' => 'nullable|string|max:100',
                 'problem_presented' => 'nullable|string',
                 'brief_physical_description' => 'nullable|string',
                 'major_life_event' => 'nullable|array',
@@ -112,16 +112,16 @@ public function update(Request $request, $id)
                 'attachments' => 'nullable|array',
                 'skills' => 'nullable|array',
                 'resources' => 'nullable|array',
-                'earnings_income' => 'nullable|string|max:255',
+                'earnings_income' => 'nullable|string|max:100',
                 'source_of_income_in_street' => 'nullable|array',
-                'hrs_stay_in_street' => 'nullable|string|max:255',
-                'length_stay_in_street' => 'nullable|string|max:255',
-                'common_substance_used' => 'nullable|string|max:255',
-                'initial_assessment' => 'nullable|string|max:255',
-                'recommendations' => 'nullable|string|max:255',
-                'prepared_by' => 'nullable|string|max:255',
-                'reviewed_by' => 'nullable|string|max:255',
-            ]);
+                'hrs_stay_in_street' => 'nullable|string|max:50',
+                'length_stay_in_street' => 'nullable|string|max:50',
+                'common_substance_used' => 'nullable|string|max:100',
+                'initial_assessment' => 'nullable|string',
+                'recommendations' => 'nullable|string',
+                'prepared_by' => 'nullable|string|max:100',
+                'reviewed_by' => 'nullable|string|max:100',
+            ]); 
 
             $sheet->update($validatedData);
             return response()->json($sheet);

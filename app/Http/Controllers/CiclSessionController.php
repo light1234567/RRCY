@@ -19,18 +19,18 @@ class CiclSessionController extends Controller
 {
     $validatedData = $request->validate([
         'client_id' => 'required|exists:clients,id',
-        'drn' => 'nullable|string|max:255',
-        'session' => 'nullable|string|max:255',
-        'title' => 'nullable|string|max:255',
+        'drn' => 'nullable|string|max:100',
+        'session' => 'nullable|string|max:100',
+        'title' => 'nullable|string|max:150',
         'date_conducted' => 'nullable|date',
         'objective' => 'nullable|string',
         'methodology' => 'nullable|string',
         'highlight' => 'nullable|string',
         'outcome' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:255',
-        'noted_by' => 'nullable|string|max:255',
-        'approved_by' => 'nullable|string|max:255',
-    ]);
+        'prepared_by' => 'nullable|string|max:100',
+        'noted_by' => 'nullable|string|max:100',
+        'approved_by' => 'nullable|string|max:100',
+    ]);    
 
     try {
         // Check if a session already exists for the client
@@ -76,19 +76,18 @@ class CiclSessionController extends Controller
     public function update(Request $request, $client_id)
 {
     $validatedData = $request->validate([
-        'drn' => 'nullable|string|max:255',
-        'session' => 'nullable|string|max:255',
-        'title' => 'nullable|string|max:255',
+        'drn' => 'nullable|string|max:100',
+        'session' => 'nullable|string|max:100',
+        'title' => 'nullable|string|max:150',
         'date_conducted' => 'nullable|date',
         'objective' => 'nullable|string',
         'methodology' => 'nullable|string',
         'highlight' => 'nullable|string',
         'outcome' => 'nullable|string',
-        'outcome' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:255',
-        'noted_by' => 'nullable|string|max:255',
-        'approved_by' => 'nullable|string|max:255',
-    ]);
+        'prepared_by' => 'nullable|string|max:100',
+        'noted_by' => 'nullable|string|max:100',
+        'approved_by' => 'nullable|string|max:100',
+    ]);    
 
     try {
         // Find the session by client_id

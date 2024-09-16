@@ -11,15 +11,15 @@ class CreateInterventionPlansTable extends Migration
         Schema::create('intervention_plans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id');
-            $table->string('period');
+            $table->string('period', 100); 
             $table->date('date_prepared');
-            $table->string('prepared_by')->nullable();  // Added field
-            $table->string('conformed_by')->nullable(); // Added field
-            $table->string('noted_by')->nullable();  
+            $table->string('prepared_by', 100)->nullable(); 
+            $table->string('conformed_by', 100)->nullable(); 
+            $table->string('noted_by', 100)->nullable(); 
             $table->timestamps();
-
+        
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-        });
+        });        
     }
 
     public function down()

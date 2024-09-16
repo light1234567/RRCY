@@ -11,11 +11,11 @@ class CreateDistinguishingMarksTable extends Migration
         Schema::create('distinguishing_marks', function (Blueprint $table) {
             $table->id(); // Automatically creates an 'id' column
             $table->unsignedBigInteger('admission_id');
-            $table->string('tattoo_scars')->nullable();
+            $table->string('tattoo_scars', 100)->nullable();
             $table->decimal('height', 5, 2)->nullable();
             $table->decimal('weight', 5, 2)->nullable();
-            $table->string('colour_of_eye')->nullable();
-            $table->string('skin_colour')->nullable();
+            $table->string('colour_of_eye', 50)->nullable();
+            $table->string('skin_colour', 50)->nullable();
             $table->timestamps();
 
             $table->foreign('admission_id')->references('id')->on('admissions')->onDelete('cascade');

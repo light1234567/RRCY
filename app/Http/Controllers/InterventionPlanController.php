@@ -17,19 +17,19 @@ class InterventionPlanController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'period' => 'required|string|max:255',
+            'period' => 'required|string|max:100',
             'date_prepared' => 'required|date',
-            'prepared_by' => 'nullable|string|max:255',
-            'conformed_by' => 'nullable|string|max:255',
-            'noted_by' => 'nullable|string|max:255',
+            'prepared_by' => 'nullable|string|max:100',
+            'conformed_by' => 'nullable|string|max:100',
+            'noted_by' => 'nullable|string|max:100',
             'items' => 'required|array',
             'items.*.objectives' => 'required|string|max:255',
             'items.*.activities' => 'required|string|max:255',
-            'items.*.time_frame' => 'required|string|max:255',
-            'items.*.responsible_person' => 'required|string|max:255',
+            'items.*.time_frame' => 'required|string|max:100',
+            'items.*.responsible_person' => 'required|string|max:100',
             'items.*.expected_outcome' => 'required|string|max:255',
-            'items.*.remarks' => 'nullable|string',
-        ]);
+            'items.*.remarks' => 'nullable|string|max:255',
+        ]);         
 
         $plan = InterventionPlan::create($validatedData);
         foreach ($validatedData['items'] as $itemData) {
@@ -54,18 +54,18 @@ class InterventionPlanController extends Controller
         if ($plan) {
             $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
-                'period' => 'required|string|max:255',
+                'period' => 'required|string|max:100',
                 'date_prepared' => 'required|date',
-                'prepared_by' => 'nullable|string|max:255',
-                'conformed_by' => 'nullable|string|max:255',
-                'noted_by' => 'nullable|string|max:255',
+                'prepared_by' => 'nullable|string|max:100',
+                'conformed_by' => 'nullable|string|max:100',
+                'noted_by' => 'nullable|string|max:100',
                 'items' => 'required|array',
                 'items.*.objectives' => 'required|string|max:255',
                 'items.*.activities' => 'required|string|max:255',
-                'items.*.time_frame' => 'required|string|max:255',
-                'items.*.responsible_person' => 'required|string|max:255',
+                'items.*.time_frame' => 'required|string|max:100',
+                'items.*.responsible_person' => 'required|string|max:100',
                 'items.*.expected_outcome' => 'required|string|max:255',
-                'items.*.remarks' => 'nullable|string',
+                'items.*.remarks' => 'nullable|string|max:255',
             ]);
 
             $plan->update($validatedData);

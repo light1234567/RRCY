@@ -11,12 +11,12 @@ class CreateTrainingSectorDetailsTable extends Migration
         Schema::create('training_sector_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('training_needs_assessment_id')->constrained('training_needs_assessments')->onDelete('cascade');
-            $table->string('sector');
-            $table->string('name');
+            $table->string('sector', 100);
+            $table->string('name', 100);
             $table->integer('rank')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

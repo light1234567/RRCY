@@ -11,20 +11,20 @@ class CreateGroupWorkAssessmentsTable extends Migration
         Schema::create('group_work_assessments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('learner_assessment_form_id')->constrained()->onDelete('cascade');
-            $table->json('participation')->nullable(); // Stores [All The Time, Some of the Time, Never] as JSON
-            $table->string('participation_remarks')->nullable();
+            $table->json('participation')->nullable();
+            $table->string('participation_remarks', 100)->nullable();
             $table->json('focus')->nullable();
-            $table->string('focus_remarks')->nullable();
+            $table->string('focus_remarks', 100)->nullable();
             $table->json('help')->nullable();
-            $table->string('help_remarks')->nullable();
+            $table->string('help_remarks', 100)->nullable();
             $table->json('questions')->nullable();
-            $table->string('questions_remarks')->nullable();
+            $table->string('questions_remarks', 100)->nullable();
             $table->json('ideas')->nullable();
-            $table->string('ideas_remarks')->nullable();
+            $table->string('ideas_remarks', 100)->nullable();
             $table->json('feedback')->nullable();
-            $table->string('feedback_remarks')->nullable();
+            $table->string('feedback_remarks', 100)->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

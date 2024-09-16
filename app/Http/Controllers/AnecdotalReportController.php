@@ -20,21 +20,21 @@ class AnecdotalReportController extends Controller
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
             'date' => 'required|date',
-            'drn' => 'nullable|string|max:255',
-            'color' => 'nullable|string|max:255',
+            'drn' => 'nullable|string|max:100',
+            'color' => 'nullable|string|max:50',
             'physical' => 'nullable|string',
             'emotional' => 'nullable|string',
             'behavioral' => 'nullable|string',
             'spiritual' => 'nullable|string',
             'recommendation' => 'nullable|string',
-            'noted_by' => 'nullable|string|max:255',
-            'approved_by' => 'nullable|string|max:255',
-            'prepared_by' => 'nullable|string|max:255',
-            'house_parents' => 'nullable|string|max:255',
-            'house_parents_signature' => 'nullable|image|max:10240', // Validate image and size up to 10MB
-            'residents' => 'nullable|string|max:255',
-            'residents_signature' => 'nullable|image|max:10240', // Validate image and size up to 10MB
-        ]);
+            'noted_by' => 'nullable|string|max:100',
+            'approved_by' => 'nullable|string|max:100',
+            'prepared_by' => 'nullable|string|max:100',
+            'house_parents' => 'nullable|string|max:100',
+            'house_parents_signature' => 'nullable|image|max:10240', 
+            'residents' => 'nullable|string|max:100',
+            'residents_signature' => 'nullable|image|max:10240',
+        ]);        
 
         try {
             // Handle file uploads
@@ -99,20 +99,20 @@ class AnecdotalReportController extends Controller
 
         $validatedData = $request->validate([
             'date' => 'required|date',
-            'drn' => 'nullable|string|max:255',
-            'color' => 'nullable|string|max:255',
+            'drn' => 'nullable|string|max:100',
+            'color' => 'nullable|string|max:50',
             'physical' => 'nullable|string',
             'emotional' => 'nullable|string',
             'behavioral' => 'nullable|string',
             'spiritual' => 'nullable|string',
             'recommendation' => 'nullable|string',
-            'noted_by' => 'nullable|string|max:255',
-            'approved_by' => 'nullable|string|max:255',
-            'prepared_by' => 'nullable|string|max:255',
-            'house_parents' => 'nullable|string|max:255',
-            'house_parents_signature' => 'nullable|image|max:10240', // Validate image and size up to 10MB
-            'residents' => 'nullable|string|max:255',
-            'residents_signature' => 'nullable|image|max:10240', // Validate image and size up to 10MB
+            'noted_by' => 'nullable|string|max:100',
+            'approved_by' => 'nullable|string|max:100',
+            'prepared_by' => 'nullable|string|max:100',
+            'house_parents' => 'nullable|string|max:100',
+            'house_parents_signature' => 'nullable|image|max:10240', 
+            'residents' => 'nullable|string|max:100',
+            'residents_signature' => 'nullable|image|max:10240',
         ]);
 
         try {

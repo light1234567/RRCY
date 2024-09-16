@@ -19,7 +19,7 @@ class IncidentReportController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'drn' => 'nullable|string|max:255',
+            'drn' => 'nullable|string|max:100',
             'incident' => 'nullable|string',
             'date_of_incident' => 'nullable|date',
             'time_of_incident' => 'nullable|date_format:H:i',
@@ -28,10 +28,10 @@ class IncidentReportController extends Controller
             'action_taken' => 'nullable|string',
             'agreements' => 'nullable|string',
             'corrective_measure' => 'nullable|string',
-            'prepared_by' => 'nullable|string|max:255',
-            'reviewed_by' => 'nullable|string|max:255',
-            'approved_by' => 'nullable|string|max:255',
-        ]);
+            'prepared_by' => 'nullable|string|max:100',
+            'reviewed_by' => 'nullable|string|max:100',
+            'approved_by' => 'nullable|string|max:100',
+        ]);        
 
         try {
             $report = IncidentReport::create($validatedData);
@@ -71,7 +71,7 @@ class IncidentReportController extends Controller
 
     // Validate the incoming request data
     $validatedData = $request->validate([
-        'drn' => 'nullable|string|max:255',
+        'drn' => 'nullable|string|max:100',
         'incident' => 'nullable|string',
         'date_of_incident' => 'nullable|date',
         'time_of_incident' => 'nullable|date_format:H:i',
@@ -80,10 +80,10 @@ class IncidentReportController extends Controller
         'action_taken' => 'nullable|string',
         'agreements' => 'nullable|string',
         'corrective_measure' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:255',
-        'reviewed_by' => 'nullable|string|max:255',
-        'approved_by' => 'nullable|string|max:255',
-    ]);
+        'prepared_by' => 'nullable|string|max:100',
+        'reviewed_by' => 'nullable|string|max:100',
+        'approved_by' => 'nullable|string|max:100',
+    ]);    
 
     try {
         $report = IncidentReport::updateOrCreate(

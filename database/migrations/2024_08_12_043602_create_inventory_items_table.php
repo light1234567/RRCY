@@ -11,17 +11,17 @@ class CreateInventoryItemsTable extends Migration
         Schema::create('inventory_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('monthly_inventory_id')->constrained('monthly_inventories')->onDelete('cascade');
-            $table->string('name');
-            $table->string('description')->nullable();
+            $table->string('name', 100);
+            $table->string('description', 100)->nullable();
             $table->integer('qty')->nullable();
-            $table->string('brand')->nullable();
-            $table->string('size')->nullable();
-            $table->string('color')->nullable();
-            $table->string('old')->nullable();
-            $table->string('new')->nullable();
-            $table->string('remarks')->nullable();
+            $table->string('brand', 50)->nullable();
+            $table->string('size', 50)->nullable();
+            $table->string('color', 50)->nullable();
+            $table->string('old', 50)->nullable();
+            $table->string('new', 50)->nullable();
+            $table->string('remarks', 100)->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

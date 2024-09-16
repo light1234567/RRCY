@@ -11,12 +11,12 @@ class CreateReadingAssessmentsTable extends Migration
         Schema::create('reading_assessments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('learner_assessment_form_id')->constrained()->onDelete('cascade');
-            $table->string('pronunciation_remarks')->nullable();
-            $table->string('fluency_remarks')->nullable();
-            $table->string('punctuation_remarks')->nullable();
-            $table->string('advance_remarks')->nullable();
+            $table->string('pronunciation_remarks', 100)->nullable();
+            $table->string('fluency_remarks', 100)->nullable();
+            $table->string('punctuation_remarks', 100)->nullable();
+            $table->string('advance_remarks', 100)->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

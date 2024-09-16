@@ -17,10 +17,10 @@ class DataPrivacyConsentController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'nullable|exists:clients,id',
-            'client_signature' => 'nullable|string|max:255',
+            'client_signature' => 'nullable|string|max:100',
             'date' => 'nullable|date',
-            'guardian_signature' => 'nullable|string|max:255',
-        ]);
+            'guardian_signature' => 'nullable|string|max:100',
+        ]);        
 
         $consent = DataPrivacyConsent::create($validatedData);
         return response()->json($consent, 201);
@@ -41,10 +41,10 @@ class DataPrivacyConsentController extends Controller
         if ($consent) {
             $validatedData = $request->validate([
                 'client_id' => 'nullable|exists:clients,id',
-                'client_signature' => 'nullable|string|max:255',
+                'client_signature' => 'nullable|string|max:100',
                 'date' => 'nullable|date',
-                'guardian_signature' => 'nullable|string|max:255',
-            ]);
+                'guardian_signature' => 'nullable|string|max:100',
+            ]);            
 
             $consent->update($validatedData);
             return response()->json($consent);

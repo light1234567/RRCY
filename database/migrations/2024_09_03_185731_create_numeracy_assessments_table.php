@@ -11,9 +11,9 @@ class CreateNumeracyAssessmentsTable extends Migration
         Schema::create('numeracy_assessments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('learner_assessment_form_id')->constrained()->onDelete('cascade');
-            $table->string('advance_remarks')->nullable();
+            $table->string('advance_remarks', 100)->nullable();
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

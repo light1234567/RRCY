@@ -11,12 +11,12 @@ class CreateAdmissionContractsTable extends Migration
         Schema::create('admission_contracts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id')->nullable();
-            $table->string('signed_day')->nullable();
-            $table->string('signed_month')->nullable();
-            $table->string('parent_custodian_name')->nullable();
-            $table->string('lgu_worker_name')->nullable();
-            $table->string('rrcy_officer')->nullable();
-            $table->string('houseparent_on_duty')->nullable();
+            $table->string('signed_day', 2)->nullable();
+            $table->string('signed_month', 20)->nullable();
+            $table->string('parent_custodian_name', 100)->nullable();
+            $table->string('lgu_worker_name', 100)->nullable();
+            $table->string('rrcy_officer', 100)->nullable();
+            $table->string('houseparent_on_duty', 100)->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

@@ -17,16 +17,16 @@ class PsychologicalInterventionPlanController extends Controller
             'client_id' => 'required|exists:clients,id',
             'as_of_date' => 'nullable|date',
             'progress_notes' => 'nullable|string',
-            'prepared_by' => 'nullable|string|max:255',
-            'noted_by' => 'nullable|string|max:255',
+            'prepared_by' => 'nullable|string|max:100',
+            'noted_by' => 'nullable|string|max:100',
             'items' => 'array',
             'items.*.objectives' => 'nullable|string',
             'items.*.activities' => 'nullable|string',
-            'items.*.responsible_person' => 'nullable|string|max:255',
-            'items.*.time_frame' => 'nullable|string|max:255',
+            'items.*.responsible_person' => 'nullable|string|max:100',
+            'items.*.time_frame' => 'nullable|string|max:50',
             'items.*.expected_output' => 'nullable|string',
             'items.*.progress' => 'nullable|string',
-        ]);
+        ]);        
 
         try {
             $plan = PsychologicalInterventionPlan::updateOrCreate(
@@ -89,16 +89,16 @@ class PsychologicalInterventionPlanController extends Controller
         $validatedData = $request->validate([
             'as_of_date' => 'nullable|date',
             'progress_notes' => 'nullable|string',
-            'prepared_by' => 'nullable|string|max:255',
-            'noted_by' => 'nullable|string|max:255',
+            'prepared_by' => 'nullable|string|max:100',
+            'noted_by' => 'nullable|string|max:100',
             'items' => 'array',
             'items.*.objectives' => 'nullable|string',
             'items.*.activities' => 'nullable|string',
-            'items.*.responsible_person' => 'nullable|string|max:255',
-            'items.*.time_frame' => 'nullable|string|max:255',
+            'items.*.responsible_person' => 'nullable|string|max:100',
+            'items.*.time_frame' => 'nullable|string|max:50',
             'items.*.expected_output' => 'nullable|string',
             'items.*.progress' => 'nullable|string',
-        ]);
+        ]); 
 
         try {
             $plan = PsychologicalInterventionPlan::where('client_id', $id)->firstOrFail();

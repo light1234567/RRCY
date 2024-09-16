@@ -11,12 +11,11 @@ class CreateKasabutansTable extends Migration
         Schema::create('kasabutans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_id');
-            $table->string('client_resident')->nullable(); // Nullable client_resident
-            $table->string('parent_guardian')->nullable(); // Nullable parent_guardian
-            $table->string('case_manager')->nullable(); // Nullable case_manager
+            $table->string('client_resident', 100)->nullable(); 
+            $table->string('parent_guardian', 100)->nullable(); 
+            $table->string('case_manager', 100)->nullable(); 
             $table->timestamps();
-            
-            // Define foreign key constraint if applicable
+    
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }

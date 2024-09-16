@@ -21,13 +21,13 @@ class CiclProgressNoteController extends Controller
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
             'admission_id' => 'required|exists:admissions,id',
-            'intervention_period' => 'nullable|string|max:255',
+            'intervention_period' => 'nullable|string|max:100',
             'problem_behavior_log' => 'nullable|string',
             'interventions_conducted' => 'nullable|string',
             'progress_notes' => 'nullable|string',
-            'prepared_by' => 'nullable|string|max:255',
-            'noted_by' => 'nullable|string|max:255',
-        ]);
+            'prepared_by' => 'nullable|string|max:100',
+            'noted_by' => 'nullable|string|max:100',
+        ]);        
 
         try {
             // Use updateOrCreate to either update an existing record or create a new one
@@ -81,13 +81,13 @@ class CiclProgressNoteController extends Controller
     {
         $validatedData = $request->validate([
             'admission_id' => 'required|exists:admissions,id',
-            'intervention_period' => 'nullable|string|max:255',
+            'intervention_period' => 'nullable|string|max:100',
             'problem_behavior_log' => 'nullable|string',
             'interventions_conducted' => 'nullable|string',
             'progress_notes' => 'nullable|string',
-            'prepared_by' => 'nullable|string|max:255',
-            'noted_by' => 'nullable|string|max:255',
-        ]);
+            'prepared_by' => 'nullable|string|max:100',
+            'noted_by' => 'nullable|string|max:100',
+        ]);        
 
         try {
             // Use updateOrCreate to either update an existing record or create a new one
