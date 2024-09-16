@@ -16,45 +16,42 @@
     </div>
 
     <div class="grid grid-cols-4 gap-2 mb-2">
-  <!-- Row 1: Name and B-Day -->
-  <div class=" w-50 col-span-2">
-    <label class=" border flex items-center block font-bold text-xs">CLIENTS NAME:
-    <input type="text" v-model="form.client_name" class="w-75 border-none p-1 text-xs" readonly>
-  </label>
+  <!-- Row 1: Name and B-Day with Date Admitted -->
+  <div class="flex w-auto col-span-2">
+    <label class="border-none flex items-center block font-bold text-xs">CLIENT'S NAME:</label>
+    <input type="text" v-model="form.client_name" class="w-56 border-none p-1 text-xs" readonly>
   </div>
-  <div class="col-span-2">
-    <label class="border flex items-center block font-bold text-xs">BIRTHDATE:
+
+  <div class="flex col-span-1 -ml-20">
+    <label class="border-none flex items-center block font-bold text-xs">BIRTHDATE:</label>
     <input type="date" v-model="form.birthdate" class="w-full border-none p-1 text-xs" readonly>
-  </label>
+  </div>
+
+  <div class="flex col-span-1 ml-8">
+    <label class="border-none w-40 flex items-center block font-bold -ml-20 text-xs">DATE ADMITTED:</label>
+    <input type="date" v-model="form.date_of_admission" class="w-full -ml-8 bg-transparent border-none p-1 text-xs" readonly>
   </div>
 
   <!-- Row 2: Age, Medical Status, Religion -->
-  <div class="col-span-1">
-    <label class="border flex items-center block font-bold text-xs">AGE:
-    <input type="number" v-model="form.age" class="w-full border-none p-1 text-xs" readonly>
-  </label>
-  </div>
-  <div class="col-span-2">
-    <label class="border flex items-center block font-bold text-xs">CURRENT MEDICAL STATUS:
-    <input type="text" v-model="form.current_medical_status" class="w-50 border-none p-1 text-xs" :readonly="!editMode">
-  </label>
-  </div>
-  <div class="col-span-1">
-    <label class="border flex items-center block font-bold text-xs">RELIGION:
-    <input type="text" v-model="form.religion" class="w-full border-none p-1 text-xs" readonly>
-  </label>
+  <div class="flex col-span-1 w-20">
+    <label class="border-none flex items-center block font-bold text-xs">AGE:</label>
+    <input type="number" v-model="form.age" class="w-10 border-none p-1 text-xs" readonly>
   </div>
 
-  <!-- Row 3: Address and Date of Admission -->
-  <div class="col-span-3">
-    <label class="border flex items-center block font-bold text-xs">ADDRESS:
-    <input type="text" v-model="form.address" class="w-full border-none p-1 text-xs" readonly>
-  </label>
+  <div class="flex -ml-28 col-span-2">
+    <label class="border-none flex items-center block font-bold text-xs">CURRENT MEDICAL STATUS:</label>
+    <input type="text" v-model="form.current_medical_status" class="w-60 border-none p-1 text-xs" :readonly="!editMode">
   </div>
-  <div class="col-span-1">
-    <label class="border-black flex items-center w-60 block font-bold text-xs">DATE ADMITTED:
-    <input type="date" v-model="form.date_of_admission" class="w-20 border-none p-1 text-xs" readonly>
-  </label>
+
+  <div class="flex col-span-1">
+    <label class="border-none -ml-12 flex items-center block font-bold text-xs">RELIGION:</label>
+    <input type="text" v-model="form.religion" class="w-full border-none p-1 text-xs" readonly>
+  </div>
+
+  <!-- Row 3: Address -->
+  <div class="flex col-span-4">
+    <label class="border-none flex items-center block font-bold text-xs">ADDRESS:</label>
+    <input type="text" v-model="form.address" class="w-full border-none p-1 text-xs" readonly>
   </div>
 </div>
 
@@ -73,115 +70,122 @@
       </thead>
       <tbody>
         <tr>
-          <td class="border text-base p-2">TEMPERATURE</td>
-          <td class="border p-2"><input type="number" v-model="form.temperature" class="w-full border-none p-1" :readonly="!editMode"></td>
+          <td class="border text-sm p-2">TEMPERATURE</td>
+          <td class="border text-sm p-2"><input type="number" v-model="form.temperature" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
-          <td class="border p-2">PULSE RATE</td>
-          <td class="border p-2"><input type="number" v-model="form.pulse_rate" class="w-full border-none p-1" :readonly="!editMode"></td>
+          <td class="border text-sm p-2">PULSE RATE</td>
+          <td class="border text-sm p-2"><input type="number" v-model="form.pulse_rate" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
-          <td class="border p-2">RESPIRATORY RATE</td>
-          <td class="border p-2"><input type="number" v-model="form.respiratory_rate" class="w-full border-none p-1" :readonly="!editMode"></td>
+          <td class="border text-sm p-2">RESPIRATORY RATE</td>
+          <td class="border text-sm p-2"><input type="number" v-model="form.respiratory_rate" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
-          <td class="border p-2">BLOOD PRESSURE</td>
-          <td class="border p-2"><input type="text" v-model="form.blood_pressure" class="w-full border-none p-1" :readonly="!editMode"></td>
+          <td class="border text-sm p-2">BLOOD PRESSURE</td>
+          <td class="border text-sm p-2"><input type="text" v-model="form.blood_pressure" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
-          <td class="border p-2">HEIGHT (cm)</td>
-          <td class="border p-2"><input type="number" v-model="form.height_cm" @input="computeBMI" class="w-full border-none p-1" :readonly="!editMode"></td>
+          <td class="border text-sm p-2">HEIGHT (cm)</td>
+          <td class="border text-sm p-2"><input type="number" v-model="form.height_cm" @input="computeBMI" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
-          <td class="border p-2">WEIGHT (kg)</td>
-          <td class="border p-2"><input type="number" v-model="form.weight_kg" @input="computeBMI" class="w-full border-none p-1" :readonly="!editMode"></td>
+          <td class="border text-sm p-2">WEIGHT (kg)</td>
+          <td class="border text-sm p-2"><input type="number" v-model="form.weight_kg" @input="computeBMI" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
         <tr>
-          <td class="border p-2">BODY MASS INDEX (BMI)</td>
-          <td class="border p-2"><input type="number" v-model="form.bmi" class="w-full border-none p-1" readonly></td>
+          <td class="border text-sm p-2">BODY MASS INDEX (BMI)</td>
+          <td class="border text-sm p-2"><input type="number" v-model="form.bmi" class="w-full border-none p-1" readonly></td>
         </tr>
         <tr>
-          <td class="border p-2">BMI REMARKS</td>
-          <td class="border p-2"><input type="text" v-model="form.bmi_remarks" class="w-full border-none p-1" :readonly="!editMode"></td>
+          <td class="border text-sm p-2">BMI REMARKS</td>
+          <td class="border text-sm p-2"><input type="text" v-model="form.bmi_remarks" class="w-full border-none p-1" :readonly="!editMode"></td>
         </tr>
       </tbody>
     </table>
 
     <!-- General Appearance -->
-    <div class="text-center border-b pb-2 mb-4">
+    <div class="text-center pb-2 mb-4">
       <h2 class="text-lg font-bold">GENERAL APPEARANCE</h2>
     </div>
 
     <div class="flex mb-4">
-  <!-- Table with health status information -->
-  <div class="w-full">
-    <table class="w-full border-collapse border">
-      <tbody>
-        <!-- Row 1: Eyes and Skin -->
-        <tr>
-          <td class="border p-2 font-bold text-base	">
-            EYES:
-            <input type="text" v-model="form.eyes_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
-          </td>
-          <td class="border p-2 font-bold text-base	">
-            NAILS:
-            <input type="text" v-model="form.nails_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
-          </td>
-        </tr>
-        
-        <!-- Row 2: Ears and Skin -->
-        <tr>
-          <td class="border p-2 font-bold text-base	">
-            EARS:
-            <input type="text" v-model="form.ears_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
-          </td>
-          <td class="border p-2 font-bold text-base	">
-            SKIN:
-            <input type="text" v-model="form.skin_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
-          </td>
-        </tr>
 
-        <!-- Row 3: Mouth & Teeth and Hair -->
-        <tr>
-          <td class="border p-2 font-bold text-base	">
-            MOUTH & TEETH:
-            <input type="text" v-model="form.mouth_teeth_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
-          </td>
-          <td class="border p-2 font-bold text-base	">
-            HAIR:
-            <input type="text" v-model="form.hair_status" class="w-full border-none p-1 mt-1" :readonly="!editMode">
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+ <!-- Table with health status information -->
+<div class="grid grid-cols-2 gap-4 w-full border">
+  <!-- Column 1: Eyes, Ears, Mouth & Teeth -->
+  <div class="border border-black-0 w-58 p-2">
+    <!-- Eyes Section -->
+    <div class="flex items-center mb-2">
+      <label class="font-bold text-xs mr-2">EYES:</label>
+      <input type="text" v-model="form.eyes_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+    </div>
+
+    <!-- Ears Section -->
+    <div class="flex items-center mb-2">
+      <label class="font-bold text-xs mr-2">EARS:</label>
+      <input type="text" v-model="form.ears_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+    </div>
+
+    <!-- Mouth & Teeth Section -->
+    <div class="flex items-center w-full mb-2">
+      <label class="flex w-44 font-bold text-xs mr-2">MOUTH & TEETH:     </label>
+      <input type="text" v-model="form.mouth_teeth_status" class="-ml-4 w-full border-none p-1 text-xs" :readonly="!editMode">
+    </div>
   </div>
+
+  <!-- Column 2: Nails, Skin, Hair -->
+  <div class="border-none p-2">
+    <!-- Nails Section -->
+    <div class="flex items-center mb-2">
+      <label class="font-bold text-xs mr-2">NAILS:</label>
+      <input type="text" v-model="form.nails_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+    </div>
+
+    <!-- Skin Section -->
+    <div class="flex items-center mb-2">
+      <label class="font-bold text-xs mr-2">SKIN:</label>
+      <input type="text" v-model="form.skin_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+    </div>
+
+    <!-- Hair Section -->
+    <div class="flex items-center mb-2">
+      <label class="font-bold text-xs mr-2">HAIR:</label>
+      <input type="text" v-model="form.hair_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+    </div>
+  </div>
+</div>
+
 </div>
 
 
 
-    
+    <div class="border">
     <div class="grid grid-cols-3 gap-4 mb-4">
   <!-- Left Column: Services Given and Remarks -->
   <div class="col-span-2">
     <!-- Services Given Section -->
-    <div class="mb-4">
-      <label class=" font-bold text-base">SERVICES GIVEN:</label>
-      <textarea v-model="form.services_given" rows="5" class="w-full p-1 border-none text-base mb-2"></textarea>
+    <div class="mb-4 bg-transparent w-96 ">
+      <label class=" font-bold ml-2 text-sm">SERVICES GIVEN:</label>
+      <textarea v-model="form.services_given" rows="5" class="w-full ml-2 p-1 border-none text-sm mb-2"></textarea>
     </div>
 
     <!-- Remarks Section -->
-    <div class="mb-4">
-      <label class=" font-bold text-base">REMARKS:</label>
-      <textarea v-model="form.remarks" rows="5" class="w-full p-1 border-none text-base mb-2"></textarea>
+    <div class="mb-4 bg-transparent w-96 ">
+      <label class=" font-bold ml-2 text-sm">REMARKS:</label>
+      <textarea v-model="form.remarks" rows="5" class="w-full p-1 ml-2 border-none text-sm mb-2"></textarea>
     </div>
   </div>
 
   <!-- Right Column: Profile Picture -->
-  <div class="col-span-1 flex justify-center items-center">
-    <div class="w-48 h-48 border flex justify-center items-center">
+  <div class="-ml-14 mt-14 col-span-1 flex-absolute justify-center items-center">
+    <div class="w-60 h-60 md-8 border flex justify-center items-center">
       <img src="/path/to/profile-picture.png" alt="Profile Picture" class="h-full w-full object-cover">
     </div>
   </div>
+</div>
+
 </div>
 
 
@@ -190,23 +194,23 @@
   <!-- Prepared by Signature -->
   <div class="w-1/2 border-r pr-4">
     <label class="block text-sm font-bold">PREPARED BY:</label>
-    <div class="flex items-center">
+    <div class="font-semibold flex items-center">
       <input
         type="text"
         value="PHILIP ROY D. COTIANGCO, RN"
-        class=" w-full mt-1 border-none shadow-none"
+        class=" w-full text-sm -ml-3 mt-1 border-none shadow-none"
         readonly
       >
     </div>
-    <div class="flex items-center">
+    <div class="font-semibold text-sm flex items-center">
       <input
         type="text"
         value="CARL BRIAN T. BAUZON, RN"
-        class="w-full mt-1 underline-input shadow-none"
+        class="w-full text-sm w-48 mr-28 mt-1 underline-input shadow-none"
         readonly
       >
     </div>
-    <p class="text-sm mt-2 font-bold">RESIDENT NURSES RRCY</p>
+    <p class="text-sm mt-2 ">RESIDENT NURSES RRCY</p>
   </div>
 
   <!-- Noted by Signature -->
@@ -216,14 +220,27 @@
       <input
         type="text"
         value="ANGELIC B. PAÑA, RSW"
-        class="w-full mt-1 underline-input shadow-none"
+        class="text-sm font-semibold w-44 mt-1 underline-input shadow-none"
         readonly
       >
     </div>
-    <p class="text-sm mt-2 font-bold">SWO IV/Center Head</p>
+    <p class="text-sm mt-2">SWO IV/Center Head</p>
   </div>
 </div>
 
+      <!-- Footer Section -->
+      <div class=" pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <p class="font-bold">PAGE 1 of 1</p>
+            <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+            <p>Email: <span class="text-blue-600 underline">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          </div>
+          <div>
+            <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
+          </div>
+        </div>
+      </div>
 
   </div>
 </template>
@@ -433,8 +450,6 @@ export default {
   border-bottom:  1px solid black;
   padding: 0;
   margin: 0;
-  line-height: 2.5;
   vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
-  font-size: inherit; /* Ensure consistent font size */
 }
 </style>

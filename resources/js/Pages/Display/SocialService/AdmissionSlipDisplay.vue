@@ -525,6 +525,7 @@ import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import '../../../fonts/arial-normal.js'; 
 import '../../../fonts/times-normal.js'; 
+import '../../../fonts/arialbd-bold.js'; 
 
 export default {  
   name: 'ClientList',
@@ -926,241 +927,462 @@ toggleDocument(client, documentName) {
 }
 
 ,
-
 async exportToPdf() {
-  const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
+const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
-  // Add and set Times New Roman font
-  pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic'); // Load the Times New Roman italic font
-  pdf.setFont('TimesNewRoman', 'italic'); // Set Times New Roman as the italic font
-
-  // Set default font properties
-  pdf.setFontSize(11);
-  pdf.setLineHeightFactor(1.5);
-
-  const imgData = '/images/headerlogo2.png'; // Ensure this is accessible or use base64
-  pdf.addImage(imgData, 'PNG', 15, 10, 75, 35); // Adjust the size as needed
-
-  // Add the header below the image
-  pdf.setFontSize(8); 
-  pdf.setFont('italic'); // Set font to italic
-  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 152, 24);
-
-  // Load and set Arial font
-  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
-  pdf.setFont('Arial', 'normal'); // Set Arial as the default font  
-  pdf.setFontSize(18);
-
-  pdf.setTextColor(0, 0, 0); // RGB values for black
-
-  // Mimic bold by drawing the text multiple times with slight offsets
-  pdf.text('ADMISSION SLIP', 108, 60, null, null, 'center'); // First pass
-  pdf.text('ADMISSION SLIP', 108.2, 60, null, null, 'center'); // Slight offset
-  pdf.text('ADMISSION SLIP', 107.8, 60, null, null, 'center'); // Slight offset
-
-  pdf.setFont('Arial', 'normal'); // Set Arial as the default font
-  pdf.setFontSize(11); // Reset font size for content
-
-  // Function to draw a custom checkmark inside the checkbox
-  function drawCheckmark(pdf, x, y) {
-    pdf.setLineWidth(0.1);
-    pdf.line(x, y + 1, x + 1, y + 2.5); // First line of the checkmark
-    pdf.line(x + 1, y + 2.5, x + 3, y - 0.5); // Second line of the checkmark
+ // Helper function to format date and time
+ function formatDateTime(dateTime) {
+    if (!dateTime) return ' ';
+    
+    const date = new Date(dateTime);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    };
+    
+    return date.toLocaleString('en-US', options);
   }
 
+// Add and set Times New Roman font
+pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic'); 
+pdf.setFont('TimesNewRoman', 'italic'); 
+
+// Set default font properties
+pdf.setFontSize(11);
+pdf.setLineHeightFactor(1.5);
+
+const imgData = '/images/headerlogo2.png'; 
+pdf.addImage(imgData, 'PNG', 15, 10, 75, 35); 
+
+// Add the header below the image
+pdf.setFontSize(8); 
+pdf.setFont('italic'); 
+pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 152, 24);
+
+// Load and set Arial font
+pdf.addFont('arialbd-bold.ttf', 'Arial', 'bold');
+pdf.setFont('Arial', 'bold');
+pdf.setFontSize(18);
+
+pdf.setTextColor(0, 0, 0); 
+
+// Title with slight bold effect
+pdf.text('ADMISSION SLIP', 108, 60, null, null, 'center');
+
+pdf.setFont('Arial', 'normal'); 
+pdf.setFontSize(11); 
+
+// Function to draw a custom checkmark inside the checkbox
+function drawCheckmark(pdf, x, y) {
+  pdf.setLineWidth(0.1);
+  pdf.line(x, y + 1, x + 1, y + 2.5);
+  pdf.line(x + 1, y + 2.5, x + 3, y - 0.5); 
+}
+
+// Function to add footer for the first page
+function addFirstPageFooter(pdf, currentPage, totalPages) {
+  const footerYPosition = 326; // Adjust position as needed
+
+  // Footer content for the first page
+  pdf.setFont('TimesNewRoman', 'bold');
+  pdf.setFontSize(9);
+  pdf.text(`PAGE ${currentPage} of ${totalPages}`, 108, footerYPosition + 2, null, null, 'center');
+  pdf.setLineWidth(0.5);
+  pdf.line(18, footerYPosition + 5, 174, footerYPosition + 5);
+
+  // Footer text
+  pdf.setFont('TimesNewRoman', 'normal');
+  pdf.setFontSize(9);
+  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 108, footerYPosition + 10, null, null, 'center');
+  pdf.text('Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City | Tel: 293-0306', 108, footerYPosition + 15, null, null, 'center');
+
+  // Add footer image (logo)
+  const footerImgData = '/images/footerimg.png'; // Ensure the image is correctly loaded
+  pdf.addImage(footerImgData, 'PNG', 175, footerYPosition, 25, 15);
+}
+
+// Function to add footer for other pages
+function addOtherPagesFooter(pdf, currentPage, totalPages) {
+  const footerYPosition = 326; // Adjust position as needed
+
+  // Simple footer for other pages
+  pdf.setFont('TimesNewRoman', 'bold');
+  pdf.setFontSize(9);
+  pdf.text(`PAGE ${currentPage} of ${totalPages}`, 108, footerYPosition + 2, null, null, 'center');
+  pdf.setLineWidth(0.5);
+  pdf.line(18, footerYPosition + 5, 198, footerYPosition + 5);
+
+  // Simple footer text for other pages
+  pdf.setFont('TimesNewRoman', 'normal');
+  pdf.setFontSize(9);
+  pdf.text('DSWD | FIELD OFFICE XI | ADMINISTRATIVE DIVISION', 108, footerYPosition + 10, null, null, 'center');
+}
+
+// Function to apply footers dynamically based on page number
+function addFooters(pdf) {
+  const totalPages = pdf.internal.getNumberOfPages(); // Get the total number of pages
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    if (i === 1) {
+      // First page footer
+      addFirstPageFooter(pdf, i, totalPages);
+    } else {
+      // Footer for other pages
+      addOtherPagesFooter(pdf, i, totalPages);
+    }
+  }
+}
+
+function checkAndAddPageIfNeeded(pdf, currentOffset) {
+  const safeAreaHeight = 320; // Content area height excluding footer
+  if (currentOffset >= safeAreaHeight) {
+    // Add the footer for the current page
+    addFooters(pdf);
+    pdf.addPage();
+      
+    // Reset for new page and apply header for the new page
+    pdf.setFontSize(8); 
+    pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic'); 
+    pdf.setFont('TimesNewRoman', 'italic'); 
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
+    
+    // Switch back to Arial normal for further content
+    pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+    pdf.setFont('Arial', 'normal'); 
+    pdf.setFontSize(11);
+
+    return 35; // Reset the Y position for the new page
+  }
+  return currentOffset;
+}
   // Function to fill the checkbox and draw the checkmark
   function fillCheckboxWithCheck(pdf, x, y) {
-    pdf.setFillColor(169, 169, 169); // Set a light gray color
-    pdf.rect(x, y, 4, 4, 'F'); // Draw and fill the rectangle
-    drawCheckmark(pdf, x, y + 2); // Draw the checkmark on top
+    pdf.setFillColor(169, 169, 169);
+    pdf.rect(x, y, 4, 4, 'F'); 
+    drawCheckmark(pdf, x, y + 2); 
   }
 
   // Loop through clients and add their data
   this.clients.forEach((client, index) => {
-    let offset = index * 160 + 80; // Adjust offset for each client's data
+    let offset = index * 160 + 80;
 
-    // Add client details with margins and underline
+    // Client Details
     pdf.text('Name:', 20, offset);
-    pdf.text(String(client.first_name) + ' ' + String(client.middle_name) + ' ' + String(client.last_name), 35, offset);
-    pdf.line(35, offset + 1, 95, offset + 1); // Draw underline for name
+    pdf.text(`${client.first_name} ${client.middle_name} ${client.last_name}`, 35, offset);
+    pdf.line(35, offset + 1, 95, offset + 1);
 
     pdf.text('Sex:', 100, offset);
     pdf.text(String(client.sex), 110, offset);
-    pdf.line(110, offset + 1, 140, offset + 1); // Draw underline for sex
+    pdf.line(110, offset + 1, 140, offset + 1);
 
     pdf.text('Religion:', 145, offset);
     pdf.text(String(client.religion), 162, offset);
-    pdf.line(162, offset + 1, 200, offset + 1); // Draw underline for religion
+    pdf.line(162, offset + 1, 200, offset + 1);
 
-    // Handle address with text wrapping
+    // Function to justify the text
+    function justifyLine(pdf, text, x, y, maxWidth) {
+      const words = text.split(' ');
+      if (words.length === 1) {
+        pdf.text(text, x, y); // No justification needed for single-word lines
+        return;
+      }
+
+      // Calculate total width of the text without extra spacing
+      const totalTextWidth = pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+
+      // Calculate the space remaining to justify the text
+      const spaceWidth = (maxWidth - totalTextWidth) / (words.length - 1);
+
+      let currentX = x;
+
+      // Draw each word with extra spacing between
+      words.forEach((word, index) => {
+        pdf.text(word, currentX, y);
+        if (index < words.length - 1) {
+          currentX += pdf.getStringUnitWidth(word) * pdf.internal.getFontSize() / pdf.internal.scaleFactor + spaceWidth;
+        }
+      });
+    }
+
+    // Handle Address Wrapping with conditional justification
     pdf.text('Address:', 20, offset + 10);
-    const addressText = String(client.province) + ', ' + String(client.city) + ', ' + String(client.barangay) + ', ' + String(client.street);
-    const wrappedAddress = pdf.splitTextToSize(addressText, 150); // 150mm width for wrapping
+    const addressText = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
+    const wrappedAddress = pdf.splitTextToSize(addressText, 150);
 
     wrappedAddress.forEach((line, i) => {
-        const lineX = i === 0 ? 40 : 20; // First line starts at 40, subsequent lines at 20
-        const lineY = offset + 10 + i * 8; // 5mm height per line
-        pdf.text(line, lineX, lineY); // Print the wrapped line
-        pdf.line(lineX, lineY + 1, 200, lineY + 1); // Draw the underline for each line
+      const lineX = i === 0 ? 40 : 20; // First line starts at 40, subsequent lines at 20
+      const lineY = offset + 10 + i * 8; // Line height is 8mm
+
+      if (i < wrappedAddress.length - 1) {
+        // Justify all lines except the last one
+        justifyLine(pdf, line, lineX, lineY, 150);
+      } else {
+        // Last line should not be justified
+        pdf.text(line, lineX, lineY);
+      }
+
+      // Draw the underline for each line
+      pdf.line(lineX, lineY + 1, 200, lineY + 1);
     });
 
-    const addressHeight = wrappedAddress.length * 5; // Adjust height based on number of lines (5mm per line)
-    offset += addressHeight + 6; // Adjust offset to account for wrapped text
+    const addressHeight = wrappedAddress.length * 9; // Adjust height based on number of lines (8mm per line)
+    offset += addressHeight + 1; // Adjust offset for the following content
 
-
+    // Date of Birth and Place
     pdf.text('Date/Place of Birth:', 20, offset + 10);
-    pdf.text(String(client.date_of_birth) + ' / ' + String(client.place_of_birth), 58, offset + 10);
-    pdf.line(58, offset + 11, 200, offset + 11); // Draw underline for birth details
+    pdf.text(`${client.date_of_birth} / ${client.place_of_birth}`, 58, offset + 10);
+    pdf.line(58, offset + 11, 200, offset + 11);
 
-    pdf.text('Committing Court:', 20, offset + 20);
-    pdf.text(String(client.admissions[0]?.committing_court), 56, offset + 20);
-    pdf.line(56, offset + 21, 110, offset + 21); // Draw underline for committing court
+    // Committing Court and Case Info
+    offset += 20;
+    pdf.text('Committing Court:', 20, offset);
+    pdf.text(`${client.admissions[0]?.committing_court}`, 56, offset);
+    pdf.line(56, offset + 1, 110, offset + 1);
 
-    pdf.text('Crim. Case #:', 115, offset + 20);
-    pdf.text(String(client.admissions[0]?.crim_case_number), 143, offset + 20);
-    pdf.line(143, offset + 21, 200, offset + 21); // Draw underline for criminal case number
+    pdf.text('Crim. Case #:', 115, offset);
+    pdf.text(`${client.admissions[0]?.crim_case_number}`, 143, offset);
+    pdf.line(143, offset + 1, 200, offset + 1);
 
-    pdf.text('Offense Committed:', 20, offset + 30);
-    pdf.text(String(client.admissions[0]?.offense_committed), 58, offset + 30);
-    pdf.line(58, offset + 31, 110, offset + 31); // Draw underline for offense
+    // Offense Committed and Date Admitted
+    offset += 10;
+    pdf.text('Offense Committed:', 20, offset);
+    pdf.text(`${client.admissions[0]?.offense_committed}`, 58, offset);
+    pdf.line(58, offset + 1, 110, offset + 1);
 
-    pdf.text('Date admitted to Center:', 115, offset + 30);
-    pdf.text(String(client.admissions[0]?.date_admitted), 160, offset + 30);
-    pdf.line(160, offset + 31, 200, offset + 31); // Draw underline for date admitted
+    pdf.text('Date admitted to Center:', 115, offset);
+    pdf.text(`${client.admissions[0]?.date_admitted}`, 160, offset);
+    pdf.line(160, offset + 1, 200, offset + 1);
 
-    pdf.text('No. of Days in Jail:', 20, offset + 40);
-    pdf.text(String(client.admissions[0]?.days_in_jail), 57, offset + 40);
-    pdf.line(57, offset + 41, 110, offset + 41); // Draw underline for days in jail
+    // Days in Jail and Detention Center
+    offset += 10;
+    pdf.text('No. of Days in Jail:', 20, offset);
+    pdf.text(String(client.admissions[0]?.days_in_jail), 57, offset);
+    pdf.line(57, offset + 1, 110, offset + 1);
 
-    pdf.text('No. of Days in Detention Center:', 115, offset + 40);
-    pdf.text(String(client.admissions[0]?.days_in_detention_center), 175, offset + 40);
-    pdf.line(175, offset + 41, 200, offset + 41); // Draw underline for days in detention center
+    pdf.text('No. of Days in Detention Center:', 115, offset);
+    pdf.text(String(client.admissions[0]?.days_in_detention_center), 175, offset);
+    pdf.line(175, offset + 1, 200, offset + 1);
 
+    // Distinguishing Marks
+    offset += 10;
     pdf.setFont('helvetica', 'bold');
-    pdf.text('Distinguishing Marks:', 20, offset + 50);
+    pdf.text('Distinguishing Marks:', 20, offset);
     pdf.setFont('helvetica', 'normal');
 
-    pdf.text('a. Tattoo/Scars:', 20, offset + 60);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars), 51, offset + 60);
-    pdf.line(51, offset + 61, 110, offset + 61); // Draw underline for tattoo/scars
+    pdf.text('a. Tattoo/Scars:', 20, offset + 10);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars}`, 51, offset + 10);
+    pdf.line(51, offset + 11, 110, offset + 11);
 
-    pdf.text('b. Height:', 115, offset + 60);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.height), 138, offset + 60);
-    pdf.line(138, offset + 61, 200, offset + 61); // Draw underline for height
+    pdf.text('b. Height:', 115, offset + 10);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.height}`, 138, offset + 10);
+    pdf.line(138, offset + 11, 200, offset + 11);
 
-    pdf.text('c. Weight:', 20, offset + 70);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.weight), 40, offset + 70);
-    pdf.line(40, offset + 71, 110, offset + 71); // Draw underline for weight
+    pdf.text('c. Weight:', 20, offset + 20);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight}`, 40, offset + 20);
+    pdf.line(40, offset + 21, 110, offset + 21);
 
-    pdf.text('d. Colour of Eye:', 115, offset + 70);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye), 150, offset + 70);
-    pdf.line(150, offset + 71, 200, offset + 71); // Draw underline for eye color
+    pdf.text('d. Colour of Eye:', 115, offset + 20);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye}`, 150, offset + 20);
+    pdf.line(150, offset + 21, 200, offset + 21);
 
-    pdf.text('e. Skin:', 20, offset + 80);
-    pdf.text(String(client.admissions[0]?.distinguishing_marks[0]?.skin_colour), 36, offset + 80);
-    pdf.line(36, offset + 81, 110, offset + 81); // Draw underline for skin color
+    pdf.text('e. Skin:', 20, offset + 30);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour}`, 36, offset + 30);
+    pdf.line(36, offset + 31, 110, offset + 31);
 
-    // Add the "Put on Documents Submitted" section with checkboxes
+    // Documents Submitted
+    offset += 40;
     pdf.setFont('helvetica', 'bold');
-    pdf.text('Put on Documents Submitted:', 20, offset + 90);
+    pdf.text('Put on Documents Submitted:', 20, offset);
     pdf.setFont('helvetica', 'normal');
 
-    const documents = [
-      { label: 'SCSR', checked: client.admissions[0]?.documents[0]?.submitted },
-      { label: 'Court Order', checked: client.admissions[0]?.documents[1]?.submitted },
-      { label: 'Medical Certificates', checked: client.admissions[0]?.documents[2]?.submitted },
-      { label: 'Consent from Parents', checked: client.admissions[0]?.documents[3]?.submitted },
-      { label: 'School Records', checked: client.admissions[0]?.documents[4]?.submitted },
-      { label: 'Others', checked: client.admissions[0]?.documents[5]?.submitted },
-    ];
+ // Retrieve and parse documents submitted
+ let documentsSubmitted = client.admissions[0]?.documents[0]?.document_name;
+    let documentNames = [];
 
-    documents.forEach((doc, i) => {
-      const x = i < 3 ? 20 + i * 70 : 20 + (i - 3) * 70;
-      const y = i < 3 ? offset + 96 : offset + 106;
-      pdf.rect(x, y, 4, 4);
-      pdf.text(doc.label, x + 8, y + 4);
-      if (doc.checked) fillCheckboxWithCheck(pdf, x, y);
+    if (typeof documentsSubmitted === 'string') {
+      try {
+        documentNames = JSON.parse(documentsSubmitted);
+      } catch (e) {
+        console.error("Error parsing document_name:", e);
+        documentNames = [];
+      }
+    }
+
+    // Document checkboxes
+    pdf.rect(20, offset + 4, 4, 4);
+    pdf.text(`SCSR`, 28, offset + 7.5);
+    if (documentNames.includes('SCSR')) {
+      fillCheckboxWithCheck(pdf, 20, offset + 4);
+    }
+
+    pdf.rect(90, offset + 4, 4, 4);
+    pdf.text(`Court Order`, 98, offset + 7.5);
+    if (documentNames.includes('Court Order')) {
+      fillCheckboxWithCheck(pdf, 90, offset + 4);
+    }
+
+    pdf.rect(157, offset + 4, 4, 4);
+    pdf.text(`Medical Certificates`, 165, offset + 7.5);
+    if (documentNames.includes('Medical Certificates')) {
+      fillCheckboxWithCheck(pdf, 157, offset + 4);
+    }
+
+    pdf.rect(20, offset + 12, 4, 4);
+    pdf.text(`Consent from Parents`, 28, offset + 15.5);
+    if (documentNames.includes('Consent from Parents')) {
+      fillCheckboxWithCheck(pdf, 20, offset + 12);
+    }
+
+    pdf.rect(90, offset + 12, 4, 4);
+    pdf.text(`School Records`, 98, offset + 15.5);
+    if (documentNames.includes('School Records')) {
+      fillCheckboxWithCheck(pdf, 90, offset + 12);
+    }
+    pdf.rect(157, offset + 12, 4, 4);
+    pdf.text(`Others`, 165, offset + 15.5);
+
+    // Check if "Others" is in the list and display its value
+    const othersDocument = documentNames.find(doc => !this.knownDocuments().includes(doc));
+
+    if (othersDocument) {
+      // Fill the checkbox if "Others" is selected
+      fillCheckboxWithCheck(pdf, 157, offset + 12);
+      
+      // Display the value of the "Others" document next to the checkbox
+      pdf.text(`(${othersDocument})`, 180, offset + 15.5); // Adjust position if needed
+    }
+
+    offset += index * 160 + 10; // Initial offset setup for the current client's section
+
+    // General Impression Section with Justified Text
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('General Impression upon admission:', 20, offset + 18); // Render the title first
+    pdf.setFont('helvetica', 'normal');
+
+    // Split the text for General Impression and justify the lines except the last one
+    const impressionText = pdf.splitTextToSize(client.admissions[0]?.general_impression || '', 170);
+    impressionText.forEach((line, i) => {
+      const lineY = offset + 28 + i * 6; // Adjust Y position dynamically based on index
+      
+      if (i < impressionText.length - 1) {
+        // Justify all lines except the last one
+        justifyLine(pdf, line, 20, lineY, 196);
+      } else {
+        // Last line is not justified
+        pdf.text(line, 20, lineY);
+      }
+
+      // Draw underline for each line
+      pdf.line(20, lineY + 1, 200, lineY + 1);
     });
 
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('General impression upon admission:', 20, offset + 120);
-    pdf.setFont('helvetica', 'normal');
-    pdf.text(String(client.admissions[0]?.general_impression || ''), 20, offset + 130, { maxWidth: 170 });
-    pdf.line(20, offset + 131, 200, offset + 131); // Draw underline for general impression
+    // Dynamically adjust offset based on General Impression content height
+    const impressionHeight = impressionText.length * 8; // Each line takes up 8 units of space
+    offset += impressionHeight + 11; // Add some extra space after the General Impression
 
+    // Action Taken Section with Justified Text (Placed after General Impression)
     pdf.setFont('helvetica', 'bold');
-    pdf.text('Action Taken:', 20, offset + 140);
+    pdf.text('Action Taken:', 20, offset + 18); // Render Action Taken title after General Impression
     pdf.setFont('helvetica', 'normal');
-    pdf.text(String(client.admissions[0]?.action_taken || ''), 20, offset + 150, { maxWidth: 170 });
-    pdf.line(20, offset + 151, 200, offset + 151); // Draw underline for action taken
 
-    if (index < this.clients.length - 1) {
-      pdf.addPage(); // Add a new page for the next client if more clients exist
+    // Split the text for Action Taken and justify the lines except the last one
+    const actionText = pdf.splitTextToSize(client.admissions[0]?.action_taken || '', 170);
+    actionText.forEach((line, i) => {
+      const lineY = offset + 27 + i * 6; // Adjust Y position dynamically based on index
+      
+      if (i < actionText.length - 1) {
+        // Justify all lines except the last one
+        justifyLine(pdf, line, 20, lineY, 194);
+      } else {
+        // Last line is not justified
+        pdf.text(line, 20, lineY);
+      }
+
+      // Draw underline below the text
+      pdf.line(20, lineY + 1, 200, lineY + 1);
+    });
+
+ // Dynamically adjust the offset based on the height of the Action Taken content
+ const actionHeight = actionText.length * 8; // Each line takes 8 units of space
+    offset += actionHeight + 30; // Add some extra space after Action Taken
+
+    // Signature and Other Fields with Dynamic Page Break
+    offset = checkAndAddPageIfNeeded(pdf, offset); // Check if signature touches the footer
+
+    // Name & Signature of Referring Party and Admitting Officer
+    pdf.text(client.admissions[0]?.referring_party_name || ' ', 20, offset);
+    pdf.line(20, offset + 1, 85, offset + 1);
+    pdf.text(client.admissions[0]?.admitting_officer || ' ', 130, offset);
+    pdf.line(130, offset + 1, 200, offset + 1);
+
+    pdf.text('Name & Signature of Referring Party', 20.5, offset + 5);
+    pdf.text('Admitting Officer', 150, offset + 5);
+
+    offset += 20;
+
+    offset = checkAndAddPageIfNeeded(pdf, offset); // Check if new fields touch the footer
+
+    // Designation / ID No. / Contact # and Designation
+    pdf.text(client.admissions[0]?.designation_id_contact || ' ', 20, offset);
+    pdf.line(20, offset + 1, 85, offset + 1);
+    pdf.text(client.admissions[0]?.designation || ' ', 130, offset);
+    pdf.line(130, offset + 1, 200, offset + 1);
+
+    pdf.text('Designation / ID No. / Contact #', 24, offset + 5);
+    pdf.text('Designation', 154, offset + 5);
+
+    offset += 20;
+
+    offset = checkAndAddPageIfNeeded(pdf, offset); // Check if new fields touch the footer
+
+    // Complete Address/Office Address and Date/Time
+    pdf.text(client.admissions[0]?.office_address || ' ', 20, offset);
+    pdf.line(20, offset + 1, 85, offset + 1);
+    pdf.text(formatDateTime(client.admissions[0]?.date_time) || ' ', 130, offset);
+    pdf.line(130, offset + 1, 200, offset + 1);
+
+    pdf.text('Complete Address/Office Address', 22, offset + 5);
+    pdf.text('Date/Time', 154, offset + 5);
+
+    offset += 20;
+    // Continue adjusting offset dynamically as needed for other sections
+
+    // Check if there's enough space for "Noted By" section
+    if (offset >= 370) {
+      // Add footer before creating a new page
+      addFooter(pdf, offset);
+      pdf.addPage();
+     // Switch back to Arial normal for further content
+      pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+      pdf.setFont('Arial', 'normal'); 
+      pdf.setFontSize(11);
+      offset = 30; // Reset offset for the new page
     }
+
+    offset = checkAndAddPageIfNeeded(pdf, offset + 20);
+
+    // Noted By Section
+    pdf.setFontSize(11);
+    pdf.text('Noted By:', 108, offset - 8, null, null, 'center');
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center');
+    pdf.line(78, offset + 7, 140, offset + 7);
+    pdf.text('Center Head/SWO IV', 108, offset + 12, null, null, 'center');
+
+    
+
+    // Add the footer at the bottom of the page
+    addFooters(pdf, 326); // 326 is approximately where the footer should be on a legal-sized page
   });
-
-  let offset = 253; // Assuming we are continuing from a previous offset
-
-  // Name & Signature of Referring Party / Admitting Officer
-  pdf.line(20, offset, 85, offset);
-  pdf.text('Name & Signature of Referring Party', 20, offset + 4);
-  pdf.line(130, offset, 200, offset);
-  pdf.text('Admitting Officer', 130, offset + 4);
-
-  offset += 10;
-
-  // Designation / ID No. / Contact # / Designation
-  pdf.line(20, offset, 85, offset);
-  pdf.text('Designation / ID No. / Contact #', 20, offset + 4);
-  pdf.line(130, offset, 200, offset);
-  pdf.text('Designation', 130, offset + 4);
-
-  offset += 10;
-
-  // Complete Address/Office Address / Date/Time
-  pdf.line(20, offset, 85, offset);
-  pdf.text('Complete Address/Office Address', 20, offset + 4);
-  pdf.line(130, offset, 200, offset);
-  pdf.text('Date/Time', 130, offset + 4);
-
-  offset += 20;
-
-  // Noted By section
-  pdf.setFontSize(11);
-  pdf.text('Noted By:', 108, offset - 5, null, null, 'center');
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center');
-  pdf.line(78, offset + 7, 140, offset + 7);
-  pdf.text('Center Head/SWO IV', 108, offset + 12, null, null, 'center');
-
-  offset += 30;
-
-  // Footer
-  pdf.setFont('TimesNewRoman', 'bold');
-  pdf.setFontSize(9);
-  pdf.text(`PAGE 1 of 1`, 108, offset + 8, null, null, 'center');
-  pdf.setLineWidth(0.5);
-  pdf.line(18, offset + 10, 174, offset + 10); // Horizontal line
-
-  // Footer content for the first page
-  pdf.setFont('TimesNewRoman', 'normal');
-  pdf.setFontSize(9);
-  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 96, offset + 15, null, null, 'center');
-  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 20, null, null, 'center');
-
-  // Add the footer image
-  const footerImgData = '/images/footerimg.png'; // Make sure the image is correctly loaded
-  pdf.addImage(footerImgData, 'PNG', 175, offset + 5, 25, 15); // Adjust the position and size as needed
 
   // Save the PDF
   pdf.save(`admission-slip-${this.id}.pdf`);
-}
-
-
-  },
-};
-
-
+},
+  }};
 
 </script>
 

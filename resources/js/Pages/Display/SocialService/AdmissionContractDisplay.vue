@@ -80,7 +80,7 @@
         <div class="flex flex-col">
           <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
           <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
         </div>
         <div class="ml-4">
           <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
@@ -158,7 +158,7 @@
         <div class="flex flex-col">
           <p class="ml-24 -mb-4 font-bold">PAGE 2 of {{ totalPages }}</p>
           <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
         </div>
         <div class="ml-4">
           <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
@@ -352,100 +352,252 @@ export default {
       this.currentPage = page;
     },
     exportToPdf() {
-      const doc = new jsPDF('p', 'mm', 'a4');
-      doc.setFontSize(12);
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
 
-      // Page 1 Content
-      doc.text('ADMISSION CONTRACT', 105, 20, null, null, 'center');
-      let yPos = 30;
+  // Convert your image to Base64 or ensure it's a valid URL
+  const imgData = '/images/headerlogo2.png'; // Ensure this is correct or use Base64 image
+  pdf.addImage(imgData, 'PNG', 15, 10, 50, 30); // DSWD logo
 
-      doc.setFontSize(10);
-      doc.text('For the CICL:', 10, yPos);
-      yPos += 10;
+  // Header
+  pdf.setFontSize(9);
+pdf.setFont('TimesNewRoman', 'italic'); // Set font style to italic
+pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
 
-      const cicls = [
-        "To be physically fit, improve grooming and hygiene. Develop positive values, work habits and acquiring responsibility in a group living task.",
-        "To develop emotional control, stability and maturity. Enable to acquire and equipped coping skills, life skills, solution-focus to address daily encountered problems, gain self-efficacy and self-actualization.",
-        "To learn and develop new adaptive behaviours.",
-        "To learn and live by with the daily structured activities of the center. Follow center policies and procedures at all times, as such offenses committed have corresponding corrective measure.",
-        "To develop and regain self-concept, confidence and able to settle down, mix with others without occurrence of social and interpersonal conflicts.",
-        "To enhance spiritual growth and rediscover the value, meaning and mission of one's life existence.",
-        "To empower oneself knowledge through education and opportunity in taking acceleration exam.",
-        "To equip oneself with skills, active participation in the management on income generating projects."
-      ];
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(20);
+  pdf.setTextColor(0, 0, 0); // Black text for title
+  pdf.text('Admission Contract', 105, 48, null, null, 'center'); // Centered title
 
-      cicls.forEach((item, index) => {
-        doc.text(`${index + 1}. ${item}`, 15, yPos);
-        yPos += 10;
-      });
+  // Main Content: Adjust positioning and apply bold/underline styles
+  let contentYPos = 55; // Start below the title
 
-      yPos += 10;
-      doc.text('For the Parents/ Custodian:', 10, yPos);
-      yPos += 10;
+  let initialX = 20;  // Adjust this value to shift the text further right as needed
+   
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(12);
+  contentYPos += 7; 
+  pdf.text('In order to enable a CICL undergo rehabilitation through an intensive management of his', initialX, contentYPos);
+  contentYPos += 8; 
+  pdf.text('behaviour and anti-social attitudes in a residential setting and prepare him for successful', initialX, contentYPos);
+  contentYPos += 8; 
+  pdf.text('adjustment to his family and community after release. This contract is set for CICL,', initialX, contentYPos);
+  contentYPos += 8; 
+  pdf.text('Parents/ Custodian, LGU to abide by the following provisions:', initialX, contentYPos);
 
-      const parents = [
-        "To follow the rehabilitation Program/ intervention measures while their son is at the center.",
-        "To observe schedule of visits to their son.",
-        "To create and submit to Case Manager effective re integration plans for their son prior to termination phase of case management.",
-        "To do follow up, constant monitoring of their son's performance while at the center.",
-        "To attend obligatory activities at the center and schedule court hearings of their son."
-      ];
+  contentYPos += 11;
+  pdf.setFontSize(13);
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('For the CICL:', initialX, contentYPos);
 
-      parents.forEach((item, index) => {
-        doc.text(`${index + 1}. ${item}`, 15, yPos);
-        yPos += 10;
-      });
+  pdf.setFontSize(12);
+  pdf.setFont('arial', 'normal');
 
-      // Page 1 Footer
-      doc.text(`PAGE 1 of ${this.totalPages}`, 105, 290, null, null, 'center');
+  contentYPos += 7; 
+  pdf.text('1. To be physically fit, improve grooming and hygiene. Develop positive values, work', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('habits and acquiring responsibility in a group living task.', initialX+10, contentYPos);
+  contentYPos += 7; 
+  pdf.text('2. To develop emotional control, stability and maturity. Enable to acquire and equipped', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('coping skills, life skills, solution-focus to address daily encountered problems, gain', initialX+10, contentYPos);
+  contentYPos += 7; 
+  pdf.text('self-efficacy and self-actualization.', initialX+10, contentYPos);
+  contentYPos += 7; 
+  pdf.text('3. To learn and develop new adaptive behaviours.', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('4. To learn and live by with the daily structured activities of the center. Follow center', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('policies and procedures at all times, as such offenses committed have corresponding', initialX+10, contentYPos);
+  contentYPos += 7; 
+  pdf.text('corrective measure.', initialX+10, contentYPos);
+  contentYPos += 7; 
+  pdf.text('5. To develop and regain self-concept, confidence and able to settle down, mix with', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('others without occurrence of social and interpersonal conflicts.', initialX+10, contentYPos);
+  contentYPos += 7; 
+  pdf.text('6. To enhance spiritual growth and rediscover the value, meaning and mission of ones', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('life existence.', initialX+10, contentYPos);
+  contentYPos += 7; 
+  pdf.text('7. To empower oneself knowledge through education and opportunity in taking', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('acceleration exam.', initialX+10, contentYPos);
+  contentYPos += 7; 
+  pdf.text('8. To equip oneself with skills, active participation in the management on income', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('generating projects.', initialX+10, contentYPos);
 
-      // Add a new page for Page 2 content
-      doc.addPage();
+  contentYPos += 11;
+  pdf.setFontSize(13);
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('For the Parents/ Custodian:', initialX, contentYPos);
 
-      // Page 2 Content
-      yPos = 20;
-      doc.text('For the LSWDO:', 10, yPos);
-      yPos += 10;
+  pdf.setFontSize(12);
+  pdf.setFont('arial', 'normal');
+  contentYPos += 7; 
+  pdf.text('1. To follow the rehabilitation Program/ intervention measures while their son is at the', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('center.', initialX+10, contentYPos);
+  contentYPos += 7; 
+  pdf.text('2. To observe schedule of visits to their son.', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('3. To create and submit to Case Manager effective re integration plans for their son prior', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('to termination phase of case management.', initialX+10, contentYPos);
 
-      const lswdo = [
-        "To submit Social Case Study Report (SCSR) upon referral of CICL for Rehabilitation.",
-        "To attend Case Conference and other obligatory responsibilities being Partners as service providers.",
-        "To prepare ahead the Parenting Capability Assessment Report (PCAR).",
-        "To assist for immediate release of LGU Claims.",
-        "To prepare ahead an After-Care Plan.",
-        "To give feedback to the DSWD F O XI-RRCY on the performances of CICL in his after Care Service."
-      ];
+// Footer Section - Adjusted Y positions to move higher
+pdf.setFontSize(9);
+pdf.setFont('TimesNewRoman', 'bold');
+pdf.text('PAGE 1 of 2', 105, 280, null, null, 'center'); // Moved higher (was 290)
+pdf.setLineWidth(0.5); // Set line width to make it bolder (default is 0.200)
+pdf.line(17, 282, 173, 282); // Footer line moved higher (was 292)
+pdf.setFont('times', 'normal');
+const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160); // Adjust width limit (160mm)
+  pdf.text(footerText, 95, 287, null, null, 'center');
+pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, null, null, 'center');
 
-      lswdo.forEach((item, index) => {
-        doc.text(`${index + 1}. ${item}`, 15, yPos);
-        yPos += 10;
-      });
+const footerImgData = '/images/footerimg.png';
+pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Adjust the position and size
 
-      yPos += 20;
-      doc.text(`Signed on day ${this.form.signed_day || ''} of ${this.form.signed_month || ''}, 2024. RRCY Davao City.`, 10, yPos);
+  // Add a new page for Page 2 content
+  pdf.addPage();
+  
+  contentYPos = 25; // Reset Y position for the new page
+  pdf.setLineWidth(0); // Set line width to make it bolder (default is 0.200)
+  pdf.setFontSize(12);
+  pdf.setFont('arial', 'normal');
+  contentYPos += 7; // Reset Y position for the new page
+  pdf.text('4. To do follow up, constant monitoring of their sons performance while at the center.', initialX+5, contentYPos);
+  contentYPos += 7; // Reset Y position for the new page
+  pdf.text('5. To attend obligatory activities at the center and schedule court hearings of their son.', initialX+5, contentYPos);
+  
+  
 
-      yPos += 30;
-      doc.text('Conforme:', 10, yPos);
-      yPos += 10;
-      doc.text(`Client Name: ${this.clientName}`, 15, yPos);
-      yPos += 10;
-      doc.text(`Parent/Custodian: ${this.form.parent_custodian_name}`, 15, yPos);
-      yPos += 10;
-      doc.text(`LGU Worker: ${this.form.lgu_worker_name}`, 15, yPos);
+  contentYPos += 11;
+  pdf.setFontSize(13);
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('For the LSWDO:', initialX, contentYPos);
 
-      yPos += 20;
-      doc.text('Witnesses:', 10, yPos);
-      yPos += 10;
-      doc.text(`RRCY Administering Officer: ${this.form.rrcy_officer}`, 15, yPos);
-      yPos += 10;
-      doc.text(`Houseparent-On Duty: ${this.form.houseparent_on_duty}`, 15, yPos);
+  pdf.setFontSize(12);
+  pdf.setFont('arial', 'normal');
+  contentYPos += 7; // Reset Y position for the new page
+  pdf.text('1. To submit Social Case Study Report (SCSR) upon referral of CICL for Rehabilitation.', initialX+5, contentYPos);
+  contentYPos += 7; // Reset Y position for the new page
+  pdf.text('2. To attend Case Conference and other obligatory responsibilities being Partners as', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('service providers.', initialX+10, contentYPos);
+  contentYPos += 7; // Reset Y position for the new page
+  pdf.text('3. To prepare ahead the Parenting Capability Assessment Report (PCAR).', initialX+5, contentYPos);
+  contentYPos += 7; // Reset Y position for the new page
+  pdf.text('4. To assist for immediate release of LGU Claims.', initialX+5, contentYPos);
+  contentYPos += 7; // Reset Y position for the new page
+  pdf.text('5. To prepare ahead an After-Care Plan.', initialX+5, contentYPos);
+  contentYPos += 7; // Reset Y position for the new page
+  pdf.text('6. To give feedback to the DSWD F O XI-RRCY on the performances of CICL in his after', initialX+5, contentYPos);
+  contentYPos += 7; 
+  pdf.text('Care Service.', initialX+10, contentYPos);
 
-      // Page 2 Footer
-      doc.text(`PAGE 2 of ${this.totalPages}`, 105, 290, null, null, 'center');
 
-      // Save the PDF
-      doc.save('admission_contract.pdf');
-    }
+  contentYPos += 10; 
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(13);
+pdf.text('Signed', initialX, contentYPos);
+pdf.setFontSize(11);
+pdf.text(`${this.form.signed_day || ''}`, initialX+19, contentYPos+-1);
+pdf.setFontSize(13);
+pdf.line(37, contentYPos, 55, contentYPos); 
+pdf.text('day of', initialX+40, contentYPos); 
+pdf.setFontSize(11);
+pdf.text(`${this.form.signed_month || ''}`, initialX+58, contentYPos+-1);
+pdf.setFontSize(13);
+pdf.line(75, contentYPos, 95, contentYPos); 
+pdf.text(', 2024. RRCY Davao City.', initialX+76, contentYPos); 
+
+// Signature Section
+contentYPos += 25;
+  pdf.setFont('arial', 'bold');
+  pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 120, contentYPos);
+  pdf.setFont('arial', 'normal');
+  pdf.text('Center Head/SWO IV', 120, contentYPos + 6);
+  contentYPos += 1;
+  pdf.line(192, contentYPos, 120, contentYPos); // Underline first (left aligned)
+  
+  contentYPos += 20;
+  pdf.setFontSize(13);
+  pdf.setFont('arial', 'bold');
+  pdf.text('Conforme:', initialX, contentYPos);
+  pdf.text('Witnesses:', initialX+95, contentYPos);
+
+  // Client/Resident underline and label
+  contentYPos += 20;
+
+  pdf.text(`${this.clientName || ''}`, initialX, contentYPos+-2);
+pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
+contentYPos += 5; // Move Y position down for the text
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(12);
+pdf.text('Signature above-completed Name of CICL', 20, contentYPos); // Label below the underline
+
+// Adjust X-coordinates to align the second signature section to the right
+contentYPos += -5;
+initialX = 110; // Set initialX for the second signature section on the right side
+pdf.text(`${this.form.rrcy_officer || ''}`, initialX, contentYPos+-2);
+pdf.line(initialX, contentYPos, initialX + 80, contentYPos); // Underline on the right side (adjusted X-coordinates)
+contentYPos += 5; // Move Y position down for the text
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(12);
+pdf.text('RRCY Administering Officer', initialX, contentYPos); // Label below the underline on the right side
+
+
+  // Client/Resident underline and label
+  contentYPos += 20;
+  pdf.text(`${this.form.parent_custodian_name || ''}`, initialX+-90, contentYPos+-2);
+pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
+contentYPos += 5; // Move Y position down for the text
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(12);
+pdf.text('Signature above-completed Name of', 20, contentYPos); // Label below the underline
+pdf.text('Parent/ Custodian', 20, contentYPos+5); // Label below the underline
+
+// Adjust X-coordinates to align the second signature section to the right
+contentYPos += -5;
+initialX = 110; // Set initialX for the second signature section on the right side
+pdf.text(`${this.form.houseparent_on_duty || ''}`, initialX, contentYPos+-2);
+pdf.line(initialX, contentYPos, initialX + 80, contentYPos); // Underline on the right side (adjusted X-coordinates)
+contentYPos += 5; // Move Y position down for the text
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(12);
+pdf.text('Houseparent-On Duty', initialX, contentYPos); // Label below the underline on the right side
+
+contentYPos += 20;
+pdf.text(`${this.form.lgu_worker_name || ''}`, initialX+-90, contentYPos+-2);
+pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
+contentYPos += 5; // Move Y position down for the text
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(12);
+pdf.text('Signature above-completed Name of LGU', 20, contentYPos); // Label below the underline
+pdf.text('Worker', 20, contentYPos+5); // Label below the underline
+
+
+
+
+// Footer Section - Adjusted Y positions to move higher
+pdf.setFontSize(8.5); // Reduced font size to fit the text in one line
+pdf.setFont('TimesNewRoman', 'bold');
+
+// Footer page number
+pdf.text('PAGE 2 of 2', 105, 280, null, null, 'center');
+
+// Footer line
+pdf.setLineWidth(0.5); // Set line width to make it bolder (default is 0.200)
+pdf.line(17, 282, 193, 282); // Adjusted line width to extend across the footer
+
+// Single-line footer text without splitting
+pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, null, null, 'center'); // Moved Y from 287 to 285 for better alignment
+
+  // Save the PDF
+  pdf.save('admission_contract.pdf');
+}
   }
 };
 </script>

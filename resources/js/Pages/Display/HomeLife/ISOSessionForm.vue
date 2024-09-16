@@ -38,7 +38,7 @@
           <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
           <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
           <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-          <p class="pt-12">DRN: ______________________</p>
+          <p class="text-xs font-semibold pt-12">DRN: ____________________________________</p>
         </div>
       </div>
       <h1 class="font-bold text-xl">DEPARTMENT OF SOCIAL WELFARE AND DEVELOPMENT</h1>
@@ -50,19 +50,19 @@
     <div class="mb-6 flex items-center">
     <!-- Session Field -->
     <div class="w-1/2 flex items-center">
-      <label for="session" class="block font-medium w-1/3">Session:</label>
-      <input type="text" id="session" v-model="form.session" class="border-b-2 border-black -ml-12 border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm w-1/2" :readonly="!editMode">
+      <label for="session" class="block font-medium w-auto">Session:</label>
+      <input type="text" id="session" v-model="form.session" class="underline-input shadow-sm w-1/2" :readonly="!editMode">
     </div>
 
     <!-- Date Conducted Field -->
     <div class="w-1/2 flex items-center justify-end space-x-2">
       <label for="dateConducted" class="block font-medium text-right">Date Conducted:</label>
-      <input type="date" id="dateConducted" v-model="form.date_conducted" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm w-1/2" :readonly="!editMode">
+      <input type="date" id="dateConducted" v-model="form.date_conducted" class="underline-input shadow-sm w-1/2" :readonly="!editMode">
       </div>
     </div>
    
     <div class="mb-6 flex flex-col items-center">
-      <input type="text" id="title" v-model="form.title" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm w-1/2 text-center" :readonly="!editMode">
+      <input type="text" id="title" v-model="form.title" class="underline-input shadow-sm w-1/2 text-center" :readonly="!editMode">
       <label for="title" class="block font-medium mt-2 text-center">Title of Session:</label>
     </div>
 
@@ -88,15 +88,16 @@
 
     <!-- Signatures Section -->
     <div>
-      <label for="preparedBy" class="block text-sm font-medium text-gray-700">Prepared By</label>
+      <label for="preparedBy" class="block text-sm font-medium">Prepared By :</label>
     <input
       type="text"
       id="preparedBy"
       v-model="form.prepared_by"
-      class="mt-1 w-3/4 border-b-2 text-sm border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+      class="mt-1 w-60 underline-input text-sm shadow-sm"
       :readonly="!editMode"
     >
       </div>
+      <br />
        <!-- Noted by and Approved by -->
        <div class="mb-6 flex justify-between items-start">
       <!-- Noted by Section -->
@@ -106,7 +107,7 @@
           type="text"
           id="notedBy"
           v-model="form.noted_by"
-          class="mt-1 w-3/4 border-b-2 text-sm border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+          class="font-semibold mt-1 w-3/4 underline-input text-sm shadow-sm"
           :readonly="!editMode"
         >
         <p class="text-sm">HP III/SHP</p>
@@ -119,26 +120,26 @@
           type="text"
           id="approvedBy"
           v-model="form.approved_by"
-          class="mt-1 w-3/4 border-b-2 border-black text-sm border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+          class="font-semibold mt-1 w-3/4 underline-input text-sm shadow-sm"
           readonly
         >
         <p class="text-sm">SWO IV / Center Head</p>
       </div>
     </div>
 
-     <!-- Footer Section -->
-     <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-      <div class="flex justify-between items-center">
-        <div class="flex flex-col">
-          <p class="ml-24 -mb-4 font-bold">PAGE 1 of 1</p>
-          <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-        </div>
-        <div class="ml-4">
-          <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+      <!-- Footer Section -->
+      <div class=" pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <p class="font-bold">PAGE 1 of 1</p>
+            <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+            <p>Email: <span class="text-blue-600 underline">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          </div>
+          <div>
+            <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
+          </div>
         </div>
       </div>
-    </div>
 
     <!-- Modal for Save Confirmation -->
     <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
@@ -343,5 +344,11 @@ export default {
 
 
 <style scoped>
-/* Add custom styles here */
+.underline-input {
+  border: none;
+  border-bottom:  1px solid black;
+  padding: 0;
+  margin: 0;
+  vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
+}
 </style>

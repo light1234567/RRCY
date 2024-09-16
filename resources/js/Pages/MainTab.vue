@@ -26,24 +26,23 @@
           </div>
         </div>
       </div>
-      
     </div>
 
     <div v-if="loading" class="text-center py-4">Loading client data...</div>
     <div v-else>
-      <div v-if="showTabs" class="flex mt-2 ml-10 border-b">
-        <div class="tabs">
+      <div v-if="showTabs" class="ml-12 flex mt-2 border-b">
+        <div class="flex space-x-4 overflow-auto tabs">
           <button
             v-for="(tab, index) in availableTabs"
             :key="index"
             @click="setTab(tab)"
-            :class="['py-2 px-8 focus:outline-none', currentTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500']"
+            :class="['py-2 px-4 focus:outline-none whitespace-nowrap', currentTab === tab ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500']"
           >
             {{ tab }}
           </button>
         </div>
       </div>
-      <div class="p-4 tab-content">
+      <div class="p-2 tab-content">
         <div v-if="currentTab === 'Social Service'"><SocialServiceTab /></div>
         <div v-if="currentTab === 'Psychological Reports'"><PsychologicalTab /></div>
         <div v-if="currentTab === 'Homelife Services'"><HomelifeTab /></div>
@@ -220,9 +219,9 @@ export default {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
-.px-8 {
-  padding-left: 2rem;
-  padding-right: 2rem;
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
   text-align: center;
 }
 .focus\:outline-none {
@@ -237,8 +236,15 @@ export default {
 .text-gray-500 {
   color: #6b7280;
 }
-.p-4 {
-  padding: 1rem;
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+.tabs {
+  display: flex;
+  flex-wrap: nowrap;
+}
+.space-x-4 {
+  column-gap: 1rem;
 }
 .tab-content {
   padding: 20px;

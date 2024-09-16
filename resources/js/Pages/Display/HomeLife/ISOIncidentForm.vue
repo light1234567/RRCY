@@ -39,7 +39,7 @@
           <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
           <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
           <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-          <p class="pt-12">DRN: ______________________</p>
+          <p class="text-xs font-semibold pt-12">DRN: _________________________________</p>
         </div>
       </div>
       <h1 class="font-bold text-md">INCIDENT REPORT</h1>
@@ -47,53 +47,56 @@
 
     <!-- Incident Details -->
     <div class="mb-6">
-      <label for="incident" class="block font-medium">What was the incident: (Unsa nga Offense? Unsa rason ngano Nahitabo?)</label>
+      <label for="incident" class="block font-semibold">What was the incident: (Unsa nga Offense? Unsa rason ngano Nahitabo?)</label>
       <textarea
         id="incident"
         v-model="form.incident"
-        class="border border-gray-400 p-2 rounded-md w-full"
+        class="border border-gray-400 p-2 w-full"
         rows="3"
         :readonly="!editMode"
       ></textarea>
     </div>
 
     <!-- When It Happened -->
-    <div class="text-center font-medium mb-4">
+    <div class="text-center font-semibold mb-4">
       WHEN IT HAPPENED
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
       <div>
-        <label for="dateOfIncident" class="block font-medium">Date of Incident:</label>
+        <label for="dateOfIncident" class="block text-sm"><span class="w-auto mr-2 font-semibold">Date of Incident:</span>
         <input
           type="date"
           id="dateOfIncident"
           v-model="form.date_of_incident"
           required
-          class="border border-gray-400 p-2 rounded-md w-full"
+          class="underline-input p-2 text-sm w-28"
           :readonly="!editMode"
         >
+      </label>
       </div>
+      <br />
       <div>
-        <label for="timeOfIncident" class="block font-medium">Time:</label>
+        <label for="timeOfIncident" class="block text-sm"><span class="w-auto mr-2 font-semibold">Time:</span>
         <input
           type="time"
           id="timeOfIncident"
           v-model="form.time_of_incident"
           required
-          class="border border-gray-400 p-2 rounded-md w-full"
+          class="underline-input text-sm p-2 w-28"
           :readonly="!editMode"
         >
+      </label>
       </div>
     </div>
 
     <!-- Who Are Involved -->
     <div class="mb-6">
-      <label for="involved" class="block font-medium">Who are involved? (State name of residents)</label>
+      <label for="involved" class="block font-semibold">Who are involved? (State name of residents)</label>
       <textarea
         id="involved"
         v-model="form.involved"
-        class="border border-gray-400 p-2 rounded-md w-full"
+        class="border border-gray-400 p-2 w-full"
         rows="3"
         :readonly="!editMode"
       ></textarea>
@@ -101,11 +104,11 @@
 
     <!-- Where It Happened -->
     <div class="mb-6">
-      <label for="location" class="block font-medium">Where it happened? (Exact place of the incident)</label>
+      <label for="location" class="block font-semibold">Where it happened? (Exact place of the incident)</label>
       <textarea
         id="location"
         v-model="form.location"
-        class="border border-gray-400 p-2 rounded-md w-full"
+        class="border border-gray-400 p-2 w-full"
         rows="3"
         :readonly="!editMode"
       ></textarea>
@@ -113,11 +116,11 @@
 
     <!-- Action Taken -->
     <div class="mb-6">
-      <label for="actionTaken" class="block font-medium">Action Taken</label>
+      <label for="actionTaken" class="block font-semibold">Action Taken</label>
       <textarea
         id="actionTaken"
         v-model="form.action_taken"
-        class="border border-gray-400 p-2 rounded-md w-full"
+        class="border border-gray-400 p-2 w-full"
         rows="3"
         :readonly="!editMode"
       ></textarea>
@@ -125,11 +128,11 @@
 
     <!-- Agreements Reached/Advice Given -->
     <div class="mb-6">
-      <label for="agreements" class="block font-medium">Agreements Reached/Advice Given to Residents Involved</label>
+      <label for="agreements" class="block font-semibold">Agreements Reached/Advice Given to Residents Involved</label>
       <textarea
         id="agreements"
         v-model="form.agreements"
-        class="border border-gray-400 p-2 rounded-md w-full"
+        class="border border-gray-400 p-2 w-full"
         rows="3"
         :readonly="!editMode"
       ></textarea>
@@ -137,11 +140,11 @@
 
     <!-- Corrective Measure -->
     <div class="mb-6">
-      <label for="correctiveMeasure" class="block font-medium">Corrective Measure</label>
+      <label for="correctiveMeasure" class="block font-semibold">Corrective Measure</label>
       <textarea
         id="correctiveMeasure"
         v-model="form.corrective_measure"
-        class="border border-gray-400 p-2 rounded-md w-full"
+        class="border border-gray-400 p-2 w-full"
         rows="3"
         :readonly="!editMode"
       ></textarea>
@@ -151,64 +154,56 @@
     <div class="grid grid-cols-1 gap-4 mb-6">
       <!-- Prepared by Field -->
       <div>
-        <label for="preparedBy" class="block font-medium">Prepared by:</label>
+        <label for="preparedBy" class="block font-medium text-sm">Prepared by:</label>
         <input
           type="text"
           id="preparedBy"
           v-model="form.prepared_by"
-          class="mt-1 w-3/4 border-b-2 text-sm border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+          class="mt-1 w-64 text-sm underline-input shadow-sm"
           :readonly="!editMode"
-        >
-        <div class="mt-2">
-          <input
-            type="text"
-            v-model="form.prepared_by_position"
-            class="border border-transparent p-2 rounded-md w-full"
-            :readonly="!editMode"
-          >
-        </div>
+  
       </div>
 
       <!-- Reviewed and Approved by Fields -->
       <div class="grid grid-cols-2 gap-4">
         <div class="">
-          <label for="reviewedBy" class="block font-medium">Reviewed by:</label>
+          <label for="reviewedBy" class="block font-medium text-sm">Reviewed by:</label>
           <input
             type="text"
             id="reviewedBy"
             v-model="form.reviewed_by"
-            class="mt-1 w-3/4 border-b-2 text-sm border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+            class="font-semibold  mt-1 w-3/4 border-b-2 text-sm underline-input p-0 rounded-none shadow-sm"
             readonly
           >
-          <p class="text-sm">HP III/SHP</p>
+          <p class="font-semibold text-sm">HP III/SHP</p>
         </div>
         <div>
-          <label for="approvedBy" class="block font-medium">Approved by:</label>
+          <label for="approvedBy" class="block font-medium text-sm">Approved by:</label>
           <input
             type="text"
             id="approvedBy"
             v-model="form.approved_by"
-            class="mt-1 w-3/4 border-b-2 text-sm border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+            class="font-semibold  mt-1 w-3/4 text-sm underline-input p-0 shadow-sm"
             readonly
           >
-          <p class="text-sm">SWO IV / Center Head</p>
+          <p class="font-semibold text-sm">SWO IV / Center Head</p>
         </div>
       </div>
     </div>
 
-   <!-- Footer Section -->
-   <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-      <div class="flex justify-between items-center">
-        <div class="flex flex-col">
-          <p class="ml-24 -mb-4 font-bold">PAGE 1 of 1</p>
-          <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-        </div>
-        <div class="ml-4">
-          <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+      <!-- Footer Section -->
+      <div class=" pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <p class="font-bold">PAGE 1 of 1</p>
+            <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+            <p>Email: <span class="text-blue-600 underline">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          </div>
+          <div>
+            <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
+          </div>
         </div>
       </div>
-    </div>
 
 
   <!-- Modal for Save Confirmation -->
@@ -427,3 +422,12 @@ export default {
 };
 </script>
 
+<style scoped>
+.underline-input {
+  border: none;
+  border-bottom:  1px solid black;
+  padding: 0;
+  margin: 0;
+  vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
+}
+</style>

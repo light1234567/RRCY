@@ -151,7 +151,7 @@
           <div class="flex flex-col">
             <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
             <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
           <div class="ml-4">
             <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
@@ -283,17 +283,18 @@ export default {
   // Header section with the logo and text
   const imgData = '/images/headerlogo2.png'; 
   pdf.addImage(imgData, 'PNG', 15, 10, 50, 30); // DSWD logo
-  pdf.setFontSize(10);
-  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 30);
+  pdf.setFontSize(9);
+pdf.setFont('TimesNewRoman', 'italic'); // Set font style to italic
+pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
 
   // Title ("KASABUTAN")
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(30);
   pdf.setTextColor(0, 0, 0); // Black text for title
   pdf.text('KASABUTAN', 105, 60, null, null, 'center'); // Centered title
 
   // Main Content: Adjust positioning and apply bold/underline styles
-  pdf.setFont('helvetica', 'normal');
+  pdf.setFont('arial', 'normal');
   pdf.setFontSize(12);
   
   let contentYPos = 80; // Start below the title
@@ -305,18 +306,18 @@ export default {
 let initialX = 20;  // Adjust this value to shift the text further right as needed
 
 // First line
-pdf.setFont('helvetica', 'normal');
-pdf.setFontSize(13);
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(12);
 pdf.text('Ako si ', initialX, contentYPos); // Normal text for 'Ako si'
 
 // Bold and underline the client's name
-pdf.setFont('helvetica', 'bold');
+pdf.setFont('arialbd', 'bold');
 pdf.setFontSize(12);
 pdf.line(33, contentYPos+1, 97, contentYPos+1); // Underline first (left aligned)
 pdf.textWithLink(this.clientName, initialX + pdf.getTextWidth('Ako si '), contentYPos, { underline: true }); // Bold and underlined client's name
 
 // Continue with normal text
-pdf.setFont('helvetica', 'normal');
+pdf.setFont('arial', 'normal');
 pdf.text(' usa ka residente diri sa DSWD-RRCY. Ako', initialX + pdf.getTextWidth('Ako si ' + this.clientName) + 6, contentYPos);
 
 // Second line of the paragraph
@@ -326,20 +327,20 @@ pdf.text('maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa cente
 // Third line, adding bold text for "COLOR RED"
 contentYPos += 8; // Move to the next line
 pdf.text('mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili ', initialX, contentYPos); // Normal text before bold
-pdf.setFont('helvetica', 'bold');
+pdf.setFont('arialbd', 'bold');
 pdf.text('"COLOR', 170, contentYPos);
 
 // Third line, adding bold text for "COLOR RED"
 contentYPos += 8; // Move to the next line
-pdf.setFont('helvetica', 'bold');
+pdf.setFont('arialbd', 'bold');
 pdf.text('RED”', 20, contentYPos); // Normal text before bold
-pdf.setFont('helvetica', 'normal');
+pdf.setFont('arial', 'normal');
 pdf.text('and akong Performance equivalent to', 32, contentYPos); // Normal text before bold
-pdf.setFont('helvetica', 'bold');
+pdf.setFont('arialbd', 'bold');
 pdf.text('"OUTSTANDING”',103 , contentYPos); // Normal text before bold
 
 
-pdf.setFont('helvetica', 'normal');
+pdf.setFont('arial', 'normal');
 // Second paragraph
 
 contentYPos += 11;
@@ -353,47 +354,52 @@ contentYPos += 1;
 
 // Client/Resident underline and label
 contentYPos += 20;
-pdf.line(20, contentYPos, 70, contentYPos); // Underline first (left aligned)
+pdf.text(`${this.form.client_resident || ''}`, initialX, contentYPos+-2);
+pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
 contentYPos += 5; // Move Y position down for the text
 pdf.text('Client/Resident', 20, contentYPos); // Label below the underline
 
 // Guardian underline and label
 contentYPos += 30; 
-pdf.line(20, contentYPos, 70, contentYPos); // Underline first (left aligned)
+pdf.text(`${this.form.parent_guardian || ''}`, initialX, contentYPos+-2);
+pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
 contentYPos += 5; // Move Y position down for the text
 pdf.text('Pangalan/Pirma sa Ginikanan/Guardian', 20, contentYPos); // Label below the underline
 
 // Case Manager underline and label
 contentYPos += 30;
-pdf.line(20, contentYPos, 70, contentYPos); // Underline first (left aligned)
+pdf.text(`${this.form.case_manager || ''}`, initialX, contentYPos+-2);
+pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
 contentYPos += 5; // Move Y position down for the text
 pdf.text('Case Manager', 20, contentYPos); // Label below the underline
 
 // Signature Section
   contentYPos += 25;
-  pdf.setFont('helvetica', 'bold');
+  pdf.setFont('arialbd', 'bold');
   pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 20, contentYPos);
-  pdf.setFont('helvetica', 'normal');
+  pdf.setFont('arial', 'normal');
   pdf.text('Center Head/SWO IV', 20, contentYPos + 6);
   contentYPos += 1;
   pdf.line(20, contentYPos, 87, contentYPos); // Underline first (left aligned)
   
 // Footer Section - Adjusted Y positions to move higher
-contentYPos += 10;
 pdf.setFontSize(9);
-pdf.setFont('helvetica', 'bold');
+pdf.setFont('TimesNewRoman', 'bold');
 pdf.text('PAGE 1 of 1', 105, 280, null, null, 'center'); // Moved higher (was 290)
-pdf.line(35, 282, 170, 282); // Footer line moved higher (was 292)
-pdf.setFont('helvetica', 'normal');
-pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 105, 287, null, null, 'center'); // Moved higher (was 297)
-pdf.text('Email: rrxy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, null, null, 'center'); // Moved higher (was 302)
+pdf.setLineWidth(0.5); // Set line width to make it bolder (default is 0.200)
+pdf.line(17, 282, 173, 282); // Footer line moved higher (was 292)
+pdf.setFont('times', 'normal');
+const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160); // Adjust width limit (160mm)
+pdf.text(footerText, 95, 287, null, null, 'center');
+pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, null, null, 'center');
 
-const footerImgData = '/images/footerimg.png';
-pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Moved left (was 180), made smaller (was 30x15)
+const footerImgData = '/images/footerimg.png'; // Make sure the image is correctly loaded
+pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Adjust the position and size
 
   // Save the PDF
   pdf.save(`kasabutan-${this.form.client_id}.pdf`);
 },
+
 printContent() {
   const originalContent = document.body.innerHTML;
 
@@ -430,7 +436,7 @@ printContent() {
 
       <div style="text-align: center; font-size: 10px; position: fixed; bottom: 20px; left: 0; right: 0;">
         <p>DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)</p>
-        <p>Email: rrxy.fo11@dswd.gov.ph | Tel. No.: 293-0306</p>
+        <p>Email: rrcy.fo11@dswd.gov.ph | Tel. No.: 293-0306</p>
       </div>
 
       <div style="position: absolute; bottom: 0; right: 20px; font-size: 10px;">

@@ -8,7 +8,7 @@
       </div>
     </template>
     <!-- Container for Main Client Information -->
-    <div class="w-full max-w-6xl mx-auto mt-6 space-y-6">
+    <div class="w-9/10 mr-4 ml-12 max-w-8xl mt-6 space-y-6">
       <!-- Main Client Information -->
       <div
         v-if="client"
