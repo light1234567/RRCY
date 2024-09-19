@@ -246,9 +246,9 @@ const getChildStatusClass = (childStatus) => {
     case 'Still at the Center (SATC)':
       return 'text-green-600';
     case 'Discharge':
-      return 'text-orange-600';
+      return 'text-red-800 ';
     case 'Leave without Permission (LWOP)':
-      return 'text-red-800';
+      return 'text-orange-600';
     default:
       return 'text-black';
   }

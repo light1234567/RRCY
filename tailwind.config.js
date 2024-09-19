@@ -16,12 +16,13 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Arial', ...defaultTheme.fontFamily.sans],
+                cops: ['Cops', 'sans-serif'], // Add 'Cops' to your font family
             },
             colors: {
                 'customBlue': 'rgb(6, 18, 56)', // Define your custom RGB color
                 'customglue': '#202A4D',
                 'lighterBlue': '#f8fbff',
-             
+               
             },
             
             

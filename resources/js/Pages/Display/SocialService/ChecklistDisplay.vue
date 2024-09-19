@@ -1,66 +1,55 @@
 <template>
-
   <!-- Tabs for Actions -->
-  <div v-if="editMode" class="flex absolute p-6 -mt-2 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-      <span class="">Back</span>
-    </button>
-  </div>
-
-  <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-    <!-- Pagination Component -->
+  <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4  space-x-4 -mt-9">
+      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
+        </svg>
+        <span>Edit</span>
+      </button>
+         <!-- Pagination Component -->
     <Pagination 
       :totalPages="totalPages" 
       :currentPage="currentPage" 
       @update:currentPage="currentPage = $event" 
     />
-    <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
-      </svg>
-      <span>Edit</span>
-    </button>
+      <button @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Save</span>
+      </button>
 
-    <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-      <span>Save</span>
-    </button>
+      <!-- Export to PDF Button -->
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Export to PDF</span>
+      </button>
+    </div>
 
-    <!-- Export to PDF Button -->
-    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-      <span>Export to PDF</span>
-    </button>
-  </div>
-
-  <!-- Modal for Save Confirmation -->
-  <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="fixed inset-0 bg-black opacity-50"></div>
-    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-      <div class="bg-white p-6">
-        <div class="flex items-center">
-          <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
-          </svg>
-          <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+    <!-- Modal for Save Confirmation -->
+    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6">
+          <div class="flex items-center">
+            <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+            </svg>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+          </div>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+          </div>
         </div>
-        <div class="mt-2">
-          <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+          <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
         </div>
-      </div>
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
-        <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
       </div>
     </div>
-  </div>
 
   <!-- Modal for Save Result -->
   <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
@@ -95,10 +84,11 @@
   </div>
 
   <!-- Page 1 of 2 -->
-  <div v-if="currentPage === 1" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+  <div class="graph-background p-0.5 -mr-9 -mb-16">
+  <div v-if="currentPage === 1" class="max-w-3xl border-gray-400 p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border ">
     <div class="relative flex justify-between items-center mb-2">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-      <p class="text-[8px]">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+      <p class="text-[10px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
     </div>
 
     <h1 class="text-2xl font-bold mb-4 text-center text-black">Checklist of Requirements during Admission</h1>
@@ -166,8 +156,11 @@
   </div>
 
   <!-- Page 2 of 2 -->
-  <div v-if="currentPage === 2" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
-    <h2 class="text-lg font-semibold -mt-2 mb-2 text-center">RRCY Forms</h2>
+  <div v-if="currentPage === 2" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+    <div class="relative flex justify-between items-center mb-2">
+  <p class="text-[10px] text-right w-full" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+</div>
+    <h2 class="text-lg font-semibold mt-8 mb-2 text-center">RRCY Forms</h2>
     <table class="min-w-full bg-white border border-black text-xs">
       <thead>
         <tr class="bg-green-400">
@@ -220,7 +213,7 @@
       </div>
     </div>
   </div>
-
+</div>
 </template>
 
 <script>
@@ -804,6 +797,12 @@ y += 25; // Add space after the signature
 
 
 <style scoped>
+
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  }
 .a4-container {
   max-width: 210mm;
   padding: 10mm;

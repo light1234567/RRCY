@@ -30,7 +30,7 @@
 </template>
 
 <script>
-export default {
+  export default {
   props: {
     totalPages: {
       type: Number,

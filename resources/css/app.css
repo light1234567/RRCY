@@ -3,7 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
-
+@font-face {
+  font-family: 'Cops';
+  src: url('../../resources/js/fonts/Cops.ttf') format('truetype'); /* Adjust path to match your project structure */
+}
 
 [x-cloak] {
     display: none;

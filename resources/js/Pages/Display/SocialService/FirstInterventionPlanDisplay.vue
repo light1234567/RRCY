@@ -1,34 +1,28 @@
 <template>
   <!-- Tabs for Actions -->
-  <div v-if="editMode" class="flex absolute p-4 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-      <span>Back</span>
-    </button>
-  </div>
-  <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-    <Pagination
-      :totalPages="totalPages" 
-      :currentPage="currentPage" 
-      @update:currentPage="updatePage" 
-    />  
+ 
+
+  <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4  space-x-4 -mt-9">
     <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
       </svg>
       <span>Edit</span>
     </button>
-
-    <button @click="addItem" class="flex items-center space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs" v-if="editMode">
+    <button @click="addItem" class="flex items-center space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs" >
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m-7-7h14" />
       </svg>
       <span>Add Row</span>
     </button>
+    <Pagination
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="updatePage" 
+    />  
+   
 
-    <button v-if="editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+    <button  @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
@@ -41,21 +35,15 @@
       </svg>
       <span>Export to PDF</span>
     </button>
-
-    <!-- New Print Button -->
-    <button @click="printPage" class="flex items-center space-x-2 px-3 py-1 bg-purple-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7v7H5V7m0-4h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm14 6H5v4h14" />
-      </svg>
-      <span>Print</span>
-    </button>
   </div>
 
+  <div class="graph-background p-0.5 -mr-9 -mb-16">
+
   <div v-if="currentPage === 1">
-    <div class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+    <div class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
       <div class="relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-        <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="text-[10px] -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
       </div>
       <div class="p-4">
         <h1 class="text-2xl font-bold mb-4 text-center">Helping/Intervention Plan</h1>
@@ -205,6 +193,7 @@
         </button>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -422,6 +411,11 @@ export default {
 </script>
 
 <style scoped>
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  }
 button {
   transition: background-color 0.3s;
 }

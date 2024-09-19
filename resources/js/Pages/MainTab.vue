@@ -9,9 +9,9 @@
     </template>
 
     <!-- Main Client Information -->
-    <div v-if="client" class="flex items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-lg">
+    <div v-if="client" class="flex  items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-lg">
       <!-- Left: Client Image and Details -->
-      <div class="ml-4 flex items-center space-x-6">
+      <div class="ml-8 flex items-center space-x-6">
         <img
           :src="client.profile_image ? `/storage/${client.profile_image}` : defaultImage"
           alt="Client Profile Image"
@@ -22,10 +22,15 @@
           <div class="mt-2 text-gray-700 space-y-1">
             <p class="text-sm"><span class="font-semibold">Age:</span> {{ calculateAge(client.date_of_birth) }} years old</p>
             <p class="text-sm"><span class="font-semibold">Address:</span> {{ formattedAddress }}</p>
-            <p class="text-sm"><span class="font-semibold">Status:</span> {{ client.child_status }}</p>
           </div>
         </div>
       </div>
+      <div class="flex justify-end mr-3">
+  <p :class="[getChildStatusClass(client.child_status), 'uppercase text-[20px] font-cops']">
+    {{ client.child_status }}
+  </p>
+</div>
+
     </div>
 
     <div v-if="loading" class="text-center py-4">Loading client data...</div>
@@ -42,7 +47,8 @@
           </button>
         </div>
       </div>
-      <div class="p-2 tab-content">
+      </div>
+      <div class=" p-2 tab-content">
         <div v-if="currentTab === 'Social Service'"><SocialServiceTab /></div>
         <div v-if="currentTab === 'Psychological Reports'"><PsychologicalTab /></div>
         <div v-if="currentTab === 'Homelife Services'"><HomelifeTab /></div>
@@ -51,7 +57,6 @@
         <div v-if="currentTab === 'Educational Services'"><EducationalTab /></div>
         <div v-if="currentTab === 'Court Order'"><CourtOrderTab /></div>
       </div>
-    </div>
   </AppLayout>
 </template>
 
@@ -189,6 +194,19 @@ export default {
       fetchClient(clientId.value);
     });
 
+    const getChildStatusClass = (childStatus) => {
+    switch (childStatus) {
+      case 'Still at the Center (SATC)':
+        return 'text-green-600';
+      case 'Discharge':
+        return 'text-red-600 mr-24 text-[28px]'; // Add right margin for Discharge
+      case 'Leave without Permission (LWOP)':
+        return 'text-orange-500';
+      default:
+        return 'text-black';
+    }
+  };
+
     return {
       tabs,
       currentTab,
@@ -202,13 +220,14 @@ export default {
       setTab,
       calculateAge,
       fetchClient,
+      getChildStatusClass,
     };
   },
 };
 </script>
 
-
 <style scoped>
+
 .flex {
   display: flex;
 }

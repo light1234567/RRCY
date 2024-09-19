@@ -1,41 +1,34 @@
 <template>
   <!-- Tabs for Actions -->
-   
-  <div v-if="editMode" class="flex absolute p-4 space-x-4">
-     <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
-       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-       </svg>
-       <span>Back</span>
-     </button>
-   </div>
+  <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4  space-x-4 -mt-9">
+      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
+        </svg>
+        <span>Edit</span>
+      </button>
+         <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+      <button @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Save</span>
+      </button>
 
+      <!-- Export to PDF Button -->
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Export to PDF</span>
+      </button>
+    </div>
 
-     <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-          <!-- Pagination Component -->
-   <Pagination 
-     :totalPages="totalPages" 
-     :currentPage="currentPage" 
-     @update:currentPage="currentPage = $event" 
-   />
-       <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
-         </svg>
-         <span>Edit</span>
-       </button>
-
-
-       <button v-if="editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-         </svg>
-         <span>Save</span>
-       </button>
-     </div>
-     <button @click="exportToPdf" class="mt-4 px-4 py-2 bg-blue-600 rounded">
-      Export to PDF
-    </button>
     <!-- Modal for Save Confirmation -->
     <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
      <div class="fixed inset-0 bg-black opacity-50"></div>
@@ -92,12 +85,14 @@
 
 
    <!--- Page 1 of 4 -->
-   <div ref="pdfContent" v-if="currentPage === 1" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+   <div class="graph-background p-0.5 -mr-9 -mb-16">
+
+   <div ref="pdfContent" v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
        <div class="">
          <div class="text-center mb-8">
            <div class="relative flex justify-between items-center mb-2">
          <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-         <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+         <p class="text-[10px] italic -mt-10">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
        </div>
        <h1 class="text-2xl font-bold">GENERAL INTAKE SHEET</h1>
        <div class="flex justify-end">
@@ -111,13 +106,13 @@
        {{ message }}
      </div>
      <div class="mb-8">
- <h2 class="text-lg font-semibold">I. Identifying Information:</h2>
- <div class="space-y-2">
-   <div class="flex items-center mb-4">
-   
- <label class="block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of client:</label>
- <input type="text" v-model="sheet.name" class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
-</div>
+      <h2 class="text-lg font-semibold">I. Identifying Information:</h2>
+      <div class="space-y-2">
+        <div class="flex items-center mb-4">
+        
+      <label class="block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of client:</label>
+      <input type="text" v-model="sheet.name" class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+      </div>
   
    <div class="grid grid-cols-2 gap-4">
      <div class="flex items-center mb-4">
@@ -220,12 +215,16 @@
  </div>
 
      
-     <div ref="pdfContent" v-if="currentPage === 2" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+     <div ref="pdfContent" v-if="currentPage === 2" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+      <div class="relative flex justify-between items-center mb-2">
+        <p class="text-[10px] text-right mb-4 w-full italic">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+      </div>
       <div class="mb-8">
   <h2 class="text-lg font-semibold">A. Major life Events:</h2>
   <div class="grid grid-cols-2 gap-4">
     <div>
-      <label><input type="checkbox" v-model="sheet.major_life_event.death_of_parents" :disabled="!editMode" /> Death of Parents</label><br />      <label><input type="checkbox" v-model="sheet.major_life_event.separation_from_family" :disabled="!editMode" /> Separation from the family</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.death_of_parents" :disabled="!editMode" /> Death of Parents</label><br />
+      <label><input type="checkbox" v-model="sheet.major_life_event.separation_from_family" :disabled="!editMode" /> Separation from the family</label><br />
       <label><input type="checkbox" v-model="sheet.major_life_event.natural_disaster" :disabled="!editMode" /> Victim of natural / manmade disaster</label><br />
       <label><input type="checkbox" v-model="sheet.major_life_event.apprehension" :disabled="!editMode" /> Victim of apprehension</label><br />
       <label><input type="checkbox" v-model="sheet.major_life_event.physical_abuse" :disabled="!editMode" /> Victim of physical abuse</label><br />
@@ -302,10 +301,6 @@
         <input type="checkbox" v-model="sheet.life_transition.beginning_parents_romantic_relationship" :disabled="!editMode" />
         <span class="ml-2">Beginning romantic relationship of parents</span>
       </label>
-      <label class="flex items-center whitespace-nowrap">
-        <input type="checkbox" v-model="sheet.life_transition.others" :disabled="!editMode" />
-        <span class="ml-2">other (pls. specify)</span>
-      </label>
     </div>
   </div>
 </div>
@@ -337,8 +332,10 @@
 
 
 
-   <div v-if="currentPage === 3" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
-
+   <div v-if="currentPage === 3" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+    <div class="relative flex justify-between items-center mb-2">
+        <p class="text-[10px] text-right mb-4 w-full italic">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+      </div>
     <div class="mb-8">
   <h2 class="text-lg font-semibold">E. Normalization:</h2>
   <div class="grid grid-cols-2 gap-4">
@@ -348,6 +345,7 @@
         <span class="ml-2">Legality/law enforcement (weak)</span>
       </label>
       <label class="flex items-center whitespace-nowrap">
+        <input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" />
         <span class="ml-2">Availability of:</span>
       </label>
       <div class="ml-16">
@@ -483,7 +481,7 @@
  
     <div>
       <label class="flex items-center whitespace-nowrap">
-        <input type="checkbox" v-model="sheet.normalization.feelingsItems" :disabled="!editMode" />
+        <input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" />
         <span class="ml-2">Feelings</span>
       </label>
       <div class="grid grid-cols-2 gap-x-8">
@@ -540,8 +538,8 @@
            <label><input type="checkbox" v-model="sheet.attachments.aunt" :disabled="!editMode" /> Aunt</label><br />
            <label><input type="checkbox" v-model="sheet.attachments.neighbour" :disabled="!editMode" /> Neighbour</label><br />
            <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Cousin</label><br />
-           <label><input type="checkbox" v-model="sheet.attachments.teacher" :disabled="!editMode" /> Teacher</label><br />
-           <label><input type="checkbox" v-model="sheet.attachments.others" :disabled="!editMode" /> Others</label><br />
+           <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Teacher</label><br />
+           <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Othe</label><br />
          </div>
          <div>
            <label><input type="checkbox" v-model="sheet.attachments.father" :disabled="!editMode" /> father</label><br />
@@ -589,8 +587,10 @@
    </div>
 
    
-<div v-if="currentPage === 4" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
-
+<div v-if="currentPage === 4" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+  <div class="relative flex justify-between items-center mb-2">
+        <p class="text-[10px] text-right mb-4 w-full italic">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+      </div>
   <div class="mb-8">
   <h2 class="text-lg font-semibold">Resources:</h2>
   <div class="space-y-8">
@@ -797,7 +797,7 @@
   </div>
 </div>
 </div>
-
+</div>
 
 </template>
 
@@ -923,8 +923,6 @@ export default {
           grandmother: false,
           aunt: false,
           neighbour: false,
-          teacher: false,
-          others: false,
           cousin: false,
           father: false,
           grandfather: false,
@@ -1001,202 +999,26 @@ export default {
   },
   methods: {
     async fetchClientData(id) {
-  try {
-    // Start a loading state if applicable
-    this.isLoading = true;
-    console.log(`Fetching data for client ID: ${id}`);
+      try {
+        const response = await axios.get(`/api/clients/${id}`);
+        const client = response.data;
 
-    // Fetch client data
-    const clientResponse = await axios.get(`/api/clients/${id}`);
-    console.log('Client data response:', clientResponse.data);
+        this.sheet.name = `${client.first_name} ${client.last_name}`;
+        this.sheet.age = this.calculateAge(client.date_of_birth);
+        this.sheet.sex = client.sex;
+        this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
+        this.sheet.date_of_birth = client.date_of_birth;
+        this.sheet.place_of_birth = client.place_of_birth;
+        this.sheet.religion = client.religion;
 
-    const client = clientResponse.data;
+        const sheetResponse = await axios.get(`/api/general-intake-sheets/${id}`);
+        const clientSheet = sheetResponse.data;
 
-    // Map client data to the sheet object
-    this.sheet.name = `${client.first_name} ${client.last_name}`;
-    this.sheet.age = this.calculateAge(client.date_of_birth);
-    this.sheet.sex = client.sex;
-    this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
-    this.sheet.date_of_birth = client.date_of_birth;
-    this.sheet.place_of_birth = client.place_of_birth;
-    this.sheet.religion = client.religion;
-
-    console.log('Mapped client data to sheet:', this.sheet);
-
-    // Fetch intake sheet data using client ID
-    const sheetResponse = await axios.get(`/api/general-intake-sheets?client_id=${id}`);
-    console.log('Intake sheet data response:', sheetResponse.data);
-
-    if (sheetResponse.data && sheetResponse.data.length > 0) {
-      const clientSheet = sheetResponse.data[0]; 
-      Object.assign(this.sheet, clientSheet);
-
-      if (!this.sheet.major_life_event) {
-        this.sheet.major_life_event = {
-          death_of_parents: false,
-          separation_from_family: false,
-          natural_disaster: false,
-          apprehension: false,
-          physical_abuse: false,
-          suicidal_tendencies: false,
-          mistaken_identity: false,
-          abandonment: false,
-          serious_accident: false,
-          demolition: false,
-          sexual_abuse: false,
-          verbal_abuse: false,
-          disability: false,
-          others: false,
-        };
+        Object.assign(this.sheet, clientSheet);
+      } catch (error) {
+        console.error('Error fetching client data:', error);
       }
-   if (!this.sheet.enduring_life_strain) {
-        this.sheet.enduring_life_strain = {
-          poverty: false,
-          physical_illness: false,
-          lack_recreational_facilities: false,
-          exclusion_from_peers: false,
-          other: false,
-          constant_need_to_earn: false,
-          lack_education_opportunity: false,
-          exclusion_from_school: false,
-          disability: false,
-        };
-      }
-  if (!this.sheet.life_transition) {
-  this.sheet.life_transition = {
-    moving_neighbour: false,
-    changing_peer_group: false,
-    moving_due_to_demolition: false,
-    moving_due_to_disaster: false,
-    kinship_foster_placement: false,
-    beginning_romantic_relationship: false,
-    beginning_parents_romantic_relationship: false,
-    others: false
-  };
-}
-if (!this.sheet.development_changes) {
-  this.sheet.development_changes = {
-    early_childhood: false,
-    school_age: false,
-    adolescence: false,
-  };
-}
-if (!this.sheet.normalization) {
-  this.sheet.normalization = {
-    legality_law_enforcement: false,
-    commercial_sex: false,
-    substance_illegal_drugs: false,
-    pornography_materials: false,
-    red_houses: false,
-    price_least_expensive: false,
-    advertisement_media: false,
-    advertisement_promoting_liquors: false,
-    television_shows: false,
-    movies: false,
-    printed_materials: false,
-    community_acceptance: false,
-    source_of_income: false,
-    involve_in_trade: false,
-    role_of_culture: false,
-    smoking: false,
-    abuse: false,
-    illicit_relationship: false,
-    incest_relationship: false,
-    begging: false,
-    rugby_sniffing: false,
-  };
-}
-if (!this.sheet.behaviour_towards_incident) {
-  this.sheet.behaviour_towards_incident = {
-    stow_away: false,
-    irritable: false,
-    delinquent_behaviour: false,
-    stealing: false,
-    begging: false,
-    others: false,
-    withdrawal: false,
-    unresponsive_passive: false,
-    indulge_in_illegal_substance: false,
-    snatching: false,
-    staying_in_street: false,
-  };
-}
-
-if (!this.sheet.attachments) {
-  this.sheet.attachments = {
-    mother: false,
-    grandmother: false,
-    aunt: false,
-    neighbour: false,
-    cousin: false,
-    father: false,
-    grandfather: false,
-    uncle: false,
-    peer: false,
-    schoolmate: false,
-    classmate: false,
-    others: false,
-  };
-}
-if (!this.sheet.skills) {
-  this.sheet.skills = {
-    problem_solving: false,
-    interpersonal_relationship: false,
-    communication_skills: false,
-    vocational_skills: false,
-    critical_thinking: false,
-    others: false,
-    coping_skills: false,
-    survival_skills: false,
-    decision_making_skills: false,
-    comprehension: false,
-    self_awareness: false,
-  };
-}
-if (!this.sheet.resources) {
-  this.sheet.resources = {
-    internal: false,
-    intelligence: false,
-    spirituality: false,
-    resourceful: false,
-    obedient: false,
-    others: false,
-    external: false,
-    family: false,
-    peers: false,
-    health_services: false,
-    recreational_services: false,
-    ngos: false,
-    civic_organization: false,
-    others_external: false,
-  };
-}
-if (!this.sheet.source_of_income_in_street) {
-  this.sheet.source_of_income_in_street = {
-    vending: false,
-    car_wash_boy: false,
-    rugby_user: false,
-    porter: false,
-    barker: false,
-  };
-}
-
-
-
-
-      console.log('Mapped intake sheet data to sheet:', this.sheet);
-    } else {
-      console.log('No intake sheet found for this client.');
-    }
-  } catch (error) {
-    console.error('Error fetching client data or intake sheet:', error);
-    this.messageType = 'error';
-  } finally {
-    // Stop the loading state if applicable
-    this.isLoading = false;
-  }
-}
-,
+    },
     exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
@@ -1397,7 +1219,6 @@ if (!this.sheet.source_of_income_in_street) {
       { label: 'Moving from biological family to a kinship/foster placement', value: this.sheet.life_transition.kinship_foster_placement, x: 20, y: sectionStartY + 50 },
       { label: 'Beginning romantic relationship', value: this.sheet.life_transition.beginning_romantic_relationship, x: 20, y: sectionStartY + 60 },
       { label: 'Beginning romantic relationship of parents', value: this.sheet.life_transition.beginning_parents_romantic_relationship, x: 20, y: sectionStartY + 70 },
-      { label: 'Beginning romantic relationship of parents', value: this.sheet.life_transition.others, x: 20, y: sectionStartY + 70 },
       { label: 'Others (pls. specify)', value: this.sheet.life_transition.others, x: 20, y: sectionStartY + 80 }
   ];
 
@@ -1553,8 +1374,6 @@ if (!this.sheet.source_of_income_in_street) {
         { label: 'Aunt', value: this.sheet.attachments.aunt, x: 20, y: attachmentsStartY + 30 },
         { label: 'Neighbour', value: this.sheet.attachments.neighbour, x: 20, y: attachmentsStartY + 40 },
         { label: 'Cousin', value: this.sheet.attachments.cousin, x: 90, y: attachmentsStartY + 10 },
-        { label: 'Cousin', value: this.sheet.attachments.teacher, x: 90, y: attachmentsStartY + 10 },
-        { label: 'Cousin', value: this.sheet.attachments.others, x: 90, y: attachmentsStartY + 10 },
         { label: 'father', value: this.sheet.attachments.father, x: 90, y: attachmentsStartY + 20 },
         { label: 'grand father', value: this.sheet.attachments.grandfather, x: 90, y: attachmentsStartY + 30 },
         { label: 'uncle', value: this.sheet.attachments.uncle, x: 90, y: attachmentsStartY + 40 },
@@ -1835,6 +1654,11 @@ if (!this.sheet.source_of_income_in_street) {
 
 
 <style scoped>
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  }
 button {
  transition: background-color 0.3s;
 }

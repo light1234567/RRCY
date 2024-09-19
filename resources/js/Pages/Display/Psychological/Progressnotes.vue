@@ -28,6 +28,14 @@
       </svg>
       <span>Save</span>
     </button>
+
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M8 16h8M8 12h8M8 8h8M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      <span>Download PDF</span>
+    </button>
   </div>
 
   <div class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
@@ -70,11 +78,11 @@
           </div>
 
           <div class="space-y-2">
-            <div class="flex text-sm">
-              <label for="interventionPeriod" class="block w-1/2">Period of Intervention Plan:</label>
-              <input type="text" id="interventionPeriod" v-model="form.intervention_period" class="block w-2/3 p-1 text-sm border-0 bg-transparent" :readonly="!editMode">
-            </div>
-          </div>
+  <div class="flex text-sm">
+    <label for="interventionPeriod" class="block w-52">Period of Intervention Plan:</label>
+    <input type="text" id="interventionPeriod" v-model="form.intervention_period" class="block flex -ml-8 w-2/3 p-0 text-sm border-0 bg-transparent" :readonly="!editMode">
+  </div>
+</div>
         </div>
 
         <!-- Problem Behavior Log Section -->
@@ -118,7 +126,7 @@
           <div class="flex flex-col">
             <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
             <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
           <div class="ml-4">
             <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
@@ -186,6 +194,7 @@
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
+import { jsPDF } from 'jspdf'; // Import jsPDF for PDF generation
 
 export default {
   name: 'ProgressReportForm',
@@ -288,6 +297,201 @@ export default {
       this.saveResultTitle = '';
       this.saveResultMessage = '';
     },
+    exportToPdf() {
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+  const pageHeight = 297; // Total page height in mm
+  const marginBottom = 30; // Bottom margin in mm
+  const rowHeight = 10; // Height of each row
+  const lineHeight = 7; // Space between lines
+  const maxContentHeight = pageHeight - marginBottom; // Max height for content before adding a new page
+  const maxWidth = 170; // Maximum width for text
+  let contentYPos = 65; // Start Y position for content
+  let initialX = 20; // X position for content
+  let currentPage = 1; // Start at page 1
+
+  
+  const addHeader = () => {
+    // Header text
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'italic');
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+  };
+  
+  // Helper function to add a new page if content exceeds the page height
+  const addNewPageIfNeeded = () => {
+    if (contentYPos >= maxContentHeight) {
+      addFooter(); // Add the footer for the current page
+      pdf.addPage(); // Add new page
+      addHeader(); // Add the header on the new page
+      currentPage++; // Increment page number
+      contentYPos = 40; // Reset Y position for the new page
+      pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
+      pdf.setFontSize(11); // Set font size back to what it was
+    }
+  };
+
+  const addFooter = () => {
+    if (currentPage === 1) {
+      // Footer for Page 1
+      pdf.setFontSize(9);
+      pdf.setFont('TimesNewRoman', 'bold');
+      pdf.setLineWidth(0.5);
+      pdf.line(17, 282, 173, 282); // Footer line
+
+      pdf.setFont('times', 'normal');
+      const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
+      pdf.text(footerText, 95, 287, { align: 'center' });
+      pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, { align: 'center' });
+
+      const footerImgData = '/images/footerimg.png';
+      pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Footer image
+    } else {
+      // Footer for Page 2 and beyond
+      pdf.setFontSize(8.5);
+      pdf.setFont('TimesNewRoman', 'bold');
+
+      pdf.setLineWidth(0.5);
+      pdf.line(17, 282, 193, 282); // Footer line extending further
+
+      pdf.setFont('times', 'bold');
+      pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, { align: 'center' });
+    }
+  };
+
+  addHeader();
+
+  // DSWD logo
+  const imgData = '/images/headerlogo2.png';
+  pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
+
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(12);
+  pdf.text('PROGRESS REPORT', 105, 48, { align: 'center' });
+  pdf.text('PSYCHOLOGICAL SERVICE', 105, 55, { align: 'center' });
+
+  // Content starts below title
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+
+  contentYPos += 6;
+  pdf.text(`Name: ${this.form.name || ''}`, initialX, contentYPos);
+  contentYPos += 6;
+  pdf.text(`Age: ${this.form.age || ''}`, initialX, contentYPos);
+  pdf.text('years old', initialX + 16, contentYPos);
+  
+  contentYPos += 6;
+  addNewPageIfNeeded();
+  pdf.text(`Date Admitted: ${this.form.date_admitted || ''}`, initialX, contentYPos);
+
+  contentYPos += 6;
+  addNewPageIfNeeded();
+  pdf.text(`Period of Intervention Plan: ${this.form.intervention_period || ''}`, initialX, contentYPos);
+
+  // Section: Problem Behavior Log
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('PROBLEM BEHAVIOR LOG:', initialX, contentYPos);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const problemBehaviorLog = `${this.form.problem_behavior_log || ''}`;
+  const problemLogLines = pdf.splitTextToSize(problemBehaviorLog, maxWidth);
+
+  problemLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+  // Section: Interventions Conducted
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('INTERVENTIONS CONDUCTED:', initialX, contentYPos);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  const interventionsConducted = `${this.form.interventions_conducted || ''}`;
+  const interventionLines = pdf.splitTextToSize(interventionsConducted, maxWidth);
+
+  interventionLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(`• ${line}`, initialX + 5, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+
+  // Section: Progress Notes
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('PROGRESS NOTES', initialX, contentYPos);
+
+  pdf.setFontSize(11);
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  const progressNotes = `${this.form.progress_notes || ''}`;
+  const progressNoteLines = pdf.splitTextToSize(progressNotes, maxWidth);
+
+  progressNoteLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+
+  contentYPos +=20;
+  // Prepared by Section
+  contentYPos += rowHeight; 
+  addNewPageIfNeeded();
+  pdf.text('Prepared by:', initialX, contentYPos);
+  
+  contentYPos += rowHeight; 
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('BRYAN V. GALANG, MPsy, RPsy', initialX, contentYPos);
+  contentYPos += 4; 
+  addNewPageIfNeeded();
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  pdf.text('Psychologist I', initialX, contentYPos);
+
+  // Noted by Section
+  contentYPos += rowHeight; 
+  addNewPageIfNeeded();
+  pdf.text('Noted by:', initialX, contentYPos);
+  
+  contentYPos += rowHeight; 
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('ANGELIC B. PAÑA, RSW, MSSW', initialX, contentYPos);
+  contentYPos += 4; 
+  addNewPageIfNeeded();
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  pdf.text('SWO IV / Center Head', initialX, contentYPos);
+
+  // Add the footer for the last page
+  addFooter();
+
+  const totalPages = pdf.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'bold');
+    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 280, { align: 'center' }); // Update the footer with the correct total pages
+  }
+
+  // Save the PDF with dynamic file name
+  pdf.save(`Progress_Report_${this.form.name || 'NoName'}.pdf`);
+},
+
 
     submitForm() {
       if (!this.form.client_id || !this.form.admission_id) {
@@ -344,7 +548,6 @@ export default {
   }
 };
 </script>
-
 
 <style scoped>
 button {

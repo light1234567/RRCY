@@ -29,7 +29,6 @@ use App\Http\Controllers\LearnerAcademicBehavioralFormController;
 use App\Http\Controllers\LearnerAssessmentFormController;
 use App\Http\Controllers\FileController;
 
-
 Route::post('/check-email', [UserController::class, 'checkEmail']);
 Route::post('/validate-password', [UserController::class, 'validatePassword']);
 Route::post('/user-role', [UserController::class, 'getUserRole']);

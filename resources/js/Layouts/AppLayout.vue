@@ -227,7 +227,48 @@
                 </span>
               </NavLink>
             </div>
-
+            
+            <!-- Logs Link with Icon -->
+          <div
+            :class="{
+              'px-0 w-12 h-16 pl-2 mt-6 mb-6': isSidebarCollapsed,
+              'w-full h-auto': !isSidebarCollapsed
+            }"
+            class="flex items-center justify-between max-w-lg p-2 rounded-lg transition-transform duration-200 ease-in-out hover:scale-105"
+          >
+            <NavLink
+              :href="route('logs')" 
+              :active="route().current('logs')" 
+              class="flex items-center space-x-4 w-full transition duration-150 ease-in-out"
+            >
+              <!-- Logs Icon -->
+              <svg
+                :class="{
+                  'w-6 h-6': !isSidebarCollapsed,
+                  'w-5 h-5': isSidebarCollapsed
+                }"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 7h6v6H3zm9 0h9v6h-9zM3 17h6v6H3zm9 0h9v6h-9z"
+                />
+              </svg>
+              <span
+                :class="{
+                  'hidden': isSidebarCollapsed,
+                  'block': !isSidebarCollapsed
+                }"
+                class="transition-opacity duration-300 text-white"
+              >
+                Logs
+              </span>
+            </NavLink>
+          </div>
             <!-- Divider Line -->
             <div>
               <hr class="mt-8 ml-2 mr-2 border-gray-700" />
@@ -281,7 +322,7 @@
           <header class="w-full py-2 bg-white border shadow-md px-24 sm:px-8 lg:px-16 flex items-center">
             <slot name="header" v-if="$slots.header"></slot>
 
-            <div class="ml-auto -mr-2 h-8 w-8">
+            <div class="ml-auto h-8 w-8">
               <div class="h-full w-full bg-white rounded-full overflow-hidden">
                 <UserProfileImage 
                   :userImage="userImage"
@@ -293,7 +334,7 @@
             <!-- Add the vertical bar here -->
             <div class="mx-4 ml-8 h-8 border-l border-gray-300"></div> <!-- This is the vertical bar -->
 
-            <div class="flex flex-col items-center -mr-2 mt-1/2 ml-2">
+            <div class="flex flex-col items-center -mr-8 mt-1/2 ml-2">
               <ApplicationMark
                 :isSidebarCollapsed="isSidebarCollapsed"
                 :userName="userfName + userSName +  userlName"
@@ -302,11 +343,7 @@
             </div>
 
             <!-- Add the small dropdown icon to the right using SVG -->
-            <div class="ml-4 -mr-8 mt-1">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
+           
           </header>
         </div>
 

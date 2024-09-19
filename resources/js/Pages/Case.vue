@@ -3,16 +3,17 @@
     <template #header>
       <div class="flex items-center">
         <div class="ml-5 w-2 h-6 bg-gray-400 mr-3"></div>
-        <i class="fa fa-users  text-black text-2xl ml-6"></i> 
+        <i class="fa fa-users text-black text-2xl ml-6"></i>
         <h1 class="text-lg ml-4 font-bold text-red-800">CICL Cases</h1>
       </div>
     </template>
+
     <!-- Container for Main Client Information -->
-    <div class="w-9/10 mr-4 ml-12 max-w-8xl mt-6 space-y-6">
+    <div class="w-9/10 ml-7 max-w-8xl mt-6 space-y-6">
       <!-- Main Client Information -->
       <div
         v-if="client"
-        class="flex items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-lg"
+        class="flex -mt-5 items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-lg"
       >
         <!-- Left: Client Image and Details -->
         <div class="flex items-center space-x-6">
@@ -26,26 +27,26 @@
             <div class="mt-2 text-gray-700 space-y-1">
               <p class="text-sm"><span class="font-semibold">Age:</span> {{ calculateAge(client.date_of_birth) }} years old</p>
               <p class="text-sm"><span class="font-semibold">Address:</span> {{ formattedAddress }}</p>
-              <p class="text-sm"><span class="font-semibold">Status:</span> {{ client.child_status }}</p>
+              <p class="text-sm"><span class="font-semibold">Status:</span> <span :class="getChildStatusClass(client.child_status)">{{ client.child_status }}</span></p>
             </div>
           </div>
         </div>
         <!-- Right: Recent Case Label -->
         <div class="text-right">
-          <p class="text-lg font-semibold text-blue-600 uppercase">Recent Case</p>
+          <p class="text-[24px] font-semibold text-blue-600 font-cops mr-24 uppercase">Recent Case</p>
         </div>
       </div>
 
       <!-- Clients Table -->
       <div v-if="matchingClients.length" class="w-full">
         <!-- Table for matching clients -->
-        <div class="overflow-x-auto bg-white border border-gray-200 rounded-lg shadow-lg">
+        <div class="ml-6 mr-6 overflow-x-auto bg-white border border-gray-200 rounded-lg shadow-lg">
           <table class="min-w-full bg-white">
             <thead>
               <tr class="bg-blue-100">
                 <th class="p-4 text-left text-sm font-bold text-blue-900">Case #</th>
-                <th class="p-4 text-left text-sm font-bold text-blue-900">Child Status</th>
                 <th class="p-4 text-left text-sm font-bold text-blue-900">Case Status</th>
+                <th class="p-4 text-left text-sm font-bold text-blue-900">Child Status</th>
                 <th class="p-4 text-left text-sm font-bold text-blue-900">Date Admitted</th>
               </tr>
             </thead>
@@ -56,9 +57,13 @@
                 @click="navigateToCase(client.id)"
                 class="border-t border-gray-200 hover:bg-blue-50 transition-all duration-300 cursor-pointer"
               >
-                <td class="p-4 text-sm text-blue-600 font-bold">Case {{ matchingClients.length - index }}</td>
-                <td class="p-4 text-sm text-gray-700">{{ client.child_status }}</td>
-                <td class="p-4 text-sm text-gray-700">{{ client.admissions.length ? client.admissions[0].case_status : 'N/A' }}</td>
+                <td class="p-4 text-sm text-bold font-bold">Case {{ matchingClients.length - index }}</td>
+                <td class="p-4 text-sm text-blue-600" :class="getCaseStatusClass(client.admissions.length ? client.admissions[0].case_status : 'N/A')">
+                  {{ client.admissions.length ? client.admissions[0].case_status : 'N/A' }}
+                </td>
+                <td class="p-4 text-sm" :class="getChildStatusClass(client.child_status)">
+                  {{ client.child_status }}
+                </td>
                 <td class="p-4 text-sm text-gray-700">{{ client.admissions.length ? client.admissions[0].date_admitted : 'N/A' }}</td>
               </tr>
             </tbody>
@@ -71,12 +76,10 @@
     </div>
   </AppLayout>
 </template>
-
 <script>
 import axios from 'axios';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import '@fortawesome/fontawesome-free/css/all.css';
-
 
 export default {
   name: 'ClientDetail',
@@ -163,6 +166,27 @@ export default {
       return age;
     },
 
+    // Function to get child status color class
+    getChildStatusClass(childStatus) {
+      switch (childStatus) {
+        case 'Still at the Center (SATC)':
+          return 'text-green-600';
+        case 'Discharge':
+          return 'text-red-800';
+        case 'Leave without Permission (LWOP)':
+          return 'text-orange-600';
+        default:
+          return 'text-black';
+      }
+    },
+
+    // Function to get case status color class
+    getCaseStatusClass(caseStatus) {
+      switch (caseStatus) {
+  
+      }
+    },
+
     // Navigate to another client case
     navigateToCase(clientId) {
       const resolvedRoute = this.$router.resolve({ name: 'maintab', params: { id: clientId } });
@@ -171,4 +195,4 @@ export default {
   },
 };
 </script>
-
+  

@@ -1,25 +1,20 @@
 <template>
   <div>
     <!-- Tabs for Actions -->
-    <div v-if="editMode" class="flex absolute p-6 -mt-2 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>Back</span>
-      </button>
-    </div>
-
-    <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-
+    <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4  space-x-4 -mt-9">
       <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
         </svg>
         <span>Edit</span>
       </button>
-
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+         <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+      <button  @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
@@ -95,17 +90,18 @@
     </div>
   
      <!-- Form Content -->
-  
-    <div ref="pdfContent" class="p-6 border border-gray-400 shadow-xs rounded-lg max-w-3xl mx-auto my-8 ">
+  <div class="graph-background pt-0.5  -mr-9 -mb-16">
+    <div>
+    <div ref="pdfContent" class="max-w-3xl border-gray-400 p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border ">
       <div class=" relative flex justify-between items-center mb-2">
-        <img src="/images/headerlogo2.png" alt="Logo" class="ml-4 h-32 w-64 relative z-10">
-        <p class="text-[10.7px] mb-10 font mr-6" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <img src="/images/headerlogo2.png" alt="Logo" class=" h-32 w-64 relative z-10">
+        <p class="text-[10px] mb-10 font mr-2 " style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
 
       </div>
 
       <h1 class="text-[21.33px] font-bold mb-2 text-center text-black">ADMISSION SLIP</h1>
 
-      <div v-if="clients.length > 0" v-for="client in clients" :key="client.id" class="mb-12 p-6 rounded-lg text-xs">
+      <div v-if="clients.length > 0" v-for="client in clients" :key="client.id" class="mb-12 p-1.5 rounded-lg text-xs">
         <div class="flex items-center">
           <div class="flex-grow text-[15px] flex items-center mr-2">
   <label class="mb-3 text-black mr-2 flex items-center h-full">Name:</label>
@@ -383,10 +379,10 @@
 
           
   <!-- Referring Party Section -->
-  <div class="flex flex-col justify-end mb-4">
+  <div class="flex flex-col justify-end text-[15px] mb-4">
 <!-- Display the current signature image if it exists or show a preview of the new uploaded image -->
 <div v-if="client.admissions[0]?.referring_party_signature || editMode" class="mb-4">
-  <label class="block mb-2 text-sm font-medium text-gray-700">
+  <label class="block mb-2 text-sm text-[15px] text-gray-700">
     Upload or Update Referring Party Signature:
   </label>
 
@@ -408,24 +404,24 @@
   :readonly="!editMode"
 >
 
-<label class="block font-semibold text-gray-700 mt-2">Name & Signature of Referring Party</label>
+<label class="block text-[15px] text-black -mt-3">Name & Signature of Referring Party</label>
 </div>
 
 
 
   <!-- Admitting Officer Section -->
-  <div class="flex flex-col justify-end mb-4">
+  <div class="flex flex-col justify-end text-[15px] mb-4">
   <input 
     type="text" 
-    class="underline-input mt-1 w-full text-[15px]" 
+    class="underline-input mt-1 w-full " 
     v-model="client.admissions[0].admitting_officer" 
     :readonly="!editMode"
   >
-  <label class="block font-semibold text-gray-700 mt-2">Admitting Officer</label>
+  <label class="block text-[15px] text-black -mt-3">Admitting Officer</label>
 </div>
 </div>
 
-<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="grid grid-cols-2 gap-4 text-[15px] mb-4">
   <div>
     <input 
       type="text" 
@@ -433,7 +429,7 @@
       v-model="client.admissions[0].designation_id_contact" 
       :readonly="!editMode"
     >
-    <label class="block font-semibold text-gray-700 mt-2">Designation / ID No. / Contact #</label>
+    <label class="block  text-[15px] text-black -mt-3">Designation / ID No. / Contact #</label>
   </div>
   <div>
     <input 
@@ -442,11 +438,11 @@
       v-model="client.admissions[0].designation" 
       :readonly="!editMode"
     >
-    <label class="block font-semibold text-gray-700 mt-2">Designation</label>
+    <label class="block text-black text-[15px] -mt-3 mb-4">Designation</label>
   </div>
 </div>
 
-<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="grid grid-cols-2 gap-4 text-[15px] mb-4">
   <div>
     <input 
       type="text" 
@@ -454,7 +450,7 @@
       v-model="client.admissions[0].office_address" 
       :readonly="!editMode"
     >
-    <label class="block font-semibold text-gray-700 mt-2">Complete Address/Office Address</label>
+    <label class="block text-black text-[15px] -mt-3">Complete Address/Office Address</label>
   </div>
   
   <div>
@@ -478,24 +474,24 @@
     >
   </template>
 
-  <label class="block font-semibold text-gray-700 mt-2">Date/Time</label>
+  <label class="block text-black text-[15px] -mt-3">Date/Time</label>
 </div>
 
 
 </div>
 
 <!-- Noted By Section -->
-<div class="border-gray-300 pt-4 text-center text-xs">
-  <p class="font-semibold mb-4 text-[12px]">Noted By:</p>
+<div class="border-gray-300 pt-4 text-[15px] text-center  ">
+  <p class="font-semibold mb-4 text-[15px]">Noted By:</p>
   <input 
     v-if="client.admissions[0]" 
     type="text" 
-    class="underline-input mt-1 text-center text-[12px] font-bold"
+    class="underline-input mt-1 text-center text-[15px] font-bold"
     v-model="client.admissions[0].noted_by" 
     :readonly="!editMode"
     style="width: 200px;" 
   />
-  <p class="text-xs">Center Head/SWO IV</p>
+  <p class="text-[15px] -mt-3">Center Head/SWO IV</p>
 </div>
 
 
@@ -518,6 +514,8 @@
       </div>
     </div>
   </div>
+</div>
+</div>
 </template>
 
 <script>
@@ -526,8 +524,13 @@ import { jsPDF } from 'jspdf';
 import '../../../fonts/arial-normal.js'; 
 import '../../../fonts/times-normal.js'; 
 import '../../../fonts/arialbd-bold.js'; 
+import Pagination from '@/Components/Pagination.vue';
+
 
 export default {  
+  components: {
+    Pagination
+  },
   name: 'ClientList',
   data() {
     return {
@@ -541,6 +544,8 @@ export default {
       id: null, // Current client or admission ID
       signaturePreview: null,
       othersDocumentName: '',
+      currentPage: 1,
+      totalPages: 1,
       form: {
         client: {
           first_name: '',
@@ -594,6 +599,15 @@ export default {
   mounted() {
     this.id = this.$route.params.id;
     this.fetchClientsData();
+  },
+  goBack() {
+    if (window.history.length > 1) {
+      // If there is browser history, go back
+      window.history.back();
+    } else {
+      // If no history, navigate to the case page
+      this.$router.push({ name: 'case', params: { id: this.id } });
+    }
   },
   watch: {
     '$route.params.id': function(newId) {
@@ -984,35 +998,36 @@ function drawCheckmark(pdf, x, y) {
 }
 
 // Function to add footer for the first page
-function addFirstPageFooter(pdf, currentPage, totalPages) {
+function addFirstPageFooter(pdf, pageNumber, totalPages) {
   const footerYPosition = 326; // Adjust position as needed
 
-  // Footer content for the first page
-  pdf.setFont('TimesNewRoman', 'bold');
-  pdf.setFontSize(9);
-  pdf.text(`PAGE ${currentPage} of ${totalPages}`, 108, footerYPosition + 2, null, null, 'center');
-  pdf.setLineWidth(0.5);
-  pdf.line(18, footerYPosition + 5, 174, footerYPosition + 5);
 
-  // Footer text
+pdf.setFont('TimesNewRoman', 'bold');
+  pdf.setFontSize(9);
+  pdf.text(`PAGE ${pageNumber} of ${totalPages}`, 108, footerYPosition + 2, null, null, 'center');
+  pdf.setLineWidth(0.5);
+  pdf.line(18, footerYPosition + 5, 174, footerYPosition + 5); // Horizontal line
+
+  // Footer content for the first page
   pdf.setFont('TimesNewRoman', 'normal');
   pdf.setFontSize(9);
-  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)', 108, footerYPosition + 10, null, null, 'center');
-  pdf.text('Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City | Tel: 293-0306', 108, footerYPosition + 15, null, null, 'center');
+  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 96,footerYPosition + 10, null, null, 'center');
+  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, footerYPosition + 15, null, null, 'center');
 
-  // Add footer image (logo)
-  const footerImgData = '/images/footerimg.png'; // Ensure the image is correctly loaded
-  pdf.addImage(footerImgData, 'PNG', 175, footerYPosition, 25, 15);
+  // Add the footer image
+  const footerImgData = '/images/footerimg.png'; // Make sure the image is correctly loaded
+  pdf.addImage(footerImgData, 'PNG', 175, footerYPosition, 25, 15); // Adjust the position and size as needed
 }
 
+
 // Function to add footer for other pages
-function addOtherPagesFooter(pdf, currentPage, totalPages) {
+function addOtherPagesFooter(pdf, pageNumber, totalPages) {
   const footerYPosition = 326; // Adjust position as needed
 
   // Simple footer for other pages
   pdf.setFont('TimesNewRoman', 'bold');
   pdf.setFontSize(9);
-  pdf.text(`PAGE ${currentPage} of ${totalPages}`, 108, footerYPosition + 2, null, null, 'center');
+  pdf.text(`PAGE ${pageNumber} of ${totalPages}`, 108, footerYPosition + 2, null, null, 'center');
   pdf.setLineWidth(0.5);
   pdf.line(18, footerYPosition + 5, 198, footerYPosition + 5);
 
@@ -1021,12 +1036,13 @@ function addOtherPagesFooter(pdf, currentPage, totalPages) {
   pdf.setFontSize(9);
   pdf.text('DSWD | FIELD OFFICE XI | ADMINISTRATIVE DIVISION', 108, footerYPosition + 10, null, null, 'center');
 }
-
 // Function to apply footers dynamically based on page number
 function addFooters(pdf) {
-  const totalPages = pdf.internal.getNumberOfPages(); // Get the total number of pages
+  const totalPages = pdf.internal.getNumberOfPages(); // Get the total number of pages after content is added
+
   for (let i = 1; i <= totalPages; i++) {
-    pdf.setPage(i);
+    pdf.setPage(i); // Set the correct page for adding footer
+
     if (i === 1) {
       // First page footer
       addFirstPageFooter(pdf, i, totalPages);
@@ -1036,6 +1052,7 @@ function addFooters(pdf) {
     }
   }
 }
+
 
 function checkAndAddPageIfNeeded(pdf, currentOffset) {
   const safeAreaHeight = 320; // Content area height excluding footer
@@ -1308,7 +1325,7 @@ function checkAndAddPageIfNeeded(pdf, currentOffset) {
 
  // Dynamically adjust the offset based on the height of the Action Taken content
  const actionHeight = actionText.length * 8; // Each line takes 8 units of space
-    offset += actionHeight + 30; // Add some extra space after Action Taken
+    offset += actionHeight + 35; // Add some extra space after Action Taken
 
     // Signature and Other Fields with Dynamic Page Break
     offset = checkAndAddPageIfNeeded(pdf, offset); // Check if signature touches the footer
@@ -1368,12 +1385,17 @@ function checkAndAddPageIfNeeded(pdf, currentOffset) {
     // Noted By Section
     pdf.setFontSize(11);
     pdf.text('Noted By:', 108, offset - 8, null, null, 'center');
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center');
-    pdf.line(78, offset + 7, 140, offset + 7);
-    pdf.text('Center Head/SWO IV', 108, offset + 12, null, null, 'center');
 
-    
+    // Dynamic Noted By value from Vue.js input field
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(client.admissions[0]?.noted_by || 'ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center');
+
+    // Draw underline
+    pdf.line(78, offset + 7, 140, offset + 7);
+    pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+    pdf.setFont('Arial', 'normal'); 
+    // Static position
+    pdf.text('Center Head/SWO IV', 108, offset + 12, null, null, 'center');
 
     // Add the footer at the bottom of the page
     addFooters(pdf, 326); // 326 is approximately where the footer should be on a legal-sized page
@@ -1387,6 +1409,12 @@ function checkAndAddPageIfNeeded(pdf, currentOffset) {
 </script>
 
 <style scoped>
+
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  }
 /* Adjust spacing and underline input */
 .underline-input {
   border: none;

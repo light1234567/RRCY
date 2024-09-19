@@ -1,30 +1,33 @@
 <template>
-   <!-- Tabs for Actions -->
-   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>Back</span>
-      </button>
-    </div>
-  
-    <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-      <Pagination :totalPages="totalPages" :currentPage="currentPage" @update:currentPage="updatePage" />
+  <!-- Tabs for Actions -->
+  <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4  space-x-4 -mt-9">
       <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
         </svg>
         <span>Edit</span>
       </button>
-
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+         <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+      <button @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
         <span>Save</span>
       </button>
-    </div>
+
+      <!-- Export to PDF Button
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Export to PDF</span>
+      </button> -->
+    </div> 
   
     <!-- Modal for Save Confirmation -->
     <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
@@ -78,9 +81,10 @@
       </div>
     </div>
 
-  <div class="mt-10">
+    <div class="graph-background pt-0.5  -mr-9 -mb-16">
+  <div class="mt-8">
     <!-- Page 1 -->
-    <div v-if="currentPage === 1" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
+    <div v-if="currentPage === 1" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
       <div class="relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
         <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
@@ -181,8 +185,8 @@
       </div> 
 
                     <!-- Emotional rows here / Page 2-->
-                 <div  v-if="currentPage === 2" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
-                    <table>
+                    <div v-if="currentPage === 2" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+                      <table>
                       <thead>
                     <tr>
                         <th class="py-2 px-4 border border-black">
@@ -261,8 +265,8 @@
 
 
         <!--page 3-->
-        <div v-if="currentPage === 3" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
-              <table>
+        <div v-if="currentPage === 3" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+          <table>
                 <thead>
                     <tr>
                         <th class="py-2 px-4 border border-black">
@@ -353,8 +357,8 @@
         
   
         <!-- Page 4 -->
-        <div v-if="currentPage === 4" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
-            <table >
+        <div v-if="currentPage === 4" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+          <table >
                 <thead>
                     <tr>
                         <th class="py-2 px-4 border border-black">
@@ -429,8 +433,8 @@
 
 
       <!--Page 5 -->
-<div v-if="currentPage === 5" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10" >
-      <table>
+      <div v-if="currentPage === 5" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+        <table>
         <thead>
                     <tr>
                         <th class="py-2 px-4 border border-black">
@@ -518,8 +522,8 @@
     </div>
     
         <!-- Page 6 -->
-        <div v-if="currentPage === 6" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
-            <table>
+        <div v-if="currentPage === 6" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+          <table>
                 <thead>
                     <tr>
                         <th class="py-2 px-4 border border-black">
@@ -621,8 +625,8 @@
         </div>
 
         <!-- Page 7 -->
-        <div v-if="currentPage === 7" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg">
-            <table class="min-w-full bg-white">
+        <div v-if="currentPage === 7" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+          <table class="min-w-full bg-white">
                 <thead>
                     <tr>
                         <th class="py-2 px-4 border border-black">
@@ -775,7 +779,7 @@
        </div>
       </div>
 
-
+      </div>
 </template>
 
 
@@ -1066,4 +1070,9 @@ button {
 button:hover {
   background-color: #2563eb;
 }
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  }
 </style>
