@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session; // Import Session facade
-use Illuminate\Support\Facades\Log;     // Import Log facade
+use Illuminate\Support\Facades\Log as Logger; // Import Log facade for logging
+use App\Models\Log; // Import Log model for saving actions
 
 class Admission extends Model
 {
     use HasFactory;
 
+    // Allow mass assignment for the specified fields
     protected $fillable = [
         'case_status',
         'committing_court',
@@ -30,9 +32,11 @@ class Admission extends Model
         'office_address',
         'date_time',
         'noted_by',
-        'updated_by'
+        'updated_by',
+        'user_role',  // Add user_role field in fillable
     ];
 
+    // Define relationships
     public function client()
     {
         return $this->belongsTo(Client::class);
@@ -48,45 +52,111 @@ class Admission extends Model
         return $this->hasMany(DocumentSubmitted::class);
     }
 
-    // Automatically update the 'updated_by' field when the model is created or updated
+    // Boot method to handle logging and updating fields
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            // Log the entire session data for debugging
-            Log::info('Session Data', Session::all());
-
-            // Get the user's first name from the session
-            $userFname = Session::get('user_fname');
-
-            // Log the specific 'user_fname' from the session
-            Log::info('Creating Admission', ['user_fname' => $userFname]);
-
-            // Set the 'updated_by' field to the user's first name from the session
-            if ($userFname) {
-                $model->updated_by = $userFname;
-            } else {
-                Log::warning('User first name not found in session during creation');
-            }
+        static::created(function ($model) {
+            self::handleLogging($model, 'created');
         });
 
-        static::updating(function ($model) {
-            // Log the entire session data for debugging
-            Log::info('Session Data', Session::all());
-
-            // Get the user's first name from the session
-            $userFname = Session::get('user_fname');
-
-            // Log the specific 'user_fname' from the session
-            Log::info('Updating Admission', ['user_fname' => $userFname]);
-
-            // Set the 'updated_by' field to the user's first name from the session
-            if ($userFname) {
-                $model->updated_by = $userFname;
-            } else {
-                Log::warning('User first name not found in session during update');
-            }
+        static::updated(function ($model) {
+            self::handleLogging($model, 'updated');
         });
+    }
+
+    /**
+     * Handle logging for created and updated events
+     * 
+     * @param  \App\Models\Admission  $model
+     * @param  string  $action
+     * @return void
+     */
+    protected static function handleLogging($model, $action)
+    {
+        // Log the session data for debugging
+        Logger::info('Session Data', Session::all());
+
+        // Fetch the user's first name, last name, and role from the session
+        $userFname = Session::get('user_fname');
+        $userLname = Session::get('user_lname');
+        $userRole = Session::get('user_role');
+
+        if (!$userFname || !$userLname || !$userRole) {
+            Logger::warning('User details not found in session during ' . $action);
+            return;
+        }
+
+        // Concatenate the first name and last name to create the full name
+        $fullName = trim($userFname . ' ' . $userLname);
+
+        // Ensure the client relationship is loaded
+        $model->load('client');
+
+        // Fetch the client details and concatenate to form the full name
+        $client = $model->client;
+        $clientFullName = '';
+        if ($client) {
+            $clientFullName = trim(
+                $client->first_name . ' ' .
+                ($client->middle_name ? $client->middle_name . ' ' : '') .
+                $client->last_name .
+                ($client->suffix ? ', ' . $client->suffix : '')
+            );
+        }
+
+        Logger::info('Admission ' . ucfirst($action), [
+            'updated_by' => $fullName,
+            'user_role' => $userRole,
+            'client_full_name' => $clientFullName,
+        ]);
+
+        // Update the 'updated_by' and 'user_role' fields
+        $model->updated_by = $fullName;
+        $model->user_role = $userRole;
+
+        // Get the current model attributes and filter out unnecessary fields
+        $currentAttributes = collect($model->getAttributes())->except([
+            'id', 'client_id', 'user_role', 'created_at', 'updated_at', 'updated_by'
+        ]);
+
+        // Handle logging for 'created' action (only show new values)
+        if ($action === 'created') {
+            // Log the action in the logs table without unnecessary fields
+            Log::create([
+                'model' => 'Admission',
+                'record_id' => $model->id,
+                'action' => $action,
+                'changes' => json_encode($currentAttributes), // Only log necessary values
+                'updated_by' => $fullName,
+                'user_role' => $userRole,
+                'client_full_name' => $clientFullName,
+            ]);
+        }
+
+        // Handle logging for 'updated' action (show old and new values)
+        if ($action === 'updated') {
+            // Get the original attributes of the model before updating
+            $original = $model->getOriginal();
+
+            // Get the changes that were made (only dirty fields)
+            $changes = collect($model->getDirty())->mapWithKeys(function ($value, $key) use ($original) {
+                return [$key => ['old' => $original[$key] ?? null, 'new' => $value]];
+            })->except([
+                'id', 'client_id', 'user_role', 'created_at', 'updated_at', 'updated_by'
+            ]); // Exclude unnecessary fields from changes
+
+            // Log the action in the logs table with old and new values, excluding unnecessary fields
+            Log::create([
+                'model' => 'Admission',
+                'record_id' => $model->id,
+                'action' => $action,
+                'changes' => json_encode($changes), // Log only necessary changes
+                'updated_by' => $fullName,
+                'user_role' => $userRole,
+                'client_full_name' => $clientFullName,
+            ]);
+        }
     }
 }

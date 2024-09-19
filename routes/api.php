@@ -236,3 +236,9 @@ Route::post('/move-file', [FileController::class, 'moveFile']);
 Route::post('/delete-folder', [FileController::class, 'deleteFolder']);
 Route::post('/delete-file', [FileController::class, 'deleteFile']);
 });
+
+use App\Http\Controllers\LogController;
+
+Route::get('/logs', [LogController::class, 'index']);
+Route::get('/logs/{id}', [LogController::class, 'show']);
+Route::post('/logs', [LogController::class, 'store']);
