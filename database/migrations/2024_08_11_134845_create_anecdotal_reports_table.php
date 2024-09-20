@@ -9,25 +9,27 @@ class CreateAnecdotalReportsTable extends Migration
     public function up()
     {
         Schema::create('anecdotal_reports', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');              
             $table->date('date');
-            $table->string('drn', 100)->nullable();
-            $table->string('color', 50)->nullable();
+            $table->string('drn', 25)->nullable();
+            $table->string('color', 10)->nullable();
             $table->text('physical')->nullable();
             $table->text('emotional')->nullable();
             $table->text('behavioral')->nullable();
             $table->text('spiritual')->nullable();
             $table->text('recommendation')->nullable();
-            $table->string('noted_by', 100)->nullable();
-            $table->string('approved_by', 100)->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('house_parents', 100)->nullable();
-            $table->string('house_parents_signature')->nullable();
-            $table->string('residents', 100)->nullable();
-            $table->string('residents_signature')->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('noted_by', 50)->nullable();
+            $table->string('approved_by', 50)->nullable();
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('house_parents', 50)->nullable();
+            $table->string('house_parents_signature', 150)->nullable();
+            $table->string('residents', 50)->nullable();
+            $table->string('residents_signature', 150)->nullable();
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+
         });        
     }
 

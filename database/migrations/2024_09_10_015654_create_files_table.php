@@ -9,12 +9,15 @@ class CreateFilesTable extends Migration
     public function up()
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained()->onDelete('cascade'); // Foreign key to clients table
-            $table->foreignId('folder_id')->nullable()->constrained()->onDelete('cascade'); // Foreign key to folders table
-            $table->string('filename');
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
+            $table->unsignedMediumInteger('folder_id')->nullable();
+            $table->string('filename', 25);
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('folder_id')->references('id')->on('folders')->onDelete('cascade');
+
         });
     }
 

@@ -17,18 +17,18 @@ class InterventionPlanController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'period' => 'required|string|max:100',
+            'period' => 'required|string|max:15',
             'date_prepared' => 'required|date',
-            'prepared_by' => 'nullable|string|max:100',
-            'conformed_by' => 'nullable|string|max:100',
-            'noted_by' => 'nullable|string|max:100',
+            'prepared_by' => 'nullable|string|max:50',
+            'conformed_by' => 'nullable|string|max:50',
+            //'noted_by' => 'nullable|string|max:50',
             'items' => 'required|array',
-            'items.*.objectives' => 'required|string|max:255',
-            'items.*.activities' => 'required|string|max:255',
-            'items.*.time_frame' => 'required|string|max:100',
-            'items.*.responsible_person' => 'required|string|max:100',
-            'items.*.expected_outcome' => 'required|string|max:255',
-            'items.*.remarks' => 'nullable|string|max:255',
+            'items.*.objectives' => 'required|string|max:50',
+            'items.*.activities' => 'required|string|max:50',
+            'items.*.time_frame' => 'required|string|max:20',
+            'items.*.responsible_person' => 'required|string|max:50',
+            'items.*.expected_outcome' => 'required|string|max:100',
+            'items.*.remarks' => 'nullable|string|max:150',
         ]);         
 
         $plan = InterventionPlan::create($validatedData);

@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('fname');
-            $table->string('lname');
-            $table->string('middlename')->nullable();
-            $table->string('email')->unique();
-            $table->string('role');
-            $table->string('status')->default('unverified'); // Default status
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->string('fname', 20);
+            $table->string('lname', 15);
+            $table->string('middlename', 15)->nullable();
+            $table->string('email', 30)->unique();
+            $table->string('role',20);
+            $table->string('status', 1)->default('u'); // Default status "unverified"
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password', 60);
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
-            $table->string('profile_photo_path', 2048)->nullable();
+            $table->string('profile_photo_path', 150)->nullable();
             $table->timestamp('login_at')->nullable(); // Add login_at
             $table->timestamp('logout_at')->nullable(); // Add logout_at
             $table->timestamps();

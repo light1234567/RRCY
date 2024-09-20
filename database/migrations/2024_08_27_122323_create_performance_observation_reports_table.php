@@ -9,15 +9,17 @@ class CreatePerformanceObservationReportsTable extends Migration
     public function up()
     {
         Schema::create('performance_observation_reports', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');              
             $table->date('assessment_date');
-            $table->string('trainings_attended', 100)->nullable();
+            $table->string('trainings_attended', 50)->nullable();
             $table->text('general_remarks')->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('noted_by', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('noted_by', 50)->nullable();
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+
         });        
     }
 

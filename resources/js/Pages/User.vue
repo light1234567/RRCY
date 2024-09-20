@@ -30,15 +30,15 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ user.role }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ user.email }}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm">
-                <span :class="user.status === 'verified' ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
-                  {{ user.status }}
+                <span :class="user.status === 'v' ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
+                  {{ user.status === 'v' ? 'Verified' : 'Unverified' }}
                 </span>
                 <!-- Switch styled button -->
                 <div class="mt-2 flex space-x-4">
                   <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" @click="toggleVerification(user)" :checked="user.status === 'verified'" class="sr-only peer">
+                    <input type="checkbox" @click="toggleVerification(user)" :checked="user.status === 'v'" class="sr-only peer">
                     <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ user.status === 'verified' ? 'Verified' : 'Unverified' }}</span>
+                    <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ user.status === 'v' ? 'Verified' : 'Unverified' }}</span>
                   </label>
                   <button @click="openDeleteModal(user)" class="text-red-700 hover:text-red-900 font-semibold">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -112,7 +112,7 @@ const getInitials = (name) => {
 // Function to toggle user verification status
 const toggleVerification = async (user) => {
   try {
-    const newStatus = user.status === 'verified' ? 'unverified' : 'verified';
+    const newStatus = user.status === 'v' ? 'u' : 'v';
     await axios.patch(`/api/users/${user.id}/toggle-verify`, { status: newStatus });
     user.status = newStatus;
   } catch (error) {

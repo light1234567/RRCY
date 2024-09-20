@@ -38,26 +38,26 @@ class TrainingNeedsAssessmentController extends Controller
     // Validate input data
     $validatedData = $request->validate([
         'education' => 'nullable|array',
-        'education.*.level' => 'required|string|max:100',
-        'education.*.year_or_grade' => 'nullable|string|max:50',
+        'education.*.level' => 'required|string|max:30',
+        'education.*.year_or_grade' => 'nullable|string|max:30',
         'trainings' => 'nullable|array',
-        'trainings.*.title' => 'nullable|string|max:150',
-        'trainings.*.duration' => 'nullable|string|max:50',
-        'trainings.*.location_outside' => 'nullable|string|max:100',
-        'trainings.*.location_inside' => 'nullable|string|max:100',
-        'social_worker' => 'nullable|string|max:100',
-        'houseparent' => 'nullable|string|max:100',
-        'father' => 'nullable|string|max:100',
-        'mother' => 'nullable|string|max:100',
-        'address' => 'nullable|string|max:255',
+        'trainings.*.title' => 'nullable|string|max:50',
+        'trainings.*.duration' => 'nullable|string|max:20',
+        'trainings.*.location_outside' => 'nullable|string|max:50',
+        'trainings.*.location_inside' => 'nullable|string|max:50',
+        'social_worker' => 'nullable|string|max:50',
+        'houseparent' => 'nullable|string|max:50',
+        'father' => 'nullable|string|max:50',
+        'mother' => 'nullable|string|max:50',
+        'address' => 'nullable|string|max:50',
         'center_duration' => 'nullable|string|max:50',
         'for_the' => 'nullable|string|max:50',
         'date_of_admission' => 'nullable|date',
         'training_sectors' => 'nullable|array',
-        'training_sectors.*.sector' => 'required|string|max:100',
-        'training_sectors.*.name' => 'required|string|max:100',
+        'training_sectors.*.sector' => 'required|string|max:50',
+        'training_sectors.*.name' => 'required|string|max:50',
         'training_sectors.*.rank' => 'nullable|integer',
-        'training_sectors.*.remarks' => 'nullable|string|max:255'
+        'training_sectors.*.remarks' => 'nullable|string'
     ]);    
 
     try {

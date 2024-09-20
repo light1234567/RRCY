@@ -9,10 +9,11 @@ class CreateInitialPsychologicalAssessmentsTable extends Migration
     public function up()
     {
         Schema::create('initial_psychological_assessments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->foreignId('admission_id')->constrained('admissions')->onDelete('cascade');
-            $table->string('nickname', 100)->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');             
+            $table->unsignedMediumInteger('admission_id');            
+            $table->string('nickname', 15)->nullable();
+            $table->text('educational_attainment')->nullable();
             $table->text('reason_for_referral')->nullable();
             $table->text('family_history')->nullable();
             $table->text('sexual_development')->nullable();
@@ -26,11 +27,13 @@ class CreateInitialPsychologicalAssessmentsTable extends Migration
             $table->text('test_result')->nullable();
             $table->text('clinical_impression')->nullable();
             $table->text('plan_of_action')->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('noted_by', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('noted_by', 50)->nullable();
             $table->timestamps();
-        });        
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('admission_id')->references('id')->on('admissions')->onDelete('cascade');
+        });       
     }
 
     public function down()

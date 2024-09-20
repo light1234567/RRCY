@@ -20,10 +20,10 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         Validator::make($input, [
-            'fname' => ['required', 'string', 'max:255'],
-            'lname' => ['required', 'string', 'max:255'],
-            'middlename' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'fname' => ['required', 'string', 'max:20'],
+            'lname' => ['required', 'string', 'max:15'],
+            'middlename' => ['nullable', 'string', 'max:15'],
+            'email' => ['required', 'string', 'email', 'max:30', 'unique:users'],
             'password' => $this->passwordRules(),
             'role' => ['required', 'string', 'in:social services,psychological,court order,homelife services,nursing care,educational services,psd,admin'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
@@ -36,7 +36,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'role' => $input['role'], // Save the role to the database
-            'status' => 'unverified', // Set the default status as 'unverified'
+            'status' => 'u', // Set the default status as 'unverified'
         ]);
     }
 }

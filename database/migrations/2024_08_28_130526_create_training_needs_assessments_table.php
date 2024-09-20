@@ -9,19 +9,20 @@ class CreateTrainingNeedsAssessmentsTable extends Migration
     public function up()
     {
         Schema::create('training_needs_assessments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->string('birthplace', 100)->nullable();
-            $table->string('social_worker', 100)->nullable();
-            $table->string('houseparent', 100)->nullable();
-            $table->string('father', 100)->nullable();
-            $table->string('mother', 100)->nullable();
-            $table->string('address', 255)->nullable();
-            $table->string('center_duration', 50)->nullable();
-            $table->string('for_the', 50)->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');              
+            $table->string('birthplace', 50)->nullable();
+            $table->string('social_worker', 50)->nullable();
+            $table->string('houseparent', 50)->nullable();
+            $table->string('father', 50)->nullable();
+            $table->string('mother', 50)->nullable();
+            $table->string('address', 150)->nullable();
+            $table->string('center_duration', 20)->nullable();
+            $table->string('for_the', 10)->nullable();
             $table->date('date_of_admission')->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });        
     }
 

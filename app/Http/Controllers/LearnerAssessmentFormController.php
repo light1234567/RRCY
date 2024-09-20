@@ -16,13 +16,13 @@ class LearnerAssessmentFormController extends Controller
             // Validate the incoming request data
             $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
-                'school_year' => 'nullable|string|max:50',
-                'grading_period' => 'nullable|string|max:50',
+                'school_year' => 'nullable|string|max:10',
+                'grading_period' => 'nullable|string|max:10',
                 'grade' => 'nullable|string|max:10',
                 'date' => 'nullable|date',
                 'recommendations' => 'nullable|string',
-                'prepared_by' => 'nullable|string|max:100',
-                'noted_by' => 'nullable|string|max:100',
+                'prepared_by' => 'nullable|string|max:50',
+                'noted_by' => 'nullable|string|max:50',
             ]);            
 
             // Log the validated data

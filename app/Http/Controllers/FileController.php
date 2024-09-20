@@ -25,7 +25,7 @@ class FileController extends Controller
     public function createFolder(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:25',
             'client_id' => 'required|exists:clients,id'
         ]);
 

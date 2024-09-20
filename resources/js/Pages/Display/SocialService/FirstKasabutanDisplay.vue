@@ -127,7 +127,9 @@
       </div>
 
       <div class="text-left mt-16">
-        <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
+        <input type="text" v-model="center_head" 
+              class="underline-input w-1/3 px-2 mt-12 py-1 text-xs" 
+              :readonly="!editMode"/>
         <p>Center Head/SWO IV</p>
       </div>
 
@@ -163,6 +165,7 @@ export default {
       editMode: false,
       message: '',
       messageType: '',
+      center_head: '',
       form: {
         client_id: null,
         client_resident: '',
@@ -185,6 +188,7 @@ export default {
     console.log('Client ID fetched:', clientId); // Console log showing client ID
     if (clientId) {
       this.fetchClientData(clientId);
+      this.fetchCenterHead(clientId);
     }
   },
   watch: {
@@ -192,6 +196,7 @@ export default {
       console.log('Client ID changed:', newId); // Console log showing updated client ID
       if (newId) {
         this.fetchClientData(newId);
+        this.fetchCenterHead(newId);
       }
     }
   },
@@ -214,6 +219,40 @@ export default {
         console.error('Error fetching client data:', error);
       }
     },
+    fetchCenterHead(clientId) {
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+  // Make an API request using the client ID
+  axios.get(`/api/center-head/${clientId}`)  // Updated endpoint to match the route
+    .then(response => {
+      this.center_head = response.data.center_head;
+      console.log("Fetched center head:", this.center_head); // Log the center head
+    })
+    .catch(error => {
+      console.error("Error fetching center head:", error);
+    });
+},
+saveCenterHead() {
+  const clientId = this.$route.params.id; // Get the clientId from the route params
+  if (!this.center_head || !clientId) {
+    return;
+  }
+  axios
+    .put(`/api/update-center-head`, {
+      center_head: this.center_head,
+      client_id: clientId, // Use the correct client ID
+    })
+    .then(response => {
+      this.editMode = false;
+      this.fetchClientData(clientId); // Refetch the data to update the UI
+    })
+    .catch(error => {
+      console.error("Error updating center head:", error);
+    });
+},
+
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -230,6 +269,7 @@ export default {
     async confirmSave() {
       try {
         await this.saveData();
+        this.saveCenterHead();
         this.saveResultTitle = 'Success';
         this.saveResultMessage = 'Data saved successfully!';
       } catch (error) {

@@ -9,20 +9,19 @@ class CreateSecondIntakeSheetsTable extends Migration
     public function up()
     {
         Schema::create('second_intake_sheets', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->unsignedBigInteger('general_intake_id')->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
+            $table->unsignedMediumInteger('general_intake_id')->nullable();
             $table->date('date')->nullable();
             $table->json('vices')->nullable();
             $table->text('school_activities_achievement')->nullable(); 
-            $table->string('occupation_of_mother', 100)->nullable(); 
-            $table->string('occupation_of_father', 100)->nullable(); 
+            $table->string('occupation_of_mother', 50)->nullable(); 
+            $table->string('occupation_of_father', 50)->nullable(); 
             $table->json('siblings')->nullable();
-            $table->string('responsible_for_households_chores', 100)->nullable(); 
-            $table->string('detention_days', 50)->nullable(); 
+            $table->string('responsible_for_households_chores', 50)->nullable(); 
+            $table->string('detention_days', 20)->nullable(); 
             $table->json('community')->nullable();
             $table->string('house_made_of', 100)->nullable(); 
-            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         
             // Foreign key constraints

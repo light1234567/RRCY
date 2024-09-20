@@ -9,19 +9,20 @@ class CreateInventoryItemsTable extends Migration
     public function up()
     {
         Schema::create('inventory_items', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('monthly_inventory_id')->constrained('monthly_inventories')->onDelete('cascade');
-            $table->string('name', 100);
-            $table->string('description', 100)->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');  
+            $table->string('name', 20);
+            $table->string('description', 50)->nullable();
             $table->integer('qty')->nullable();
-            $table->string('brand', 50)->nullable();
-            $table->string('size', 50)->nullable();
-            $table->string('color', 50)->nullable();
-            $table->string('old', 50)->nullable();
-            $table->string('new', 50)->nullable();
+            $table->string('brand', 20)->nullable();
+            $table->string('size', 4)->nullable();
+            $table->string('color', 10)->nullable();
+            $table->string('old', 10)->nullable();
+            $table->string('new', 10)->nullable();
             $table->string('remarks', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });        
     }
 

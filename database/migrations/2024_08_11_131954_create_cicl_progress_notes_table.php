@@ -9,17 +9,19 @@ class CreateCiclProgressNotesTable extends Migration
     public function up()
     {
         Schema::create('cicl_progress_notes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->foreignId('admission_id')->constrained('admissions')->onDelete('cascade');
-            $table->string('intervention_period', 100)->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');             
+            $table->unsignedMediumInteger('admission_id');             
+            $table->string('intervention_period', 20)->nullable();
             $table->text('problem_behavior_log')->nullable();
             $table->text('interventions_conducted')->nullable();
             $table->text('progress_notes')->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('noted_by', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('noted_by', 50)->nullable();
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('admission_id')->references('id')->on('admissions')->onDelete('cascade');
         });        
     }
 

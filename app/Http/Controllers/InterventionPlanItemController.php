@@ -17,12 +17,12 @@ class InterventionPlanItemController extends Controller
     {
         $validatedData = $request->validate([
             'plan_id' => 'required|exists:intervention_plans,id',
-            'objectives' => 'required|string|max:255',
-            'activities' => 'required|string|max:255',
-            'time_frame' => 'required|string|max:100', 
+            'objectives' => 'required|string|max:50',
+            'activities' => 'required|string|max:50',
+            'time_frame' => 'required|string|max:20', 
             'responsible_person' => 'required|string|max:100',
-            'expected_outcome' => 'required|string|max:255',
-            'remarks' => 'nullable|string|max:255',
+            'expected_outcome' => 'required|string|max:100',
+            'remarks' => 'nullable|string|max:150',
         ]);        
 
         $item = InterventionPlanItem::create($validatedData);

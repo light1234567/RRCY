@@ -14,19 +14,15 @@ class CreatePerformanceIndicatorsTable extends Migration
 
         // Create the table
         Schema::create('performance_indicators', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('section_id'); // Ensure this matches the `id` in `performance_sections`
-            $table->string('description');
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('section_id'); // Ensure this matches the `id` in `performance_sections`
+            $table->string('description', 150);
             $table->integer('self_rating')->nullable();
             $table->integer('mdo_rating')->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
 
             // Define the foreign key constraint
-            $table->foreign('section_id')
-                  ->references('id')
-                  ->on('performance_sections')
-                  ->onDelete('cascade');
+            $table->foreign('section_id')->references('id')->on('performance_sections')->onDelete('cascade');
         });
     }
 

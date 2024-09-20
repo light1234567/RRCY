@@ -109,9 +109,10 @@
     </div>
 
     <div class="text-right mt-12 mb-12">
-      <p><strong><u>ANGELIC B. PAÑA, RSW, MSSW</u></strong></p>
-      <p>Center Head/SWO IV</p>
-    </div>
+  <!-- Center the input and label properly on the right side -->
+  <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-1/2 inline-block border-none p-1 text-right" :readonly="!editMode"> <p class="text-right">Center Head/SWO IV</p>
+</div>
+
 
     <div class="mt-8">
       <div class="grid grid-cols-2 gap-8">
@@ -236,6 +237,7 @@ export default {
       editMode: false,
       message: '',
       messageType: '',
+      center_head: '',
       form: {
         client_id: null,
         signed_day: '',
@@ -275,6 +277,8 @@ export default {
             this.form.client_id = client.id;
             console.log('Client ID fetched:', client.id);
 
+            this.fetchCenterHead(client.id);
+
             return axios.get(`/api/admission-contracts/${id}`);
           })
           .then((response) => {
@@ -293,6 +297,41 @@ export default {
           });
       }
     },
+    fetchCenterHead(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    // Make an API request using the client ID
+    axios.get(`/api/center-head/${clientId}`)
+      .then(response => {
+        this.center_head = response.data.center_head;
+        console.log("Fetched center head:", this.center_head); // Log the center head
+      })
+      .catch(error => {
+        console.error("Error fetching center head:", error);
+      });
+  },
+  // Save center head
+  saveCenterHead() {
+    const clientId = this.$route.params.id;
+    if (!this.center_head || !clientId) {
+      return;
+    }
+    axios
+      .put(`/api/update-center-head`, {
+        center_head: this.center_head,
+        client_id: clientId, // Use the correct client ID
+      })
+      .then(response => {
+        this.editMode = false;
+        this.fetchClientData(clientId); // Refetch the data to update the UI
+      })
+      .catch(error => {
+        console.error("Error updating center head:", error);
+      });
+  },
+
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -308,6 +347,7 @@ export default {
     },
     confirmSave() {
       this.saveData();
+      this.saveCenterHead();
       this.closeModal();
       this.editMode = false;
     },

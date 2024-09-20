@@ -121,7 +121,7 @@
           </div>
           <div>
             <label class="font-semibold">Noted by:</label>
-            <input type="text" v-model="plan.noted_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode">
+            <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode">
             <div class="text-xs mt-1">Center Head/ SWO IV</div>
           </div>
         </div>
@@ -219,7 +219,8 @@ export default {
       isSaveResultModalOpen: false,
       saveResultTitle: '',
       saveResultMessage: '',
-      emptyRows: 5, // Number of empty rows to display
+      center_head: '',
+      emptyRows: 5, 
       plan: {
         id: null,
         name: '',
@@ -270,6 +271,38 @@ export default {
 
       console.log('Fetched client ID:', this.clientId);
     },
+    fetchCenterHead(clientId) {
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+  // Make an API request using the client ID
+  axios.get(`/api/center-head/${clientId}`)  // Updated endpoint to match the route
+    .then(response => {
+      this.center_head = response.data.center_head;
+      console.log("Fetched center head:", this.center_head); // Log the center head
+    })
+    .catch(error => {
+      console.error("Error fetching center head:", error);
+    });
+},
+saveCenterHead() {
+  if (!this.center_head || !this.clientId) {
+    return;
+  }
+  axios
+    .put(`/api/update-center-head`, {
+      center_head: this.center_head,
+      client_id: this.clientId, // Pass the client ID instead of admission ID
+    })
+    .then(response => {
+      this.editMode = false;
+      this.fetchClientData(); // Refetch the data to update the UI
+    })
+    .catch(error => {
+      console.error("Error updating center head:", error);
+    });
+},
     calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);
@@ -302,6 +335,7 @@ export default {
     },
     confirmSave() {
       this.saveData();
+      this.saveCenterHead();
       this.closeModal();
       this.editMode = false;
     },
@@ -324,7 +358,7 @@ export default {
         date_prepared: this.plan.date_prepared,
         prepared_by: this.plan.prepared_by,
         conformed_by: this.plan.conformed_by,
-        noted_by: this.plan.noted_by,
+        center_head: this.center_head,
         items: this.plan.items.map(item => ({
           objectives: item.objectives,
           activities: item.activities,
@@ -400,11 +434,13 @@ export default {
   mounted() {
     this.clientId = this.$route.params.id;
     this.fetchClientData();
+    this.fetchCenterHead(this.clientId);
   },
   watch: {
     '$route.params.id': function(newId) {
       this.clientId = newId;
       this.fetchClientData();
+      this.fetchCenterHead(this.clientId);
     }
   }
 };

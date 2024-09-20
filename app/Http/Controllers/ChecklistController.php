@@ -43,23 +43,23 @@ public function store(Request $request)
 {
     $validatedData = $request->validate([
         'client_id' => 'required|exists:clients,id',
-        'admitting_officer' => 'nullable|string|max:100', 
-        'case_manager' => 'nullable|string|max:100', 
+        'admitting_officer' => 'nullable|string|max:50', 
+        'case_manager' => 'nullable|string|max:50', 
         'documents' => 'nullable|array',
-        'documents.*.document' => 'nullable|string|max:255', 
+        'documents.*.document' => 'nullable|string|max:50', 
         'documents.*.yes' => 'nullable|boolean',
         'documents.*.no' => 'nullable|boolean',
-        'documents.*.remarks' => 'nullable|string|max:255', 
+        'documents.*.remarks' => 'nullable|string|max:150', 
         'documents.*.subItems' => 'nullable|array',
-        'documents.*.subItems.*.document' => 'nullable|string|max:255', 
+        'documents.*.subItems.*.document' => 'nullable|string|max:150', 
         'documents.*.subItems.*.yes' => 'nullable|boolean',
         'documents.*.subItems.*.no' => 'nullable|boolean',
-        'documents.*.subItems.*.remarks' => 'nullable|string|max:255', 
+        'documents.*.subItems.*.remarks' => 'nullable|string|max:150', 
         'rrcy_forms' => 'nullable|array',
-        'rrcy_forms.*.form' => 'nullable|string|max:255', 
+        'rrcy_forms.*.form' => 'nullable|string|max:150', 
         'rrcy_forms.*.yes' => 'nullable|boolean',
         'rrcy_forms.*.no' => 'nullable|boolean',
-        'rrcy_forms.*.remarks' => 'nullable|string|max:255', 
+        'rrcy_forms.*.remarks' => 'nullable|string|max:150', 
     ]);
 
     // Handling of the documents and their sub-items

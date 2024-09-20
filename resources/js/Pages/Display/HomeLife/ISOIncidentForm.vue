@@ -182,7 +182,7 @@
           <input
             type="text"
             id="approvedBy"
-            v-model="form.approved_by"
+            v-model="center_head"
             class="font-semibold  mt-1 w-3/4 text-sm underline-input p-0 shadow-sm"
             readonly
           >
@@ -272,6 +272,7 @@ export default {
   },
   data() {
     return {
+      center_head: '',
       form: {
         client_id: null,
         drn: '',
@@ -312,6 +313,7 @@ export default {
     fetchData() {
       const clientId = this.$route.params.id;
       console.log('Fetching data for client ID:', clientId);
+      this.fetchCenterHead(clientId);
       if (clientId) {
         axios.get(`/api/incident-reports/${clientId}`).then(response => {
           if (response.data.report) {
@@ -331,6 +333,40 @@ export default {
         });
       }
     },
+    fetchCenterHead(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    // Make an API request using the client ID
+    axios.get(`/api/center-head/${clientId}`)
+      .then(response => {
+        this.center_head = response.data.center_head;
+        console.log("Fetched center head:", this.center_head); // Log the center head
+      })
+      .catch(error => {
+        console.error("Error fetching center head:", error);
+      });
+  },
+  // Save center head
+  saveCenterHead() {
+    const clientId = this.$route.params.id;
+    if (!this.center_head || !clientId) {
+      return;
+    }
+    axios
+      .put(`/api/update-center-head`, {
+        center_head: this.center_head,
+        client_id: clientId, // Use the correct client ID
+      })
+      .then(response => {
+        this.editMode = false;
+        this.fetchClientData(clientId); // Refetch the data to update the UI
+      })
+      .catch(error => {
+        console.error("Error updating center head:", error);
+      });
+  },
 
     toggleEdit() {
       if (this.editMode) {
@@ -351,6 +387,7 @@ export default {
 
     confirmSave() {
       this.submitForm();
+      this.saveCenterHead();
       this.closeModal();
     },
 

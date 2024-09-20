@@ -154,7 +154,7 @@
                 type="text"
                 v-model="form.educational_attainment"
                 class="p-1 border-b border-transparent focus:outline-none"
-                readonly
+                :readonly="!editMode"
               />
             </div>
 
@@ -321,7 +321,8 @@
           </div>
           <div class="space-y-2">
             <label for="notedBy" class="block font-medium">Noted by:</label>
-            <input type="text" id="notedBy" v-model="form.noted_by" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode">
+            <input type="text" v-model="center_head" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode">
+            <div class="text-xs mt-1">SWO IV / Center Head</div>
           </div>
           <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
        <div class="flex justify-between items-center">
@@ -404,6 +405,7 @@ export default {
   },
   data() {
     return {
+      center_head: '',
       form: {
         id: null,
         client_id: null,
@@ -432,7 +434,6 @@ export default {
         clinical_impression: '',
         plan_of_action: '',
         prepared_by: '',
-        noted_by: '',
       },
       editMode: false,
       message: '',
@@ -455,7 +456,7 @@ export default {
     fetchData() {
       const clientId = this.$route.params.id;
       console.log('Client ID:', clientId); // Log the client ID to the console
-
+      this.fetchCenterHead(clientId);
       if (clientId) {
         axios.get(`/api/initial-psychological-assessments/${clientId}`)
           .then(response => {
@@ -496,6 +497,41 @@ export default {
           });
       }
     },
+    fetchCenterHead(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    // Make an API request using the client ID
+    axios.get(`/api/center-head/${clientId}`)
+      .then(response => {
+        this.center_head = response.data.center_head;
+        console.log("Fetched center head:", this.center_head); // Log the center head
+      })
+      .catch(error => {
+        console.error("Error fetching center head:", error);
+      });
+  },
+  // Save center head
+  saveCenterHead() {
+    const clientId = this.$route.params.id;
+    if (!this.center_head || !clientId) {
+      return;
+    }
+    axios
+      .put(`/api/update-center-head`, {
+        center_head: this.center_head,
+        client_id: clientId, // Use the correct client ID
+      })
+      .then(response => {
+        this.editMode = false;
+        this.fetchClientData(clientId); // Refetch the data to update the UI
+      })
+      .catch(error => {
+        console.error("Error updating center head:", error);
+      });
+  },
+
     toggleEdit() {
       this.editMode = !this.editMode;
     },
@@ -509,6 +545,7 @@ export default {
     confirmSave() {
       this.isModalOpen = false;
       this.submitForm();
+      this.saveCenterHead();
     },
     closeModal() {
       this.isModalOpen = false;

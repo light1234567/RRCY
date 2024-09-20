@@ -17,10 +17,10 @@ class RrcyFormController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'form' => 'required|string|max:255',
+            'form' => 'required|string|max:100',
             'yes' => 'boolean',
             'no' => 'boolean',
-            'remarks' => 'nullable|string|max:255',
+            'remarks' => 'nullable|string|max:150',
         ]);
 
         $rrcyForm = RrcyForm::create($validatedData);
@@ -42,10 +42,10 @@ class RrcyFormController extends Controller
         if ($rrcyForm) {
             $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
-                'form' => 'required|string|max:255',
+                'form' => 'required|string|max:100',
                 'yes' => 'boolean',
                 'no' => 'boolean',
-                'remarks' => 'nullable|string|max:255',
+                'remarks' => 'nullable|string|max:150',
             ]);
 
             $rrcyForm->update($validatedData);

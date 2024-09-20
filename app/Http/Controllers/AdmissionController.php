@@ -19,44 +19,44 @@ class AdmissionController extends Controller
     try {
         // Validate the request data
         $validated = $request->validate([
-            'client.child_status' => 'required|string|max:50',
-            'client.first_name' => 'required|string|max:50',
-            'client.middle_name' => 'nullable|string|max:50',
-            'client.last_name' => 'required|string|max:50',
-            'client.suffix' => 'nullable|string|max:10',
-            'client.sex' => 'required|string|max:10',
+            'client.child_status' => 'required|string|max:35',
+            'client.first_name' => 'required|string|max:20',
+            'client.middle_name' => 'nullable|string|max:15',
+            'client.last_name' => 'required|string|max:15',
+            'client.suffix' => 'nullable|string|max:3',
+            'client.sex' => 'required|string|max:6',
             'client.date_of_birth' => 'required|date',
-            'client.place_of_birth' => 'required|string|max:100',
-            'client.province' => 'required|string|max:50',
-            'client.city' => 'required|string|max:50',
-            'client.barangay' => 'required|string|max:50',
-            'client.street' => 'nullable|string|max:100',
-            'client.religion' => 'nullable|string|max:100',
+            'client.place_of_birth' => 'required|string|max:50',
+            'client.province' => 'required|string|max:20',
+            'client.city' => 'required|string|max:30',
+            'client.barangay' => 'required|string|max:30',
+            'client.street' => 'nullable|string|max:60',
+            'client.religion' => 'nullable|string|max:20',
             'distinguishing_marks.tattoo_scars' => 'nullable|string|max:100',
             'distinguishing_marks.height' => 'nullable|numeric',
             'distinguishing_marks.weight' => 'nullable|numeric',
-            'distinguishing_marks.colour_of_eye' => 'nullable|string|max:50',
-            'distinguishing_marks.skin_colour' => 'nullable|string|max:50',
-            'admission.case_status' => 'required|string|max:100',
-            'admission.committing_court' => 'required|string|max:100',
-            'admission.crim_case_number' => 'required|string|max:100',
-            'admission.offense_committed' => 'required|string|max:100',
+            'distinguishing_marks.colour_of_eye' => 'nullable|string|max:10',
+            'distinguishing_marks.skin_colour' => 'nullable|string|max:10',
+            'admission.case_status' => 'required|string|max:25',
+            'admission.committing_court' => 'required|string|max:50',
+            'admission.crim_case_number' => 'required|string|max:25',
+            'admission.offense_committed' => 'required|string|max:50',
             'admission.date_admitted' => 'required|date',
             'admission.days_in_jail' => 'required|integer',
             'admission.days_in_detention_center' => 'required|integer',
-            'admission.action_taken' => 'required|string|max:255',
+            'admission.action_taken' => 'required|string|max:150',
             'admission.general_impression' => 'required|string',
             'documents_submitted.documents' => 'array',
-            'documents_submitted.documents.*' => 'string|max:255',
-            'documents_submitted.others' => 'nullable|string|max:50',
-            'admission.referring_party_name' => 'nullable|string|max:100',
-            'referring_party_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
-            'admission.admitting_officer' => 'nullable|string|max:100',
-            'admission.designation_id_contact' => 'nullable|string|max:100',
-            'admission.designation' => 'nullable|string|max:100',
-            'admission.office_address' => 'nullable|string|max:100',
+            'documents_submitted.documents.*' => 'string|max:50',
+            'documents_submitted.others' => 'nullable|string|max:20',
+            'admission.referring_party_name' => 'nullable|string|max:50',
+            'referring_party_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:150',
+            'admission.admitting_officer' => 'nullable|string|max:50',
+            'admission.designation_id_contact' => 'nullable|string|max:50',
+            'admission.designation' => 'nullable|string|max:50',
+            'admission.office_address' => 'nullable|string|max:50',
             'admission.date_time' => 'nullable|date',
-            'admission.noted_by' => 'nullable|string|max:100',
+            'admission.center_head' => 'nullable|string|max:50',
         ]);        
 
         Log::info('Validation passed. Validated data: ', $validated);
@@ -201,6 +201,41 @@ class AdmissionController extends Controller
         return response()->json($clients);
     }
     
-    
-    
+    public function getCenterHeadName($client_id)
+{
+    // Fetch the center_head for the specified client_id from the most recent admission
+    $centerHeadName = Admission::where('client_id', $client_id)
+                               ->latest('created_at')
+                               ->value('center_head');
+
+    if (!$centerHeadName) {
+        return response()->json(['message' => 'No center head name found for this client'], 404);
+    }
+
+    return response()->json(['center_head' => $centerHeadName]);
+}
+
+public function updateCenterHead(Request $request)
+{
+    $request->validate([
+        'center_head' => 'required|string|max:50',
+        'client_id' => 'required|integer' // Ensure the client ID is validated
+    ]);
+
+    // Fetch the most recent admission for the provided client ID
+    $admission = Admission::where('client_id', $request->client_id)
+                          ->latest('created_at')
+                          ->first();
+
+    if ($admission) {
+        $admission->center_head = $request->center_head;
+        $admission->save();
+
+        return response()->json(['message' => 'Center head updated successfully']);
+    }
+
+    return response()->json(['error' => 'Admission not found for this client'], 404);
+}
+
+
     }

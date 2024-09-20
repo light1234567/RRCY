@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -13,7 +14,7 @@ class AdminController extends Controller
     public function index()
     {
         $users = User::select(
-            \DB::raw("CONCAT(fname, ' ', middlename, ' ', lname) as full_name"),
+            DB::raw("CONCAT(fname, ' ', middlename, ' ', lname) as full_name"),
             'id',
             'role',
             'email',
@@ -30,7 +31,7 @@ class AdminController extends Controller
     public function show($id)
     {
         $user = User::select(
-            \DB::raw("CONCAT(fname, ' ', middlename, ' ', lname) as full_name"),
+            DB::raw("CONCAT(fname, ' ', middlename, ' ', lname) as full_name"),
             'id',
             'role',
             'email',
@@ -69,7 +70,7 @@ class AdminController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        $user->status = 'verified';
+        $user->status = 'v';
         $user->save();
 
         return response()->json(['message' => 'User verified successfully'], 200);

@@ -39,6 +39,7 @@ Route::get('/users', [AdminController::class, 'index']);
 Route::get('/users/{id}', [AdminController::class, 'show']);
 Route::delete('/users/{id}', [AdminController::class, 'destroy']);
 Route::patch('/users/{id}/verify', [AdminController::class, 'verify']);
+Route::patch('/users/{id}/toggle-verify', [AdminController::class, 'toggleVerify']);
 
 // Client Routes
 Route::middleware(['web', 'auth'])->group(function () {
@@ -56,6 +57,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/clients-data/{id}', [AdmissionController::class, 'getAllData']);
     Route::get('/test', [AdmissionController::class, 'getClientsByName']);
     Route::post('/admission', [AdmissionController::class, 'saveForm']); 
+    Route::get('/center-head/{client_id}', [AdmissionController::class, 'getCenterHeadName']);
+    Route::put('/update-center-head', [AdmissionController::class, 'updateCenterHead']);
     });
 
 // Checklist Routes

@@ -487,7 +487,7 @@
     v-if="client.admissions[0]" 
     type="text" 
     class="underline-input mt-1 text-center text-[15px] font-bold"
-    v-model="client.admissions[0].noted_by" 
+    v-model="client.admissions[0].center_head" 
     :readonly="!editMode"
     style="width: 200px;" 
   />
@@ -577,7 +577,7 @@ export default {
           designation: '',
           office_address: '',
           date_time: '',
-          noted_by: '',
+          center_head: '',
           referring_party_signature: null,
         },
         distinguishing_marks: {
@@ -708,7 +708,7 @@ getSignatureUrl(signaturePath) {
         designation: admission.designation || '',
         office_address: admission.office_address || '',
         date_time: admission.date_time || '',
-        noted_by: admission.noted_by || ''
+        center_head: admission.center_head || ''
       },
       distinguishing_marks: {
         tattoo_scars: admission.distinguishing_marks?.[0]?.tattoo_scars || '',
@@ -1388,7 +1388,7 @@ function checkAndAddPageIfNeeded(pdf, currentOffset) {
 
     // Dynamic Noted By value from Vue.js input field
     pdf.setFont('helvetica', 'bold');
-    pdf.text(client.admissions[0]?.noted_by || 'ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center');
+    pdf.text(client.admissions[0]?.center_head || 'ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center');
 
     // Draw underline
     pdf.line(78, offset + 7, 140, offset + 7);

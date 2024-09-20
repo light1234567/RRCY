@@ -9,13 +9,13 @@ class CreateTrainingsAttendedTable extends Migration
     public function up()
     {
         Schema::create('trainings_attended', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('report_id')->constrained('performance_observation_reports')->onDelete('cascade');
-            $table->string('title', 150);
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('report_id');             
+            $table->string('title', 50);
             $table->date('date_of_attendance')->nullable();
-            $table->string('status', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('status', 50)->nullable();
             $table->timestamps();
+            $table->foreign('report_id')->references('id')->on('performance_observation_reports')->onDelete('cascade');
         });        
     }
 

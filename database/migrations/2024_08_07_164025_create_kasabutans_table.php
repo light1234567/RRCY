@@ -9,12 +9,11 @@ class CreateKasabutansTable extends Migration
     public function up()
     {
         Schema::create('kasabutans', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->string('client_resident', 100)->nullable(); 
-            $table->string('parent_guardian', 100)->nullable(); 
-            $table->string('case_manager', 100)->nullable(); 
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
+            $table->string('client_resident', 50)->nullable(); 
+            $table->string('parent_guardian', 50)->nullable(); 
+            $table->string('case_manager', 50)->nullable(); 
             $table->timestamps();
     
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

@@ -9,21 +9,23 @@ class CreateCiclSessionsTable extends Migration
     public function up()
     {
         Schema::create('cicl_sessions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->string('drn', 100)->nullable();
-            $table->string('session', 100)->nullable();
-            $table->string('title', 150)->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');              
+            $table->string('drn', 25)->nullable();
+            $table->string('session', 20)->nullable();
+            $table->string('title', 50)->nullable();
             $table->date('date_conducted')->nullable();
             $table->text('objective')->nullable();
             $table->text('methodology')->nullable();
             $table->text('highlight')->nullable();
             $table->text('outcome')->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('noted_by', 100)->nullable();
-            $table->string('approved_by', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('noted_by', 50)->nullable();
+            $table->string('approved_by', 50)->nullable();
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+
         });        
     }
 

@@ -40,7 +40,7 @@ class FortifyServiceProvider extends ServiceProvider
             $user = \App\Models\User::where('email', $request->email)->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
-                if ($user->status === 'unverified') {
+                if ($user->status === 'u') {
                     return null; // Return null to prevent login
                 }
                 return $user; // Proceed with login if verified

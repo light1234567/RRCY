@@ -129,7 +129,7 @@
           <input 
             type="text" 
             class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
-            v-model="form.client_signature" 
+            v-model="clientName" 
             :readonly="!editMode"
           >
           <label class="block text-gray-700">Name and signature (Client):</label>

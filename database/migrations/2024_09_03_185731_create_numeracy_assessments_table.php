@@ -9,11 +9,12 @@ class CreateNumeracyAssessmentsTable extends Migration
     public function up()
     {
         Schema::create('numeracy_assessments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('learner_assessment_form_id')->constrained()->onDelete('cascade');
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('learner_assessment_form_id');             
             $table->string('advance_remarks', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
+
+            $table->foreign('learner_assessment_form_id')->references('id')->on('learner_assessment_forms')->onDelete('cascade');
         });        
     }
 

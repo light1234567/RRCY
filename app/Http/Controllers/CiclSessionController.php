@@ -19,17 +19,17 @@ class CiclSessionController extends Controller
 {
     $validatedData = $request->validate([
         'client_id' => 'required|exists:clients,id',
-        'drn' => 'nullable|string|max:100',
-        'session' => 'nullable|string|max:100',
-        'title' => 'nullable|string|max:150',
+        'drn' => 'nullable|string|max:25',
+        'session' => 'nullable|string|max:20',
+        'title' => 'nullable|string|max:50',
         'date_conducted' => 'nullable|date',
         'objective' => 'nullable|string',
         'methodology' => 'nullable|string',
         'highlight' => 'nullable|string',
         'outcome' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:100',
-        'noted_by' => 'nullable|string|max:100',
-        'approved_by' => 'nullable|string|max:100',
+        'prepared_by' => 'nullable|string|max:50',
+        'noted_by' => 'nullable|string|max:50',
+        'approved_by' => 'nullable|string|max:50',
     ]);    
 
     try {
@@ -76,17 +76,17 @@ class CiclSessionController extends Controller
     public function update(Request $request, $client_id)
 {
     $validatedData = $request->validate([
-        'drn' => 'nullable|string|max:100',
-        'session' => 'nullable|string|max:100',
-        'title' => 'nullable|string|max:150',
+        'drn' => 'nullable|string|max:25',
+        'session' => 'nullable|string|max:20',
+        'title' => 'nullable|string|max:50',
         'date_conducted' => 'nullable|date',
         'objective' => 'nullable|string',
         'methodology' => 'nullable|string',
         'highlight' => 'nullable|string',
         'outcome' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:100',
-        'noted_by' => 'nullable|string|max:100',
-        'approved_by' => 'nullable|string|max:100',
+        'prepared_by' => 'nullable|string|max:50',
+        'noted_by' => 'nullable|string|max:50',
+        'approved_by' => 'nullable|string|max:50',
     ]);    
 
     try {

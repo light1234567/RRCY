@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             'middlename' => 'Estorgio',
             'email' => 'michaelentero123@gmail.com',
             'role' => 'admin',
-            'status' => 'verified',
+            'status' => 'v',
             'password' => Hash::make('kel12345'),
 
         ]);

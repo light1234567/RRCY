@@ -181,7 +181,7 @@
          <input
            type="text"
            id="signatureResidents"
-           v-model="form.signature_residents"
+           v-model="form.name"
            class="mt-1 w-3/4 underline-input text-sm shadow-sm"
            :readonly="!editMode"
          >
@@ -210,11 +210,8 @@
        <label for="approvedBy" class="block text-sm font-medium">Approved by:</label>
        <input
          type="text"
-         id="approvedBy"
-         v-model="form.approved_by"
-         class=" font-semibold mt-1 w-3/4 underline-input text-sm rounded-none shadow-sm"
-         readonly
-       >
+         v-model="center_head"
+         :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode">
        <p class="text-sm">SWO IV / Center Head</p>
      </div>
    </div>
@@ -302,6 +299,7 @@ export default {
  },
  data() {
    return {
+    center_head: '',
      form: {
        client_id: null,
        name: '',
@@ -316,6 +314,7 @@ export default {
        noted_by: 'VAN M. DE LEON',
        approved_by: 'ANGELIC B. PAÑA',
        prepared_by: '',
+       signature_residents: '',
      },
      originalForm: null, // To store the original form data
      editMode: false,
@@ -330,35 +329,68 @@ export default {
    };
  },
  mounted() {
-   this.id = this.$route.params.id;
-   this.fetchData();
+   const clientId = this.$route.params.id;
+   this.fetchData(clientId);
+   this.fetchCenterHead(clientId);
  },
  watch: {
-   '$route.params.id': function(newId) {
-     this.id = newId;
-     this.fetchData();
+    '$route.params.id': function(newId) {
+     this.fetchData(newId);
+     this.fetchCenterHead(newId);
    }
  },
  methods: {
-   fetchData() {
-     const clientId = this.$route.params.id;
-     console.log('Fetching data for client ID:', clientId);
-     if (clientId) {
-       axios.get(`/api/anecdotal-reports/${clientId}`).then(response => {
-         if (response.data.report) {
-           Object.assign(this.form, response.data.report);
-           this.form.client_id = clientId;
-           this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store the original form data
-         } else {
-           const { client } = response.data;
-           this.form.client_id = client.id;
-           this.form.name = `${client.first_name} ${client.last_name}`;
-           this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store the original form data
-         }
-       }).catch(error => {
-         console.error('Error fetching data:', error);
-       });
+  fetchData(clientId) {
+  if (!clientId) return;
+  console.log('Fetching data for client ID:', clientId);
+
+  axios.get(`/api/anecdotal-reports/${clientId}`).then(response => {
+    console.log('API Response:', response.data); // Add this to check the response
+
+    if (response.data.report) {
+      // Populate form if report exists
+      Object.assign(this.form, response.data.report);
+      this.form.client_id = clientId;
+      this.form.name = `${response.data.client.first_name} ${response.data.client.last_name}`; // Ensure correct field mapping
+      this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store original form
+    } else {
+      // If no report, fetch client info
+      const { client } = response.data;
+      this.form.client_id = client.id;
+      this.form.name = `${client.first_name} ${client.last_name}`;
+      this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store original form
+    }
+  }).catch(error => {
+    console.error('Error fetching data:', error);
+  });
+}
+,
+   fetchCenterHead(clientId) {
+     if (!clientId) {
+       console.error("Client ID is missing.");
+       return;
      }
+     axios.get(`/api/center-head/${clientId}`).then(response => {
+       this.center_head = response.data.center_head;
+       console.log("Fetched center head:", this.center_head); 
+     }).catch(error => {
+       console.error("Error fetching center head:", error);
+     });
+   },
+
+   saveCenterHead() {
+     const clientId = this.$route.params.id; 
+     if (!this.center_head || !clientId) {
+       return;
+     }
+     axios.put(`/api/update-center-head`, {
+       center_head: this.center_head,
+       client_id: clientId,
+     }).then(() => {
+       this.fetchData(clientId); 
+     }).catch(error => {
+       console.error("Error updating center head:", error);
+     });
    },
 
    toggleEdit() {
@@ -380,6 +412,7 @@ export default {
 
    confirmSave() {
      this.submitForm();
+     this.saveCenterHead();
      this.closeModal();
    },
 
@@ -403,8 +436,8 @@ export default {
          this.saveResultMessage = 'Data saved successfully.';
          this.isSaveResultModalOpen = true;
          this.clearMessage();
-         this.fetchData(); // Re-fetch data to update the form with the latest saved data
-       })
+         this.fetchData(this.form.client_id);       
+        })
        .catch(error => {
          this.message = 'Failed to update data';
          this.messageType = 'error';

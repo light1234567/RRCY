@@ -9,8 +9,8 @@ class CreateWritingAssessmentsTable extends Migration
     public function up()
     {
         Schema::create('writing_assessments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('learner_assessment_form_id')->constrained()->onDelete('cascade');
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('learner_assessment_form_id');             
             $table->json('punctuation')->nullable();
             $table->string('punctuation_remarks', 100)->nullable();
             $table->json('capitalization')->nullable();
@@ -21,8 +21,9 @@ class CreateWritingAssessmentsTable extends Migration
             $table->string('content_ideas_remarks', 100)->nullable();
             $table->json('spelling')->nullable();
             $table->string('spelling_remarks', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
+
+            $table->foreign('learner_assessment_form_id')->references('id')->on('learner_assessment_forms')->onDelete('cascade');
         });        
     }
 

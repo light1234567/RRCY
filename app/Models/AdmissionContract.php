@@ -79,8 +79,8 @@ class AdmissionContract extends Model
        if ($client) {
            $clientFullName = trim(
                $client->first_name . ' ' .
-               ($client->middle_name ? $client->middle_name . ' ' : '') . 
-               $client->last_name . 
+               ($client->middle_name ? $client->middle_name . ' ' : '') .
+               $client->last_name .
                ($client->suffix ? ', ' . $client->suffix : '')
            );
        }
@@ -91,51 +91,15 @@ class AdmissionContract extends Model
            'client_full_name' => $clientFullName,
        ]);
 
-       // Update the 'updated_by' and 'user_role' fields
-       $model->updated_by = $fullName;
-       $model->user_role = $userRole;
-
-       // Get the current model attributes and filter out unnecessary fields
-       $currentAttributes = collect($model->getAttributes())->except([
-           'id', 'created_at', 'updated_at', 'updated_by', 'user_role'
+       // Log the action in the logs table
+       Log::create([
+           'model' => 'AdmissionContract',
+           'record_id' => $model->id,
+           'action' => $action,
+           'changes' => json_encode($model->getAttributes()), // Log the model's attributes
+           'updated_by' => $fullName,
+           'user_role' => $userRole,
+           'client_full_name' => $clientFullName,
        ]);
-
-       // Handle logging for 'created' action (only show new values)
-       if ($action === 'created') {
-           // Log the action in the logs table without unnecessary fields
-           Log::create([
-               'model' => 'AdmissionContract',
-               'record_id' => $model->id,
-               'action' => $action,
-               'changes' => json_encode($currentAttributes), // Only log necessary values
-               'updated_by' => $fullName,
-               'user_role' => $userRole,
-               'client_full_name' => $clientFullName,
-           ]);
-       }
-
-       // Handle logging for 'updated' action (show old and new values)
-       if ($action === 'updated') {
-           // Get the original attributes of the model before updating
-           $original = $model->getOriginal();
-
-           // Get the changes that were made (only dirty fields)
-           $changes = collect($model->getDirty())->mapWithKeys(function ($value, $key) use ($original) {
-               return [$key => ['old' => $original[$key] ?? null, 'new' => $value]];
-           })->except([
-               'id', 'created_at', 'updated_at', 'updated_by', 'user_role'
-           ]); // Exclude unnecessary fields from changes
-
-           // Log the action in the logs table with old and new values
-           Log::create([
-               'model' => 'AdmissionContract',
-               'record_id' => $model->id,
-               'action' => $action,
-               'changes' => json_encode($changes), // Log only necessary changes
-               'updated_by' => $fullName,
-               'user_role' => $userRole,
-               'client_full_name' => $clientFullName,
-           ]);
-       }
    }
 }

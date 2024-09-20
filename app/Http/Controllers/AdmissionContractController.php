@@ -17,12 +17,12 @@ class AdmissionContractController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'nullable|exists:clients,id',
-            'signed_day' => 'nullable|string|max:2', 
-            'signed_month' => 'nullable|string|max:20', 
-            'parent_custodian_name' => 'nullable|string|max:100', 
-            'lgu_worker_name' => 'nullable|string|max:100',
-            'rrcy_officer' => 'nullable|string|max:100', 
-            'houseparent_on_duty' => 'nullable|string|max:100', 
+            'signed_day' => 'nullable|integer|min:1|max:32', 
+            'signed_month' => 'nullable|string|max:10', 
+            'parent_custodian_name' => 'nullable|string|max:50', 
+            'lgu_worker_name' => 'nullable|string|max:50',
+            'rrcy_officer' => 'nullable|string|max:50', 
+            'houseparent_on_duty' => 'nullable|string|max:50', 
         ]);  
 
         $admissionContract = AdmissionContract::create($validatedData);
@@ -44,12 +44,12 @@ class AdmissionContractController extends Controller
         if ($admissionContract) {
             $validatedData = $request->validate([
                 'client_id' => 'nullable|exists:clients,id',
-                'signed_day' => 'nullable|string|max:2', 
-                'signed_month' => 'nullable|string|max:20', 
-                'parent_custodian_name' => 'nullable|string|max:150', 
-                'lgu_worker_name' => 'nullable|string|max:150',
-                'rrcy_officer' => 'nullable|string|max:150', 
-                'houseparent_on_duty' => 'nullable|string|max:150', 
+                'signed_day' => 'nullable|integer|min:1|max:32',
+                'signed_month' => 'nullable|string|max:10', 
+                'parent_custodian_name' => 'nullable|string|max:50', 
+                'lgu_worker_name' => 'nullable|string|max:50',
+                'rrcy_officer' => 'nullable|string|max:50', 
+                'houseparent_on_duty' => 'nullable|string|max:50', 
             ]);            
 
             $admissionContract->update($validatedData);

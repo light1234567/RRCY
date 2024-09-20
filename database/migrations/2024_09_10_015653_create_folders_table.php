@@ -9,11 +9,12 @@ class CreateFoldersTable extends Migration
     public function up()
     {
         Schema::create('folders', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained()->onDelete('cascade'); // Foreign key to clients table
-            $table->string('name');
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');             
+            $table->string('name', 25);
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
 

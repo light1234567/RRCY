@@ -5,13 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session; // Import Session facade
-use Illuminate\Support\Facades\Log;     // Import Log facade
+use Illuminate\Support\Facades\Log as Logger; // Import Log facade for logging
+use App\Models\Log; // Import Log model for saving actions
 
 class Checklist extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['client_id', 'admitting_officer', 'case_manager', 'documents', 'rrcy_forms',    'updated_by'];
+    protected $fillable = [
+        'client_id', 
+        'admitting_officer', 
+        'case_manager', 
+        'documents', 
+        'rrcy_forms',    
+        'updated_by'
+    ];
 
     // Cast JSON fields
     protected $casts = [
@@ -23,45 +31,55 @@ class Checklist extends Model
     {
         return $this->belongsTo(Client::class);
     }
-     // Automatically update the 'updated_by' field when the model is created or updated
-     protected static function boot()
-     {
-         parent::boot();
- 
-         static::creating(function ($model) {
-             // Log the entire session data for debugging
-             Log::info('Session Data', Session::all());
- 
-             // Get the user's first name from the session
-             $userFname = Session::get('user_fname');
- 
-             // Log the specific 'user_fname' from the session
-             Log::info('Creating Admission', ['user_fname' => $userFname]);
- 
-             // Set the 'updated_by' field to the user's first name from the session
-             if ($userFname) {
-                 $model->updated_by = $userFname;
-             } else {
-                 Log::warning('User first name not found in session during creation');
-             }
-         });
- 
-         static::updating(function ($model) {
-             // Log the entire session data for debugging
-             Log::info('Session Data', Session::all());
- 
-             // Get the user's first name from the session
-             $userFname = Session::get('user_fname');
- 
-             // Log the specific 'user_fname' from the session
-             Log::info('Updating Admission', ['user_fname' => $userFname]);
- 
-             // Set the 'updated_by' field to the user's first name from the session
-             if ($userFname) {
-                 $model->updated_by = $userFname;
-             } else {
-                 Log::warning('User first name not found in session during update');
-             }
-         });
-     }
+     
+    // Boot method to handle logging and updating fields
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            self::handleLogging($model, 'created');
+        });
+
+        static::updated(function ($model) {
+            self::handleLogging($model, 'updated');
+        });
+    }
+
+    /**
+     * Handle logging for created and updated events
+     * 
+     * @param  \App\Models\Checklist  $model
+     * @param  string  $action
+     * @return void
+     */
+    protected static function handleLogging($model, $action)
+    {
+        // Log the session data for debugging
+        Logger::info('Session Data', Session::all());
+
+        // Fetch the user's first name, last name, and role from the session
+        $userFname = Session::get('user_fname');
+        $userLname = Session::get('user_lname');
+        $userRole = Session::get('user_role');
+
+        if (!$userFname || !$userLname || !$userRole) {
+            Logger::warning('User details not found in session during ' . $action);
+            return;
+        }
+
+        // Concatenate the first name and last name to create the full name
+        $fullName = trim($userFname . ' ' . $userLname);
+
+        // Log the action in the logs table
+        Log::create([
+            'model' => 'Checklist',
+            'record_id' => $model->id,
+            'action' => $action,
+            'changes' => json_encode($model->getAttributes()), // Log the model's attributes
+            'updated_by' => $fullName,
+            'user_role' => $userRole,
+            'client_full_name' => null, // Assuming no direct client name here, can be added if necessary
+        ]);
+    }
 }

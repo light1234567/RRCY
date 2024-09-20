@@ -9,14 +9,15 @@ class CreateMonthlyInventoriesTable extends Migration
     public function up()
     {
         Schema::create('monthly_inventories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->string('month', 50)->nullable();
-            $table->string('drn', 50)->nullable();
-            $table->string('resident_name', 100)->nullable();
-            $table->string('houseparent_name', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');             
+            $table->string('month', 10)->nullable();
+            $table->string('drn', 25)->nullable();
+            $table->string('resident_name', 50)->nullable();
+            $table->string('houseparent_name', 50)->nullable();
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });        
     }
 

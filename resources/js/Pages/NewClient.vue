@@ -626,7 +626,7 @@
         <input
           type="text"
           id="notedBy"
-          v-model="form.admission.noted_by"
+          v-model="form.admission.center_head"
           class="w-full px-2 py-1 border rounded-md text-sm"
         />
       </div>
@@ -703,6 +703,7 @@ const form = ref({
     designation: '',
     office_address: '',
     date_time: '',
+    center_head: '',
   },
   documents_submitted: {
     documents: [],
@@ -927,6 +928,7 @@ const resetForm = () => {
       designation: '',
       office_address: '',
       date_time: '',
+      center_head: '',
   
     },
     documents_submitted: {

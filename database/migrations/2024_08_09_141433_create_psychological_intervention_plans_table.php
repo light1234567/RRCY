@@ -9,13 +9,12 @@ class CreatePsychologicalInterventionPlansTable extends Migration
     public function up()
     {
         Schema::create('psychological_intervention_plans', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('client_id');
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
             $table->date('as_of_date')->nullable();
             $table->text('progress_notes')->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('noted_by', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('noted_by', 50)->nullable();
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

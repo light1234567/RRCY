@@ -9,14 +9,13 @@ class CreateInterventionPlansTable extends Migration
     public function up()
     {
         Schema::create('intervention_plans', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->string('period', 100); 
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
+            $table->string('period', 15); 
             $table->date('date_prepared');
-            $table->string('prepared_by', 100)->nullable(); 
-            $table->string('conformed_by', 100)->nullable(); 
-            $table->string('noted_by', 100)->nullable(); 
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable(); 
+            $table->string('conformed_by', 50)->nullable(); 
+            $table->string('noted_by', 50)->nullable(); 
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

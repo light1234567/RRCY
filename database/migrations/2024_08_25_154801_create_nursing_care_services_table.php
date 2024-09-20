@@ -9,10 +9,10 @@ class CreateNursingCareServicesTable extends Migration
     public function up()
     {
         Schema::create('nursing_care_services', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('client_id')->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id')->nullable();
             $table->date('date_of_admission')->nullable();
-            $table->string('current_medical_status', 255)->nullable();
+            $table->string('current_medical_status', 20)->nullable();
             $table->float('temperature')->nullable();
             $table->integer('pulse_rate')->nullable();
             $table->integer('respiratory_rate')->nullable();
@@ -21,18 +21,17 @@ class CreateNursingCareServicesTable extends Migration
             $table->float('weight_kg')->nullable();
             $table->float('bmi')->nullable();
             $table->string('bmi_remarks', 100)->nullable();
-            $table->string('eyes_status', 100)->nullable();
-            $table->string('nails_status', 100)->nullable();
-            $table->string('ears_status', 100)->nullable();
-            $table->string('skin_status', 100)->nullable();
-            $table->string('mouth_teeth_status', 100)->nullable();
-            $table->string('hair_status', 100)->nullable();
+            $table->string('eyes_status', 50)->nullable();
+            $table->string('nails_status', 50)->nullable();
+            $table->string('ears_status', 50)->nullable();
+            $table->string('skin_status', 50)->nullable();
+            $table->string('mouth_teeth_status', 50)->nullable();
+            $table->string('hair_status', 50)->nullable();
             $table->text('services_given')->nullable();
             $table->text('remarks')->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('noted_by', 100)->nullable();
-            $table->string('profile_image')->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('noted_by', 50)->nullable();
+            $table->string('profile_image', 150)->nullable();
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

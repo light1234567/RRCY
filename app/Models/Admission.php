@@ -31,7 +31,7 @@ class Admission extends Model
         'designation',
         'office_address',
         'date_time',
-        'noted_by',
+        'center_head',
         'updated_by',
         'user_role',  // Add user_role field in fillable
     ];

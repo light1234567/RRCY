@@ -9,25 +9,26 @@ class CreateSwappingFormsTable extends Migration
     public function up()
     {
         Schema::create('swapping_forms', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->string('drn', 100)->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');              
+            $table->string('drn', 25)->nullable();
             $table->date('date_of_filing')->nullable();
-            $table->string('requesting_party_name', 100)->nullable();
-            $table->string('requesting_party_position', 100)->nullable();
+            $table->string('requesting_party_name', 50)->nullable();
+            $table->string('requesting_party_position', 50)->nullable();
             $table->date('date_of_duty')->nullable();
             $table->time('time_of_duty')->nullable();
-            $table->string('sod_name', 100)->nullable();
+            $table->string('sod_name', 50)->nullable();
             $table->date('sod_date_of_duty')->nullable();
-            $table->string('sod_position', 100)->nullable();
-            $table->string('sod_shift_time', 50)->nullable();
+            $table->string('sod_position', 50)->nullable();
+            $table->string('sod_shift_time', 20)->nullable();
             $table->text('purpose')->nullable();
-            $table->string('requested_by', 100)->nullable();
-            $table->string('accepted_by', 100)->nullable();
-            $table->string('noted_by', 100)->default('VAN M. DE LEON');
-            $table->string('approved_by', 100)->default('ANGELIC B. PAÑA');
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('requested_by', 50)->nullable();
+            $table->string('accepted_by', 50)->nullable();
+            $table->string('noted_by', 50)->default('VAN M. DE LEON');
+            $table->string('approved_by', 50)->default('ANGELIC B. PAÑA');
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });        
     }
 

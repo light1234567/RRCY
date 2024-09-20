@@ -9,14 +9,15 @@ class CreateTrainingSectorDetailsTable extends Migration
     public function up()
     {
         Schema::create('training_sector_details', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('training_needs_assessment_id')->constrained('training_needs_assessments')->onDelete('cascade');
-            $table->string('sector', 100);
-            $table->string('name', 100);
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('training_needs_assessment_id');              
+            $table->string('sector', 50);
+            $table->string('name', 50);
             $table->integer('rank')->nullable();
             $table->text('remarks')->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
+
+            $table->foreign('training_needs_assessment_id')->references('id')->on('training_needs_assessments')->onDelete('cascade');
         });        
     }
 

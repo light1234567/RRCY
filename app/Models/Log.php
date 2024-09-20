@@ -10,6 +10,12 @@ class Log extends Model
     use HasFactory;
 
     protected $fillable = [
-        'model', 'record_id', 'action', 'changes', 'updated_by','client_full_name','user_role'
+        'model', 
+        'record_id', 
+        'action', 
+        'changes', 
+        'updated_by',
+        'client_full_name',
+        'user_role'
     ];
 }

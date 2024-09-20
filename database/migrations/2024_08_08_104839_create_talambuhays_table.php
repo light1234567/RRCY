@@ -9,14 +9,13 @@ class CreateTalambuhaysTable extends Migration
     public function up()
     {
         Schema::create('talambuhays', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('client_id')->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
             $table->text('about_my_family')->nullable();
             $table->text('about_my_self')->nullable();
             $table->text('about_my_case')->nullable();
-            $table->string('case_manager', 100)->nullable();
+            $table->string('case_manager', 50)->nullable();
             $table->date('date')->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

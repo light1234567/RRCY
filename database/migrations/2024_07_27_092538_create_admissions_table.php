@@ -9,26 +9,25 @@ class CreateAdmissionsTable extends Migration
     public function up()
     {
         Schema::create('admissions', function (Blueprint $table) {
-                        $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->string('committing_court', 100);
-            $table->string('crim_case_number', 100);
-            $table->string('offense_committed', 100);
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
+            $table->string('committing_court', 50);
+            $table->string('crim_case_number', 25);
+            $table->string('offense_committed', 50);
             $table->date('date_admitted');
             $table->integer('days_in_jail');
             $table->integer('days_in_detention_center');
-            $table->string('action_taken', 255);
+            $table->string('action_taken', 150);
             $table->text('general_impression');
-            $table->string('case_status', 100);
-            $table->string('referring_party_name', 100)->nullable();
+            $table->string('case_status', 25);
+            $table->string('referring_party_name', 50)->nullable();
             //$table->string('referring_party_signature')->nullable();
-            $table->string('admitting_officer', 100)->nullable();
-            $table->string('designation_id_contact', 100)->nullable();
-            $table->string('designation', 100)->nullable();
-            $table->string('office_address', 255)->nullable();
+            $table->string('admitting_officer', 50)->nullable();
+            $table->string('designation_id_contact', 50)->nullable();
+            $table->string('designation', 50)->nullable();
+            $table->string('office_address', 50)->nullable();
             $table->dateTime('date_time')->nullable();
-            $table->string('noted_by', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('center_head', 50)->nullable();
             $table->timestamps();
             
             // Foreign key definition

@@ -114,7 +114,7 @@
           <div class="space-y-2 mt-4">
             <label for="notedBy" class="block mb-12 mt-12 font-sm">Noted by:</label>
             <div class="flex flex-col">
-              <strong><input type="text" id="notedBy" v-model="form.noted_by" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode"></strong>
+              <strong><input type="text" v-model="center_head" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode"></strong>
               <span>SWO IV / Center Head</span>
             </div>
           </div>
@@ -203,6 +203,7 @@ export default {
   },
   data() {
     return {
+      center_head: '',
       form: {
         client_id: null,
         admission_id: null,
@@ -242,6 +243,7 @@ export default {
     fetchData() {
       const clientId = this.id;
       console.log('Fetching data for client ID:', clientId);
+      this.fetchCenterHead(clientId);
       if (clientId) {
         axios.get(`/api/cicl-progress-notes/${clientId}`)
           .then(response => {
@@ -269,6 +271,40 @@ export default {
           });
       }
     },
+    fetchCenterHead(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    // Make an API request using the client ID
+    axios.get(`/api/center-head/${clientId}`)
+      .then(response => {
+        this.center_head = response.data.center_head;
+        console.log("Fetched center head:", this.center_head); // Log the center head
+      })
+      .catch(error => {
+        console.error("Error fetching center head:", error);
+      });
+  },
+  // Save center head
+  saveCenterHead() {
+    const clientId = this.$route.params.id;
+    if (!this.center_head || !clientId) {
+      return;
+    }
+    axios
+      .put(`/api/update-center-head`, {
+        center_head: this.center_head,
+        client_id: clientId, // Use the correct client ID
+      })
+      .then(response => {
+        this.editMode = false;
+        this.fetchClientData(clientId); // Refetch the data to update the UI
+      })
+      .catch(error => {
+        console.error("Error updating center head:", error);
+      });
+  },
 
     toggleEdit() {
       this.editMode = !this.editMode;
@@ -286,6 +322,7 @@ export default {
     confirmSave() {
       this.isModalOpen = false;
       this.submitForm();
+      this.saveCenterHead();
     },
 
     closeModal() {

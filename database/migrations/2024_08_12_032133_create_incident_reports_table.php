@@ -9,9 +9,9 @@ class CreateIncidentReportsTable extends Migration
     public function up()
     {
         Schema::create('incident_reports', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->string('drn', 100)->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');              
+            $table->string('drn', 25)->nullable();
             $table->text('incident')->nullable();
             $table->date('date_of_incident')->nullable();
             $table->time('time_of_incident')->nullable();
@@ -20,11 +20,13 @@ class CreateIncidentReportsTable extends Migration
             $table->text('action_taken')->nullable();
             $table->text('agreements')->nullable();
             $table->text('corrective_measure')->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('reviewed_by', 100)->nullable();
-            $table->string('approved_by', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('reviewed_by', 50)->nullable();
+            $table->string('approved_by', 50)->nullable();
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+
         });        
     }
 

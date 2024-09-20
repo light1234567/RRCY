@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session; // Import Session facade
-use Illuminate\Support\Facades\Log;     // Import Log facade
-
+use Illuminate\Support\Facades\Log as Logger; // Import Log facade for logging
+use App\Models\Log; // Import Log model for saving actions
 class SecondIntakeSheet extends Model
 {
     use HasFactory;
@@ -42,45 +42,56 @@ class SecondIntakeSheet extends Model
     {
         return $this->belongsTo(GeneralIntakeSheet::class, 'general_intake_id');
     }
-   // Automatically update the 'updated_by' field when the model is created or updated
-   protected static function boot()
-   {
-       parent::boot();
+   
+    // Boot method to handle logging and updating fields
+    protected static function boot()
+    {
+        parent::boot();
 
-       static::creating(function ($model) {
-           // Log the entire session data for debugging
-           Log::info('Session Data', Session::all());
+        static::created(function ($model) {
+            self::handleLogging($model, 'created');
+        });
 
-           // Get the user's first name from the session
-           $userFname = Session::get('user_fname');
+        static::updated(function ($model) {
+            self::handleLogging($model, 'updated');
+        });
+    }
 
-           // Log the specific 'user_fname' from the session
-           Log::info('Creating Admission', ['user_fname' => $userFname]);
+    protected static function handleLogging($model, $action)
+    {
+        Logger::info('Session Data', Session::all());
 
-           // Set the 'updated_by' field to the user's first name from the session
-           if ($userFname) {
-               $model->updated_by = $userFname;
-           } else {
-               Log::warning('User first name not found in session during creation');
-           }
-       });
+        $userFname = Session::get('user_fname');
+        $userLname = Session::get('user_lname');
+        $userRole = Session::get('user_role');
 
-       static::updating(function ($model) {
-           // Log the entire session data for debugging
-           Log::info('Session Data', Session::all());
+        if (!$userFname || !$userLname || !$userRole) {
+            Logger::warning('User details not found in session during ' . $action);
+            return;
+        }
 
-           // Get the user's first name from the session
-           $userFname = Session::get('user_fname');
+        $fullName = trim($userFname . ' ' . $userLname);
+        $model->load('client');
 
-           // Log the specific 'user_fname' from the session
-           Log::info('Updating Admission', ['user_fname' => $userFname]);
+        $client = $model->client;
+        $clientFullName = '';
+        if ($client) {
+            $clientFullName = trim(
+                $client->first_name . ' ' .
+                ($client->middle_name ? $client->middle_name . ' ' : '') .
+                $client->last_name .
+                ($client->suffix ? ', ' . $client->suffix : '')
+            );
+        }
 
-           // Set the 'updated_by' field to the user's first name from the session
-           if ($userFname) {
-               $model->updated_by = $userFname;
-           } else {
-               Log::warning('User first name not found in session during update');
-           }
-       });
-   }
+        Log::create([
+            'model' => 'RrcyForm',
+            'record_id' => $model->client_id . '-' . $model->form, // Log composite key
+            'action' => $action,
+            'changes' => json_encode($model->getAttributes()),
+            'updated_by' => $fullName,
+            'user_role' => $userRole,
+            'client_full_name' => $clientFullName,
+        ]);
+    }
 }

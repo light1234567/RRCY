@@ -70,7 +70,7 @@ Route::post('/login', function (Request $request) {
         $user = Auth::user();
 
         // Check if the user's status is 'unverified'
-        if ($user->status === 'unverified') {
+        if ($user->status === 'u') {
             // Log out the user
             Auth::logout();
 

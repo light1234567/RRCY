@@ -9,12 +9,13 @@ class CreateEducationDetailsTable extends Migration
     public function up()
     {
         Schema::create('education_details', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('training_needs_assessment_id')->constrained('training_needs_assessments')->onDelete('cascade');
-            $table->string('education_level', 100);
-            $table->string('year_or_grade', 50)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('training_needs_assessment_id');            
+            $table->string('education_level', 30);
+            $table->string('year_or_grade', 30)->nullable();
             $table->timestamps();
+
+            $table->foreign('training_needs_assessment_id')->references('id')->on('training_needs_assessments')->onDelete('cascade');
         });        
     }
 

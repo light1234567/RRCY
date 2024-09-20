@@ -9,12 +9,11 @@ class CreateDataPrivacyConsentsTable extends Migration
     public function up()
     {
         Schema::create('data_privacy_consents', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->string('client_signature', 100)->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
+            $table->string('client_signature', 50)->nullable();
             $table->date('date')->nullable();
-            $table->string('guardian_signature', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('guardian_signature', 50)->nullable();
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

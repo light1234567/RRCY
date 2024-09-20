@@ -22,7 +22,8 @@ class InitialPsychologicalAssessmentController extends Controller
     $validatedData = $request->validate([
         'client_id' => 'required|exists:clients,id',
         'admission_id' => 'required|exists:admissions,id',
-        'nickname' => 'nullable|string|max:100',
+        'nickname' => 'nullable|string|max:15',
+        'educational_attainment' => 'nullable|string|max:20',
         'reason_for_referral' => 'nullable|string',
         'family_history' => 'nullable|string',
         'sexual_development' => 'nullable|string',
@@ -36,8 +37,8 @@ class InitialPsychologicalAssessmentController extends Controller
         'test_result' => 'nullable|string',
         'clinical_impression' => 'nullable|string',
         'plan_of_action' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:100',
-        'noted_by' => 'nullable|string|max:100',
+        'prepared_by' => 'nullable|string|max:50',
+        'noted_by' => 'nullable|string|max:50',
     ]);    
 
     try {
@@ -85,7 +86,8 @@ class InitialPsychologicalAssessmentController extends Controller
 {
     $validatedData = $request->validate([
         'admission_id' => 'required|exists:admissions,id',
-        'nickname' => 'nullable|string|max:100',
+        'nickname' => 'nullable|string|max:15',
+        'educational_attainment' => 'nullable|string|max:20',
         'reason_for_referral' => 'nullable|string',
         'family_history' => 'nullable|string',
         'sexual_development' => 'nullable|string',
@@ -99,8 +101,9 @@ class InitialPsychologicalAssessmentController extends Controller
         'test_result' => 'nullable|string',
         'clinical_impression' => 'nullable|string',
         'plan_of_action' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:100',
-        'noted_by' => 'nullable|string|max:100',
+        'prepared_by' => 'nullable|string|max:50',
+        'noted_by' => 'nullable|string|max:50',
+        'educational_attainment' => 'nullable|string|max:255',
     ]);    
 
     try {

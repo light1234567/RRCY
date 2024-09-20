@@ -10,13 +10,12 @@ class CreateChecklistsTable extends Migration
     
     {
         Schema::create('checklists', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->string('admitting_officer', 100)->nullable(); 
-            $table->string('case_manager', 100)->nullable(); 
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
+            $table->string('admitting_officer', 50)->nullable(); 
+            $table->string('case_manager', 50)->nullable(); 
             $table->json('documents')->nullable(); 
             $table->json('rrcy_forms')->nullable(); 
-            $table->string('updated_by')->nullable(); // Add updated_by field
             $table->timestamps();
 
             // Foreign key constraint on client_id

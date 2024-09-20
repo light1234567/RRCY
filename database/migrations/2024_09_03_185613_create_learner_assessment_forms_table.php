@@ -9,17 +9,19 @@ class CreateLearnerAssessmentFormsTable extends Migration
     public function up()
     {
         Schema::create('learner_assessment_forms', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('client_id')->constrained()->onDelete('cascade');
-            $table->string('school_year', 50)->nullable();
-            $table->string('grading_period', 50)->nullable();
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');             
+            $table->string('school_year', 10)->nullable();
+            $table->string('grading_period', 10)->nullable();
             $table->string('grade', 10)->nullable();
             $table->date('date')->nullable();
             $table->text('recommendations')->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('noted_by', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('noted_by', 50)->nullable();
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+
         });        
     }
 

@@ -11,9 +11,9 @@ class CreateIndicatorsOfSocialFunctioningTable extends Migration
         Schema::dropIfExists('indicators_of_social_functionings');
 
         Schema::create('indicators_of_social_functionings', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('client_id');
-            $table->unsignedBigInteger('admission_id');
+            $table->unsignedMediumInteger('id', false)->autoIncrement();
+            $table->unsignedMediumInteger('client_id');
+            $table->unsignedMediumInteger('admission_id');
             $table->date('date_administered')->nullable();
             $table->integer('physical_raw_score1')->nullable();
             $table->decimal('physical_score_per_area1')->nullable();
@@ -42,9 +42,8 @@ class CreateIndicatorsOfSocialFunctioningTable extends Migration
             $table->decimal('economic_score_per_area')->nullable();
             $table->decimal('general_score')->nullable();
             $table->text('interpretation')->nullable();
-            $table->string('prepared_by', 100)->nullable();
-            $table->string('discussed_with', 100)->nullable();
-            $table->string('updated_by')->nullable(); // Add updated_by field
+            $table->string('prepared_by', 50)->nullable();
+            $table->string('discussed_with', 50)->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
