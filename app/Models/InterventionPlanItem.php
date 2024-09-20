@@ -72,15 +72,45 @@ class InterventionPlanItem extends Model
             'user_role' => $userRole,
         ]);
 
-        // Log the action in the logs table
-        Log::create([
-            'model' => 'InterventionPlanItem',
-            'record_id' => $model->id,
-            'action' => $action,
-            'changes' => json_encode($model->getAttributes()), // Log the model's attributes
-            'updated_by' => $fullName,
-            'user_role' => $userRole,
-            'client_full_name' => null, // Assuming no client involved here
+        // Get the current model attributes and filter out unnecessary fields
+        $currentAttributes = collect($model->getAttributes())->except([
+            'id', 'plan_id', 'created_at', 'updated_at', 'updated_by'
         ]);
+
+        // Handle logging for 'created' action (only show new values)
+        if ($action === 'created') {
+            Log::create([
+                'model' => 'InterventionPlanItem',
+                'record_id' => $model->id,
+                'action' => $action,
+                'changes' => json_encode($currentAttributes), // Log only necessary values
+                'updated_by' => $fullName,
+                'user_role' => $userRole,
+                'client_full_name' => null, // Assuming no client involved here
+            ]);
+        }
+
+        // Handle logging for 'updated' action (show old and new values)
+        if ($action === 'updated') {
+            // Get the original attributes of the model before updating
+            $original = $model->getOriginal();
+
+            // Get the changes that were made (only dirty fields)
+            $changes = collect($model->getDirty())->mapWithKeys(function ($value, $key) use ($original) {
+                return [$key => ['old' => $original[$key] ?? null, 'new' => $value]];
+            })->except([
+                'id', 'plan_id', 'created_at', 'updated_at', 'updated_by'
+            ]); // Exclude unnecessary fields from changes
+
+            Log::create([
+                'model' => 'InterventionPlanItem',
+                'record_id' => $model->id,
+                'action' => $action,
+                'changes' => json_encode($changes), // Log only necessary changes
+                'updated_by' => $fullName,
+                'user_role' => $userRole,
+                'client_full_name' => null, // Assuming no client involved here
+            ]);
+        }
     }
 }
