@@ -3,8 +3,8 @@
     <div class="background-container min-h-screen flex items-center justify-center">
       <div class="w-full max-w-md p-6 mb-16 shadow-2xl rounded-md border-2 border-gray-300 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg flex flex-col items-center transform hover:translate-y-0 transition-transform duration-300">
         
-          <!-- Back Icon and Centered Heading -->
-          <div class="flex items-center justify-center mb-6 w-full relative">
+        <!-- Back Icon and Centered Heading -->
+        <div class="flex items-center justify-center mb-6 w-full relative">
           <button @click="goBack" class="text-white focus:outline-none absolute left-0">
             <!-- Back Icon SVG -->
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -31,6 +31,7 @@
             />
           </div>
           <p v-if="errorMessage" class="text-red-700 text-sm mt-2">{{ errorMessage }}</p>
+          <p v-if="onlineMessage" class="text-green-600 text-sm mt-2">{{ onlineMessage }}</p>
 
           <!-- Back and Submit Buttons -->
           <div class="flex justify-center space-x-4">
@@ -48,7 +49,7 @@
           <span class="text-white">Didn't receive OTP?</span> 
           <button 
             @click="resendOtp" 
-            :disabled="timer > 0"
+            :disabled="timer > 0 || !isOnline" 
             class="text-white font-bold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50"
           > 
             RESEND 
@@ -100,26 +101,32 @@ export default {
     return {
       otp: ['', '', '', '', '', ''], // Array to store each digit of the OTP
       errorMessage: '', // Property to store the error message
+      onlineMessage: '', // Property to store the online success message
       showModal: false,
       successModal: false, // Property for success verification modal
       resentModal: false, // Property for resent OTP modal
       modalMessage: '',
       redirecting: false,  // Track if redirection is happening
       timer: 0, // Timer for OTP resend button
+      isLoading: false,  // Loading state for async operations
+      isOnline: true,  // Property to track if the user is online or offline
     };
   },
   methods: {
+    // Move focus to the next box after entering a digit
     focusNextBox(index) {
       if (this.otp[index].length === 1 && index < 5) {
         this.$refs.otpBoxes[index + 1].focus();
       }
     },
+    // Move focus to the previous box and clear if necessary
     focusPreviousBox(index) {
       if (this.otp[index] === '' && index > 0) {
         this.$refs.otpBoxes[index - 1].focus();
         this.otp[index - 1] = ''; // Clear the previous box as well
       }
     },
+    // Verify the OTP by combining all input fields
     async verifyOtp() {
       const otpCode = this.otp.join(''); // Combine the OTP array into a single string
 
@@ -129,59 +136,79 @@ export default {
       }
 
       this.errorMessage = ''; // Clear the error message if OTP is not empty
+      this.isLoading = true; // Set loading state
 
       try {
         const response = await axios.post('/verify-otp', { otp: otpCode });
         this.modalMessage = response.data.message;
 
         if (response.status === 200) {
-        this.successModal = true; // Show success modal
-        // Wait for 2 seconds before redirecting to the dashboard
-        setTimeout(() => {
-          this.$inertia.visit('/dashboard', {
-            onFinish: () => {
-              window.location.reload(); // Refresh the page after redirection
-            },
-          }); 
-        }, 2000);
-      }
+          this.successModal = true; // Show success modal
+          // Wait for 2 seconds before redirecting to the dashboard
+          setTimeout(() => {
+            this.$inertia.visit('/dashboard', {
+              onFinish: () => {
+                window.location.reload(); // Refresh the page after redirection
+              },
+            });
+          }, 2000);
+        }
       } catch (error) {
         // Handle invalid or expired OTP errors
         if (error.response && (error.response.status === 400 || error.response.status === 422)) {
           this.displayErrorMessage(error.response.data.message);
           this.clearOtp(); // Clear the OTP input fields
         } else {
-          this.modalMessage = error.response.data.message;
+          this.modalMessage = 'An unexpected error occurred. Please try again.';
           this.showModal = true; // Show modal for other errors
         }
+      } finally {
+        this.isLoading = false; // Stop loading state
       }
     },
+    // Resend OTP request
     async resendOtp() {
       this.errorMessage = ''; // Clear any existing error messages
       this.modalMessage = ''; // Clear any existing modal messages
       this.showModal = false; // Ensure the modal is not shown initially
-      
+      this.isLoading = true; // Start loading state
+
       try {
         const response = await axios.post('/resend-otp');
         this.modalMessage = response.data.message;
         this.resentModal = true; // Show the OTP Resent Successfully modal
-        this.setTimer(); // Start the countdown timer and save the end time
+        this.setTimer(); // Start the countdown timer
 
         setTimeout(() => {
           this.resentModal = false; // Automatically close the resent modal after 2 seconds
         }, 2000);
       } catch (error) {
-        // In case of an error, handle it without setting the errorMessage
-        console.error("Error while resending OTP:", error);
         this.modalMessage = 'Failed to resend OTP. Please try again.'; // Provide a generic error message
         this.showModal = true; // Show the modal with a generic error message
+      } finally {
+        this.isLoading = false; // Stop loading state
       }
     },
+    // Automatically resend OTP when internet is restored
+    handleConnectionChange() {
+      this.isOnline = navigator.onLine;
+      if (this.isOnline) {
+        // Automatically resend OTP when connection is back
+        this.errorMessage = ''; // Clear the error message when online
+        this.onlineMessage = 'You are back online. Check your email, we resent the OTP.'; // Display the online message
+        this.resendOtp();
+      } else {
+        this.onlineMessage = ''; // Clear the online message if offline
+        this.displayErrorMessage('You are offline. OTP cannot be sent.');
+      }
+    },
+    // Start the OTP resend timer
     setTimer() {
       const endTime = Date.now() + 180000; // Set the timer to 3 minutes from now (180000 ms)
       localStorage.setItem('otpTimerEnd', endTime);
       this.startTimer();
     },
+    // Update the timer countdown
     startTimer() {
       const endTime = parseInt(localStorage.getItem('otpTimerEnd'), 10);
       if (!endTime) return;
@@ -199,26 +226,41 @@ export default {
 
       updateTimer();
     },
+    // Display error messages for offline status
     displayErrorMessage(message) {
       this.errorMessage = message;
-      // Automatically hide the error message after 2 seconds
-      setTimeout(() => {
-        this.errorMessage = '';
-      }, 2000);
     },
+    // Clear all OTP input fields
     clearOtp() {
       this.otp = ['', '', '', '', '', '']; // Clear all OTP input fields
       this.$refs.otpBoxes[0].focus(); // Focus on the first input box
     },
+    // Close the error modal
     closeModal() {
       this.showModal = false;
     },
+    // Go back to the previous page
     goBack() {
       window.history.back(); // Navigate to the previous page in browser history
     }
   },
   mounted() {
     this.startTimer(); // Start or resume the timer when the component is mounted
+
+    // Add listeners for online and offline events
+    window.addEventListener('online', this.handleConnectionChange);
+    window.addEventListener('offline', this.handleConnectionChange);
+
+    // Check initial online/offline status
+    this.isOnline = navigator.onLine;
+    if (!this.isOnline) {
+      this.displayErrorMessage('You are offline. OTP cannot be sent.');
+    }
+  },
+  beforeDestroy() {
+    // Remove event listeners to avoid memory leaks
+    window.removeEventListener('online', this.handleConnectionChange);
+    window.removeEventListener('offline', this.handleConnectionChange);
   }
 };
 </script>
