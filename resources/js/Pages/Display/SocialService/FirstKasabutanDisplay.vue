@@ -1,42 +1,47 @@
 <template>
-  <!-- Tabs for Actions -->
-    <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4  space-x-4 -mt-9">
-      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
-        </svg>
-        <span>Edit</span>
-      </button>
-         <!-- Pagination Component -->
+<!-- Tabs for Actions -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <!-- FontAwesome for Back -->
+      <i class="fas fa-arrow-left w-4 h-4"></i>
+      <span>Back</span>
+    </button>
+</div>
+
+<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+    <!-- Pagination Component -->
     <Pagination 
       :totalPages="totalPages" 
       :currentPage="currentPage" 
       @update:currentPage="currentPage = $event" 
     />
-      <button  @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <span>Save</span>
-      </button>
+    <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Edit -->
+      <i class="fas fa-edit w-4 h-4"></i>
+      <span>Edit</span>
+    </button>
 
-      <!-- Export to PDF Button -->
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>Export to PDF</span>
-      </button>
-    </div>
+    <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Save -->
+      <i class="fas fa-check w-4 h-4"></i>
+      <span>Save</span>
+    </button>
 
-    <div class="graph-background pt-0.5  -mr-9 -mb-16">
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for PDF Download -->
+      <i class="fas fa-file-pdf w-4 h-4"></i>
+      <span>Export PDF</span>
+    </button>
+</div>
 
-  <div>   
 
-    <div ref="contentToPrint" class="max-w-3xl border-gray-400 p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border">
+  <div class="graph-background pt-0.5  -mr-9 -mb-16">
+  <div>
+    <div ref="contentToPrint" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
       <div class="relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-        <p class="text-[10px] italic mb-10">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
       </div>
       <div class="text-center mb-8">
         <h1 class="text-[35px] font-bold">KASABUTAN</h1>
@@ -95,7 +100,8 @@
           </div>
         </div>
       </div>
-
+      
+      
       <div class="mb-8 text-justify">
         <p class="mb-4">
           <span class="ml-8 inline-block">Ako</span> si <span class="font-bold underline">{{ clientName }}</span> usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili <strong>“COLOR RED”</strong> and akong Performance equivalent to <strong>“OUTSTANDING”</strong>
@@ -127,9 +133,7 @@
       </div>
 
       <div class="text-left mt-16">
-        <input type="text" v-model="center_head" 
-              class="underline-input w-1/3 px-2 mt-12 py-1 text-xs" 
-              :readonly="!editMode"/>
+        <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
         <p>Center Head/SWO IV</p>
       </div>
 
@@ -147,13 +151,17 @@
       </div>
     </div>
   </div>
-  </div>  
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
 import { jsPDF } from 'jspdf';
+import '../../../fonts/arial-normal.js'; 
+import '../../../fonts/times-normal.js'; 
+import '../../../fonts/arialbd-bold.js'; 
+
 
 export default {
   name: 'KasabutanSheet',
@@ -165,7 +173,6 @@ export default {
       editMode: false,
       message: '',
       messageType: '',
-      center_head: '',
       form: {
         client_id: null,
         client_resident: '',
@@ -188,7 +195,6 @@ export default {
     console.log('Client ID fetched:', clientId); // Console log showing client ID
     if (clientId) {
       this.fetchClientData(clientId);
-      this.fetchCenterHead(clientId);
     }
   },
   watch: {
@@ -196,7 +202,6 @@ export default {
       console.log('Client ID changed:', newId); // Console log showing updated client ID
       if (newId) {
         this.fetchClientData(newId);
-        this.fetchCenterHead(newId);
       }
     }
   },
@@ -219,40 +224,6 @@ export default {
         console.error('Error fetching client data:', error);
       }
     },
-    fetchCenterHead(clientId) {
-  if (!clientId) {
-    console.error("Client ID is missing.");
-    return;
-  }
-  // Make an API request using the client ID
-  axios.get(`/api/center-head/${clientId}`)  // Updated endpoint to match the route
-    .then(response => {
-      this.center_head = response.data.center_head;
-      console.log("Fetched center head:", this.center_head); // Log the center head
-    })
-    .catch(error => {
-      console.error("Error fetching center head:", error);
-    });
-},
-saveCenterHead() {
-  const clientId = this.$route.params.id; // Get the clientId from the route params
-  if (!this.center_head || !clientId) {
-    return;
-  }
-  axios
-    .put(`/api/update-center-head`, {
-      center_head: this.center_head,
-      client_id: clientId, // Use the correct client ID
-    })
-    .then(response => {
-      this.editMode = false;
-      this.fetchClientData(clientId); // Refetch the data to update the UI
-    })
-    .catch(error => {
-      console.error("Error updating center head:", error);
-    });
-},
-
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -269,7 +240,6 @@ saveCenterHead() {
     async confirmSave() {
       try {
         await this.saveData();
-        this.saveCenterHead();
         this.saveResultTitle = 'Success';
         this.saveResultMessage = 'Data saved successfully!';
       } catch (error) {
@@ -325,61 +295,49 @@ pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
   
   let contentYPos = 80; // Start below the title
 
-// Adjust starting position
-// Increase the starting X-position to move the text to the right
-// Use let or const for variable declaration in JavaScript
-
-let initialX = 20;  // Adjust this value to shift the text further right as needed
-
-// First line
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(12);
-pdf.text('Ako si ', initialX, contentYPos); // Normal text for 'Ako si'
-
-// Bold and underline the client's name
-pdf.setFont('arialbd', 'bold');
-pdf.setFontSize(12);
-pdf.line(33, contentYPos+1, 97, contentYPos+1); // Underline first (left aligned)
-pdf.textWithLink(this.clientName, initialX + pdf.getTextWidth('Ako si '), contentYPos, { underline: true }); // Bold and underlined client's name
-
-// Continue with normal text
-pdf.setFont('arial', 'normal');
-pdf.text(' usa ka residente diri sa DSWD-RRCY. Ako', initialX + pdf.getTextWidth('Ako si ' + this.clientName) + 6, contentYPos);
-
-// Second line of the paragraph
-contentYPos += 7; // Move to the next line
-pdf.text('maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako', initialX, contentYPos);
-
-// Third line, adding bold text for "COLOR RED"
-contentYPos += 8; // Move to the next line
-pdf.text('mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili ', initialX, contentYPos); // Normal text before bold
-pdf.setFont('arialbd', 'bold');
-pdf.text('"COLOR', 170, contentYPos);
-
-// Third line, adding bold text for "COLOR RED"
-contentYPos += 8; // Move to the next line
-pdf.setFont('arialbd', 'bold');
-pdf.text('RED”', 20, contentYPos); // Normal text before bold
-pdf.setFont('arial', 'normal');
-pdf.text('and akong Performance equivalent to', 32, contentYPos); // Normal text before bold
-pdf.setFont('arialbd', 'bold');
-pdf.text('"OUTSTANDING”',103 , contentYPos); // Normal text before bold
+  const initialX = 20;  // Initial X position for the text
+const maxWidth = 170;
 
 
-pdf.setFont('arial', 'normal');
-// Second paragraph
+const clientName = this.clientName;
+const text1 = 'Ako si ' + clientName + ' usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili “COLOR RED” and akong Performance equivalent to “OUTSTANDING”.';
+const text2 = 'Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.';
 
-contentYPos += 11;
-pdf.text('Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY', 28, contentYPos);
+// Function to justify text
+function justifyText(text, maxWidth, initialX, yPos, pdf) {
+    const lines = pdf.splitTextToSize(text, maxWidth);
+    lines.forEach((line, lineIndex) => {
+        const words = line.split(' ');
+        if (words.length > 1 && lineIndex < lines.length - 1) {
+            const totalWordsWidth = words.reduce((total, word) => total + pdf.getTextWidth(word), 0);
+            const totalSpaceWidth = maxWidth - totalWordsWidth;
+            const spaceWidth = totalSpaceWidth / (words.length - 1);
 
-contentYPos += 5;
-pdf.text('hangtud na ako moabot sa 21 anyos.', 20, contentYPos);
+            let x = initialX;
+            words.forEach((word, index) => {
+                pdf.text(word, x, yPos);
+                x += pdf.getTextWidth(word) + spaceWidth;  // Add space between words
+            });
+        } else {
+            // For the last line or single-word lines, print as is (no extra spaces)
+            pdf.text(line, initialX, yPos);
+        }
+        yPos += 7; // Move to the next line
+    });
+}
+
+
+// Justify the first text
+justifyText(text1, maxWidth, initialX, contentYPos, pdf);
+
+// Justify the second text
+contentYPos += 35;  // Add some spacing between the two paragraphs
+justifyText(text2, maxWidth, initialX, contentYPos, pdf);
 
   // Underlined sections for Client/Resident, Guardian, and Case Manager
-contentYPos += 1;
+contentYPos += 40;
 
-// Client/Resident underline and label
-contentYPos += 20;
+
 pdf.text(`${this.form.client_resident || ''}`, initialX, contentYPos+-2);
 pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
 contentYPos += 5; // Move Y position down for the text

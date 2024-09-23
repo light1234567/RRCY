@@ -1,38 +1,43 @@
 <template>
- 
-    <!-- Tabs for Actions -->
-    <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4  space-x-4 -mt-9">
-      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
-        </svg>
-        <span>Edit</span>
-      </button>
-         <!-- Pagination Component -->
+<!-- Tabs for Actions -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <!-- FontAwesome for Back -->
+      <i class="fas fa-arrow-left w-4 h-4"></i>
+      <span>Back</span>
+    </button>
+</div>
+
+<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+    <!-- Pagination Component -->
     <Pagination 
       :totalPages="totalPages" 
       :currentPage="currentPage" 
       @update:currentPage="currentPage = $event" 
     />
-      <button  @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <span>Save</span>
-      </button>
+    <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Edit -->
+      <i class="fas fa-edit w-4 h-4"></i>
+      <span>Edit</span>
+    </button>
 
-      <!-- Export to PDF Button -->
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>Export to PDF</span>
-      </button>
-    </div>
+    <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Save -->
+      <i class="fas fa-check w-4 h-4"></i>
+      <span>Save</span>
+    </button>
+
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for PDF Download -->
+      <i class="fas fa-file-pdf w-4 h-4"></i>
+      <span>Export PDF</span>
+    </button>
+</div>
+<div class="graph-background pt-0.5  -mr-9 -mb-16">
 
   <!-- Page 1 Content -->
-  <div class="graph-background pt-0.5  -mr-9 -mb-16">
-  <div v-if="currentPage === 1" class="mt-8 max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+  <div v-if="currentPage === 1" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
     <div class="relative flex justify-between items-center mb-2">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
       <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
@@ -88,7 +93,7 @@
   </div>
 
   <!-- Page 2 Content -->
-  <div v-if="currentPage === 2" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+  <div v-if="currentPage === 2" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
     <h2 class="text-lg font-semibold">For the LSWDO:</h2>
     <ol class="list-decimal ml-6 space-y-2 text-justify">
       <li>To submit Social Case Study Report (SCSR) upon referral of CICL for Rehabilitation.</li>
@@ -109,10 +114,9 @@
     </div>
 
     <div class="text-right mt-12 mb-12">
-  <!-- Center the input and label properly on the right side -->
-  <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-1/2 inline-block border-none p-1 text-right" :readonly="!editMode"> <p class="text-right">Center Head/SWO IV</p>
-</div>
-
+      <p><strong><u>ANGELIC B. PAÑA, RSW, MSSW</u></strong></p>
+      <p>Center Head/SWO IV</p>
+    </div>
 
     <div class="mt-8">
       <div class="grid grid-cols-2 gap-8">
@@ -219,13 +223,17 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import Pagination from '@/Components/Pagination.vue';
+import '../../../fonts/arial-normal.js'; 
+import '../../../fonts/times-normal.js'; 
+import '../../../fonts/arialbd-bold.js'; 
+
 
 export default {
   name: 'AdmissionContract',
@@ -237,7 +245,6 @@ export default {
       editMode: false,
       message: '',
       messageType: '',
-      center_head: '',
       form: {
         client_id: null,
         signed_day: '',
@@ -277,8 +284,6 @@ export default {
             this.form.client_id = client.id;
             console.log('Client ID fetched:', client.id);
 
-            this.fetchCenterHead(client.id);
-
             return axios.get(`/api/admission-contracts/${id}`);
           })
           .then((response) => {
@@ -297,41 +302,6 @@ export default {
           });
       }
     },
-    fetchCenterHead(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    // Make an API request using the client ID
-    axios.get(`/api/center-head/${clientId}`)
-      .then(response => {
-        this.center_head = response.data.center_head;
-        console.log("Fetched center head:", this.center_head); // Log the center head
-      })
-      .catch(error => {
-        console.error("Error fetching center head:", error);
-      });
-  },
-  // Save center head
-  saveCenterHead() {
-    const clientId = this.$route.params.id;
-    if (!this.center_head || !clientId) {
-      return;
-    }
-    axios
-      .put(`/api/update-center-head`, {
-        center_head: this.center_head,
-        client_id: clientId, // Use the correct client ID
-      })
-      .then(response => {
-        this.editMode = false;
-        this.fetchClientData(clientId); // Refetch the data to update the UI
-      })
-      .catch(error => {
-        console.error("Error updating center head:", error);
-      });
-  },
-
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -347,7 +317,6 @@ export default {
     },
     confirmSave() {
       this.saveData();
-      this.saveCenterHead();
       this.closeModal();
       this.editMode = false;
     },
@@ -393,6 +362,29 @@ export default {
     exportToPdf() {
   const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
 
+  // Function to justify text
+function justifyText(text, maxWidth, initialX, yPos, pdf) {
+    const lines = pdf.splitTextToSize(text, maxWidth);
+    lines.forEach((line, lineIndex) => {
+        const words = line.split(' ');
+        if (words.length > 1 && lineIndex < lines.length - 1) {
+            const totalWordsWidth = words.reduce((total, word) => total + pdf.getTextWidth(word), 0);
+            const totalSpaceWidth = maxWidth - totalWordsWidth;
+            const spaceWidth = totalSpaceWidth / (words.length - 1);
+
+            let x = initialX;
+            words.forEach((word, index) => {
+                pdf.text(word, x, yPos);
+                x += pdf.getTextWidth(word) + spaceWidth;  // Add space between words
+            });
+        } else {
+            // For the last line or single-word lines, print as is (no extra spaces)
+            pdf.text(line, initialX, yPos);
+        }
+        yPos += 7; // Move to the next line
+    });
+}
+
   // Convert your image to Base64 or ensure it's a valid URL
   const imgData = '/images/headerlogo2.png'; // Ensure this is correct or use Base64 image
   pdf.addImage(imgData, 'PNG', 15, 10, 50, 30); // DSWD logo
@@ -411,19 +403,16 @@ pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
   let contentYPos = 55; // Start below the title
 
   let initialX = 20;  // Adjust this value to shift the text further right as needed
-   
+  const maxWidth = 170;
+
+  contentYPos += 5;
   pdf.setFont('arial', 'normal');
   pdf.setFontSize(12);
-  contentYPos += 7; 
-  pdf.text('In order to enable a CICL undergo rehabilitation through an intensive management of his', initialX, contentYPos);
-  contentYPos += 8; 
-  pdf.text('behaviour and anti-social attitudes in a residential setting and prepare him for successful', initialX, contentYPos);
-  contentYPos += 8; 
-  pdf.text('adjustment to his family and community after release. This contract is set for CICL,', initialX, contentYPos);
-  contentYPos += 8; 
-  pdf.text('Parents/ Custodian, LGU to abide by the following provisions:', initialX, contentYPos);
+  const text1 = 'In order to enable a CICL undergo rehabilitation through an intensive management of his behaviour and anti-social attitudes in a residential setting and prepare him for successful adjustment to his family and community after release. This contract is set for CICL, Parents/ Custodian, LGU to abide by the following provisions:';
+  justifyText(text1, maxWidth, initialX, contentYPos, pdf);
 
-  contentYPos += 11;
+
+  contentYPos += 35;
   pdf.setFontSize(13);
   pdf.setFont('arialbd', 'bold');
   pdf.text('For the CICL:', initialX, contentYPos);
@@ -480,9 +469,9 @@ pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
   contentYPos += 7; 
   pdf.text('2. To observe schedule of visits to their son.', initialX+5, contentYPos);
   contentYPos += 7; 
-  pdf.text('3. To create and submit to Case Manager effective re integration plans for their son prior', initialX+5, contentYPos);
+  pdf.text('3. To create and submit to Case Manager effective re integration plans for their son', initialX+5, contentYPos);
   contentYPos += 7; 
-  pdf.text('to termination phase of case management.', initialX+10, contentYPos);
+  pdf.text('prior to termination phase of case management.', initialX+10, contentYPos);
 
 // Footer Section - Adjusted Y positions to move higher
 pdf.setFontSize(9);
@@ -500,8 +489,11 @@ pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Adjust the position and
 
   // Add a new page for Page 2 content
   pdf.addPage();
+
+  pdf.setFont('TimesNewRoman', 'italic'); // Set font style to italic
+pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
   
-  contentYPos = 25; // Reset Y position for the new page
+  contentYPos = 30; // Reset Y position for the new page
   pdf.setLineWidth(0); // Set line width to make it bolder (default is 0.200)
   pdf.setFontSize(12);
   pdf.setFont('arial', 'normal');
@@ -532,9 +524,9 @@ pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Adjust the position and
   contentYPos += 7; // Reset Y position for the new page
   pdf.text('5. To prepare ahead an After-Care Plan.', initialX+5, contentYPos);
   contentYPos += 7; // Reset Y position for the new page
-  pdf.text('6. To give feedback to the DSWD F O XI-RRCY on the performances of CICL in his after', initialX+5, contentYPos);
+  pdf.text('6. To give feedback to the DSWD F O XI-RRCY on the performances of CICL in his', initialX+5, contentYPos);
   contentYPos += 7; 
-  pdf.text('Care Service.', initialX+10, contentYPos);
+  pdf.text('after Care Service.', initialX+10, contentYPos);
 
 
   contentYPos += 10; 
@@ -554,7 +546,7 @@ pdf.text(', 2024. RRCY Davao City.', initialX+76, contentYPos);
 
 // Signature Section
 contentYPos += 25;
-  pdf.setFont('arial', 'bold');
+  pdf.setFont('arialbd', 'bold');
   pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 120, contentYPos);
   pdf.setFont('arial', 'normal');
   pdf.text('Center Head/SWO IV', 120, contentYPos + 6);
@@ -563,7 +555,7 @@ contentYPos += 25;
   
   contentYPos += 20;
   pdf.setFontSize(13);
-  pdf.setFont('arial', 'bold');
+  pdf.setFont('arialbd', 'bold');
   pdf.text('Conforme:', initialX, contentYPos);
   pdf.text('Witnesses:', initialX+95, contentYPos);
 
@@ -642,15 +634,15 @@ pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHAB
 </script>
 
 <style scoped>
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  }
 button {
   transition: background-color 0.3s;
 }
 button:hover {
   background-color: #2563eb;
 }
-.graph-background {
-    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
-                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
-    background-size: 15px 15px; /* Adjust size as per your need */
-  }
 </style>

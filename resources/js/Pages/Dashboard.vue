@@ -89,48 +89,52 @@
 
     <!-- Main Body Content (Offense Committed, Age Distribution, Child Status) -->
     <div class="flex flex-wrap lg:flex-nowrap gap-4 p-8">
-      <!-- Offense Committed Table -->
-      <div class="ml-4 bg-white p-6 rounded-lg shadow-md w-full lg:w-1/3">
-  <h2 class="text-sm mb-6 font-semibold text-gray-700">Offense Committed</h2>
-  <div class="overflow-y-auto h-64">
-    <table class="-ml-1 w-full table-auto border-collapse">
-      <thead class=" bg-gray-50 text-gray-600 uppercase text-xs font-semibold shadow-sm sticky top-0">
-        <tr>
-          <th class="px-4 py-3 text-left">Offense</th>
-          <th class="px-8 py-3 text-left">Count</th>
-        </tr>
-      </thead>
-      <tbody class="text-gray-700 text-sm divide-y divide-gray-100">
-        <tr v-for="([offense, count], index) in filteredOffenses" :key="index" class="hover:bg-gray-50 transition duration-300 ease-in-out">
-          <td class="px-4 py-4">{{ offense }}</td>
-          <td class="px-8 py-4">{{ count }}</td>
-        </tr>
-      </tbody>
-    </table>
+      
+<!-- Age Distribution Bar Chart -->
+<div class="ml-4 bg-white p-4 rounded-lg shadow-md w-full lg:w-1/3">
+  <h2 class="text-sm font-semibold">Age Distribution</h2>
+  <div class="-mb-12 relative w-full" style="height: 310px;"> <!-- Custom height here -->
+    <Bar 
+      :data="filteredAgeData"
+      :options="{
+        maintainAspectRatio: false, // Allow chart to expand
+        plugins: {
+          title: { display: true, font: { size: 15 } },
+          tooltip: { enabled: true }
+        }
+      }"
+      height="310"
+    />
   </div>
 </div>
-
-
-      <!-- Age Distribution Bar Chart -->
-      <div class="bg-white p-4 rounded-lg shadow-md w-full lg:w-1/2">
-        <h2 class="text-sm font-semibold">Age Distribution</h2>
-        <div class="-mb-12 relative w-full h-96">
-          <Bar 
-            :data="filteredAgeData"
-            :options="{
-              plugins: {
-                title: {  display: true, font: { size: 15 } },
-                tooltip: { enabled: true }
-              }
-            }"
-          />
-        </div>
-      </div>
+<!-- Offense Committed Table -->
+<div class="bg-white p-6 rounded-lg shadow-md w-full lg:w-2/5">
+  <h2 class="text-sm mb-4 font-bold text-gray-800 pb-2">Offense Committed</h2>
+  <div class="overflow-hidden rounded-lg shadow">
+    <!-- Set fixed height and enable scrolling -->
+    <div class="max-h-64 overflow-y-auto">
+      <table class="min-w-full leading-normal">
+        <thead class="bg-gray-100 text-gray-600 uppercase text-xs font-semibold">
+          <tr>
+            <th class="px-5 py-3 border-b-2 border-gray-200 text-left">Offense</th>
+            <th class="px-5 py-3 border-b-2 border-gray-200 text-center">Count</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr v-for="([offense, count], index) in filteredOffenses" :key="index" class="hover:bg-gray-50 transition duration-150 ease-in-out">
+            <td class="px-5 py-4 text-sm font-medium text-gray-900">{{ offense }}</td>
+            <td class="px-5 py-4 text-sm text-center font-semibold text-gray-700">{{ count }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
       <!-- Child Status Distribution Pie Chart -->
       <div class="bg-white p-4 rounded-lg shadow-md w-full lg:w-1/3">
         <h2 class="text-sm font-semibold">Child Status Distribution</h2>
-        <div class="flex justify-center relative h-64">
+        <div class="flex justify-center relative h-72 ">
           <Pie 
             :data="filteredChildStatusData"
             :options="{
@@ -146,6 +150,8 @@
           />
         </div>
       </div>
+     
+
     </div>
 
     <!-- Sidebar (Dashboard Filters) -->
@@ -438,7 +444,7 @@ const filteredAgeData = computed(() => {
     datasets: [
       {
         label: 'Age Distribution',
-        backgroundColor: '#87CEEB', // Sky blue color for histogram bars
+        backgroundColor: '#017995',
         borderColor: '#388E3C',     // Darker green for border
         borderWidth: 1,
         data: Object.values(ageCounts),

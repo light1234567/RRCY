@@ -1,34 +1,40 @@
 <template>
-  <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4  space-x-4 -mt-9">
-      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
-        </svg>
-        <span>Edit</span>
-      </button>
-         <!-- Pagination Component -->
+<!-- Tabs for Actions -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <!-- FontAwesome for Back -->
+      <i class="fas fa-arrow-left w-4 h-4"></i>
+      <span>Back</span>
+    </button>
+</div>
+
+<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+    <!-- Pagination Component -->
     <Pagination 
       :totalPages="totalPages" 
       :currentPage="currentPage" 
       @update:currentPage="currentPage = $event" 
     />
-      <button @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <span>Save</span>
-      </button>
+    <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Edit -->
+      <i class="fas fa-edit w-4 h-4"></i>
+      <span>Edit</span>
+    </button>
 
-      <!-- Export to PDF Button -->
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        <span>Export to PDF</span>
-      </button>
-    </div>
+    <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Save -->
+      <i class="fas fa-check w-4 h-4"></i>
+      <span>Save</span>
+    </button>
 
-  
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for PDF Download -->
+      <i class="fas fa-file-pdf w-4 h-4"></i>
+      <span>Export PDF</span>
+    </button>
+</div>
+
 
    <!-- Modal for Save Confirmation -->
    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
@@ -84,10 +90,10 @@
      </div>
    </div>
 
-   <div class="graph-background pt-0.5  -mr-9 -mb-16">
- <div class=" p-10">
+<div class="graph-background pt-0.5  -mr-9 -mb-16">
+ <div class="p-8">
    <!-- Page 1 -->
-   <div v-if="currentPage === 1" class="max-w-3xl mx-auto bg-white p-12 rounded-lg shadow-lg mb-10">
+   <div v-if="currentPage === 1" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
      <div class="flex items-center justify-between mb-4">
        <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-32 w-64 relative z-10">
        <div class="text-right">
@@ -182,7 +188,7 @@
         </div>
       </div>
    </div>
-  </div>
+</div>
 
  </div>
 </template>
@@ -265,6 +271,10 @@ export default {
        this.editMode = !this.editMode;
      }
    },
+   cancelEdit() {
+      this.editMode = false;
+      console.log('Edit mode canceled');
+    },
    openModal() {
      this.isModalOpen = true;
    },
@@ -314,244 +324,216 @@ export default {
    },
    exportToPdf() {
  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+ const pageHeight = 297; // Total page height in mm
+ const marginBottom = 30; // Bottom margin in mm
+ const lineHeight = 7; // Space between lines
+ const maxContentHeight = pageHeight - marginBottom; // Max height for content before adding a new page
+ const maxWidth = 170; // Maximum width for text
+ let contentYPos = 70; // Start Y position for content
+ let initialX = 20; // X position for content
+ let currentPage = 1; // Start at page 1
 
- // Header section with the logo and text
- const imgData = '/images/headerlogo2.png'; 
- pdf.addImage(imgData, 'PNG', 15, 10, 70, 35); // DSWD logo
- pdf.setFontSize(9);
-pdf.setFont('TimesNewRoman', 'italic'); // Set font style to italic
-pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
 
- // Title ("KASABUTAN")
+ const addHeader = () => {
+   // Header text
+   pdf.setFontSize(9);
+   pdf.setFont('TimesNewRoman', 'italic');
+   pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+ };
+
+ // Helper function to add a new page if content exceeds the page height
+ const addNewPageIfNeeded = () => {
+   if (contentYPos >= maxContentHeight) {
+     addFooter(); // Add the footer for the current page
+     pdf.addPage(); // Add new page
+     addHeader(); // Add the header on the new page
+     currentPage++; // Increment page number
+     contentYPos = 40; // Reset Y position for the new page
+     pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
+     pdf.setFontSize(11); // Set font size back to what it was
+   }
+ };
+
+ const addFooter = () => {
+   if (currentPage === 1) {
+     // Footer for Page 1
+     pdf.setFontSize(9);
+     pdf.setFont('TimesNewRoman', 'bold');
+     pdf.setLineWidth(0.5);
+     pdf.line(17, 282, 173, 282); // Footer line
+
+     pdf.setFont('times', 'normal');
+     const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
+     pdf.text(footerText, 95, 287, { align: 'center' });
+     pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, { align: 'center' });
+
+     const footerImgData = '/images/footerimg.png';
+     pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Footer image
+   } else {
+     // Footer for Page 2 and beyond
+     pdf.setFontSize(8.5);
+     pdf.setFont('TimesNewRoman', 'bold');
+
+     pdf.setLineWidth(0.5);
+     pdf.line(17, 282, 193, 282); // Footer line extending further
+
+     pdf.setFont('times', 'bold');
+     pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, { align: 'center' });
+   }
+ };
+
+ addHeader();
+
+ const imgData = '/images/headerlogo2.png';
+ pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
+
+ // Add the title section
  pdf.setFont('arialbd', 'bold');
  pdf.setFontSize(20);
- pdf.setTextColor(0, 0, 0); // Black text for title
- pdf.text('CONFIDENTIAL', 105, 50, null, null, 'center'); // Centered title
+ pdf.text('CONFIDENTIAL', 105, 50, null, null, 'center');
+ pdf.setFontSize(15);
+ pdf.setFont('arial', 'normal');
+ pdf.text('TALAMBUHAY', 105, 60, null, null, 'center');
+ pdf.line(87, contentYPos + -9, 123, contentYPos + -9); // Underline
 
-// Set the font to a built-in one like 'helvetica' if 'arial' is not available
-pdf.setFont('helvetica', 'normal');
+ // Reset contentYPos to start below the title
+ contentYPos = 70;
 
-// Set font size and text color
-pdf.setFontSize(15);
-pdf.setTextColor(0, 0, 0); // Black text for title
-
-// Draw the centered title text
-pdf.text('TALAMBUHAY', 105, 60, { align: 'center' });
-
-
-// Make sure contentYPos is defined and has a value
-let contentYPos = 70; // Example value
-
-
- // Main Content: Adjust positioning and apply bold/underline styles
+ // Main content section for "Pamilya"
  pdf.setFont('arial', 'normal');
  pdf.setFontSize(12);
- contentYPos = 70; // Start below the title
-let initialX = 20;  // Adjust this value to shift the text further right as needed
+ pdf.text('Tungkol sa aking', initialX, contentYPos);
+ pdf.setFont('arialbd', 'bold');
+ pdf.text('Pamilya.', initialX + 33, contentYPos);
+ pdf.setFont('Arial', 'normal');
+ pdf.text('(Ilan kaming magkakapatid at tungkol sa kanilang buhay o', initialX + 51, contentYPos);
+ pdf.line(20, contentYPos + 1, 70, contentYPos + 1); // Underline
+ contentYPos += 7;
+ pdf.text('kaya trabaho; papa/mama at tungkol sa kanilang ikinabubuhay, tungkol sa pamilya at iba', initialX, contentYPos);
+ contentYPos += 7;
+ pdf.text('pa)', initialX, contentYPos);
 
-
-
-pdf.setFontSize(12);
-pdf.setFont('arial', 'normal');
-pdf.text('Tungkol sa aking', initialX, contentYPos);
-pdf.setFont('arialbd', 'bold');
-pdf.text('Pamilya.', initialX+33, contentYPos);
-pdf.setFont('Arial', 'normal');
-pdf.text('(Ilan kaming magkakapatid at tungkol sa kanilang buhay o', initialX+51, contentYPos);
-pdf.line(20, contentYPos+1, 70, contentYPos+1); // Underline first (left aligned)
-contentYPos += 7; 
-pdf.text('kaya trabaho; papa/mama at tungkol sa kanilang ikinabubuhay, tungkol sa pamilya at iba', initialX, contentYPos);
-contentYPos += 7; 
-pdf.text('pa)', initialX, contentYPos);
-
-
-contentYPos += 10;
-const maxWidth = 170;
-const lineHeight = 7; // Adjust the line height if needed
-const text = `${this.form.about_my_family || ''}`;
-
-// Split the text into lines that fit within the specified width
-const wrappedText = pdf.splitTextToSize(text, maxWidth);
-
-// Set the starting position for the text
-let currentYPos = contentYPos; // Set it to the initial Y position where you want the text to start
-
-// Loop through each line and draw the text with an underline
-wrappedText.forEach(line => {
- // Draw the text
- pdf.text(line, initialX, currentYPos);
-
- // Get the width of the current line to draw the underline only beneath the text
- const textWidth = pdf.getTextWidth(line);
-
- // Draw an underline from the start of the text to the end of the text
- pdf.line(initialX, currentYPos + 1, initialX + textWidth, currentYPos + 1); // +1 to position the line just below the text
-
- // Move the Y position down for the next line
- currentYPos += lineHeight;
-});
-
-
-
-
-
-contentYPos += 80; 
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(12);
-pdf.text('Tungkol sa aking', initialX, contentYPos);
-pdf.setFont('arialbd', 'bold');
-pdf.text('Sarili.', initialX+33, contentYPos);
-pdf.setFont('Arial', 'normal');
-pdf.text('(Karanasan mula pagkabata, mga napagtagumpayan, mga', initialX+47, contentYPos);
-pdf.line(20, contentYPos+1, 65, contentYPos+1); // Underline first (left aligned)
-contentYPos += 7; 
-pdf.text('bisyo/pagkakamali, eskwela, interes at mga gustong gawin, sports, ambisyon, pangarap', initialX, contentYPos);
-contentYPos += 7; 
-pdf.text('at iba pa)', initialX, contentYPos);
-
-// Second section dynamic text with underline
-contentYPos += 10;
- const text2 = `${this.form.about_my_self || ''}`;
-
- // Split the text into lines that fit within the specified width
- const wrappedText2 = pdf.splitTextToSize(text2, maxWidth);
-
- // Loop through each line and draw the text with an underline
- wrappedText2.forEach(line => {
-   // Draw the text
+ // Dynamic text with underline
+ contentYPos += 10;
+ const text1 = `${this.form.about_my_family || ''}`;
+ const wrappedText1 = pdf.splitTextToSize(text1, maxWidth);
+ wrappedText1.forEach(line => {
+   addNewPageIfNeeded(); // Add a new page if necessary
    pdf.text(line, initialX, contentYPos);
-
-   // Get the width of the current line to draw the underline only beneath the text
    const textWidth = pdf.getTextWidth(line);
-
-   // Draw an underline from the start of the text to the end of the text
-   pdf.line(initialX, contentYPos + 1, initialX + textWidth, contentYPos + 1); // +1 to position the line just below the text
-
-   // Move the Y position down for the next line
+   pdf.line(initialX, contentYPos + 1, initialX + textWidth, contentYPos + 1); // Underline
    contentYPos += lineHeight;
  });
- 
-// Footer Section - Adjusted Y positions to move higher
-pdf.setFontSize(9);
-pdf.setFont('TimesNewRoman', 'bold');
-pdf.text('PAGE 1 of 1', 105, 280, null, null, 'center'); // Moved higher (was 290)
-pdf.setLineWidth(0.5); // Set line width to make it bolder (default is 0.200)
-pdf.line(17, 282, 173, 282); // Footer line moved higher (was 292)
-pdf.setFont('times', 'normal');
-const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160); // Adjust width limit (160mm)
-pdf.text(footerText, 95, 287, null, null, 'center');
-pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, null, null, 'center');
 
-const footerImgData = '/images/footerimg.png'; // Make sure the image is correctly loaded
-pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Adjust the position and size
-
-
-
-// Add a new page for Page 2 content
-pdf.addPage();
-
-pdf.setFont('TimesNewRoman', 'italic'); // Set font style to italic
-pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
- contentYPos = 50; // Reset Y position for the new page
+ // Main content section for "Sarili"
+ contentYPos += 70;
  pdf.setFont('arial', 'normal');
-pdf.setFontSize(12);
-pdf.text('Tungkol sa aking', initialX, contentYPos);
-pdf.setFont('arialbd', 'bold');
-pdf.text('kaso.', initialX+33, contentYPos);
-pdf.setFont('Arial', 'normal');
-pdf.text('(Ano at papaano nangyari, detalye ng pangyayari, ano ang rason', initialX+46, contentYPos);
-pdf.line(20, contentYPos+1, 64, contentYPos+1); // Underline first (left aligned)
-contentYPos += 7; 
-pdf.text('at bakit nasangkot "Na-apil" sa kaso, sino-sino ang sangkot at iba pa)', initialX, contentYPos);
+ pdf.text('Tungkol sa aking', initialX, contentYPos);
+ pdf.setFont('arialbd', 'bold');
+ pdf.text('Sarili.', initialX + 33, contentYPos);
+ pdf.setFont('Arial', 'normal');
+ pdf.text('(Karanasan mula pagkabata, mga napagtagumpayan, mga', initialX + 47, contentYPos);
+ pdf.line(20, contentYPos + 1, 65, contentYPos + 1); // Underline
+ contentYPos += 7;
+ pdf.text('bisyo/pagkakamali, eskwela, interes at mga gustong gawin, sports, ambisyon, pangarap', initialX, contentYPos);
+ contentYPos += 7;
+ pdf.text('at iba pa)', initialX, contentYPos);
 
-// Second section dynamic text with underline
-contentYPos += 10;
- const text3 = `${this.form.about_my_case || ''}`;
-
- // Split the text into lines that fit within the specified width
- const wrappedText3 = pdf.splitTextToSize(text3, maxWidth);
-
- // Loop through each line and draw the text with an underline
- wrappedText3.forEach(line => {
-   // Draw the text
+ // Dynamic text with underline for "Sarili"
+ contentYPos += 10;
+ const text2 = `${this.form.about_my_self || ''}`;
+ const wrappedText2 = pdf.splitTextToSize(text2, maxWidth);
+ wrappedText2.forEach(line => {
+   addNewPageIfNeeded(); // Add a new page if necessary
    pdf.text(line, initialX, contentYPos);
-
-   // Get the width of the current line to draw the underline only beneath the text
    const textWidth = pdf.getTextWidth(line);
-
-   // Draw an underline from the start of the text to the end of the text
-   pdf.line(initialX, contentYPos + 1, initialX + textWidth, contentYPos + 1); // +1 to position the line just below the text
-
-   // Move the Y position down for the next line
+   pdf.line(initialX, contentYPos + 1, initialX + textWidth, contentYPos + 1); // Underline
    contentYPos += lineHeight;
  });
- pdf.setLineWidth(0); // Set line width to make it bolder (default is 0.200)
- contentYPos += 60;
+
+ // Footer for Page 1
+ addFooter();
+
+ // Add a new page for the next section
+ pdf.addPage();
+ addHeader(); // Add the header for the new page
+ currentPage++; // Increment the page count
+ contentYPos = 50; // Reset Y position
+
+ // Main content section for "Kaso"
+ pdf.setLineWidth(0);
+ pdf.setFont('arial', 'normal');
+ pdf.setFontSize(12);
+ pdf.text('Tungkol sa aking', initialX, contentYPos);
+ pdf.setFont('arialbd', 'bold');
+ pdf.text('Kaso.', initialX + 33, contentYPos);
+ pdf.setFont('Arial', 'normal');
+ pdf.text('(Ano at papaano nangyari, detalye ng pangyayari, ano ang rason', initialX + 46, contentYPos);
+ pdf.line(20, contentYPos + 1, 64, contentYPos + 1); // Underline
+ contentYPos += 7;
+ pdf.text('at bakit nasangkot "Na-apil" sa kaso, sino-sino ang sangkot at iba pa)', initialX, contentYPos);
+
+ // Dynamic text with underline for "Kaso"
+ contentYPos += 10;
+ const text3 = `${this.form.about_my_case || ''}`;
+ const wrappedText3 = pdf.splitTextToSize(text3, maxWidth);
+ wrappedText3.forEach(line => {
+   addNewPageIfNeeded(); // Add a new page if necessary
+   pdf.text(line, initialX, contentYPos);
+   const textWidth = pdf.getTextWidth(line);
+   pdf.line(initialX, contentYPos + 1, initialX + textWidth, contentYPos + 1); // Underline
+   contentYPos += lineHeight;
+ });
+
+
+
+ // Signature and Date Section
+ contentYPos += 40;
+ addNewPageIfNeeded();
  pdf.setFontSize(13);
  pdf.setFont('arialbd', 'bold');
  pdf.text('Received & Assessed:', initialX, contentYPos);
-
  contentYPos += 20;
-
  pdf.setFont('arial', 'normal');
- pdf.text(`${this.form.case_manager || ''}`, initialX, contentYPos+-2);
-pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
-contentYPos += 5; // Move Y position down for the text
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(12);
-pdf.text('Case Manager', 20, contentYPos); // Label below the underline
+ pdf.setFontSize(11);
+ pdf.text(`${this.form.case_manager || ''}`, initialX, contentYPos - 2);
+ pdf.line(20, contentYPos, 100, contentYPos); // Underline for Case Manager
+ contentYPos += 5;
+ pdf.text('Case Manager', 20, contentYPos); // Label for Case Manager
 
-// Adjust X-coordinates to align the second signature section to the right
-contentYPos += -5;
-initialX = 110; // Set initialX for the second signature section on the right side
-pdf.text(`${this.clientName || ''}`, initialX, contentYPos+-2);
-pdf.line(initialX, contentYPos, initialX + 80, contentYPos); // Underline on the right side (adjusted X-coordinates)
-contentYPos += 5; // Move Y position down for the text
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(12);
-pdf.text('Pangalan ng Client at Pirma', initialX, contentYPos); // Label below the underline on the right side
+ // Signature on the right
+ contentYPos -= 5;
+ initialX = 110;
+ pdf.text(`${this.clientName || ''}`, initialX, contentYPos - 2);
+ pdf.line(initialX, contentYPos, initialX + 80, contentYPos); // Underline for Client Signature
+ contentYPos += 5;
+ pdf.text('Pangalan ng Client at Pirma', initialX, contentYPos); // Label for Client Signature
 
-
- // Client/Resident underline and label
+ // Date Section
  contentYPos += 20;
- pdf.text(`${this.form.date || ''}`, initialX+-90, contentYPos+-2);
-pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
-contentYPos += 5; // Move Y position down for the text
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(12);
-pdf.text('Petsa:', 20, contentYPos); // Label below the underline
+ initialX = 20;
+ pdf.text(`${this.form.date || ''}`, initialX, contentYPos - 2);
+ pdf.line(20, contentYPos, 100, contentYPos); // Underline for Date
+ contentYPos += 5;
+ pdf.text('Petsa', 20, contentYPos); // Label for Date
 
+ // Footer for Page 2
+ addFooter();
 
-
- 
-
-
-
-
-
-
-
-// Footer Section - Adjusted Y positions to move higher
-pdf.setFontSize(8.5); // Reduced font size to fit the text in one line
-pdf.setFont('TimesNewRoman', 'bold');
-
-// Footer page number
-pdf.text('PAGE 2 of 2', 105, 280, null, null, 'center');
-
-// Footer line
-pdf.setLineWidth(0.5); // Set line width to make it bolder (default is 0.200)
-pdf.line(17, 282, 193, 282); // Adjusted line width to extend across the footer
-
-// Single-line footer text without splitting
-pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, null, null, 'center'); // Moved Y from 287 to 285 for better alignment
-
-
-
-
+ // Total pages
+ const totalPages = pdf.internal.getNumberOfPages();
+ for (let i = 1; i <= totalPages; i++) {
+   pdf.setPage(i);
+   pdf.setFontSize(9);
+   pdf.setFont('TimesNewRoman', 'bold');
+   pdf.text(`PAGE ${i} of ${totalPages}`, 105, 280, { align: 'center' }); // Add page number for each page
+ }
 
  // Save the PDF
- pdf.save(`Talambuhay`);
+ pdf.save(`Talambuhay_${this.clientName || 'NoName'}.pdf`);
 },
+
+
 
  }
 };
