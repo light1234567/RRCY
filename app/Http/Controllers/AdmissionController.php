@@ -61,6 +61,33 @@ class AdmissionController extends Controller
 
         Log::info('Validation passed. Validated data: ', $validated);
 
+        // Check if a client with the same first name, last name, date of birth, and admission date already exists
+$existingClient = Client::where('first_name', $validated['client']['first_name'])
+->where('last_name', $validated['client']['last_name'])
+->where('date_of_birth', $validated['client']['date_of_birth'])
+->whereHas('admissions', function ($query) use ($validated) {
+    $query->where('date_admitted', $validated['admission']['date_admitted']);
+})
+->first();
+
+if ($existingClient) {
+return response()->json(['error' => 'Client with the same first name, last name, date of birth, and date admitted already exists.'], 400);
+}
+
+// Check if a client with the same first name, last name, and date of birth exists with a child status of "Still at the Center (SATC)"
+$existingClientWithSATC = Client::where('first_name', $validated['client']['first_name'])
+    ->where('last_name', $validated['client']['last_name'])
+    ->where('date_of_birth', $validated['client']['date_of_birth'])
+    ->where('child_status', 'Still at the Center (SATC)')
+    ->first();
+
+if ($existingClientWithSATC) {
+    return response()->json(['error' => 'The client has a pending case at the center.'], 400);
+}
+
+// Continue with the rest of your logic...
+
+
         // Check if client_id is provided, update existing client or create a new one
         $client = $request->client_id 
             ? Client::find($request->client_id) 
@@ -70,6 +97,11 @@ class AdmissionController extends Controller
             return response()->json(['error' => 'Client not found.'], 404);
         }
 
+        $validated['client']['middle_name'] = $validated['client']['middle_name'] ?? '';
+        $validated['client']['suffix'] = $validated['client']['suffix'] ?? '';
+        $validated['client']['street'] = $validated['client']['street'] ?? '';
+        $validated['client']['religion'] = $validated['client']['religion'] ?? '';
+        
         // Update or create the client record
         $client->fill($validated['client']);
         $client->save();

@@ -124,18 +124,22 @@
                 </select>
               </div>
               <div class="mb-2">
-                <label for="clientSex" class="block mb-1 text-sm">
-                  Sex: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="clientSex"
-                  v-model="form.client.sex"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  readonly
-                  required
-                />
-              </div>
+  <label for="clientSex" class="block mb-1 text-sm">
+    Sex: <span class="text-red-500">*</span>
+  </label>
+  <select
+    id="clientSex"
+    v-model="form.client.sex"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+    required
+  >
+    <option value="">Select Sex</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Rather not to say">Rather not to say</option>
+  </select>
+</div>
+
             </div>
 
             <!-- Address Breakdown with Cascading Dropdowns -->
@@ -225,20 +229,21 @@
     </select>
   </div>
 
-  <!-- Conditional text input when 'Other' is selected -->
-  <div class="mb-2" v-if="form.client.religion === 'Other'">
-    <label for="customReligion" class="block mb-1 text-sm">
-      Please specify: <span class="text-red-500">*</span>
-    </label>
-    <input
-      type="text"
-      id="customReligion"
-      v-model="form.client.customReligion"
-      class="w-full px-2 py-1 border rounded-md text-sm"
-      placeholder="Enter your religion"
-      required
-    />
-  </div>
+<!-- Conditional text input when 'Other' is selected -->
+<div class="mb-2" v-if="form.client.religion === 'Other'">
+  <label for="customReligion" class="block mb-1 text-sm">
+    Please specify: <span class="text-red-500">*</span>
+  </label>
+  <input
+    type="text"
+    id="customReligion"
+    v-model="form.client.customReligion"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+    placeholder="Enter your religion"
+    required
+  />
+</div>
+
 </div>
 
           </div>
@@ -280,40 +285,69 @@
                   max="999" 
                 />
               </div>
-              <div class="mb-2">
-              <label for="colourOfEye" class="block mb-1 text-sm">Colour of Eye:</label>
-              <select
-                id="colourOfEye"
-                v-model="form.distinguishing_marks.colour_of_eye"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-              >
-                <option value="">Select Colour</option>
-                <option value="Brown">Brown</option>
-                <option value="Blue">Blue</option>
-                <option value="Green">Green</option>
-                <option value="Hazel">Black</option>
-                <option value="Gray">Gray</option>
-                <option value="Amber">Amber</option>
-                
-              </select>
-            </div>
-            <div class="mb-2">
-              <label for="skinColour" class="block mb-1 text-sm">Skin Colour:</label>
-              <select
-                id="skinColour"
-                v-model="form.distinguishing_marks.skin_colour"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-              >
-                <option value="">Select Skin Colour</option>
-                <option value="Light">Light</option>
-                <option value="Fair">Fair</option>
-                <option value="Medium">Medium</option>
-                <option value="Olive">Olive</option>
-                <option value="Brown">Brown</option>
-                <option value="Dark">Dark</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
+
+           <!-- Color of Eye -->
+<div class="mb-2">
+  <label for="colourOfEye" class="block mb-1 text-sm">Colour of Eye:</label>
+  <select
+    id="colourOfEye"
+    v-model="form.distinguishing_marks.colour_of_eye"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+  >
+    <option value="">Select Colour</option>
+    <option value="Brown">Brown</option>
+    <option value="Blue">Blue</option>
+    <option value="Green">Green</option>
+    <option value="Hazel">Hazel</option>
+    <option value="Gray">Gray</option>
+    <option value="Amber">Amber</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
+<!-- Custom Eye Color Input (Only when "Other" is selected) -->
+<div v-if="form.distinguishing_marks.colour_of_eye === 'Other'" class="mb-2">
+  <label for="customEyeColor" class="block mb-1 text-sm">Custom Eye Color:</label>
+  <input
+    type="text"
+    id="customEyeColor"
+    v-model="form.distinguishing_marks.custom_eye_color"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+    placeholder="Enter custom eye color"
+  />
+</div>
+
+            <!-- Skin Colour -->
+<div class="mb-2">
+  <label for="skinColour" class="block mb-1 text-sm">Skin Colour:</label>
+  <select
+    id="skinColour"
+    v-model="form.distinguishing_marks.skin_colour"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+  >
+    <option value="">Select Skin Colour</option>
+    <option value="Light">Light</option>
+    <option value="Fair">Fair</option>
+    <option value="Medium">Medium</option>
+    <option value="Olive">Olive</option>
+    <option value="Brown">Brown</option>
+    <option value="Dark">Dark</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
+<!-- Custom Skin Colour Input (Only when "Other" is selected) -->
+<div v-if="form.distinguishing_marks.skin_colour === 'Other'" class="mb-2">
+  <label for="customSkinColour" class="block mb-1 text-sm">Custom Skin Colour:</label>
+  <input
+    type="text"
+    id="customSkinColour"
+    v-model="form.distinguishing_marks.custom_skin_colour"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+    placeholder="Enter custom skin colour"
+  />
+</div>
+
           </div>
         </fieldset>
 
@@ -322,45 +356,43 @@
           <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">ADMISSION DETAILS</legend>
          
           <div class="grid grid-cols-1 gap-2">
-            <div class="mb-2 col-span-1">
-          <label for="committingCourt" class="block mb-1 text-sm">
-            Committing Court: <span class="text-red-500">*</span>
-          </label>
-          <select
-            id="committingCourt"
-            v-model="form.admission.committing_court"
-            class="w-full px-2 py-1 border rounded-md text-sm"
-            required
-          >
-            <option value="">Select Committing Court</option>
-            <option value="Supreme Court of the Philippines">Supreme Court of the Philippines</option>
-            <option value="Court of Appeals">Court of Appeals</option>
-            <option value="Sandiganbayan">Sandiganbayan</option>
-            <option value="Court of Tax Appeals">Court of Tax Appeals</option>
-            <option value="Regional Trial Court">Regional Trial Court</option>
-            <option value="Metropolitan Trial Court">Metropolitan Trial Court</option>
-            <option value="Municipal Trial Court">Municipal Trial Court</option>
-            <option value="Municipal Circuit Trial Court">Municipal Circuit Trial Court</option>
-            <option value="Shari'a District Court">Shari'a District Court</option>
-            <option value="Shari'a Circuit Court">Shari'a Circuit Court</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+          <!-- Committing Court -->
+<div class="mb-2">
+  <label for="committingCourt" class="block mb-1 text-sm">Committing Court:</label><span class="text-red-500">*</span>
+  <select
+    id="committingCourt"
+    v-model="form.admission.committing_court"
+    required
+    class="w-full px-2 py-1 border rounded-md text-sm"
+  >
+    <option value="">Select Committing Court</option>
+    <option value="Supreme Court of the Philippines">Supreme Court of the Philippines</option>
+    <option value="Court of Appeals">Court of Appeals</option>
+    <option value="Sandiganbayan">Sandiganbayan</option>
+    <option value="Court of Tax Appeals">Court of Tax Appeals</option>
+    <option value="Regional Trial Court">Regional Trial Court</option>
+    <option value="Metropolitan Trial Court">Metropolitan Trial Court</option>
+    <option value="Municipal Trial Court">Municipal Trial Court</option>
+    <option value="Municipal Circuit Trial Court">Municipal Circuit Trial Court</option>
+    <option value="Shari'a District Court">Shari'a District Court</option>
+    <option value="Shari'a Circuit Court">Shari'a Circuit Court</option>
+    <option value="Other">Other</option>
+  </select>
+  
+</div>
 
-        <!-- Optional custom input for 'Other' court -->
-        <div class="mb-2 col-span-1" v-if="form.admission.committing_court === 'Other'">
-          <label for="customCommittingCourt" class="block mb-1 text-sm">
-            Specify Committing Court: <span class="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="customCommittingCourt"
-            v-model="form.admission.custom_committing_court"
-            class="w-full px-2 py-1 border rounded-md text-sm"
-            placeholder="Enter court name"
-            required
-          />
-        </div>
+<!-- Custom Committing Court Input (Only when "Other" is selected) -->
+<div v-if="form.admission.committing_court === 'Other'" class="mb-2">
+  <label for="customCommittingCourt" class="block mb-1 text-sm">Specify Committing Court:</label>
+  <input
+    type="text"
+    id="customCommittingCourt"
+    v-model="form.admission.custom_committing_court"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+    placeholder="Enter court name"
+    required
+  />
+</div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
               <div class="mb-2">
@@ -668,7 +700,7 @@ const form = ref({
     middle_name: '',
     last_name: '',
     suffix: ' ',
-    sex: 'Male',
+    sex: '',
     date_of_birth: '',
     place_of_birth: '',
     province: '',
@@ -770,6 +802,26 @@ const saveForm = async () => {
   try {
     const formData = new FormData();
 
+// Check if "Other" is selected for Colour of Eye and Skin Colour, and set custom values
+if (form.value.distinguishing_marks.colour_of_eye === 'Other') {
+      form.value.distinguishing_marks.colour_of_eye = form.value.distinguishing_marks.custom_eye_color;
+    }
+    if (form.value.distinguishing_marks.skin_colour === 'Other') {
+      form.value.distinguishing_marks.skin_colour = form.value.distinguishing_marks.custom_skin_colour;
+    }
+
+    // Check if "Other" is selected for Committing Court and set custom value
+    if (form.value.admission.committing_court === 'Other') {
+      form.value.admission.committing_court = form.value.admission.custom_committing_court;
+    }
+    // Check if the religion is "Other" and set it to the custom religion input value
+    if (form.value.client.religion === 'Other') {
+      form.value.client.religion = form.value.client.customReligion; // Replace 'Other' with custom religion
+    }
+    if (!form.value.client.suffix) {
+      form.value.client.suffix = ''; // Default to empty string if no suffix is selected
+    }
+
     // Append client data
     Object.keys(form.value.client).forEach((key) => {
       formData.append(`client[${key}]`, form.value.client[key]);
@@ -806,8 +858,8 @@ const saveForm = async () => {
       },
     });
 
-    // Show success message
-    modalType.value = 'success';
+  // Show success message
+  modalType.value = 'success';
     modalMessage.value = 'Form saved successfully!';
     showModal.value = true;
 
@@ -815,11 +867,14 @@ const saveForm = async () => {
     resetForm();
 
   } catch (error) {
-    // Handle errors
+    // Handle errors, specifically checking for the "Client already exists" error
     if (error.response && error.response.status === 400) {
-      if (error.response.data.error === 'Client with the same first name, last name, and date admitted already exists.') {
+      if (error.response.data.error === 'Client with the same first name, last name, date of birth, and date admitted already exists.') {
         modalType.value = 'error';
-        modalMessage.value = 'CICL is already existed!';
+        modalMessage.value = 'Client already exists!';
+      } else if (error.response.data.error === 'The client has a pending case at the center.') {
+      modalType.value = 'error';
+      modalMessage.value = 'The client has a pending case at the center!';
       } else {
         modalType.value = 'error';
         modalMessage.value = 'An error occurred while saving the form. Please try again.';
@@ -836,16 +891,15 @@ const saveForm = async () => {
 onMounted(() => {
   const today = new Date();
 
-  // Calculate the year when someone would be 10 years old today
-  const maxYear = today.getFullYear() - 10;
-  const maxDate = new Date(maxYear, 11, 31); // Set to December 31 of that year
-  form.value.client.maxDateOfBirth = maxDate.toISOString().split('T')[0];
+  // Calculate the exact date when someone would be 10 years old today
+  const maxDate = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+  form.value.client.maxDateOfBirth = maxDate.toISOString().split('T')[0]; // Restrict to clients who are at least 10 years old
 
-  // Calculate the year when someone would be 25 years old today
-  const minYear = today.getFullYear() - 25;
-  const minDate = new Date(minYear, 0, 1); // Set to January 1 of that year
-  form.value.client.minDateOfBirth = minDate.toISOString().split('T')[0];
+  // Calculate the exact date when someone would be 25 years old today
+  const minDate = new Date(today.getFullYear() - 25, today.getMonth(), today.getDate());
+  form.value.client.minDateOfBirth = minDate.toISOString().split('T')[0]; // Restrict to clients who are at most 25 years old
 });
+
 
 // Watcher to limit height input to three digits
 watch(
@@ -893,7 +947,7 @@ const resetForm = () => {
       middle_name: '',
       last_name: '',
       suffix: '',
-      sex: 'Male',
+      sex: '',
       date_of_birth: '',
       place_of_birth: '',
       province: '',
