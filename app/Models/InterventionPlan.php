@@ -19,9 +19,14 @@ class InterventionPlan extends Model
         'prepared_by',    // Added field
         'conformed_by',   // Added field
         'noted_by',
-        'updated_by'      // Added field
+        'updated_by',      // Added field
+        'items',
     ];
 
+    protected $casts = [
+        'items' => 'array', // Casts `items` to an array when retrieved
+    ];
+    
     public function client()
     {
         return $this->belongsTo(Client::class);

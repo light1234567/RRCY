@@ -16,6 +16,7 @@ class AnecdotalReport extends Model
         'client_id',
         'date',
         'drn',
+        'month',
         'color',
         'physical',
         'emotional',

@@ -38,8 +38,12 @@
           <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
           <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
           <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-          <p class="text-xs font-semibold pt-12">DRN: ____________________________________</p>
-        </div>
+          <div class="text-xs font-semibold pt-12">
+  <p class="text-sm">
+  DRN
+  <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+</p>
+</div>        </div>
       </div>
       <h1 class="font-bold text-xl">DEPARTMENT OF SOCIAL WELFARE AND DEVELOPMENT</h1>
       <p>REGIONAL REHABILITATION CENTER FOR YOUTH</p>
@@ -106,7 +110,7 @@
         <input
           type="text"
           id="notedBy"
-          v-model="form.noted_by"
+          v-model="shp"
           class="font-semibold mt-1 w-3/4 underline-input text-sm shadow-sm"
           :readonly="!editMode"
         >
@@ -209,6 +213,8 @@ export default {
   data() {
     return {
       center_head: '',
+      shp: '',
+      drn: '',
       form: {
         client_id: null,
         drn: '',
@@ -236,18 +242,25 @@ export default {
     };
   },
   mounted() {
-    this.fetchData();
+    const clientId = this.$route.params.id;
+    this.fetchData(clientId);
+    this.fetchCenterHead(clientId);
+    this.fetchSHP(clientId);  
+    this.fetchDrn(clientId);
   },
+    
   watch: {
     '$route.params.id': function(newId) {
-      this.fetchData();
+      this.fetchData(newId);
+      this.fetchCenterHead(newId);
+      this.fetchSHP(newId);
+      this.fetchDrn(newId);
     }
   },
   methods: {
     fetchData() {
       const clientId = this.$route.params.id;
       console.log('Fetching data for client ID:', clientId);
-      this.fetchCenterHead(clientId);
       if (clientId) {
         axios.get(`/api/cicl-sessions/${clientId}`).then(response => {
           if (response.data.session) {
@@ -297,7 +310,77 @@ export default {
         console.error("Error updating center head:", error);
       });
   },
+  fetchSHP(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.get(`/api/shp/${clientId}`)
+      .then(response => {
+        this.shp = response.data.shp || '';
+        console.log("Fetched SHP:", this.shp);
+      })
+      .catch(error => {
+        console.error("Error fetching SHP:", error);
+      });
+  },
+  saveSHP() {
+    const clientId = this.$route.params.id;
+    console.log("Saving SHP:", this.shp, "for client:", clientId);
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.put(`/api/update-shp/${clientId}`, { 
+      client_id: clientId,
+      name: this.shp
+    })
+    .then(response => {
+      console.log("SHP saved successfully:", response.data);
+      this.editMode = false;
+      this.fetchSHP(clientId);
+    })
+    .catch(error => {
+      console.error("Error updating SHP:", error);
+    });
+  },
+  fetchDrn(clientId) {
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+  // Fetch DRN based on clientId
+  axios.get(`/api/drn/${clientId}`)
+    .then(response => {
+      this.drn = response.data.drn || ''; // Set DRN to the response, or an empty string if not present
+      console.log("Fetched DRN:", this.drn);
+    })
+    .catch(error => {
+      console.error("Error fetching DRN:", error);
+    });
+},
 
+
+saveDrn() {
+  const clientId = this.form.client_id; // Ensure client_id is available in the form
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+
+  // Save or update DRN
+  axios.post('/api/drn', {
+    client_id: clientId, // Pass the client_id
+    drn: this.drn // Pass the DRN value
+  })
+  .then(response => {
+    console.log("DRN saved successfully:", response.data);
+    this.fetchDrn(clientId); // Fetch updated DRN after save
+  })
+  .catch(error => {
+    console.error("Error saving DRN:", error.response.data); // Log detailed error message
+  });
+},
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -318,6 +401,8 @@ export default {
     confirmSave() {
       this.submitForm();
       this.saveCenterHead();
+      this.saveSHP();
+      this.saveDrn();
       this.closeModal();
     },
 

@@ -354,10 +354,38 @@ export default {
     console.error('Error fetching client data:', error);
   }
 }
-
-
-
 ,
+async fetchCaseManager(clientId) {
+    console.log(`Fetching case manager for client: ${clientId}`); // Log the clientId for debugging
+    try {
+        const response = await axios.get(`/api/case-manager/${clientId}`);
+        console.log('Fetched case manager response:', response.data); // Log the response for debugging
+        this.caseManager = response.data.case_manager; // Assign the case manager name to your data property
+        console.log('Case Manager:', this.caseManager); // Log the case manager for debugging
+    } catch (error) {
+        console.error('Error fetching case manager:', error);
+    }
+},
+async saveCaseManager() {
+    console.log('Saving Case Manager');
+    try {
+        const payload = {
+            client_id: this.clientId,
+            name: this.caseManager,
+        };
+
+        console.log('Payload:', payload);
+
+        // Remove the Authorization header and directly make the POST request
+        const response = await axios.post('/api/case-manager', payload);
+
+        console.log('Response:', response.data);
+        this.showSaveResultModal('Success', 'Case Manager saved successfully.');
+    } catch (error) {
+        console.error('Error saving case manager:', error);
+        this.showSaveResultModal('Error', 'Error saving case manager. Please try again.');
+    }
+},
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -376,6 +404,7 @@ export default {
     },
     confirmSave() {
       this.saveData();
+      this.saveCaseManager();
       this.closeModal();
       this.editMode = false;
     },
@@ -822,12 +851,14 @@ y += 25; // Add space after the signature
   mounted() {
     this.clientId = this.$route.params.id;
     this.fetchData();
+    this.fetchCaseManager(this.clientId);
 }
 ,
   watch: {
     '$route.params.id': function(newId) {
       this.clientId = newId;
       this.fetchData();
+      this.fetchCaseManager(this.clientId);
     }
   }
 };

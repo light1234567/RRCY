@@ -39,8 +39,14 @@
           <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
           <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
           <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-          <p class="text-xs font-semibold pt-12">DRN: _________________________________</p>
-        </div>
+          <div class="text-xs font-semibold pt-12">
+  <p class="text-sm">
+  DRN
+  <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+</p>
+</div> 
+     
+</div>
       </div>
       <h1 class="font-bold text-md">INCIDENT REPORT</h1>
     </div>
@@ -160,8 +166,7 @@
           id="preparedBy"
           v-model="form.prepared_by"
           class="mt-1 w-64 text-sm underline-input shadow-sm"
-          :readonly="!editMode"
-  
+          :readonly="!editMode">
       </div>
 
       <!-- Reviewed and Approved by Fields -->
@@ -171,9 +176,9 @@
           <input
             type="text"
             id="reviewedBy"
-            v-model="form.reviewed_by"
+            v-model="shp"
             class="font-semibold  mt-1 w-3/4 border-b-2 text-sm underline-input p-0 rounded-none shadow-sm"
-            readonly
+            :readonly="!editMode"
           >
           <p class="font-semibold text-sm">HP III/SHP</p>
         </div>
@@ -184,7 +189,7 @@
             id="approvedBy"
             v-model="center_head"
             class="font-semibold  mt-1 w-3/4 text-sm underline-input p-0 shadow-sm"
-            readonly
+            :readonly="!editMode"
           >
           <p class="font-semibold text-sm">SWO IV / Center Head</p>
         </div>
@@ -273,6 +278,7 @@ export default {
   data() {
     return {
       center_head: '',
+      shp: '',
       form: {
         client_id: null,
         drn: '',
@@ -302,37 +308,48 @@ export default {
     };
   },
   mounted() {
-    this.fetchData();
+    const clientId = this.$route.params.id;
+    this.fetchData(clientId);
+    this.fetchCenterHead(clientId);
+    this.fetchSHP(clientId);
+    this.fetchDrn(clientId);
   },
   watch: {
     '$route.params.id': function(newId) {
-      this.fetchData();
+      this.fetchData(newId);
+      this.fetchCenterHead(newId);
+      this.fetchSHP(newId);
+      this.fetchDrn(newId);
     }
   },
   methods: {
     fetchData() {
-      const clientId = this.$route.params.id;
-      console.log('Fetching data for client ID:', clientId);
-      this.fetchCenterHead(clientId);
-      if (clientId) {
-        axios.get(`/api/incident-reports/${clientId}`).then(response => {
-          if (response.data.report) {
-            if (response.data.report.time_of_incident) {
-              this.form.time_of_incident = response.data.report.time_of_incident.slice(0, 5);
-            }
-            Object.assign(this.form, response.data.report);
-            this.form.client_id = clientId;
-            this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store the original form data
-          } else {
-            const { client } = response.data;
-            this.form.client_id = client.id;
-            this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store the original form data
-          }
-        }).catch(error => {
-          console.error('Error fetching data:', error);
-        });
-      }
-    },
+    const clientId = this.$route.params.id;
+    console.log('Fetching data for client ID:', clientId);
+    if (clientId) {
+      axios.get(`/api/incident-reports/${clientId}`).then(response => {
+        if (response.data.report) {
+          // Populate form with existing report data
+          this.form = {
+            ...this.form,
+            ...response.data.report,
+            time_of_incident: response.data.report.time_of_incident
+              ? response.data.report.time_of_incident.slice(0, 5)
+              : '',
+          };
+          this.form.client_id = clientId;
+          this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store original data
+        } else {
+          // No report exists yet, set client_id for a new report
+          const { client } = response.data;
+          this.form.client_id = client.id;
+          this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store original data
+        }
+      }).catch(error => {
+        console.error('Error fetching data:', error);
+      });
+    }
+  },
     fetchCenterHead(clientId) {
     if (!clientId) {
       console.error("Client ID is missing.");
@@ -367,7 +384,77 @@ export default {
         console.error("Error updating center head:", error);
       });
   },
+  fetchSHP(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.get(`/api/shp/${clientId}`)
+      .then(response => {
+        this.shp = response.data.shp || '';
+        console.log("Fetched SHP:", this.shp);
+      })
+      .catch(error => {
+        console.error("Error fetching SHP:", error);
+      });
+  },
+  saveSHP() {
+    const clientId = this.$route.params.id;
+    console.log("Saving SHP:", this.shp, "for client:", clientId);
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.put(`/api/update-shp/${clientId}`, { 
+      client_id: clientId,
+      name: this.shp
+    })
+    .then(response => {
+      console.log("SHP saved successfully:", response.data);
+      this.editMode = false;
+      this.fetchSHP(clientId);
+    })
+    .catch(error => {
+      console.error("Error updating SHP:", error);
+    });
+  }
+,
+fetchDrn(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.get(`/api/drn/${clientId}`)
+      .then(response => {
+        this.drn = response.data.drn || '';
+        console.log("Fetched DRN:", this.drn);
+      })
+      .catch(error => {
+        console.error("Error fetching DRN:", error);
+      });
+  },
 
+  saveDrn() {
+    const clientId = this.form.client_id; // Assuming client_id is in the form
+    console.log("Saving DRN:", this.drn, "for client:", clientId);
+
+    if (!clientId) {
+        console.error("Client ID is missing.");
+        return;
+    }
+
+    axios.post('/api/drn', {  // Ensure the correct URL with /api prefix
+        client_id: clientId,
+        drn: this.drn
+    })
+    .then(response => {
+        console.log("DRN saved successfully:", response.data);
+        this.fetchDrn(clientId); // Fetch updated DRN
+    })
+    .catch(error => {
+        console.error("Error saving DRN:", error.response.data); // Log detailed error message
+    });
+},
     toggleEdit() {
       if (this.editMode) {
         this.openSaveModal();
@@ -388,6 +475,8 @@ export default {
     confirmSave() {
       this.submitForm();
       this.saveCenterHead();
+      this.saveSHP();
+      this.saveDrn();
       this.closeModal();
     },
 
@@ -400,44 +489,58 @@ export default {
     },
 
     submitForm() {
-      if (!this.form.client_id) {
-        this.message = 'Client ID is required.';
-        this.messageType = 'error';
-        this.clearMessage();
-        return;
-      }
+    if (!this.form.client_id) {
+      this.message = 'Client ID is required.';
+      this.messageType = 'error';
+      this.clearMessage();
+      return;
+    }
 
-      if (this.form.time_of_incident) {
-        this.form.time_of_incident = this.form.time_of_incident.slice(0, 5);
-      }
+    if (this.form.time_of_incident) {
+      this.form.time_of_incident = this.form.time_of_incident.slice(0, 5);
+    }
 
-      const url = `/api/incident-reports/${this.form.client_id}`;
+    const url = `/api/incident-reports/${this.form.client_id}`;
 
-      axios.put(url, this.form)
-        .then(response => {
-          this.editMode = false;
-          this.message = 'Data updated successfully!';
-          this.messageType = 'success';
-          this.saveResultTitle = 'Success';
-          this.saveResultMessage = 'Data saved successfully.';
-          this.isSaveResultModalOpen = true;
-          this.clearMessage();
-          this.fetchData(); // Re-fetch data to update the form with the latest saved data
-        })
-        .catch(error => {
-          if (error.response && error.response.status === 422) {
-            this.message = 'Validation error: ' + JSON.stringify(error.response.data.errors);
-          } else {
-            this.message = 'Failed to update data';
-          }
-          this.messageType = 'error';
-          this.saveResultTitle = 'Error';
-          this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
-          this.isSaveResultModalOpen = true;
-          this.clearMessage();
-        });
-    },
-
+    // Check if we are updating or creating a new record
+    axios.get(`/api/incident-reports/${this.form.client_id}`)
+      .then(response => {
+        if (response.data.report) {
+          // Update existing report
+          axios.put(url, this.form)
+            .then(response => {
+              this.message = 'Data updated successfully!';
+              this.messageType = 'success';
+              this.fetchData(); // Refresh data
+            })
+            .catch(error => {
+              this.handleError(error);
+            });
+        } else {
+          // Create new report
+          axios.post(`/api/incident-reports`, this.form)
+            .then(response => {
+              this.message = 'Data created successfully!';
+              this.messageType = 'success';
+              this.fetchData(); // Refresh data
+            })
+            .catch(error => {
+              this.handleError(error);
+            });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching report for validation:', error);
+      });
+  },
+  handleError(error) {
+    if (error.response && error.response.status === 422) {
+      this.message = 'Validation error: ' + JSON.stringify(error.response.data.errors);
+    } else {
+      this.message = 'Failed to save data';
+    }
+    this.messageType = 'error';
+  },
     clearMessage() {
       setTimeout(() => {
         this.message = '';

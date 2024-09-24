@@ -124,7 +124,7 @@
             <label class="block text-base -mt-1">Pangalan/Pirma sa Ginikanan/Guardian</label>
           </div>
           <div>
-            <input type="text" v-model="form.case_manager" 
+            <input type="text" v-model="case_manager" 
               class="underline-input w-1/3 px-2 mt-12 py-1 text-xs" 
               :readonly="!editMode"/>
             <label class="block text-base -mt-1">Case Manager</label>
@@ -133,8 +133,7 @@
       </div>
 
       <div class="text-left mt-16">
-        <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
-        <p>Center Head/SWO IV</p>
+        <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode">        <p>Center Head/SWO IV</p>
       </div>
 
       <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
@@ -173,11 +172,12 @@ export default {
       editMode: false,
       message: '',
       messageType: '',
+      case_manager: '',
+      center_head: '',
       form: {
         client_id: null,
         client_resident: '',
         parent_guardian: '',
-        case_manager: '',
         id: null
       },
       clientName: '',
@@ -195,6 +195,8 @@ export default {
     console.log('Client ID fetched:', clientId); // Console log showing client ID
     if (clientId) {
       this.fetchClientData(clientId);
+      this.fetchCenterHead(clientId);
+      this.fetchCaseManager(clientId);
     }
   },
   watch: {
@@ -202,6 +204,8 @@ export default {
       console.log('Client ID changed:', newId); // Console log showing updated client ID
       if (newId) {
         this.fetchClientData(newId);
+        this.fetchCenterHead(newId);
+        this.fetchCaseManager(newId);
       }
     }
   },
@@ -217,13 +221,84 @@ export default {
         const kasabutan = kasabutanResponse.data;
         this.form.client_resident = kasabutan.client_resident || '';
         this.form.parent_guardian = kasabutan.parent_guardian || '';
-        this.form.case_manager = kasabutan.case_manager || '';
         this.form.id = kasabutan.id;
       } catch (error) {
         this.errorMessage = 'Error fetching client data.';
         console.error('Error fetching client data:', error);
       }
     },
+    fetchCenterHead(clientId) {
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+  // Make an API request using the client ID
+  axios.get(`/api/center-head/${clientId}`)  // Updated endpoint to match the route
+    .then(response => {
+      this.center_head = response.data.center_head;
+      console.log("Fetched center head:", this.center_head); // Log the center head
+    })
+    .catch(error => {
+      console.error("Error fetching center head:", error);
+    });
+},
+saveCenterHead() {
+  const clientId = this.$route.params.id; // Get the clientId from the route params
+  if (!this.center_head || !clientId) {
+    return;
+  }
+  axios
+    .put(`/api/update-center-head`, {
+      center_head: this.center_head,
+      client_id: clientId, // Use the correct client ID
+    })
+    .then(response => {
+      this.editMode = false;
+      this.fetchClientData(clientId); // Refetch the data to update the UI
+    })
+    .catch(error => {
+      console.error("Error updating center head:", error);
+    });
+},
+
+fetchCaseManager(clientId) {
+    // Fetch the case manager based on the client ID
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.get(`/api/case-manager/${clientId}`)
+      .then(response => {
+        this.case_manager = response.data.case_manager || '';
+        console.log("Fetched case manager:", this.case_manager); // Log the case manager
+      })
+      .catch(error => {
+        console.error("Error fetching case manager:", error);
+      });
+  },
+  saveCaseManager() {
+    const clientId = this.$route.params.id;  // Get the clientId from the route
+    console.log("Saving case manager:", this.case_manager, "for client:", clientId); // Log the data before the request
+
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.put(`/api/update-case-manager/${clientId}`, { 
+      client_id: clientId,  // Include the client_id here
+      name: this.case_manager 
+    })
+    .then(response => {
+      console.log("Case manager saved successfully:", response.data); // Log the response
+      this.editMode = false;
+      this.fetchCaseManager(clientId);  // Refetch to update the UI
+    })
+    .catch(error => {
+      console.error("Error updating case manager:", error);
+    });
+  }
+,
+
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -241,6 +316,8 @@ export default {
       try {
         await this.saveData();
         this.saveResultTitle = 'Success';
+        this.saveCenterHead();
+        this.saveCaseManager();
         this.saveResultMessage = 'Data saved successfully!';
       } catch (error) {
         this.saveResultTitle = 'Error';
@@ -352,7 +429,7 @@ pdf.text('Pangalan/Pirma sa Ginikanan/Guardian', 20, contentYPos); // Label belo
 
 // Case Manager underline and label
 contentYPos += 30;
-pdf.text(`${this.form.case_manager || ''}`, initialX, contentYPos+-2);
+pdf.text(`${this.case_manager || ''}`, initialX, contentYPos+-2);
 pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
 contentYPos += 5; // Move Y position down for the text
 pdf.text('Case Manager', 20, contentYPos); // Label below the underline
@@ -409,7 +486,7 @@ printContent() {
         <div style="margin-bottom: 32px;">
           <p>Client/Resident: <span style="border-bottom: 2px solid black;">${this.form.client_resident}</span></p>
           <p>Pangalan/Pirma sa Ginikanan/Guardian: <span style="border-bottom: 2px solid black;">${this.form.parent_guardian}</span></p>
-          <p>Case Manager: <span style="border-bottom: 2px solid black;">${this.form.case_manager}</span></p>
+          <p>Case Manager: <span style="border-bottom: 2px solid black;">${this.case_manager}</span></p>
         </div>
 
         <div style="text-align: left; margin-top: 64px;">

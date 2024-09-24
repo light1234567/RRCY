@@ -11,6 +11,7 @@ class CreateInventoryItemsTable extends Migration
         Schema::create('inventory_items', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');  
+            $table->unsignedMediumInteger('monthly_inventory_id');
             $table->string('name', 20);
             $table->string('description', 50)->nullable();
             $table->integer('qty')->nullable();
@@ -23,6 +24,7 @@ class CreateInventoryItemsTable extends Migration
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('monthly_inventory_id')->references('id')->on('monthly_inventories')->onDelete('cascade');
         });        
     }
 

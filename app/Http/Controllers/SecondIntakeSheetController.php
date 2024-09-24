@@ -11,13 +11,16 @@ class SecondIntakeSheetController extends Controller
     public function index(Request $request)
     {
         try {
-            if ($request->has('admission_id')) {
+            if ($request->has('client_id')) {
+                // Search second intake sheets by client_id if provided
+                $sheets = SecondIntakeSheet::where('client_id', $request->client_id)->get();
+            } elseif ($request->has('admission_id')) {
                 // Search second intake sheets by admission_id if provided
                 $sheets = SecondIntakeSheet::where('admission_id', $request->admission_id)->get();
             } else {
                 $sheets = SecondIntakeSheet::all();
             }
-            
+
             return response()->json($sheets);
         } catch (\Exception $e) {
             Log::error("Error fetching second intake sheets: " . $e->getMessage());
@@ -43,7 +46,7 @@ class SecondIntakeSheetController extends Controller
                 'responsible_for_households_chores' => 'nullable|string|max:50', 
                 'detention_days' => 'nullable|string|max:20', 
                 'community' => 'nullable|array',
-                'house_made_of' => 'nullable|string|max:100', 
+                'house_made_of' => 'nullable|string|max:100',
             ]);            
 
             Log::info('Validated data for second intake sheet:', $validatedData);
@@ -78,7 +81,7 @@ class SecondIntakeSheetController extends Controller
 }
 
 
-    public function update(Request $request, $id)
+public function update(Request $request, $id)
 {
     Log::info('Updating second intake sheet with ID: ' . $id);
 
@@ -98,7 +101,7 @@ class SecondIntakeSheetController extends Controller
                 'responsible_for_households_chores' => 'nullable|string|max:50', 
                 'detention_days' => 'nullable|string|max:20', 
                 'community' => 'nullable|array',
-                'house_made_of' => 'nullable|string|max:100', 
+                'house_made_of' => 'nullable|string|max:100',
             ]); 
 
             Log::info('Validated data for update:', $validatedData);

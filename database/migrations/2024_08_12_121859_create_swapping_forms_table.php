@@ -15,6 +15,8 @@ class CreateSwappingFormsTable extends Migration
             $table->date('date_of_filing')->nullable();
             $table->string('requesting_party_name', 50)->nullable();
             $table->string('requesting_party_position', 50)->nullable();
+            $table->string('requested_by_position', 50)->nullable();
+            $table->string('accepted_by_position', 50)->nullable();
             $table->date('date_of_duty')->nullable();
             $table->time('time_of_duty')->nullable();
             $table->string('sod_name', 50)->nullable();

@@ -17,6 +17,8 @@ class SwappingForm extends Model
         'date_of_filing',
         'requesting_party_name',
         'requesting_party_position',
+        'accepted_by_position',
+        'requested_by_position',
         'date_of_duty',
         'time_of_duty',
         'sod_name',

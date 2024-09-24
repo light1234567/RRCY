@@ -1,4 +1,15 @@
 <template>
+<!-- Edit and Save Buttons -->
+<div class="flex justify-end space-x-4 mb-4">
+      <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+        <span v-if="!editMode">Edit</span>
+        <span v-else>Cancel</span>
+      </button>
+      <button v-if="editMode" @click="saveData" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+        Save
+      </button>
+    </div>
+
   <div class="p-8 bg-white max-w-screen-md mx-auto border border-gray-300 rounded-lg shadow-lg">
     <!-- Header Section -->
     <div class="text-center border-b pb-2 mb-4">
@@ -178,12 +189,25 @@
     </div>
   </div>
 
-  <!-- Right Column: Profile Picture -->
+  <!-- Profile Picture Upload -->
   <div class="-ml-14 mt-14 col-span-1 flex-absolute justify-center items-center">
-    <div class="w-60 h-60 md-8 border flex justify-center items-center">
-      <img src="/path/to/profile-picture.png" alt="Profile Picture" class="h-full w-full object-cover">
+      <div 
+        class="w-60 h-60 md-8 border flex justify-center items-center cursor-pointer" 
+        @click="triggerFileInput">
+        <img 
+          :src="profileImageUrl" 
+          alt="Profile Picture" 
+          class="h-full w-full object-cover" 
+        />
+      </div>
+      <input
+        type="file"
+        ref="fileInput"
+        accept="image/*"
+        @change="handleFileUpload"
+        class="hidden"
+      />
     </div>
-  </div>
 </div>
 
 </div>
@@ -197,9 +221,9 @@
     <div class="font-semibold flex items-center">
       <input
         type="text"
-        value="PHILIP ROY D. COTIANGCO, RN"
+        v-model="form.prepared_by"
         class=" w-full text-sm -ml-3 mt-1 border-none shadow-none"
-        readonly
+        :readonly="!editMode"
       >
     </div>
     <div class="font-semibold text-sm flex items-center">
@@ -207,7 +231,7 @@
         type="text"
         value="CARL BRIAN T. BAUZON, RN"
         class="w-full text-sm w-48 mr-28 mt-1 underline-input shadow-none"
-        readonly
+        :readonly="!editMode"
       >
     </div>
     <p class="text-sm mt-2 ">RESIDENT NURSES RRCY</p>
@@ -219,9 +243,9 @@
     <div class="flex items-center">
       <input
         type="text"
-        value="ANGELIC B. PAÑA, RSW"
+        v-model="center_head"
         class="text-sm font-semibold w-44 mt-1 underline-input shadow-none"
-        readonly
+        :readonly="!editMode"
       >
     </div>
     <p class="text-sm mt-2">SWO IV/Center Head</p>
@@ -251,6 +275,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      center_head: '',
       form: {
         client_name: '',
         birthdate: '',
@@ -283,58 +308,98 @@ export default {
         id: null, // This will hold the id of NursingCareService if exists
       },
       editMode: false,
-      profileImageUrl: '', // To display uploaded image
+      profileImageUrl: '/storage/default-profile.jpg', // To display uploaded image
     };
   },
   mounted() {
     const clientId = this.$route.params.id;
     console.log('Mounted with client ID:', clientId); // Log client ID on component mount
     this.fetchData(clientId);
+    this.fetchCenterHead(clientId);
   },
   watch: {
     '$route.params.id': function (newClientId) {
       console.log('Watched client ID change:', newClientId); // Log client ID on route change
       this.fetchData(newClientId);
+      this.fetchCenterHead(newClientId);
     }
   },
   methods: {
     fetchData(clientId) {
-    console.log('Fetching data for client ID:', clientId); // Log client ID before API call
-    axios.get(`/api/nursing-care-services/${clientId}`)
-        .then(response => {
-            console.log('API Response:', response.data); // Log full API response
-            if (response.data) {
-                const { client, assessment } = response.data;
+  if (!clientId) {
+    console.error('Client ID is missing.');
+    return;
+  }
 
-                // Log client details
-                console.log('Fetched Client Details:', client);
+  axios.get(`/api/nursing-care-services/${clientId}`)
+    .then(response => {
+      const { data } = response;
+      
+      if (!data || !data.client) {
+        console.warn('No client data found in the response.');
+        return;
+      }
 
-                // Populate the form with client details
-                this.form.client_name = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
-                this.form.birthdate = client.date_of_birth;
-                this.form.age = this.calculateAge(client.date_of_birth);
-                this.form.religion = client.religion;
-                this.form.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
-                this.form.client_id = client.id; // Ensure client_id is set
-                this.form.date_of_admission = client.admissions.length ? client.admissions[0].date_admitted : null; // Ensure date_of_admission is set
+      const { client, assessment } = data;
+      this.form.client_id = client.id;  // Ensure client_id is set
+      this.form.client_name = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
+      this.form.birthdate = client.date_of_birth;
+      this.form.age = this.calculateAge(client.date_of_birth);
+      this.form.religion = client.religion;
+      this.form.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
+      
+      // Make sure date_of_admission is correctly set if it exists
+      if (client.admissions && client.admissions.length > 0) {
+        this.form.date_of_admission = client.admissions[0].date_admitted;
+      } else {
+        this.form.date_of_admission = '';  // Set an empty string if date is missing
+      }
 
-                if (assessment) {
-                    Object.assign(this.form, assessment); // Assigning all assessment fields to form
-                    this.form.id = assessment.id; // Store the NursingCareService ID
-                    this.profileImageUrl = assessment.profile_image ? `/storage/${assessment.profile_image}` : 'path-to-default-pic.png';
-                    console.log('Fetched NursingCareService Details:', assessment); // Log assessment details
-                } else {
-                    // Initialize form fields if no assessment found
-                    this.profileImageUrl = 'path-to-default-pic.png';
-                    console.log('No NursingCareService found. Client initialized:', this.form); // Log client initialization
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
+      if (assessment) {
+        Object.assign(this.form, assessment);
+        this.form.id = assessment.id;
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error.response ? error.response.data : error.message);
+    });
 }
 ,
+fetchCenterHead(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    // Make an API request using the client ID
+    axios.get(`/api/center-head/${clientId}`)
+      .then(response => {
+        this.center_head = response.data.center_head;
+        console.log("Fetched center head:", this.center_head); // Log the center head
+      })
+      .catch(error => {
+        console.error("Error fetching center head:", error);
+      });
+  },
+  // Save center head
+  saveCenterHead() {
+    const clientId = this.$route.params.id;
+    if (!this.center_head || !clientId) {
+      return;
+    }
+    axios
+      .put(`/api/update-center-head`, {
+        center_head: this.center_head,
+        client_id: clientId, // Use the correct client ID
+      })
+      .then(response => {
+        this.editMode = false;
+        this.fetchClientData(clientId); // Refetch the data to update the UI
+      })
+      .catch(error => {
+        console.error("Error updating center head:", error);
+      });
+  },
+
     calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);
@@ -363,82 +428,95 @@ export default {
       this.$refs.fileInput.click();
     },
     handleFileUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        this.form.file = file; // Store the file for submission
-        this.profileImageUrl = URL.createObjectURL(file); // Update image display immediately
-        console.log('File selected for upload:', file); // Log file details
+  const file = event.target.files[0];
+  if (file) {
+    this.form.file = file; // Store the file for submission
+    this.profileImageUrl = URL.createObjectURL(file); // Update image display immediately
+    console.log('File selected for upload:', file); // Log file details
+  } else {
+    this.form.file = null; // Clear if no file is selected
+    console.log('No file selected for upload');
+  }
+},
+saveData() {
+  const formData = new FormData();
+
+  // Ensure client_id is included correctly
+  if (!this.form.client_id) {
+    console.error('Missing client_id');
+    alert('Client ID is missing, cannot save data.');
+    return;
+  }
+  formData.append('client_id', this.form.client_id);
+
+  // Additional validation for required fields
+  if (!this.form.date_of_admission) {
+    console.error('Missing date_of_admission');
+    alert('Date of Admission is required.');
+    return;
+  }
+  formData.append('date_of_admission', this.form.date_of_admission);  // Ensure it's appended
+
+  // Append other fields to formData
+  Object.keys(this.form).forEach(key => {
+    if (this.form[key] !== null && key !== 'file' && key !== 'client_id') {
+      formData.append(key, this.form[key]);
+    }
+  });
+
+  // Append the profile image if present
+  if (this.form.file) {
+    formData.append('profile_image', this.form.file, this.form.file.name);
+  }
+
+  // Log the formData to verify the correct structure before sending
+  console.log([...formData.entries()]);
+
+  // Determine if it's an update or new record
+  const isUpdate = Boolean(this.form.id);
+  const requestUrl = isUpdate ? `/api/nursing-care-services/${this.form.id}` : `/api/nursing-care-services`;
+  const requestMethod = isUpdate ? 'put' : 'post';
+
+  // Send the data using axios
+  axios[requestMethod](requestUrl, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  })
+  .then(response => {
+    this.toggleEdit();
+    alert('Data saved successfully!');
+
+    // Re-fetch data to update UI
+    this.fetchData(this.form.client_id);
+  })
+  .catch(error => {
+    let errorMessage = 'Unexpected error occurred. Please try again.';
+    
+    if (error.response) {
+      // Check for validation errors
+      if (error.response.data.errors) {
+        const validationErrors = Object.values(error.response.data.errors)
+          .flat() // Flatten the error messages
+          .join('\n'); // Join messages with newlines
+        errorMessage = `Error saving data:\n${validationErrors}`;
       } else {
-        // If no file is selected, clear the file from form data
-        this.form.file = null;
-        console.log('No file selected for upload'); // Log no file selected
+        // General error message
+        errorMessage = `Error: ${error.response.data.message || 'Something went wrong.'}`;
       }
-    },
-    saveData() {
-    const formData = new FormData();
-
-    // Ensure required fields are added
-    if (this.form.client_id) {
-        formData.append('client_id', this.form.client_id);
+    } else if (error.request) {
+      // No response was received
+      errorMessage = 'Error: No response received from the server.';
     } else {
-        console.error('Missing client_id'); // Log missing client_id
+      // Other errors
+      errorMessage = `Error: ${error.message}`;
     }
 
-    if (this.form.date_of_admission) {
-        formData.append('date_of_admission', this.form.date_of_admission);
-    } else {
-        console.error('Missing date_of_admission'); // Log missing date_of_admission
-    }
-
-    // Append all other form fields to FormData
-    for (const key in this.form) {
-        if (this.form[key] !== null && key !== 'file' && key !== 'client_id' && key !== 'date_of_admission') {
-            formData.append(key, this.form[key]);
-        }
-    }
-
-    // Append the file if present
-    if (this.form.file) {
-        formData.append('profile_image', this.form.file);
-    }
-
-    // Determine the appropriate URL and method
-    const isUpdate = Boolean(this.form.id);
-    const requestUrl = isUpdate
-        ? `/api/nursing-care-services/${this.form.id}`
-        : `/api/nursing-care-services`;
-
-    const requestMethod = isUpdate ? 'put' : 'post';
-
-    console.log(`Saving data using ${requestMethod.toUpperCase()} for client ID:`, this.form.client_id);
-
-    axios[requestMethod](requestUrl, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        }
-    })
-    .then(response => {
-        this.toggleEdit();
-        alert('Data saved successfully!');
-
-        // Update profileImageUrl if a new image has been uploaded and returned
-        if (response.data.profile_image) {
-            this.profileImageUrl = `/storage/${response.data.profile_image}`;
-        }
-
-        // Fetch updated data to reflect all changes
-        this.fetchData(this.form.client_id);
-    })
-    .catch(error => {
-        if (error.response && error.response.data.errors) {
-            console.error('Error saving data:', error.response.data.errors);
-            alert('Error saving data. Please check the input fields and try again.');
-        } else {
-            console.error('Unexpected error:', error);
-            alert('Unexpected error occurred. Please try again.');
-        }
-    });
+    console.error('Error saving data:', errorMessage);
+    alert(errorMessage); // Show the detailed error message
+  });
 }
+
 
   },
 };

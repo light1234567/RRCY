@@ -20,7 +20,6 @@ class ChecklistController extends Controller
             $checklist = Checklist::create([
                 'client_id' => $clientId,
                 'admitting_officer' => '',
-                'case_manager' => '',
                 'documents' => json_encode([]), // Empty JSON for documents
                 'rrcy_forms' => json_encode([]), // Empty JSON for forms
             ]);

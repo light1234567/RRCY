@@ -1,4 +1,13 @@
 <template>
+<!-- Buttons -->
+<div class="flex justify-end space-x-4">
+      <button v-if="!editMode" @click="toggleEdit" type="button" class="px-4 py-2 bg-blue-500 text-white rounded">Edit</button>
+      <button v-else @click="submitForm" type="button" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
+    </div>
+
+    <!-- Success/Error Message -->
+    <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
+
   <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
     <!-- Header -->
     <div class="relative flex justify-between items-center mb-4">
@@ -15,12 +24,7 @@
 
     <div class="flex items-center justify-center mb-6">
       <p class="text-md font-semibold mr-4">For the Period:</p>
-      <input type="text" v-model="form.period" class="underline-input bg-transparent border-b-2 border-gray-300 text-center text-xs" />
-    </div>
-
-    <!-- Success/Error Message -->
-    <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
-      {{ message }}
+      <input type="text" v-model="form.period" class="underline-input bg-transparent border-b-2 border-gray-300 text-center text-xs" :readonly="!editMode"/>
     </div>
       
     <!-- General Information -->
@@ -113,11 +117,6 @@
 
   <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
 
-    <!-- Success/Error Message -->
-    <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
-      {{ message }}
-    </div>
-      
     <!-- General Information -->
     <div class="mb-6 grid grid-cols-2 gap-4">
       <div>
@@ -252,8 +251,8 @@
         <input
           type="text"
           id="notedBy"
-          value="ANGELIC B. PAÑA"
-          readonly
+          v-model="center_head"
+          :readonly="!editMode"
           class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm "
         >
       </div>
@@ -289,6 +288,7 @@ export default {
       form: {
         client_id: null,
         name: '',
+        period: '',
         assessment_date: '',
         trainings_attended: '',
         sections: [
@@ -380,30 +380,223 @@ export default {
           },
         ],
         general_remarks: '',
-        trainings: [],
+        trainings: [ { title: '', date_of_attendance: '', status: '' },],
         prepared_by: '',
-        noted_by: '',
       },
+      center_head: '',
       editMode: false,
+      originalForm: null,
       message: '',
-      messageType: '', // 'success' or 'error'
+      messageType: '',
     };
   },
+  mounted() {
+    this.fetchReportData();
+  },
+  watch: {
+    '$route.params.id': 'fetchReportData',
+}
+,
   methods: {
-    toggleEdit() {
-      this.editMode = !this.editMode;
+    addTraining() {
+    this.form.trainings.push({ title: '', date_of_attendance: '', status: '' });
+  },
+  removeTraining(index) {
+    this.form.trainings.splice(index, 1);
+  },
+  fetchReportData() {
+        const clientId = this.$route.params.id;
+        // Fetch client data first, if clientId is undefined
+        if (!clientId) {
+            console.warn("Client ID is undefined, fetching client data.");
+            this.fetchClientData(); // Fetch the client data directly
+            return;
+        }
+
+        axios.get(`/api/performance-observation-reports/${clientId}`)
+            .then(response => {
+                console.log('API Response:', response.data);  // Log API response
+
+                if (response.data) {
+                    // Ensure the response structure is correct
+                    if (response.data.sections && Array.isArray(response.data.sections)) {
+                        this.form.sections = response.data.sections.map(section => ({
+                            title: section.title,
+                            sub_total: section.sub_total,
+                            remarks: section.remarks,
+                            indicators: section.indicators.map(indicator => ({
+                                description: indicator.description,
+                                self_rating: indicator.self_rating,
+                                mdo_rating: indicator.mdo_rating,
+                            }))
+                        }));
+                    }
+                    
+                    if (response.data.trainings && Array.isArray(response.data.trainings)) {
+                        this.form.trainings = response.data.trainings.map(training => ({
+                            title: training.title,
+                            date_of_attendance: training.date_of_attendance,
+                            status: training.status,
+                        }));
+                    }
+
+                    // Assign fetched client and report data to form
+                    this.form.client_id = response.data.client_id;
+                    this.form.name = `${response.data.client.first_name} ${response.data.client.last_name}`;
+                    this.form.assessment_date = response.data.assessment_date;
+                    this.form.period = response.data.period;
+                    this.form.trainings_attended = response.data.trainings_attended;
+                    this.form.general_remarks = response.data.general_remarks;
+                    this.form.prepared_by = response.data.prepared_by;
+
+                    // Fetch center head after fetching the client_id
+                    this.fetchCenterHead(this.form.client_id);
+
+                    console.log('Form after API fetch:', this.form);  // Log the form data after fetch
+                    this.messageType = 'success';
+                } else {
+                    // No report data, fetch client data directly
+                    this.fetchClientData(clientId);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching report data:', error);
+                // Fallback to fetching client data
+                this.fetchClientData(clientId);
+            });
     },
-    submitForm() {
-      // Replace with your form submission logic
-      axios.post('/api/form-submit', this.form)
+
+    fetchClientData(clientId) {
+        axios.get(`/api/clients/${clientId}`)
+            .then(response => {
+                const client = response.data;
+
+                this.center_head = response.data.center_head;
+                this.form.client_id = client.id; // Set the client_id
+                this.form.name = `${client.first_name} ${client.last_name}`;
+                this.fetchCenterHead(clientId);
+                
+               
+            })
+            .catch(error => {
+                console.error('Error fetching client data:', error);
+                
+                
+            });
+    },
+    fetchCenterHead(clientId) {
+        if (!clientId) {
+            console.error("Client ID is missing, skipping center head fetch.");
+            return;
+        }
+        axios.get(`/api/center-head/${clientId}`)
+            .then(response => {
+                this.center_head = response.data.center_head || 'No Center Head Assigned';
+                console.log("Fetched center head:", this.center_head);
+            })
+            .catch(error => {
+                console.error("Error fetching center head:", error);
+            });
+    },
+  // Save center head
+  saveCenterHead() {
+        const clientId = this.$route.params.id || this.form.client_id;
+        if (!this.center_head || !clientId) {
+            return;
+        }
+        axios.put(`/api/update-center-head`, {
+            center_head: this.center_head,
+            client_id: clientId, // Use the correct client ID
+        })
         .then(response => {
-          this.message = 'Form submitted successfully!';
-          this.messageType = 'success';
+            this.editMode = false;
+            this.message = 'Center Head updated successfully!';
+            this.messageType = 'success';
+            this.clearMessageAfterDelay();
         })
         .catch(error => {
-          this.message = 'Error submitting form.';
-          this.messageType = 'error';
+            console.error("Error updating center head:", error);
+            this.message = 'Failed to update Center Head.';
+            this.messageType = 'error';
+            this.clearMessageAfterDelay();
         });
+    },
+    submitForm() {
+        console.log("Submitting form with data:", this.form);
+        this.saveCenterHead();
+        if (!this.form.client_id) {
+            this.message = 'Failed to save data: Missing client ID';
+            this.messageType = 'error';
+            return;
+        }
+        if (!this.form.assessment_date) {
+            this.message = 'Assessment date is required.';
+            this.messageType = 'error';
+            return;
+        }
+
+        axios.post(`/api/performance-observation-reports/${this.form.client_id}`, this.form)
+            .then(response => {
+                const updatedSections = response.data.sections || this.form.sections;
+                const updatedTrainings = response.data.trainings || this.form.trainings;
+
+                this.form = {
+                    ...this.form,
+                    ...response.data, 
+                    sections: this.form.sections.map((section, index) => ({
+                        ...section,
+                        ...updatedSections[index] || {} // Ensure section exists before merging
+                    })),
+                    trainings: this.form.trainings.map((training, index) => ({
+                        ...training,
+                        ...updatedTrainings[index] || {} // Ensure training exists before merging
+                    })),
+                };
+
+                this.editMode = false;
+                this.message = 'Data saved or updated successfully!';
+                this.messageType = 'success';
+                this.clearMessageAfterDelay();
+            })
+            .catch(error => {
+                const errorMessage = this.constructDetailedErrorMessage(error);
+                console.error('Failed to save or update data:', errorMessage);
+                this.message = errorMessage;
+                this.messageType = 'error';
+                this.clearMessageAfterDelay();
+            });
+    },
+    clearMessageAfterDelay() {
+    setTimeout(() => {
+      this.message = '';
+    }, 3000); // Clear the message after 3 seconds
+  },
+    constructDetailedErrorMessage(error) {
+        let message = 'Failed to save or update data: ';
+    
+        if (error.response) {
+            message += `HTTP ${error.response.status} (${error.response.statusText}) - `;
+    
+            if (error.response.data && error.response.data.message) {
+                message += `${error.response.data.message}. `;
+            }
+    
+            if (error.response.data && error.response.data.errors) {
+                const errorDetails = Object.entries(error.response.data.errors)
+                    .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
+                    .join('; ');
+                message += `Details: ${errorDetails}`;
+            }
+        } else if (error.request) {
+            message += 'No response received from the server. ';
+        } else {
+            message += `Request setup error: ${error.message}. `;
+        }
+    
+        return message;
+    },
+    toggleEdit() {
+        this.editMode = !this.editMode;
     },
     calculateTotalRating(indicator) {
       return (parseFloat(indicator.self_rating) || 0) + (parseFloat(indicator.mdo_rating) || 0);

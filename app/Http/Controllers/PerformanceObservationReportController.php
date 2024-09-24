@@ -21,6 +21,7 @@ class PerformanceObservationReportController extends Controller
                 'general_remarks' => 'nullable|string',
                 'prepared_by' => 'nullable|string|max:50',
                 'noted_by' => 'nullable|string|max:50',
+                'period' => 'nullable|string|max:20',
                 'sections' => 'array',
                 'sections.*.title' => 'nullable|string|max:50',
                 'sections.*.sub_total' => 'nullable|integer',
@@ -40,6 +41,7 @@ class PerformanceObservationReportController extends Controller
                 ['client_id' => $client_id],
                 [
                     'assessment_date' => $validatedData['assessment_date'],
+                    'period' => $validatedData['period'],
                     'trainings_attended' => $validatedData['trainings_attended'] ?? null,
                     'general_remarks' => $validatedData['general_remarks'] ?? null,
                     'prepared_by' => $validatedData['prepared_by'] ?? null,

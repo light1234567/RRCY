@@ -28,6 +28,9 @@ use App\Http\Controllers\TrainingNeedsAssessmentController;
 use App\Http\Controllers\LearnerAcademicBehavioralFormController;
 use App\Http\Controllers\LearnerAssessmentFormController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\CaseManagerController;
+use App\Http\Controllers\SHPController;
+use App\Http\Controllers\DrnController;
 
 Route::post('/check-email', [UserController::class, 'checkEmail']);
 Route::post('/validate-password', [UserController::class, 'validatePassword']);
@@ -69,16 +72,11 @@ Route::post('/checklist', [ChecklistController::class, 'store']);
 });
 // Intervention Plan Routes
 Route::middleware(['web', 'auth'])->group(function () {
-Route::get('/intervention-plans', [InterventionPlanController::class, 'index']);
-Route::get('/intervention-plans/{id}', [InterventionPlanController::class, 'show']);
-Route::post('/intervention-plans', [InterventionPlanController::class, 'store']);
-Route::put('/intervention-plans/{id}', [InterventionPlanController::class, 'update']);
-Route::delete('/intervention-plans/{id}', [InterventionPlanController::class, 'destroy']);
-Route::get('/intervention-plan-items', [InterventionPlanItemController::class, 'index']);
-Route::get('/intervention-plan-items/{id}', [InterventionPlanItemController::class, 'show']);
-Route::post('/intervention-plan-items', [InterventionPlanItemController::class, 'store']);
-Route::put('/intervention-plan-items/{id}', [InterventionPlanItemController::class, 'update']);
-Route::delete('/intervention-plan-items/{id}', [InterventionPlanItemController::class, 'destroy']);
+    Route::get('/intervention-plans', [InterventionPlanController::class, 'index']);
+    Route::get('/intervention-plans/{id}', [InterventionPlanController::class, 'show']);
+    Route::post('/intervention-plans', [InterventionPlanController::class, 'store']);
+    Route::put('/intervention-plans/{id}', [InterventionPlanController::class, 'update']);
+    Route::delete('/intervention-plans/{id}', [InterventionPlanController::class, 'destroy']);
 });
 // General Intake Sheet Routes
 Route::middleware(['web', 'auth'])->group(function () {
@@ -245,3 +243,19 @@ use App\Http\Controllers\LogController;
 Route::get('/logs', [LogController::class, 'index']);
 Route::get('/logs/{id}', [LogController::class, 'show']);
 Route::post('/logs', [LogController::class, 'store']);
+
+//case manager
+Route::post('/case-manager', [CaseManagerController::class, 'storeCaseManager']);
+Route::get('/case-manager/{clientId}', [CaseManagerController::class, 'getCaseManager']);
+Route::put('/update-case-manager/{clientId}', [CaseManagerController::class, 'storeCaseManager']);
+Route::get('/case-manager/{clientId}', [CaseManagerController::class, 'getCaseManager']);
+
+
+// API routes for SHP
+Route::post('/shp', [SHPController::class, 'storeSHP']);
+Route::get('/shp/{clientId}', [SHPController::class, 'getSHP']);
+Route::put('/update-shp/{clientId}', [SHPController::class, 'storeSHP']);
+
+// DRN API Routes
+Route::post('/drn', [DrnController::class, 'storeDrn']); // This should handle both create and update
+Route::get('/drn/{clientId}', [DrnController::class, 'getDrn']);

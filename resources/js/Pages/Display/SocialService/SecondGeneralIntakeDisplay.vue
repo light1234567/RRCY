@@ -456,6 +456,7 @@ export default {
     client_id: this.clientId,
     general_intake_id: this.sheet.general_intake_id || null,
     vices: this.sheet.vices,
+    date: this.sheet.date,
     school_activities_achievement: this.sheet.school_activities_achievement,
     occupation_of_mother: this.sheet.occupation_of_mother,
     occupation_of_father: this.sheet.occupation_of_father,

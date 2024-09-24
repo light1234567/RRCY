@@ -1,4 +1,21 @@
 <template>
+
+<div class="flex justify-end space-x-4 mb-4">
+  <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+    <span v-if="!editMode">Edit</span>
+    <span v-else>Cancel</span>
+  </button>
+  <button v-if="editMode" @click="submitForm" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+  Save
+</button>
+
+</div>
+
+<!-- Success/Error Message -->
+<div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
+  {{ message }}
+</div>
+
   <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
     <!-- Header Section with Logo and Document Details -->
     <div class="relative flex justify-between items-center mb-4">
@@ -13,12 +30,6 @@
 
     <form @submit.prevent="submitForm">
 
-      <div class="flex justify-end space-x-4">
-        <button @click="toggleEdit" type="button" class="bg-blue-500 text-white px-4 py-2 rounded">
-          {{ editMode ? 'Cancel' : 'Edit' }}
-        </button>
-        <button v-if="editMode" type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-      </div>
 
       <div class="text-center mb-6">
         <h1 class="font-bold text-xl">LEARNER’S ACADEMIC BEHAVIORAL FORM</h1>
@@ -32,11 +43,6 @@
             <input v-model="form.school_year" type="text" id="schoolYear" class="block w-32 p-1 border border-gray-300 mx-auto text-sm" />
           </div>
         </div>
-      </div>
-
-      <!-- Success/Error Message -->
-      <div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
-        {{ message }}
       </div>
 
       <div class="flex flex-wrap gap-4 mb-6">
@@ -133,9 +139,8 @@
           <label for="centerHeadSignature" class="block text-sm font-medium">Center Head</label>
           <div class="flex items-center">
             <input
-              v-model="form.center_head_signature"
+              v-model="center_head"
               type="text"
-              id="centerHeadSignature"
               class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm bg-gray-200"
               :readonly="!editMode"
             >
@@ -181,6 +186,7 @@ export default {
       },
       originalForm: null,
       editMode: false,
+      center_head: '',
       message: '', 
       messageType: '', 
     };
@@ -201,6 +207,7 @@ export default {
   },
   methods: {
     fetchData() {
+      this.fetchCenterHead(this.form.client_id);
       if (!this.form.client_id) {
         console.error('client_id is missing. Cannot fetch the form data.');
         return;
@@ -223,36 +230,78 @@ export default {
           console.error('Error fetching data:', error.response?.data || error);
         });
     },
-    toggleEdit() {
-      this.message = ''; // Clear any existing messages when toggling edit mode
-      if (this.editMode) {
-        Object.assign(this.form, this.originalForm);
+    fetchCenterHead(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    // Make an API request using the client ID
+    axios.get(`/api/center-head/${clientId}`)
+      .then(response => {
+        this.center_head = response.data.center_head;
+        console.log("Fetched center head:", this.center_head); // Log the center head
+      })
+      .catch(error => {
+        console.error("Error fetching center head:", error);
+      });
+  },
+  // Save center head
+  saveCenterHead() {
+    const clientId = this.$route.params.id;
+    if (!this.center_head || !clientId) {
+      return;
+    }
+    axios
+      .put(`/api/update-center-head`, {
+        center_head: this.center_head,
+        client_id: clientId, // Use the correct client ID
+      })
+      .then(response => {
         this.editMode = false;
-      } else {
-        this.editMode = true;
-      }
-    },
-    submitForm() {
+        this.fetchClientData(clientId); // Refetch the data to update the UI
+      })
+      .catch(error => {
+        console.error("Error updating center head:", error);
+      });
+  },
+
+  submitForm() {
+      this.saveCenterHead();
       if (!this.form.client_id) {
-        console.error('client_id is missing. Cannot submit the form.');
         this.message = 'Client ID is missing. Cannot submit the form.';
         this.messageType = 'error';
+        console.error('client_id is missing. Cannot submit the form.');
         return;
       }
 
-      axios.post('/api/learner-academic-behavioral-forms', this.form)
+      const url = `/api/learner-academic-behavioral-forms`;
+      
+      axios.post(url, this.form)
         .then(response => {
           this.editMode = false;
-          this.fetchData();
           this.message = 'Form submitted successfully!';
-          this.messageType = 'success';
+          this.messageType = 'success'; // Set success message
+          this.clearMessageAfterDelay();
+          this.fetchData(); // Reload the form data
           console.log('Form submitted successfully:', response.data);
+
         })
         .catch(error => {
           this.message = 'Error saving data: ' + (error.response?.data || error.message);
-          this.messageType = 'error';
+          this.messageType = 'error'; // Set error message
+          this.clearMessageAfterDelay();
           console.error('Error saving data:', error.response?.data || error);
         });
+    },
+    clearMessageAfterDelay() {
+    setTimeout(() => {
+      this.message = '';
+    }, 3000); // Clear the message after 3 seconds
+  },
+    toggleEdit() {
+      this.message = ''; // Clear any existing messages when toggling edit mode
+      this.messageType = ''; // Clear message type as well
+      this.editMode = !this.editMode;
     }
   }
 };
@@ -272,3 +321,4 @@ input[type="text"], textarea {
   border-width: 1px;
 }
 </style>
+      

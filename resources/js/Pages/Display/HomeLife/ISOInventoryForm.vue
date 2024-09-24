@@ -39,12 +39,18 @@
         <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
         <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
         <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-        <p class="text-sm pt-12">DRN: ______________________</p>
-      </div>
+        <div class="text-xs font-semibold pt-12">
+  <p class="text-sm">
+  DRN
+  <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+</p>
+</div>      </div>
     </div>
     <h1 class="font-bold text-md">MONTHLY INVENTORY OF BELONGINGS</h1>
-    <p class="font-semibold text-sm">FOR THE MONTH OF ____________________</p>
-  </div>
+    <p class="text-sm">
+  FOR THE MONTH OF
+  <input type="text" v-model="form.month" class="underline-input text-sm p-1" :readonly="!editMode" />
+</p>  </div>
 
   <!-- Inventory Table -->
   <div class="overflow-x-auto mb-6">
@@ -114,7 +120,7 @@
         <input
           type="text"
           id="preparedBy"
-          v-model="form.prepared_by"
+          v-model="form.houseparent_name"
           class="mt-1 w-3/4 underline-input shadow-sm"
           :readonly="!editMode"
         >
@@ -129,7 +135,7 @@
         <input
           type="text"
           id="signatureResidents"
-          v-model="form.signature_residents"
+          v-model="form.resident_name"
           class="mt-1 w-3/4 underline-input shadow-sm"
           :readonly="!editMode"
         >
@@ -142,8 +148,10 @@
     <!-- Noted by Section -->
     <div class="w-1/2 mr-12">
       <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
-      <p class="text-sm mt-1"><strong><u>VAN M. DE LEON</u></strong></p>
-      <p class="text-sm">HP III/SHP</p>
+      <input type="text" v-model="shp" 
+    class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 py-1 text-xs" 
+    :readonly="!editMode"/>      
+    <p class="text-sm">HP III/SHP</p>
     </div>
   </div>
 
@@ -233,7 +241,6 @@ data() {
       id: null,
       client_id: null,
       month: '',
-      drn: '',
       resident_name: '',
       houseparent_name: '',
       items: [
@@ -251,14 +258,21 @@ data() {
     saveResultMessage: '',
     currentPage: 1,
     totalPages: 1,
+    shp: '',
+    drn: '',
   };
 },
 mounted() {
-  this.fetchData();
+  const clientId = this.$route.params.id;
+    this.fetchData(clientId);
+    this.fetchSHP(clientId);
+    this.fetchDrn(clientId);
 },
 watch: {
   '$route.params.id': function(newId) {
-    this.fetchData();
+      this.fetchData(newId);
+      this.fetchSHP(newId);
+      this.fetchDrn(newId);
   }
 },
 methods: {
@@ -285,6 +299,9 @@ methods: {
           console.log('Fetch data response:', response.data); // Debugging
           if (response.data.inventory) {
             this.form = response.data.inventory;
+            this.form.month = response.data.report.month;
+            this.form.resident_name = response.data.report.resident_name;
+            this.form.houseparent_name = response.data.report.houseparent_name;
             this.form.client_id = clientId;
             this.originalForm = JSON.parse(JSON.stringify(this.form)); // Capture the original state
           } else {
@@ -298,7 +315,78 @@ methods: {
         });
     }
   },
+  fetchSHP(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.get(`/api/shp/${clientId}`)
+      .then(response => {
+        this.shp = response.data.shp || '';
+        console.log("Fetched SHP:", this.shp);
+      })
+      .catch(error => {
+        console.error("Error fetching SHP:", error);
+      });
+  },
+  saveSHP() {
+    const clientId = this.$route.params.id;
+    console.log("Saving SHP:", this.shp, "for client:", clientId);
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.put(`/api/update-shp/${clientId}`, { 
+      client_id: clientId,
+      name: this.shp
+    })
+    .then(response => {
+      console.log("SHP saved successfully:", response.data);
+      this.editMode = false;
+      this.fetchSHP(clientId);
+    })
+    .catch(error => {
+      console.error("Error updating SHP:", error);
+    });
+  }
+,
+fetchDrn(clientId) {
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+  // Fetch DRN based on clientId
+  axios.get(`/api/drn/${clientId}`)
+    .then(response => {
+      this.drn = response.data.drn || ''; // Set DRN to the response, or an empty string if not present
+      console.log("Fetched DRN:", this.drn);
+    })
+    .catch(error => {
+      console.error("Error fetching DRN:", error);
+    });
+},
 
+
+saveDrn() {
+  const clientId = this.form.client_id; // Ensure client_id is available in the form
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+
+  // Save or update DRN
+  axios.post('/api/drn', {
+    client_id: clientId, // Pass the client_id
+    drn: this.drn // Pass the DRN value
+  })
+  .then(response => {
+    console.log("DRN saved successfully:", response.data);
+    this.fetchDrn(clientId); // Fetch updated DRN after save
+  })
+  .catch(error => {
+    console.error("Error saving DRN:", error.response.data); // Log detailed error message
+  });
+},
   toggleEdit() {
     if (this.editMode) {
       this.openModal();
@@ -318,6 +406,8 @@ methods: {
 
   confirmSave() {
     this.submitForm();
+    this.saveSHP();
+    this.saveDrn();
     this.closeModal();
   },
 

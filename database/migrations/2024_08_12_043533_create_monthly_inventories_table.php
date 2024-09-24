@@ -12,7 +12,6 @@ class CreateMonthlyInventoriesTable extends Migration
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');             
             $table->string('month', 10)->nullable();
-            $table->string('drn', 25)->nullable();
             $table->string('resident_name', 50)->nullable();
             $table->string('houseparent_name', 50)->nullable();
             $table->timestamps();

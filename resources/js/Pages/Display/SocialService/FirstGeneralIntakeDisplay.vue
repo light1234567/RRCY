@@ -776,7 +776,7 @@
     <div class="flex justify-between mb-8">
       <div class="flex flex-col items-start">
         <label class="block text-base font-semibold text-gray-700 mb-1">Prepared by:</label>
-        <input type="text" v-model="sheet.prepared_by" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+        <input type="text" v-model="case_manager" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
         <p>SWO __/Case Manager</p>
       </div>
       <div class="flex flex-col items-end">
@@ -822,6 +822,8 @@ export default {
       editMode: false,
       message: '',
       messageType: '',
+      center_head: '',
+      case_manager:'',
       totalPages: 4,
       clientId: null,
       currentPage: 1,
@@ -988,7 +990,6 @@ export default {
         water_source: '',
         house_made_of: '',
         prepared_by: '',  // New field
-        reviewed_by: '',  // New field
       }
     };
   },
@@ -997,12 +998,14 @@ export default {
     console.log('Client ID fetched:', this.clientId); // Console log showing client ID
     this.fetchClientData(this.clientId);
     this.fetchCenterHead(this.clientId);
+    this.fetchCaseManager(this.clientId);
   },
   watch: {
     '$route.params.id'(newId) {
       this.clientId = newId;
       this.fetchClientData(this.clientId);
       this.fetchCenterHead(this.clientId);
+      this.fetchCaseManager(this.clientId);
     }
   },
   methods: {
@@ -1059,6 +1062,123 @@ saveCenterHead() {
       console.error("Error updating center head:", error);
     });
 },
+fetchCaseManager(clientId) {
+      // Fetch the case manager based on the client ID
+      if (!clientId) {
+        console.error("Client ID is missing.");
+        return;
+      }
+      axios.get(`/api/case-manager/${clientId}`)
+        .then(response => {
+          this.case_manager = response.data.case_manager || '';
+          console.log("Fetched case manager:", this.case_manager); // Log the case manager
+        })
+        .catch(error => {
+          console.error("Error fetching case manager:", error);
+        });
+    },
+
+    saveCaseManager() {
+  console.log("Saving case manager:", this.case_manager, "for client:", this.clientId); // Log the data before the request
+  
+  if (!this.clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+
+  axios.put(`/api/update-case-manager/${this.clientId}`, { 
+    client_id: this.clientId,  // Include the client_id here
+    name: this.case_manager 
+  })
+  .then(response => {
+    console.log("Case manager saved successfully:", response.data); // Log the response
+    this.editMode = false;
+    this.fetchCaseManager(this.clientId);  // Refetch to update the UI
+  })
+  .catch(error => {
+    console.error("Error updating case manager:", error);
+  });
+}
+,
+
+calculateAge(birthDate) {
+      const today = new Date();
+      const birthDateObj = new Date(birthDate);
+      let age = today.getFullYear() - birthDateObj.getFullYear();
+      const monthDiff = today.getMonth() - birthDateObj.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+        age--;
+      }
+      return age;
+    },
+    toggleEdit() {
+      if (this.editMode) {
+        this.openModal();
+      } else {
+        this.editMode = !this.editMode;
+      }
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    confirmSave() {
+      this.saveData();
+      this.saveCenterHead();
+      this.saveCaseManager(); 
+      this.closeModal();
+      this.editMode = false;
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    saveData() {
+      if (!this.clientId) {
+        this.message = 'No client selected.';
+        this.messageType = 'error';
+        this.clearNotification();
+        return;
+      }
+
+      const payload = {
+        client_id: this.clientId,
+        center_head: this.center_head,
+        ...this.sheet
+      };
+
+      const method = this.sheet.id ? 'put' : 'post';
+      const url = `/api/general-intake-sheets${this.sheet.id ? '/' + this.sheet.id : ''}`;
+
+      axios[method](url, payload)
+        .then(response => {
+          this.saveResultTitle = 'Success';
+          this.saveResultMessage = 'Data saved successfully.';
+          if (!this.sheet.id) this.sheet.id = response.data.id;
+          this.editMode = false;
+        })
+        .catch(error => {
+          this.saveResultTitle = 'Error';
+          this.saveResultMessage = error.response.data.message || 'Error saving data.';
+          console.error('Error saving data:', error);
+        })
+        .finally(() => {
+          this.isModalOpen = false;
+          this.isSaveResultModalOpen = true;
+        });
+    },
+    closeSaveResultModal() {
+      this.isSaveResultModalOpen = false;
+      this.saveResultTitle = '';
+      this.saveResultMessage = '';
+    },
+    clearNotification() {
+      setTimeout(() => {
+        this.message = '';
+        this.messageType = '';
+      }, 3000);
+    },
 
     exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
@@ -1613,84 +1733,6 @@ saveCenterHead() {
       // Save the PDF
       pdf.save('General Intake Sheet.pdf');
     },
-
-    calculateAge(birthDate) {
-      const today = new Date();
-      const birthDateObj = new Date(birthDate);
-      let age = today.getFullYear() - birthDateObj.getFullYear();
-      const monthDiff = today.getMonth() - birthDateObj.getMonth();
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-        age--;
-      }
-      return age;
-    },
-    toggleEdit() {
-      if (this.editMode) {
-        this.openModal();
-      } else {
-        this.editMode = !this.editMode;
-      }
-    },
-    openModal() {
-      this.isModalOpen = true;
-    },
-    closeModal() {
-      this.isModalOpen = false;
-    },
-    confirmSave() {
-      this.saveData();
-      this.saveCenterHead();
-      this.closeModal();
-      this.editMode = false;
-    },
-    cancelEdit() {
-      this.editMode = false;
-    },
-    saveData() {
-      if (!this.clientId) {
-        this.message = 'No client selected.';
-        this.messageType = 'error';
-        this.clearNotification();
-        return;
-      }
-
-      const payload = {
-        client_id: this.clientId,
-        center_head: this.center_head,
-        ...this.sheet
-      };
-
-      const method = this.sheet.id ? 'put' : 'post';
-      const url = `/api/general-intake-sheets${this.sheet.id ? '/' + this.sheet.id : ''}`;
-
-      axios[method](url, payload)
-        .then(response => {
-          this.saveResultTitle = 'Success';
-          this.saveResultMessage = 'Data saved successfully.';
-          if (!this.sheet.id) this.sheet.id = response.data.id;
-          this.editMode = false;
-        })
-        .catch(error => {
-          this.saveResultTitle = 'Error';
-          this.saveResultMessage = error.response.data.message || 'Error saving data.';
-          console.error('Error saving data:', error);
-        })
-        .finally(() => {
-          this.isModalOpen = false;
-          this.isSaveResultModalOpen = true;
-        });
-    },
-    closeSaveResultModal() {
-      this.isSaveResultModalOpen = false;
-      this.saveResultTitle = '';
-      this.saveResultMessage = '';
-    },
-    clearNotification() {
-      setTimeout(() => {
-        this.message = '';
-        this.messageType = '';
-      }, 3000);
-    }
   }
 };
 </script>

@@ -14,6 +14,7 @@ class InventoryItem extends Model
 
     protected $fillable = [
         'monthly_inventory_id',
+        'client_id',
         'name',
         'description',
         'qty',

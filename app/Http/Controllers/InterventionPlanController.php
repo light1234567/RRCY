@@ -21,59 +21,54 @@ class InterventionPlanController extends Controller
             'date_prepared' => 'required|date',
             'prepared_by' => 'nullable|string|max:50',
             'conformed_by' => 'nullable|string|max:50',
-            //'noted_by' => 'nullable|string|max:50',
-            'items' => 'required|array',
+            'items' => 'required|array', // Expect an array for items
             'items.*.objectives' => 'required|string|max:50',
             'items.*.activities' => 'required|string|max:50',
             'items.*.time_frame' => 'required|string|max:20',
             'items.*.responsible_person' => 'required|string|max:50',
             'items.*.expected_outcome' => 'required|string|max:100',
             'items.*.remarks' => 'nullable|string|max:150',
-        ]);         
+        ]);
 
+        // Store items as JSON
         $plan = InterventionPlan::create($validatedData);
-        foreach ($validatedData['items'] as $itemData) {
-            $plan->items()->create($itemData);
-        }
 
         return response()->json($plan, 201);
-    }
-
-    public function show($id)
-    {
-        $plan = InterventionPlan::with('items')->where('client_id', $id)->first();
-        if ($plan) {
-            return response()->json($plan);
-        }
-        return response()->json(['message' => 'Not found'], 404);
     }
 
     public function update(Request $request, $id)
     {
         $plan = InterventionPlan::find($id);
+
         if ($plan) {
             $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
-                'period' => 'required|string|max:100',
+                'period' => 'required|string|max:15',
                 'date_prepared' => 'required|date',
-                'prepared_by' => 'nullable|string|max:100',
-                'conformed_by' => 'nullable|string|max:100',
-                'noted_by' => 'nullable|string|max:100',
+                'prepared_by' => 'nullable|string|max:50',
+                'conformed_by' => 'nullable|string|max:50',
                 'items' => 'required|array',
-                'items.*.objectives' => 'required|string|max:255',
-                'items.*.activities' => 'required|string|max:255',
-                'items.*.time_frame' => 'required|string|max:100',
-                'items.*.responsible_person' => 'required|string|max:100',
-                'items.*.expected_outcome' => 'required|string|max:255',
-                'items.*.remarks' => 'nullable|string|max:255',
+                'items.*.objectives' => 'required|string|max:50',
+                'items.*.activities' => 'required|string|max:50',
+                'items.*.time_frame' => 'required|string|max:20',
+                'items.*.responsible_person' => 'required|string|max:50',
+                'items.*.expected_outcome' => 'required|string|max:100',
+                'items.*.remarks' => 'nullable|string|max:150',
             ]);
 
+            // Update plan and store items as JSON
             $plan->update($validatedData);
-            $plan->items()->delete();
-            foreach ($validatedData['items'] as $itemData) {
-                $plan->items()->create($itemData);
-            }
 
+            return response()->json($plan);
+        }
+
+        return response()->json(['message' => 'Not found'], 404);
+    }
+
+    public function show($id)
+    {
+        $plan = InterventionPlan::with('client')->find($id);
+        if ($plan) {
             return response()->json($plan);
         }
         return response()->json(['message' => 'Not found'], 404);
@@ -89,4 +84,3 @@ class InterventionPlanController extends Controller
         return response()->json(['message' => 'Not found'], 404);
     }
 }
-

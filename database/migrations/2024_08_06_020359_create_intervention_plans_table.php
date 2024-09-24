@@ -15,7 +15,8 @@ class CreateInterventionPlansTable extends Migration
             $table->date('date_prepared');
             $table->string('prepared_by', 50)->nullable(); 
             $table->string('conformed_by', 50)->nullable(); 
-            $table->string('noted_by', 50)->nullable(); 
+            $table->string('noted_by', 50)->nullable();
+            $table->json('items'); // Store items as JSON
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

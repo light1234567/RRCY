@@ -15,7 +15,6 @@ class Checklist extends Model
     protected $fillable = [
         'client_id', 
         'admitting_officer', 
-        'case_manager', 
         'documents', 
         'rrcy_forms',    
         'updated_by'

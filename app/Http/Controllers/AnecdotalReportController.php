@@ -19,7 +19,8 @@ class AnecdotalReportController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'date' => 'required|date',
+            'date' => 'nullable|date',
+            'month' => 'nullable|string|max:20',
             'drn' => 'nullable|string|max:25',
             'color' => 'nullable|string|max:10',
             'physical' => 'nullable|string',
@@ -100,6 +101,7 @@ class AnecdotalReportController extends Controller
         $validatedData = $request->validate([
             'date' => 'required|date',
             'drn' => 'nullable|string|max:25',
+            'month' => 'nullable|string|max:20',
             'color' => 'nullable|string|max:10',
             'physical' => 'nullable|string',
             'emotional' => 'nullable|string',

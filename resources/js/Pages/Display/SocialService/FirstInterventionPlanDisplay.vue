@@ -69,44 +69,76 @@
               <label class="font-semibold w-1/5">Date Prepared:</label>
               <input type="date" v-model="plan.date_prepared" :class="{'twinkle-border': editMode}" class="w-3/4 border border-transparent p-1" :readonly="!editMode">
               <span class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" @click="openCalendar">
-                <svg class="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H16M8 11H16M8 15H16M4 4H20V20H4V4Z"></path>
-                </svg>
+                
               </span>
             </div>
           </div>
         </div>
         <table class="min-w-full bg-white border border-black text-xs">
-          <thead>
-            <tr>
-              <th class="py-1 px-2 border-b border-r border-black">Objectives</th>
-              <th class="py-1 px-2 border-b border-r border-black">Activities</th>
-              <th class="py-1 px-2 border-b border-r border-black">Time Frame</th>
-              <th class="py-1 px-2 border-b border-r border-black">Responsible Person</th>
-              <th class="py-1 px-2 border-b border-r border-black">Expected Outcome</th>
-              <th class="py-1 px-2 border-b border-black">Remarks</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in plan.items" :key="index" class="hover:bg-gray-100">
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" v-model="item.objectives" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" v-model="item.activities" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" v-model="item.time_frame" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" v-model="item.responsible_person" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" v-model="item.expected_outcome" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-black"><input type="text" v-model="item.remarks" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-            </tr>
-            <!-- Add empty rows for additional entries -->
-            <tr v-for="i in emptyRows" :key="'empty' + i" class="hover:bg-gray-100">
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-r border-black"><input type="text" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-              <td class="py-1 px-2 border-b border-black"><input type="text" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode"></td>
-            </tr>
-          </tbody>
-        </table>
+  <thead>
+    <tr>
+      <th class="py-1 px-2 border-b border-r border-black">Objectives</th>
+      <th class="py-1 px-2 border-b border-r border-black">Activities</th>
+      <th class="py-1 px-2 border-b border-r border-black">Time Frame</th>
+      <th class="py-1 px-2 border-b border-r border-black">Responsible Person</th>
+      <th class="py-1 px-2 border-b border-r border-black">Expected Outcome</th>
+      <th class="py-1 px-2 border-b border-black">Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(item, index) in plan.items" :key="item.id || index" class="hover:bg-gray-100">
+      <td class="py-1 px-2 border-b border-r border-black">
+        <textarea v-model="item.objectives" 
+          :class="{'twinkle-border': editMode}" 
+          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+          :readonly="!editMode" 
+          @input="adjustHeight($event)">
+        </textarea>
+      </td>
+      <td class="py-1 px-2 border-b border-r border-black">
+        <textarea v-model="item.activities" 
+          :class="{'twinkle-border': editMode}" 
+          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+          :readonly="!editMode" 
+          @input="adjustHeight($event)">
+        </textarea>
+      </td>
+      <td class="py-1 px-2 border-b border-r border-black">
+        <textarea v-model="item.time_frame" 
+          :class="{'twinkle-border': editMode}" 
+          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+          :readonly="!editMode" 
+          @input="adjustHeight($event)">
+        </textarea>
+      </td>
+      <td class="py-1 px-2 border-b border-r border-black">
+        <textarea v-model="item.responsible_person" 
+          :class="{'twinkle-border': editMode}" 
+          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+          :readonly="!editMode" 
+          @input="adjustHeight($event)">
+        </textarea>
+      </td>
+      <td class="py-1 px-2 border-b border-r border-black">
+        <textarea v-model="item.expected_outcome" 
+          :class="{'twinkle-border': editMode}" 
+          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+          :readonly="!editMode" 
+          @input="adjustHeight($event)">
+        </textarea>
+      </td>
+      <td class="py-1 px-2 border-b border-black">
+        <textarea v-model="item.remarks" 
+          :class="{'twinkle-border': editMode}" 
+          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+          :readonly="!editMode" 
+          @input="adjustHeight($event)">
+        </textarea>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
       
         <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
           <div>
@@ -229,7 +261,6 @@ export default {
         date_prepared: '',
         prepared_by: '',
         conformed_by: '',
-        noted_by: '',
         items: [
           { objectives: '', activities: '', time_frame: '', responsible_person: '', expected_outcome: '', remarks: '' },
         ],
@@ -238,39 +269,36 @@ export default {
   },
   methods: {
     fetchClientData() {
-      axios.get(`/api/clients/${this.clientId}`)
-        .then(response => {
-          const client = response.data;
-          this.plan.name = `${client.first_name} ${client.last_name}`;
-          this.plan.age = this.calculateAge(client.date_of_birth);
+  axios.get(`/api/clients/${this.clientId}`)
+    .then(response => {
+      const client = response.data;
+      this.plan.name = `${client.first_name} ${client.last_name}`;
+      this.plan.age = this.calculateAge(client.date_of_birth);
 
-          return axios.get(`/api/intervention-plans/${this.clientId}`);
-        })
-        .then(response => {
-          const clientPlan = response.data;
+      return axios.get(`/api/intervention-plans/${this.clientId}`);
+    })
+    .then(response => {
+      const clientPlan = response.data;
 
-          this.plan.id = clientPlan.id;
-          this.plan.period = clientPlan.period;
-          this.plan.date_prepared = clientPlan.date_prepared;
-          this.plan.prepared_by = clientPlan.prepared_by || '';
-          this.plan.conformed_by = clientPlan.conformed_by || '';
-          this.plan.noted_by = clientPlan.noted_by || '';
-          this.plan.items = clientPlan.items.map(item => ({
-            objectives: item.objectives,
-            activities: item.activities,
-            time_frame: item.time_frame,
-            responsible_person: item.responsible_person,
-            expected_outcome: item.expected_outcome,
-            remarks: item.remarks,
-          }));
-          this.updateTotalPages();
-        })
-        .catch(error => {
-          console.error('Error fetching client data:', error);
-        });
+      this.plan.id = clientPlan.id;
+      this.plan.period = clientPlan.period;
+      this.plan.date_prepared = clientPlan.date_prepared;
+      this.plan.prepared_by = clientPlan.prepared_by || '';
+      this.plan.conformed_by = clientPlan.conformed_by || '';
 
-      console.log('Fetched client ID:', this.clientId);
-    },
+      // Assign the JSON items directly to the plan.items array
+      this.plan.items = clientPlan.items ? clientPlan.items : [];
+
+      // Update the total pages for pagination
+      this.updateTotalPages();
+    })
+    .catch(error => {
+      console.error('Error fetching client data:', error);
+    });
+
+  console.log('Fetched client ID:', this.clientId);
+}
+,
     fetchCenterHead(clientId) {
   if (!clientId) {
     console.error("Client ID is missing.");
@@ -346,60 +374,60 @@ saveCenterHead() {
       this.isSaveResultModalOpen = false;
     },
     saveData() {
-      if (!this.clientId) {
-        this.message = 'No client selected.';
-        this.messageType = 'error';
-        return;
+  if (!this.clientId) {
+    this.message = 'No client selected.';
+    this.messageType = 'error';
+    return;
+  }
+
+  const payload = {
+    client_id: this.clientId,
+    period: this.plan.period,
+    date_prepared: this.plan.date_prepared,
+    prepared_by: this.plan.prepared_by,
+    conformed_by: this.plan.conformed_by,
+    center_head: this.center_head,
+    items: this.plan.items, // Send items as an array
+  };
+
+  const method = this.plan.id ? 'put' : 'post';
+  const url = `/api/intervention-plans${this.plan.id ? '/' + this.plan.id : ''}`;
+
+  axios[method](url, payload)
+    .then(response => {
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data saved successfully.';
+      if (!this.plan.id) {
+        this.plan.id = response.data.id;
       }
+      this.editMode = false;
+    })
+    .catch(error => {
+      this.messageType = 'error';
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = error.response.data.message || 'An error occurred while saving data.';
+      console.error('Error saving data:', error);
+    })
+    .finally(() => {
+      this.isModalOpen = false;
+      this.isSaveResultModalOpen = true;
+    });
+}
 
-      const payload = {
-        client_id: this.clientId,
-        period: this.plan.period,
-        date_prepared: this.plan.date_prepared,
-        prepared_by: this.plan.prepared_by,
-        conformed_by: this.plan.conformed_by,
-        center_head: this.center_head,
-        items: this.plan.items.map(item => ({
-          objectives: item.objectives,
-          activities: item.activities,
-          time_frame: item.time_frame,
-          responsible_person: item.responsible_person,
-          expected_outcome: item.expected_outcome,
-          remarks: item.remarks,
-        })),
-      };
-
-      const method = this.plan.id ? 'put' : 'post';
-      const url = `/api/intervention-plans${this.plan.id ? '/' + this.plan.id : ''}`;
-
-      axios[method](url, payload)
-        .then(response => {
-          this.saveResultTitle = 'Success';
-          this.saveResultMessage = 'Data saved successfully.';
-          if (!this.plan.id) this.plan.id = response.data.id;
-          this.editMode = false;
-        })
-        .catch(error => {
-          this.messageType = 'error';
-          this.saveResultTitle = 'Error';
-          this.saveResultMessage = error.response.data.message || 'An error occurred while saving data.';
-          console.error('Error saving data:', error);
-        })
-        .finally(() => {
-          this.isModalOpen = false;
-          this.isSaveResultModalOpen = true;
-        });
-    },
+,
     addItem() {
-      this.plan.items.push({
-        objectives: '',
-        activities: '',
-        time_frame: '',
-        responsible_person: '',
-        expected_outcome: '',
-        remarks: '',
-      });
-      this.updateTotalPages(); // Update the total pages after adding a new item
+        // Add a new item with no `id` (new items should not have an `id` before saving to the database)
+        const newItem = {
+            objectives: '',
+            activities: '',
+            time_frame: '',
+            responsible_person: '',
+            expected_outcome: '',
+            remarks: ''
+        };
+
+        // Replace the array to avoid using .push()
+        this.plan.items = [...this.plan.items, newItem]; xxxxxxx
     },
     openCalendar() {
       document.querySelector('input[type="date"]').showPicker();
@@ -469,4 +497,14 @@ button:hover {
 .twinkle-border {
   animation: twinkle 2s infinite;
 }
+textarea {
+  min-height: 40px;  /* Set a minimum height for readability */
+  max-height: 300px;  /* Optional: limit how tall the textarea can grow */
+  line-height: 1.5;
+}
+
+textarea:focus {
+  outline: none;  /* Remove the outline when focused */
+}
+
 </style>

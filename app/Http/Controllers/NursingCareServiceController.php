@@ -14,10 +14,12 @@ class NursingCareServiceController extends Controller
     public function storeOrUpdate(Request $request)
 {
     Log::info('Store or Update method called', ['request_data' => $request->all()]);
+    Log::info('Client ID received:', ['client_id' => $request->input('client_id')]);
 
-    $validator = Validator::make($request->all(), [
-        'client_id' => 'required|exists:clients,id',
-        'date_of_admission' => 'required|date',
+
+    // Validate request data
+    $validatedData = $request->validate([
+        'client_id' => 'required|exists:clients,id', // Ensure it's required and exists
         'current_medical_status' => 'nullable|string|max:20',
         'temperature' => 'nullable|numeric',
         'pulse_rate' => 'nullable|integer',
@@ -37,23 +39,17 @@ class NursingCareServiceController extends Controller
         'remarks' => 'nullable|string',
         'prepared_by' => 'nullable|string|max:50',
         'noted_by' => 'nullable|string|max:50',
-        'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:150',
-    ]);    
+        'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+    ]);
 
-    if ($validator->fails()) {
-        Log::error('Validation failed', ['errors' => $validator->errors()->toArray()]);
-        return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-    }
+    Log::info('Validated Client ID:', ['client_id' => $validatedData['client_id']]);
 
-    $validatedData = $validator->validated();
-
-    // Handle image upload
+    // Handle image upload if provided
     if ($request->hasFile('profile_image')) {
         try {
             $originalName = $request->file('profile_image')->getClientOriginalName();
             $path = $request->file('profile_image')->storeAs('profile_images', $originalName, 'public');
             $validatedData['profile_image'] = $path;
-            Log::info('Profile image uploaded', ['path' => $path]);
         } catch (\Exception $e) {
             Log::error('Profile image upload failed', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Profile image upload failed', 'errors' => $e->getMessage()], 500);
@@ -61,14 +57,18 @@ class NursingCareServiceController extends Controller
     }
 
     try {
-        // Save or update the NursingCareService record
+        // Check if an id is provided for updating
         if ($request->has('id') && $request->id) {
             $nursingCareService = NursingCareService::find($request->id);
             if ($nursingCareService) {
-                if (isset($validatedData['profile_image'])) {
-                    if ($nursingCareService->profile_image && Storage::disk('public')->exists($nursingCareService->profile_image)) {
-                        Storage::disk('public')->delete($nursingCareService->profile_image);
-                    }
+                // Retain the existing profile image if no new image is uploaded
+                if (!isset($validatedData['profile_image']) && $nursingCareService->profile_image) {
+                    $validatedData['profile_image'] = $nursingCareService->profile_image;
+                }
+
+                // Handle profile image deletion
+                if (isset($validatedData['profile_image']) && $nursingCareService->profile_image) {
+                    Storage::disk('public')->delete($nursingCareService->profile_image);
                 }
 
                 $nursingCareService->update($validatedData);
@@ -79,6 +79,7 @@ class NursingCareServiceController extends Controller
                 return response()->json(['message' => 'Not found'], 404);
             }
         } else {
+            // Create a new NursingCareService record
             $nursingCareService = NursingCareService::create($validatedData);
             Log::info('NursingCareService record created', ['nursingCareService' => $nursingCareService]);
             return response()->json($nursingCareService, 201);
@@ -91,8 +92,6 @@ class NursingCareServiceController extends Controller
         return response()->json(['message' => 'Failed to save record', 'errors' => $e->getMessage()], 500);
     }
 }
-
-
 
 
 

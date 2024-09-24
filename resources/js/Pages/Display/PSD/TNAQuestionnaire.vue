@@ -2,7 +2,6 @@
   <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
   <!-- Success/Error Message -->
   <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
-  <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
 <!-- Header -->
 <div class="relative flex justify-between items-center mb-4">
     <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48">

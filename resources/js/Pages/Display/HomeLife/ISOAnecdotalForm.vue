@@ -41,11 +41,19 @@
          <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
          <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
          <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-         <p class="pt-12">DRN: ______________________</p>
+         <div class="text-xs font-semibold pt-12">
+  <p class="text-sm">
+  DRN
+  <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+</p>
+</div>
        </div>
      </div>
      <h1 class="font-bold text-md">ANECDOTAL REPORT</h1>
-     <p class="text-sm">FOR THE MONTH OF ____________________</p>
+     <p class="text-sm">
+  FOR THE MONTH OF
+  <input type="text" v-model="form.month" class="underline-input text-sm p-1" :readonly="!editMode" />
+</p>
    </div>
 
    <!-- General Information -->
@@ -198,7 +206,7 @@
        <input
          type="text"
          id="notedBy"
-         v-model="form.noted_by"
+         v-model="shp"
          class="mt-1 w-3/4 underline-input text-sm shadow-sm"
          :readonly="!editMode"
        >
@@ -210,8 +218,11 @@
        <label for="approvedBy" class="block text-sm font-medium">Approved by:</label>
        <input
          type="text"
+         id="notedBy"
          v-model="center_head"
-         :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode">
+         class="mt-1 w-3/4 underline-input text-sm shadow-sm"
+         :readonly="!editMode"
+       >
        <p class="text-sm">SWO IV / Center Head</p>
      </div>
    </div>
@@ -300,11 +311,13 @@ export default {
  data() {
    return {
     center_head: '',
+    drn: '',
+    shp: '',
      form: {
        client_id: null,
        name: '',
        date: '',
-       drn: '',
+       month: '',
        color: '',
        physical: '',
        emotional: '',
@@ -330,13 +343,17 @@ export default {
  },
  mounted() {
    const clientId = this.$route.params.id;
-   this.fetchData(clientId);
    this.fetchCenterHead(clientId);
+   this.fetchSHP(clientId);
+   this.fetchDrn(clientId);
+   this.fetchData(clientId);
  },
  watch: {
     '$route.params.id': function(newId) {
+      this.fetchCenterHead(newId);
+     this.fetchSHP(newId);
+     this.fetchDrn(newId);
      this.fetchData(newId);
-     this.fetchCenterHead(newId);
    }
  },
  methods: {
@@ -351,6 +368,7 @@ export default {
       // Populate form if report exists
       Object.assign(this.form, response.data.report);
       this.form.client_id = clientId;
+      this.form.month = response.data.report.month;
       this.form.name = `${response.data.client.first_name} ${response.data.client.last_name}`; // Ensure correct field mapping
       this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store original form
     } else {
@@ -392,6 +410,78 @@ export default {
        console.error("Error updating center head:", error);
      });
    },
+   fetchSHP(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.get(`/api/shp/${clientId}`)
+      .then(response => {
+        this.shp = response.data.shp || '';
+        console.log("Fetched SHP:", this.shp);
+      })
+      .catch(error => {
+        console.error("Error fetching SHP:", error);
+      });
+  },
+  saveSHP() {
+    const clientId = this.$route.params.id;
+    console.log("Saving SHP:", this.shp, "for client:", clientId);
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.put(`/api/update-shp/${clientId}`, { 
+      client_id: clientId,
+      name: this.shp
+    })
+    .then(response => {
+      console.log("SHP saved successfully:", response.data);
+      this.editMode = false;
+      this.fetchSHP(clientId);
+    })
+    .catch(error => {
+      console.error("Error updating SHP:", error);
+    });
+  },
+  fetchDrn(clientId) {
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+  // Fetch DRN based on clientId
+  axios.get(`/api/drn/${clientId}`)
+    .then(response => {
+      this.drn = response.data.drn || ''; // Set DRN to the response, or an empty string if not present
+      console.log("Fetched DRN:", this.drn);
+    })
+    .catch(error => {
+      console.error("Error fetching DRN:", error);
+    });
+},
+
+
+saveDrn() {
+  const clientId = this.form.client_id; // Ensure client_id is available in the form
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+
+  // Save or update DRN
+  axios.post('/api/drn', {
+    client_id: clientId, // Pass the client_id
+    drn: this.drn // Pass the DRN value
+  })
+  .then(response => {
+    console.log("DRN saved successfully:", response.data);
+    this.fetchDrn(clientId); // Fetch updated DRN after save
+  })
+  .catch(error => {
+    console.error("Error saving DRN:", error.response.data); // Log detailed error message
+  });
+},
+
 
    toggleEdit() {
      if (this.editMode) {
@@ -413,6 +503,8 @@ export default {
    confirmSave() {
      this.submitForm();
      this.saveCenterHead();
+     this.saveSHP();
+     this.saveDrn();
      this.closeModal();
    },
 
@@ -427,26 +519,17 @@ export default {
    submitForm() {
      const url = `/api/anecdotal-reports/${this.form.client_id}`;
 
-     axios.put(url, this.form)
-       .then(response => {
-         this.editMode = false;
-         this.message = 'Data updated successfully!';
-         this.messageType = 'success';
-         this.saveResultTitle = 'Success';
-         this.saveResultMessage = 'Data saved successfully.';
-         this.isSaveResultModalOpen = true;
-         this.clearMessage();
-         this.fetchData(this.form.client_id);       
-        })
-       .catch(error => {
-         this.message = 'Failed to update data';
-         this.messageType = 'error';
-         this.saveResultTitle = 'Error';
-         this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
-         this.isSaveResultModalOpen = true;
-         this.clearMessage();
-       });
-   },
+  // Avoid fetching and losing current data. Use form directly.
+  axios.put(url, this.form)
+    .then(response => {
+      this.message = 'Data updated successfully!';
+      this.messageType = 'success';
+      this.fetchData(); // Refresh data, but ensure you're not wiping out other fields.
+    })
+    .catch(error => {
+    });
+},
+
 
    clearMessage() {
      setTimeout(() => {

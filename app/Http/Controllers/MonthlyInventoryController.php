@@ -22,7 +22,6 @@ class MonthlyInventoryController extends Controller
         'id' => 'nullable|exists:monthly_inventories,id',
         'client_id' => 'required|exists:clients,id',
         'month' => 'nullable|string|max:10',
-        'drn' => 'nullable|string|max:25',
         'resident_name' => 'nullable|string|max:50',
         'houseparent_name' => 'nullable|string|max:50',
         'items' => 'required|array',
@@ -46,7 +45,6 @@ class MonthlyInventoryController extends Controller
         $inventory->fill([
             'client_id' => $validatedData['client_id'],
             'month' => $validatedData['month'],
-            'drn' => $validatedData['drn'],
             'resident_name' => $validatedData['resident_name'],
             'houseparent_name' => $validatedData['houseparent_name'],
         ]);
@@ -54,8 +52,11 @@ class MonthlyInventoryController extends Controller
         $inventory->save();
 
         // Sync items with the inventory
-        $items = collect($validatedData['items'])->map(function($itemData) use ($inventory) {
-            return new InventoryItem(array_merge($itemData, ['inventory_id' => $inventory->id]));
+        $items = collect($validatedData['items'])->map(function($itemData) use ($inventory, $validatedData) {
+            return new InventoryItem(array_merge($itemData, [
+                'monthly_inventory_id' => $inventory->id,
+                'client_id' => $validatedData['client_id'] // Use the validated variable
+            ]));
         });
 
         // Delete old items and save new ones
@@ -96,7 +97,6 @@ class MonthlyInventoryController extends Controller
     {
         $validatedData = $request->validate([
             'month' => 'nullable|string|max:20',
-            'drn' => 'nullable|string|max:25',
             'resident_name' => 'nullable|string|max:50',
             'houseparent_name' => 'nullable|string|max:50',
             'items' => 'required|array',

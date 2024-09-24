@@ -16,6 +16,7 @@ class CreatePerformanceObservationReportsTable extends Migration
             $table->text('general_remarks')->nullable();
             $table->string('prepared_by', 50)->nullable();
             $table->string('noted_by', 50)->nullable();
+            $table->string('period', 20)->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

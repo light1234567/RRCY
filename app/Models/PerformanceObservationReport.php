@@ -13,6 +13,7 @@ class PerformanceObservationReport extends Model
 
     protected $fillable = [
         'client_id',
+        'period',
         'assessment_date',
         'trainings_attended',
         'general_remarks',

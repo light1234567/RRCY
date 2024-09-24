@@ -38,8 +38,12 @@
         <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
         <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
         <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-        <p class="text-xs font-semibold pt-12">DRN: ______________________</p>
-      </div>
+        <div class="text-xs font-semibold pt-12">
+  <p class="text-sm">
+  DRN
+  <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+</p>
+</div>      </div>
     </div>
     <h1 class="font-bold text-xl">REGIONAL REHABILITATION CENTER FOR YOUTH</h1>
     <p>Bago Oshiro Tugbok dist. Davao City</p>
@@ -72,11 +76,15 @@
             :readonly="!editMode">
     </div>
     <div>
-      <label for="timeOfDuty" class="block font-medium">Time of Duty:</label>
-      <input type="time" v-model="form.time_of_duty" id="timeOfDuty" 
-            class="underline-input shadow-sm w-3/4" 
-            :readonly="!editMode">
-    </div>
+  <label for="timeOfDuty" class="block font-medium">Time of Duty:</label>
+  <input 
+    type="time" 
+    v-model="form.time_of_duty" 
+    id="timeOfDuty" 
+    class="underline-input shadow-sm w-3/4" 
+    :readonly="!editMode"
+  />
+</div>
   </div>
 
 
@@ -126,7 +134,7 @@
       :readonly="!editMode">
       <div class="mb-6 flex justify-start items-center">
         <label for="requestedPosition" class="block font-medium">Position:</label>
-  <input type="text" v-model="form.requesting_party_position" id="requestedPosition" 
+  <input type="text" v-model="form.requested_by_position" id="requestedPosition" 
         class="underline-input shadow-sm w-1/2" 
         :readonly="!editMode">
       </div>
@@ -148,8 +156,7 @@
       <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
       <input
         type="text"
-        id="notedBy"
-        v-model="form.noted_by"
+        v-model="shp"
         class="mt-1 w-3/4 border-none font-semibold text-base"
         :readonly="!editMode"
       >
@@ -253,12 +260,16 @@ components: {
 data() {
   return {
     center_head: '',
+    shp: '',
+    drn: '',
     form: {
       client_id: null,
       drn: '',
       date_of_filing: '',
       requesting_party_name: '',
       requesting_party_position: '',
+      requested_by_position:'',
+      accepted_by_position:'',
       date_of_duty: '',
       time_of_duty: '',
       sod_name: '',
@@ -284,18 +295,24 @@ data() {
   };
 },
 mounted() {
-  this.fetchData();
+  const clientId = this.$route.params.id;
+    this.fetchData(clientId);
+    this.fetchCenterHead(clientId);
+    this.fetchSHP(clientId);
+    this.fetchDrn(clientId);
 },
 watch: {
   '$route.params.id': function(newId) {
-    this.fetchData();
+      this.fetchData(newId);
+      this.fetchCenterHead(newId);
+      this.fetchSHP(newId);
+      this.fetchDrn(newId);
   }
 },
 methods: {
   fetchData() {
     const clientId = this.$route.params.id;
     console.log('Fetching data for client ID:', clientId);
-    this.fetchCenterHead(clientId);
     if (clientId) {
       axios.get(`/api/swapping-forms/${clientId}`).then(response => {
         if (response.data.form) {
@@ -344,7 +361,88 @@ methods: {
         console.error("Error updating center head:", error);
       });
   },
+  fetchSHP(clientId) {
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.get(`/api/shp/${clientId}`)
+      .then(response => {
+        this.shp = response.data.shp || '';
+        console.log("Fetched SHP:", this.shp);
+      })
+      .catch(error => {
+        console.error("Error fetching SHP:", error);
+      });
+  },
+  saveSHP() {
+    const clientId = this.$route.params.id;
+    console.log("Saving SHP:", this.shp, "for client:", clientId);
+    if (!clientId) {
+      console.error("Client ID is missing.");
+      return;
+    }
+    axios.put(`/api/update-shp/${clientId}`, { 
+      client_id: clientId,
+      name: this.shp
+    })
+    .then(response => {
+      console.log("SHP saved successfully:", response.data);
+      this.editMode = false;
+      this.fetchSHP(clientId);
+    })
+    .catch(error => {
+      console.error("Error updating SHP:", error);
+    });
+  },
+  fetchDrn(clientId) {
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+  // Fetch DRN based on clientId
+  axios.get(`/api/drn/${clientId}`)
+    .then(response => {
+      this.drn = response.data.drn || ''; // Set DRN to the response, or an empty string if not present
+      console.log("Fetched DRN:", this.drn);
+    })
+    .catch(error => {
+      console.error("Error fetching DRN:", error);
+    });
+},
 
+
+saveDrn() {
+  const clientId = this.form.client_id; // Ensure client_id is available in the form
+  if (!clientId) {
+    console.error("Client ID is missing.");
+    return;
+  }
+
+  // Save or update DRN
+  axios.post('/api/drn', {
+    client_id: clientId, // Pass the client_id
+    drn: this.drn // Pass the DRN value
+  })
+  .then(response => {
+    console.log("DRN saved successfully:", response.data);
+    this.fetchDrn(clientId); // Fetch updated DRN after save
+  })
+  .catch(error => {
+    console.error("Error saving DRN:", error.response.data); // Log detailed error message
+  });
+},
+formatTime(value) {
+  if (!value) return ''; // Handle empty time case
+
+  // Handle the time string and format it to H:i (24-hour format)
+  const date = new Date(`1970-01-01T${value}`);
+  let hours = date.getHours().toString().padStart(2, '0');
+  let minutes = date.getMinutes().toString().padStart(2, '0');
+  
+  return `${hours}:${minutes}`;
+}
+,
   toggleEdit() {
     if (this.editMode) {
       this.openModal();
@@ -365,6 +463,8 @@ methods: {
   confirmSave() {
     this.submitForm();
     this.saveCenterHead();
+    this.saveSHP();
+    this.saveDrn();
     this.closeModal();
   },
 
@@ -376,6 +476,10 @@ methods: {
   },
 
   submitForm() {
+    if (this.form.time_of_duty) {
+    this.form.time_of_duty = this.formatTime(this.form.time_of_duty);
+  }
+  
     if (!this.form.client_id) {
       this.message = 'Client ID is required.';
       this.messageType = 'error';
