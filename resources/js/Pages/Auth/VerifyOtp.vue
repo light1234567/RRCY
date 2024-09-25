@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col bg-cover bg-center overflow-hidden" style="background-image: url(''); background-size: cover; background-repeat: no-repeat;">
     <div class="background-container min-h-screen flex items-center justify-center">
-      <div class="w-full max-w-md p-6 mb-16 shadow-2xl rounded-md border-2 border-gray-300 bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg flex flex-col items-center transform hover:translate-y-0 transition-transform duration-300">
+      <div class="w-full max-w-md p-6 mb-16 shadow-2xl rounded-md border-2 border-gray-300 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg flex flex-col items-center transform hover:translate-y-0 transition-transform duration-300">
         
         <!-- Back Icon and Centered Heading -->
         <div class="flex items-center justify-center mb-6 w-full relative">
@@ -30,8 +30,15 @@
               type="text"
             />
           </div>
-          <p v-if="errorMessage" class="text-red-700 text-sm mt-2">{{ errorMessage }}</p>
-          <p v-if="onlineMessage" class="text-green-600 text-sm mt-2">{{ onlineMessage }}</p>
+          <p v-if="errorMessage" class="text-red-700 text-sm mt-2" style="text-shadow: .2px .2px .2px #000;">
+              <i class="fas fa-exclamation-circle mr-1"></i>
+              {{ errorMessage }}
+            </p>
+            <p v-if="onlineMessage" class="text-green-300 text-sm mt-2" style="text-shadow: .5px .5px .5px #000;">
+              <i class="fas fa-check-circle mr-1"></i>
+              {{ onlineMessage }}
+            </p>
+
 
           <!-- Back and Submit Buttons -->
           <div class="flex justify-center space-x-4">
@@ -197,11 +204,17 @@ export default {
         this.errorMessage = ''; // Clear the error message when online
         this.onlineMessage = 'You are back online. Check your email, we resent the OTP.'; // Display the online message
         this.resendOtp();
+        
+        // Clear onlineMessage after 5 seconds
+        setTimeout(() => {
+          this.onlineMessage = '';
+        }, 5000);
       } else {
         this.onlineMessage = ''; // Clear the online message if offline
         this.displayErrorMessage('You are offline. OTP cannot be sent.');
       }
     },
+
     // Start the OTP resend timer
     setTimer() {
       const endTime = Date.now() + 180000; // Set the timer to 3 minutes from now (180000 ms)
@@ -308,5 +321,9 @@ body, html {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   z-index: 100;
+}
+.text-stroke {
+  -webkit-text-stroke: 1px white;
+  text-stroke: 0.5px white; /* For other browsers */
 }
 </style>

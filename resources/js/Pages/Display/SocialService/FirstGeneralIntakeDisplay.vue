@@ -115,71 +115,71 @@
       <div class="space-y-2">
         <div class="flex items-center mb-4">
         
-      <label class="block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of client:</label>
-      <input type="text" v-model="sheet.name" class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+          <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of client:</label>
+          <input type="text" v-model="sheet.name" class="mt-1 p-0 flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
       </div>
   
    <div class="grid grid-cols-2 gap-4">
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
-         <label class="block text-base font-semibold text-gray-700 mr-4">Age:</label>
-         <input type="text" v-model="sheet.age" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+         <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Age:</label>
+         <input type="text" v-model="sheet.age" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
-         <label class="block text-base font-semibold text-gray-700 mr-4">Sex:</label>
-         <input type="text" v-model="sheet.sex" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+         <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Sex:</label>
+         <input type="text" v-model="sheet.sex" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
    </div>
    <div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
-       <label class="block text-base font-semibold text-gray-700 mr-4">Address:</label>
-       <input type="text" v-model="sheet.address" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+       <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Address:</label>
+       <input type="text" v-model="sheet.address" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
      </div>
    </div>
    <div class="grid grid-cols-2 gap-4">
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
-         <label class="block text-base font-semibold text-gray-700 mr-4">Date of Birth:</label>
-         <input type="date" v-model="sheet.date_of_birth" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+         <label class="mt-2 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Date of Birth:</label>
+         <input type="date" v-model="sheet.date_of_birth" class=" p-0  w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
-         <label class="block text-base font-semibold text-gray-700 mr-4">Place of birth:</label>
-         <input type="text" v-model="sheet.place_of_birth" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+         <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Place of birth:</label>
+         <input type="text" v-model="sheet.place_of_birth" class=" p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
    </div>
    <div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
-       <label class="block text-base font-semibold text-gray-700 mr-4">Religion:</label>
-       <input type="text" v-model="sheet.religion" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+       <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Religion:</label>
+       <input type="text" v-model="sheet.religion" class="-mt-3 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
      </div>
    </div>
    <div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
-       <label class="block text-base font-semibold text-gray-700 mr-4">Occupation:</label>
-       <input type="text" v-model="sheet.occupation" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+       <label class="mt-2 block text-base font-semibold text-gray-700 mr-4">Occupation:</label>
+       <input type="text" v-model="sheet.occupation" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
      </div>
    </div>
    <div class="flex items-center mb-4">
- <label class="block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Highest Educ'l Att't:</label>
- <input type="text" v-model="sheet.highest_educ_att" class="flex-grow border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+ <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Highest Educ'l Att't:</label>
+ <input type="text" v-model="sheet.highest_educ_att" class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
 </div>
  
-   <div class="flex items-center mb-4">
+<div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
-       <label class="block text-base font-semibold text-gray-700 mr-4">Name of School:</label>
-       <input type="text" v-model="sheet.school_name" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+       <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of School:</label>
+       <input type="text" v-model="sheet.school_name" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
      </div>
    </div>
    <div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
-       <label class="block text-base font-semibold text-gray-700 mr-4">Class Adviser:</label>
-       <input type="text" v-model="sheet.class_adviser" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+       <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap ">Class Adviser:</label>
+       <input type="text" v-model="sheet.class_adviser" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
      </div>
    </div>
  </div>
@@ -810,7 +810,9 @@
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
 import { jsPDF } from 'jspdf';
-
+import '../../../fonts/arial-normal.js'; 
+import '../../../fonts/times-normal.js'; 
+import '../../../fonts/arialbd-bold.js'; 
 
 export default {
   name: 'GeneralIntakeSheet',
@@ -1184,551 +1186,1220 @@ calculateAge(birthDate) {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
   // Set default font properties
-  pdf.setFont('helvetica', 'normal');
+  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+  pdf.setFont('Arial', 'normal');   
   pdf.setFontSize(11);
   pdf.setLineHeightFactor(1.5);
 
   // Page 1 content
-  let offset = 327; // Initialize offset at the start of page 1
+  let offset = 90; // Initialize offset at the start of page 1
 
   const imgData = '/images/headerlogo2.png'; // Ensure this is accessible or use base64
   pdf.addImage(imgData, 'PNG', 15, 10, 75, 35); // Increase width to 75 and height to 35
 
   // Add the header below the image
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'italic');
-  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+  pdf.setFontSize(8);
+  pdf.setFont('TimesNewRoman', 'italic');
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 153, 24);
 
   // Add the title
-  pdf.setFont('helvetica', 'bold');
+  pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+  pdf.setFont('arialbd', 'bold');  
   pdf.setFontSize(18);
   pdf.text('GENERAL INTAKE SHEET', 108, 60, null, null, 'center');
-  pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(11);
+  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+  pdf.setFont('Arial', 'normal');  
+
 
   // Date
-  pdf.setFontSize(11);
+  pdf.setFontSize(12);
   pdf.text(`Date: ${String(this.sheet.date)}`, 160, 70);
   pdf.line(170, 71, 200, 71);
 
-  // Identifying Information
-  pdf.setFont('helvetica', 'bold');
-  pdf.setFontSize(11);
-  pdf.text('I. Identifying Information:', 20, 90);
-  pdf.setFont('helvetica', 'normal'); // Reset font to normal for subsequent text
+// Function to add footer to the first page with debug text
+function addFirstPageFooter(pdf, totalPages) {
+    // Set font and add debug text for the footer
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
 
-  pdf.setFontSize(11);
+    // Footer text
+    const footerText = "DEBUG: Footer Page 1 of " + totalPages;
+    
+    // Add the footer text with correct alignment
+    pdf.text(footerText, 20, pdf.internal.pageSize.getHeight() - 10);  // Adjusted y-position for visibility
+
+    // Add a debug rectangle to visualize the footer area
+    pdf.rect(15, pdf.internal.pageSize.getHeight() - 30, 180, 20); // Debug rectangle for visual confirmation
+
+    // Add a simple placeholder image or comment out the image to debug
+    pdf.text("DEBUG: Footer Image Area", 20, pdf.internal.pageSize.getHeight() - 20); // Placeholder for image
+}
+
+// Function to add footer for pages 2 and beyond with debug text
+function addOtherPagesFooter(pdf, pageNumber, totalPages) {
+    // Set font for normal footer text
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(10);
+    
+    // Footer text for other pages
+    const footerText = "DEBUG: Footer Page " + pageNumber + " of " + totalPages;
+
+    // Add the footer text
+    pdf.text(footerText, 20, pdf.internal.pageSize.getHeight() - 10);  // Adjusted y-position for visibility
+
+    // Add a debug rectangle to visualize the footer area
+    pdf.rect(15, pdf.internal.pageSize.getHeight() - 30, 180, 20); // Debug rectangle for visual confirmation
+}
+
+// Function to apply footers to all pages with debug text
+function addAllFooters(pdf, totalPages) {
+    // Loop through all pages to apply footers
+    for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i);
+        if (i === 1) {
+            addFirstPageFooter(pdf, totalPages);  // Custom footer for the first page
+        } else {
+            addOtherPagesFooter(pdf, i, totalPages);  // Footer for subsequent pages
+        }
+    }
+}
+
+// Function to check for page overflow and add a new page if necessary
+function checkAndAddPage(pdf, currentOffset, pageHeight, footerHeight) {
+    // If the current offset exceeds the allowable page height (minus footer), add a new page
+    if (currentOffset > pageHeight - footerHeight) {
+        pdf.addPage();
+        return 0;  // Reset offset after adding a new page
+    }
+    return currentOffset;  // Return the current offset if no new page is needed
+}
+
+  // Identifying Information
+  pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+  pdf.setFont('arialbd', 'bold');  
+  pdf.setFontSize(12);
+  pdf.text('I. Identifying Information:', 20, 90);
+  pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+  pdf.setFont('Arial', 'normal');  
+
+  pdf.setFontSize(12);
   pdf.text(`Name of client:`, 20, 100);
-  pdf.text(String(this.sheet.name), 52, 100);
-  pdf.line(52, 101, 130, 101);
+  pdf.text(String(this.sheet.name), 50, 100);
+  pdf.line(50, 101, 130, 101);
 
   pdf.text(`Age:`, 135, 100);
-  pdf.text(String(this.sheet.age), 148, 100);
-  pdf.line(148, 101, 170, 101);
+  pdf.text(String(this.sheet.age), 145, 100);
+  pdf.line(145, 101, 170, 101);
 
-  pdf.text(`Sex:`, 175, 101);
-  pdf.text(String(this.sheet.sex), 187, 100);
-  pdf.line(187, 101, 200, 101);
+  pdf.text(`Sex:`, 175, 100);
+  pdf.text(String(this.sheet.sex), 185, 100);
+  pdf.line(185, 101, 200, 101);
+  
+  function justifyLine(pdf, text, x, y, maxWidth) {
+  const textWidth = pdf.getTextWidth(text); // Get the width of the text
+  const spaceCount = (text.match(/\s+/g) || []).length; // Count the number of spaces in the text
+  const spaceWidth = (maxWidth - textWidth) / spaceCount; // Calculate extra space to add between words
 
-  pdf.text(`Address:`, 20, 110);
-  pdf.text(String(this.sheet.address), 42, 110);
-  pdf.line(42, 111, 200, 111);
+  // If no spaces, or if the text is already fitting within the width, skip justification
+  if (spaceCount === 0 || spaceWidth <= 0) {
+    pdf.text(text, x, y);
+    return;
+  }
 
-  pdf.text(`Date of Birth:`, 20, 120);
-  pdf.text(String(this.sheet.date_of_birth), 48, 120);
-  pdf.line(48, 121, 124, 121);
+  // Split the text into words
+  const words = text.split(/\s+/);
 
-  pdf.text(`Place of birth:`, 130, 120);
-  pdf.text(String(this.sheet.place_of_birth), 160, 120);
-  pdf.line(160, 121, 200, 121);
+  let currentX = x;
 
-  pdf.text(`Religion:`, 20, 130);
-  pdf.text(String(this.sheet.religion), 40, 130);
-  pdf.line(40, 131, 200, 131);
-
-  pdf.text(`Occupation:`, 20, 140);
-  pdf.text(String(this.sheet.occupation), 44, 140);
-  pdf.line(44, 141, 200, 141);
-
-  pdf.text(`Highest Educ'l Att't:`, 20, 150);
-  pdf.text(String(this.sheet.highest_educ_att), 60, 150);
-  pdf.line(60, 151, 200, 151);
-
-  pdf.text(`Name of School:`, 20, 160);
-  pdf.text(String(this.sheet.school_name), 56, 160);
-  pdf.line(56, 161, 200, 161);
-
-  pdf.text(`Class Adviser:`, 20, 170);
-  pdf.text(String(this.sheet.class_adviser), 54, 170);
-  pdf.line(54, 171, 200, 171);
-
-  // Problem Presented
-  pdf.setFont('helvetica', 'bold'); // Set font to bold
-  pdf.setFontSize(11);
-  pdf.text('II. Problem Presented:', 20, 190);
-  pdf.setFont('helvetica', 'normal'); // Reset font to normal for subsequent text
-
-  pdf.setFontSize(11);
-  pdf.text(String(this.sheet.problem_presented), 20, 200, { maxWidth: 180 });
-  pdf.line(20, 201, 200, 201);
-  pdf.line(20, 207, 200, 207);
-  pdf.line(20, 213, 200, 213);
-  pdf.line(20, 219, 200, 219);
-  pdf.line(20, 225, 200, 225);
-  pdf.line(20, 231, 200, 231);
-
-  // Brief Physical Description
-  pdf.setFont('helvetica', 'bold'); // Set font to bold
-  pdf.setFontSize(11);
-  pdf.text('III. Brief Physical Description of the Minor:', 20, 240);
-  pdf.setFont('helvetica', 'normal'); // Reset font to normal for subsequent text
-  pdf.setFontSize(11);
-  pdf.text(String(this.sheet.brief_physical_description), 20, 250, { maxWidth: 170 });
-  pdf.line(20, 251, 200, 251);
-  pdf.line(20, 257, 200, 257);
-  pdf.line(20, 263, 200, 263);
-  pdf.line(20, 269, 200, 269);
-  pdf.line(20, 275, 200, 275);
-  pdf.line(20, 281, 200, 281);
-  pdf.line(20, 287, 200, 287);
-  // Footer
-  pdf.setFont('Times');
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text(`PAGE 1 of ${String(this.totalPages)}`, 108, 330, null, null, 'center');
-  pdf.setFont('helvetica', 'normal');
-  pdf.setLineWidth(0.5);
-  pdf.line(20, offset + 5, 210 - 30, offset + 5);
-  pdf.setFontSize(8);
-  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
-  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
-
-  // Add the footer image
-  const footerImgData = '/images/footerimg.png';
-  pdf.addImage(footerImgData, 'PNG', 182, offset, 20, 10);
-
-  // Move to the second page
-  pdf.addPage();
-  offset = 327; // Reset offset for the second page
-
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'italic');
-  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
-
-  // Page 2 content
-  pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(11);
-      
-  // Section A: Major Life Events
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('A. Major Life Events:', 20, 30);
-
-  pdf.setFont('helvetica', 'normal');
-  const majorLifeEvents = [
-  { label: 'Death of Parents', value: this.sheet.major_life_event.death_of_parents, x: 20, y: 40 },
-  { label: 'Separation from the family', value: this.sheet.major_life_event.separation_from_family, x: 20, y: 50 },
-  { label: 'Victim of natural / manmade disaster', value: this.sheet.major_life_event.natural_disaster, x: 20, y: 60 },
-  { label: 'Victim of apprehension', value: this.sheet.major_life_event.apprehension, x: 20, y: 70 },
-  { label: 'Victim of physical abuse', value: this.sheet.major_life_event.physical_abuse, x: 20, y: 80 },
-  { label: 'With suicidal tendencies', value: this.sheet.major_life_event.suicidal_tendencies, x: 20, y: 90 },
-  { label: 'Mistaken identity', value: this.sheet.major_life_event.mistaken_identity, x: 20, y: 100 },
-  { label: 'Abandonment', value: this.sheet.major_life_event.abandonment, x: 120, y: 40 },
-  { label: 'Serious Accident', value: this.sheet.major_life_event.serious_accident, x: 120, y: 50 },
-  { label: 'Victim of demolition', value: this.sheet.major_life_event.demolition, x: 120, y: 60 },
-  { label: 'Victim of sexual abuse', value: this.sheet.major_life_event.sexual_abuse, x: 120, y: 70 },
-  { label: 'Victim of verbal abuse', value: this.sheet.major_life_event.verbal_abuse, x: 120, y: 80 },
-  { label: 'Acquired disability', value: this.sheet.major_life_event.disability, x: 120, y: 90 },
-  { label: 'Others (pls. Specify)', value: this.sheet.major_life_event.others, x: 120, y: 100 }
-  ];
-
-  majorLifeEvents.forEach((event) => {
-    pdf.text(`[${event.value ? 'X' : ' '}] ${event.label}`, event.x, event.y);
-  }); 
-  // Section B: Enduring Life Strain
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('B. Enduring Life Strain:', 20, 115);
-
-  pdf.setFont('helvetica', 'normal');
-  const enduringLifeStrains = [
-    { label: 'Poverty', value: this.sheet.enduring_life_strain.poverty, x: 20, y: 125 },
-    { label: 'Physical illness', value: this.sheet.enduring_life_strain.physical_illness, x: 20, y: 135 },
-    { label: 'Lack of recreational facilities', value: this.sheet.enduring_life_strain.lack_recreational_facilities, x: 20, y: 145 },
-    { label: 'Exclusion from peers', value: this.sheet.enduring_life_strain.exclusion_from_peers, x: 20, y: 155 },
-    { label: 'Other (pls. specify)', value: this.sheet.enduring_life_strain.other, x: 20, y: 165 },
-    { label: 'Constant need to earn for the family', value: this.sheet.enduring_life_strain.constant_need_to_earn, x: 120, y: 125 },
-    { label: 'Lack of educational opportunity', value: this.sheet.enduring_life_strain.lack_education_opportunity, x: 120, y: 135 },
-    { label: 'Exclusion from school', value: this.sheet.enduring_life_strain.exclusion_from_school, x: 120, y: 145 },
-    { label: 'With disability', value: this.sheet.enduring_life_strain.with_disability, x: 120, y: 155 }
-  ];
-
-  enduringLifeStrains.forEach((strain) => {
-      pdf.text(`[${strain.value ? 'X' : ' '}] ${strain.label}`, strain.x, strain.y);
+  // Loop through each word, print it, and add extra space between words
+  words.forEach((word, index) => {
+    pdf.text(word, currentX, y); // Print the word at the current X position
+    currentX += pdf.getTextWidth(word) + spaceWidth; // Move the X position to the right for the next word
   });
+}
 
-  const sectionStartY = 180; // Adjust this to set the starting position for the section title
+// Handle Address Wrapping with conditional justification
+pdf.text('Address:', 20, offset + 20); // Static label placement at 20x offset
 
-  pdf.setFontSize(11);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('C. Life Transition:', 20, sectionStartY);
+const addressText = String(this.sheet.address); // Dynamically fetch the address from the data
+const wrappedAddress = pdf.splitTextToSize(addressText, 150); // Wrap the address text to fit within 150 units of width
 
-  // Define life transitions with dynamic x and y coordinates
-  const lifeTransitions = [
-      { label: 'Moving from one neighbour to another', value: this.sheet.life_transition.moving_neighbour, x: 20, y: sectionStartY + 10 },
-      { label: 'Changing peer group', value: this.sheet.life_transition.changing_peer_group, x: 20, y: sectionStartY + 20 },
-      { label: 'Moving to another place of residence due to demolition', value: this.sheet.life_transition.moving_due_to_demolition, x: 20, y: sectionStartY + 30 },
-      { label: 'Moving to another place of residence due to disaster', value: this.sheet.life_transition.moving_due_to_disaster, x: 20, y: sectionStartY + 40 },
-      { label: 'Moving from biological family to a kinship/foster placement', value: this.sheet.life_transition.kinship_foster_placement, x: 20, y: sectionStartY + 50 },
-      { label: 'Beginning romantic relationship', value: this.sheet.life_transition.beginning_romantic_relationship, x: 20, y: sectionStartY + 60 },
-      { label: 'Beginning romantic relationship of parents', value: this.sheet.life_transition.beginning_parents_romantic_relationship, x: 20, y: sectionStartY + 70 },
-      { label: 'Others (pls. specify)', value: this.sheet.life_transition.others, x: 20, y: sectionStartY + 80 }
-  ];
+// Adjust the offset to account for the wrapped address lines
+wrappedAddress.forEach((line, i) => {
+  const lineX = i === 0 ? 38 : 20; // Align first line with some margin (42), subsequent lines start at 20
+  const lineY = offset + 20 + i * 8; // Adjust Y position based on the current line
 
-  // Add items with checkboxes
-  pdf.setFont('helvetica', 'normal');
-  lifeTransitions.forEach((transition) => {
-      pdf.text(`[${transition.value ? 'X' : ' '}] ${transition.label}`, transition.x, transition.y);
+  if (i < wrappedAddress.length - 1) {
+    // Justify all lines except the last one
+    justifyLine(pdf, line, lineX, lineY, 170);
+  } else {
+    // Last line should not be justified
+    pdf.text(line, lineX, lineY);
+  }
+
+  // Draw underline for each line
+  pdf.line(lineX, lineY + 1, 200, lineY + 1);
+});
+
+// Calculate the total height used by the wrapped address and update the offset
+const addressHeight = wrappedAddress.length * 9; // Adjust height based on the number of lines (9 units per line)
+offset += addressHeight + 10; // Update offset for the following content
+
+// Date of Birth
+pdf.text(`Date of Birth:`, 20, offset + 10  );
+pdf.text(String(this.sheet.date_of_birth), 46, offset + 10);
+pdf.line(46, offset + 11, 100, offset + 11);
+offset += 10; // Move offset down
+
+// Place of Birth
+pdf.text(`Place of birth:`, 105, offset);
+pdf.text(String(this.sheet.place_of_birth), 133, offset);
+pdf.line(133, offset + 1, 200, offset + 1);
+offset += 10; // Move offset down
+
+// Religion
+pdf.text(`Religion:`, 20, offset);
+pdf.text(String(this.sheet.religion), 40, offset);
+pdf.line(40, offset + 1, 200, offset + 1);
+offset += 10; // Move offset down
+
+// Occupation
+pdf.text(`Occupation:`, 20, offset);
+pdf.text(String(this.sheet.occupation), 45, offset);
+pdf.line(45, offset + 1, 200, offset + 1);
+offset += 10; // Move offset down
+
+// Highest Educational Attainment
+pdf.text(`Highest Educ'l Att't:`, 20, offset);
+pdf.text(String(this.sheet.highest_educ_att), 59, offset);
+pdf.line(59, offset + 1, 200, offset + 1);
+offset += 10; // Move offset down
+
+// Name of School
+pdf.text(`Name of School:`, 20, offset);
+pdf.text(String(this.sheet.school_name), 53, offset);
+pdf.line(53, offset + 1, 200, offset + 1);
+offset += 10; // Move offset down
+
+// Class Adviser
+pdf.text(`Class Adviser:`, 20, offset);
+pdf.text(String(this.sheet.class_adviser), 50, offset);
+pdf.line(50, offset + 1, 200, offset + 1);
+offset += 10; // Move offset down
+
+function addTextWithWrappingAndLines(pdf, text, x, y, maxWidth, pageHeight, footerHeight, lineHeight) {
+  const lines = pdf.splitTextToSize(text, maxWidth); // Split long text into multiple lines
+  lines.forEach((line) => {
+    // If the current y position + lineHeight exceeds the page height minus the footer height, add a new page
+    if (y + lineHeight > pageHeight - footerHeight) {
+      pdf.addPage(); // Add new page
+      pdf.setFontSize(8); 
+      pdf.setFont('TimesNewRoman', 'italic'); 
+      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
+      pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+      pdf.setFont('Arial', 'normal'); 
+      pdf.setFontSize(11);
+      y = 20; // Reset y position for the new page
+    }
+
+    pdf.text(line, x, y); // Add the text line at (x, y)
+    pdf.line(x, y + 1, 200, y + 1); // Draw a line under each text line
+    y += lineHeight; // Move to the next line position
   });
+  return y; // Return the updated y position after all lines are added
+}
 
-  const developmentChangesStartY = 275; // Adjust this to set the starting position for the Development Changes section
+const pageHeight = 356; // Height of a legal-sized page in mm
+const footerHeight = 25; // Footer height in mm
+const lineHeight = 7; // Height between lines
 
-  pdf.setFontSize(11);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('D. Development Changes:', 20, developmentChangesStartY);
+// Section II: Problem Presented
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.setFontSize(12);
+pdf.text('II. Problem Presented:', 20, offset);
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+offset += 10;
+// Define rowHeight and column positions globally or at the beginning of your function
+const rowHeight = 6; 
+const rowHeight1 =2; // Row height for spacing between items
+const leftColumnX = 20; // X coordinate for the left column
+const rightColumnX = 120; // X coordinate for the right column
 
-  // Define development changes with dynamic x and y coordinates
-  const developmentChanges = [
-      { label: 'Early childhood 1-6 yrs. Old', value: this.sheet.development_changes.early_childhood, x: 20, y: developmentChangesStartY + 10 },
-      { label: 'School age 7-12 yrs. Old', value: this.sheet.development_changes.school_age, x: 20, y: developmentChangesStartY + 20 },
-      { label: 'Adolescence 13-18 yrs. old', value: this.sheet.development_changes.adolescence, x: 20, y: developmentChangesStartY + 30 }
-  ];
+// Dynamically add Problem Presented text with wrapping and check for page breaks
+offset = addTextWithWrappingAndLines(pdf, String(this.sheet.problem_presented), 20, offset, 180, pageHeight, footerHeight, rowHeight);
 
-  // Add items with checkboxes
-  pdf.setFont('helvetica', 'normal');
-  developmentChanges.forEach((change) => {
-      pdf.text(`[${change.value ? 'X' : ' '}] ${change.label}`, change.x, change.y);
-  });
+// Section III: Brief Physical Description
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.setFontSize(12);
+pdf.text('III. Brief Physical Description of the Minor:', 20, offset + 5);
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+offset += 10;
 
-  // Footer for Page 2
-  pdf.setFont('Times');
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text(`PAGE 2 of ${String(this.totalPages)}`, 108, 330, null, null, 'center');
-  pdf.setFont('helvetica', 'normal');
-  pdf.setLineWidth(0.5);
-  pdf.line(20, offset + 5, 210 - 30, offset + 5);
-  pdf.setFontSize(8);
-  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
-  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
-  pdf.addImage(footerImgData, 'PNG', 182, offset, 20, 10);
+// Dynamically add Brief Physical Description with wrapping and page breaks
+offset = addTextWithWrappingAndLines(pdf, String(this.sheet.brief_physical_description), 20, offset + 5, 170, pageHeight, footerHeight, rowHeight);
 
-  // Move to the second page
-  pdf.addPage();
-  offset = 327; // Reset offset for the second page
+// Dynamically add space after the previous section
+offset += 15; // Add a bit of extra space between sections
 
-  pdf.setFontSize(10);
-  pdf.setFont('helvetica', 'italic');
-  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+// Function to dynamically add text with wrapping and checkboxes, and handle page breaks
+function addTextWithCheckboxAndWrapping(pdf, text, x, y, isChecked, maxWidth, pageHeight, footerHeight, rowHeight1) {
+  const boxSize = 5;
 
-  const normalizationStartY = 30; // Adjust this to set the starting position for the Normalization section
-  const feelingsStartY = 165; // Adjust this to set the starting position for the Feelings / Behaviour towards the incident section
-  const attachmentsStartY = 218; // Adjust this to set the starting position for the Attachments section
-  const skillsStartY = 270; // Adjust this to set the starting position for the Skills section
-
-  // Set font and size for section title
-  pdf.setFontSize(11);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('E. Normalization:', 20, 30);
-
-  // Set font and size for content
-  pdf.setFont('helvetica', 'normal');
-
-  // Define checkbox positions and labels with x and y coordinates
-  const normalizationItems = [
-    { label: 'legality/law enforcement (weak)', value: this.sheet.normalization.legality_law_enforcement, x: 20, y: 40 },
-    { label: 'Availability of:', value: '', x: 20, y: 50 },
-    { label: 'Commercial sex', value: this.sheet.normalization.commercial_sex, x: 30, y: 60 },
-    { label: 'substance/illegal drugs', value: this.sheet.normalization.substance_illegal_drugs, x: 30, y: 70 },
-    { label: 'Pornography materials to include video tapes', value: this.sheet.normalization.pornography_materials, x: 30, y: 80 },
-    { label: 'Red houses', value: this.sheet.normalization.red_houses, x: 30, y: 90 },
-    { label: 'Price- least expensive', value: this.sheet.normalization.price_least_expensive, x: 20, y: 100 },
-    { label: 'Advertisement/ sponsorship/ media presentation', value: this.sheet.normalization.advertisement_media, x: 20, y: 110 },
-    { label: 'Advertisement promoting liquors/cigarettes/clubs/', value: this.sheet.normalization.advertisement_promoting_liquors, x: 30, y: 120, split: true },
-    { label: 'Television shows', value: this.sheet.normalization.television_shows, x: 30, y: 140 },
-    { label: 'Movies', value: this.sheet.normalization.movies, x: 30, y: 150 },
-    { label: 'printed materials', value: this.sheet.normalization.printed_materials, x: 130, y: 40 },
-    { label: 'Community acceptance', value: this.sheet.normalization.community_acceptance, x: 120, y: 50 },
-    { label: 'Source of income', value: this.sheet.normalization.source_of_income, x: 130, y: 60 },
-    { label: 'involve in actual trade/ production', value: this.sheet.normalization.involve_in_trade, x: 130, y: 70 },
-    { label: 'Role of culture (culturally accepted)', value: this.sheet.normalization.role_of_culture, x: 120, y: 80 },
-    { label: 'Smoking', value: this.sheet.normalization.smoking, x: 130, y: 90 },
-    { label: 'Abuse', value: this.sheet.normalization.abuse, x: 130, y: 100 },
-    { label: 'Illicit relationship', value: this.sheet.normalization.illicit_relationship, x: 130, y: 110 },
-    { label: 'Incest relationship', value: this.sheet.normalization.incest_relationship, x: 130, y: 120 },
-    { label: 'Begging', value: this.sheet.normalization.begging, x: 130, y: 130 },
-    { label: 'Rugby sniffing', value: this.sheet.normalization.rugby_sniffing, x: 130, y: 140 }
-  ];
-  // Add items with checkboxes
-  pdf.setFont('helvetica', 'normal');
-  normalizationItems.forEach((item) => {
-      if (item.split) {
-          // Split the label into two lines
-          const lines = [
-              'Advertisement promoting liquors/cigarettes/clubs/',
-              'red houses'
-          ];
-          lines.forEach((line, index) => {
-              if (index === 0) {
-                  // Add checkbox only for the first line
-                  pdf.text(`[${item.value ? 'X' : ' '}] ${line}`, item.x, item.y + (index * 10));
-              } else {
-                  // Add label without checkbox for the second line
-                  pdf.text(`${line}`, item.x + 10, item.y + (index * 10)); // Adjust x for alignment
-              }
-          });
-      } else {
-          // For items that do not need splitting
-          pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
-      }
-  });
-
-  // Add checkbox items to PDF
-  pdf.setFont('helvetica', 'normal');
-  normalizationItems.forEach((item) => {
-      pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
-  });
-
-
-  pdf.setFontSize(11);
-  pdf.setFont('helvetica', 'bold');
-  pdf.text('F. Feelings / Behaviour towards the incident:', 20, feelingsStartY);
-
-  // Define feelings and behavior items with dynamic x and y coordinates
-  pdf.setFont('helvetica', 'normal');
-  const feelingsItems = [
-      { label: 'stow away', value: this.sheet.behaviour_towards_incident.stow_away, x: 20, y: feelingsStartY + 10 },
-      { label: 'irritable', value: this.sheet.behaviour_towards_incident.irritable, x: 20, y: feelingsStartY + 20 },
-      { label: 'Delinquent behaviour', value: this.sheet.behaviour_towards_incident.delinquent_behaviour, x: 20, y: feelingsStartY + 30 },
-      { label: 'stealing', value: this.sheet.behaviour_towards_incident.stealing, x: 20, y: feelingsStartY + 40 },
-      { label: 'begging', value: this.sheet.behaviour_towards_incident.begging, x: 90, y: feelingsStartY + 10 },
-      { label: 'staying in the street', value: this.sheet.behaviour_towards_incident.staying_in_street, x: 90, y: feelingsStartY + 20 },
-      { label: 'indulge in illegal substance', value: this.sheet.behaviour_towards_incident.indulge_in_illegal_substance, x: 90, y: feelingsStartY + 30 },
-      { label: 'unresponsive/ passive', value: this.sheet.behaviour_towards_incident.unresponsive_passive, x: 90, y: feelingsStartY + 40 },
-      { label: 'withdrawal', value: this.sheet.behaviour_towards_incident.withdrawal, x: 150, y: feelingsStartY + 10 },
-      { label: 'snatching', value: this.sheet.behaviour_towards_incident.snatching, x: 150, y: feelingsStartY + 20 },
-      { label: 'others (pls. specify)', value: this.sheet.behaviour_towards_incident.others, x: 150, y: feelingsStartY + 30 },
-    ];
-
-    // Add feelings and behavior items with checkboxes
-    feelingsItems.forEach((item) => {
-        pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
-    });
-
+  // If the current y position + rowHeight exceeds the page height minus the footer height, add a new page
+  if (y + rowHeight1 > pageHeight - footerHeight) {
+    pdf.addPage(); // Add a new page
+    pdf.setFontSize(8); 
+    pdf.setFont('TimesNewRoman', 'italic'); 
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
+    pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+    pdf.setFont('Arial', 'normal'); 
     pdf.setFontSize(11);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('G. Attachments:', 20, attachmentsStartY);
+    y = 20; // Reset y position for the new page
+  }
 
-    // Define attachments items with dynamic x and y coordinates
-    pdf.setFont('helvetica', 'normal');
-    const attachmentsItems = [
-        { label: 'Mother', value: this.sheet.attachments.mother, x: 20, y: attachmentsStartY + 10 },
-        { label: 'Grandmother', value: this.sheet.attachments.grandmother, x: 20, y: attachmentsStartY + 20 },
-        { label: 'Aunt', value: this.sheet.attachments.aunt, x: 20, y: attachmentsStartY + 30 },
-        { label: 'Neighbour', value: this.sheet.attachments.neighbour, x: 20, y: attachmentsStartY + 40 },
-        { label: 'Cousin', value: this.sheet.attachments.cousin, x: 90, y: attachmentsStartY + 10 },
-        { label: 'father', value: this.sheet.attachments.father, x: 90, y: attachmentsStartY + 20 },
-        { label: 'grand father', value: this.sheet.attachments.grandfather, x: 90, y: attachmentsStartY + 30 },
-        { label: 'uncle', value: this.sheet.attachments.uncle, x: 90, y: attachmentsStartY + 40 },
-        { label: 'peer', value: this.sheet.attachments.peer, x: 150, y: attachmentsStartY + 10 },
-        { label: 'schoolmate', value: this.sheet.attachments.schoolmate, x: 150, y: attachmentsStartY + 20 },
-        { label: 'classmate', value: this.sheet.attachments.classmate, x: 150, y: attachmentsStartY + 30 }
-    ];
+  // Calculate text lines with wrapping
+  const lines = pdf.splitTextToSize(text, maxWidth);
+  lines.forEach((line) => {
+    // Draw checkbox and checkmark
+    drawCheckboxWithCheckmark(pdf, x, y, isChecked);
+    
+    // Draw the text label next to the checkbox
+    pdf.text(line, x + 10, y);
+    
+    // Update the y position
+    y += rowHeight1;
+    
+    // Check for page break again inside the loop
+    if (y + rowHeight1 > pageHeight - footerHeight) {
+      pdf.addPage();
+      pdf.setFontSize(8); 
+    pdf.setFont('TimesNewRoman', 'italic'); 
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
 
-    // Add attachments items with checkboxes
-    attachmentsItems.forEach((item) => {
-        pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
-    });
-
+    pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+    pdf.setFont('Arial', 'normal'); 
     pdf.setFontSize(11);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('H. Skills:', 20, skillsStartY);
+      y = 20; // Reset y position for new page
+    }
+  });
 
-    pdf.setFont('helvetica', 'normal');
-    const skillsItems = [
-      { label: 'Problem solving', value: this.sheet.skills.problem_solving, x: 20, y: skillsStartY + 10 },
-      { label: 'Interpersonal relationship', value: this.sheet.skills.interpersonal_relationship, x: 20, y: skillsStartY + 20 },
-      { label: 'Communication skills', value: this.sheet.skills.communication_skills, x: 20, y: skillsStartY + 30 },
-      { label: 'Vocational skills', value: this.sheet.skills.vocational_skills, x: 20, y: skillsStartY + 40 },
-      { label: 'Critical thinking', value: this.sheet.skills.critical_thinking, x: 90, y: skillsStartY + 10 },
-      { label: 'Self-awareness', value: this.sheet.skills.self_awareness, x: 90, y: skillsStartY + 20 },
-      { label: 'Coping skills', value: this.sheet.skills.coping_skills, x: 90, y: skillsStartY + 30 },
-      { label: 'Survival skills', value: this.sheet.skills.survival_skills, x: 90, y: skillsStartY + 40 },
-      { label: 'Decision making skills', value: this.sheet.skills.decision_making_skills, x: 150, y: skillsStartY + 10 },
-      { label: 'Comprehension', value: this.sheet.skills.comprehension, x: 150, y: skillsStartY + 20 },
-      { label: 'Others', value: this.sheet.skills.others, x: 150, y: skillsStartY + 30 },
-    ];
+  return y; // Return the updated y position
+}
 
-    pdf.setFont('helvetica', 'normal');
-    skillsItems.forEach(item => {
-      pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
+// Section A: Major Life Events
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.text('A. Major Life Events:', 20, offset -10); // Use the dynamic offset value
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+offset += rowHeight1 -4; // Add some space after the title
+
+// Define your major life events array with the appropriate values
+const majorLifeEvents = [
+  { label: 'Death of Parents', value: this.sheet.major_life_event.death_of_parents },
+  { label: 'Separation from the family', value: this.sheet.major_life_event.separation_from_family },
+  { label: 'Victim of natural / manmade disaster', value: this.sheet.major_life_event.natural_disaster },
+  { label: 'Victim of apprehension', value: this.sheet.major_life_event.apprehension },
+  { label: 'Victim of physical abuse', value: this.sheet.major_life_event.physical_abuse },
+  { label: 'With suicidal tendencies', value: this.sheet.major_life_event.suicidal_tendencies },
+  { label: 'Mistaken identity', value: this.sheet.major_life_event.mistaken_identity },
+  { label: 'Abandonment', value: this.sheet.major_life_event.abandonment },
+  { label: 'Serious Accident', value: this.sheet.major_life_event.serious_accident },
+  { label: 'Victim of demolition', value: this.sheet.major_life_event.demolition },
+  { label: 'Victim of sexual abuse', value: this.sheet.major_life_event.sexual_abuse },
+  { label: 'Victim of verbal abuse', value: this.sheet.major_life_event.verbal_abuse },
+  { label: 'Acquired disability', value: this.sheet.major_life_event.disability },
+  { label: 'Others (pls. Specify)', value: this.sheet.major_life_event.others }
+];
+
+// Split the events into two columns (left and right)
+const halfLength = Math.ceil(majorLifeEvents.length / 2);
+const leftColumnEvents = majorLifeEvents.slice(0, halfLength);
+const rightColumnEvents = majorLifeEvents.slice(halfLength);
+
+// Track the current Y position
+let currentY = offset + 2;
+
+// Loop through both columns and draw items on the left and right at the same Y position
+for (let i = 0; i < halfLength; i++) {
+  // Render the left column
+  if (leftColumnEvents[i]) {
+    currentY = addTextWithCheckboxAndWrapping(pdf, leftColumnEvents[i].label, leftColumnX, currentY, leftColumnEvents[i].value, 90, pageHeight, footerHeight, rowHeight1);
+  }
+
+  // Render the right column
+  if (rightColumnEvents[i]) {
+    currentY = addTextWithCheckboxAndWrapping(pdf, rightColumnEvents[i].label, rightColumnX, currentY, rightColumnEvents[i].value, 90, pageHeight, footerHeight, rowHeight1);
+  }
+
+  // Increment Y for the next row in both columns
+  currentY += rowHeight1;
+}
+offset += 50;
+// Section B: Enduring Life Strain
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.setFontSize(12);
+pdf.text('B. Enduring Life Strain:', 20, offset ); // Use the current dynamic offset value
+
+offset += 10; // Add some space after the title
+
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+pdf.setFontSize(12); // Regular text font size
+
+// Function to draw a checkbox and checkmark with blue background and blue border when checked
+function drawCheckboxWithCheckmark(pdf, x, y, isChecked) {
+  const boxSize = 5; // Size of the checkbox
+
+  if (isChecked) {
+    // If checked, set the background color and border color to light blue
+    pdf.setFillColor(0, 102, 255); // Blue background color
+    pdf.setDrawColor(0, 102, 255); // Blue border color (same as background)
+    pdf.rect(x, y - boxSize + 1, boxSize, boxSize, 'FD'); // Filled and outlined rectangle
+  } else {
+    // If not checked, keep normal black border with no background
+    pdf.setDrawColor(0, 0, 0); // Black border
+    pdf.rect(x, y - boxSize + 1, boxSize, boxSize); // Regular rectangle with border
+  }
+
+  if (isChecked) {
+    // Draw checkmark if checked
+    pdf.setLineWidth(0.3);
+    pdf.setDrawColor(255, 255, 255); // White checkmark color
+    pdf.line(x + 1, y - 2, x + 2, y); // First part of checkmark
+    pdf.line(x + 2, y, x + 4, y - 3); // Second part of checkmark
+  }
+}
+
+// Use existing data structure for enduring life strain
+const enduringLifeStrains = [
+  { label: 'Poverty', value: this.sheet.enduring_life_strain.poverty },
+  { label: 'Physical illness', value: this.sheet.enduring_life_strain.physical_illness },
+  { label: 'Lack of recreational facilities', value: this.sheet.enduring_life_strain.lack_recreational_facilities },
+  { label: 'Exclusion from peers', value: this.sheet.enduring_life_strain.exclusion_from_peers },
+  { label: 'Other (pls. specify)', value: this.sheet.enduring_life_strain.other },
+  { label: 'Constant need to earn for the family', value: this.sheet.enduring_life_strain.constant_need_to_earn },
+  { label: 'Lack of educational opportunity', value: this.sheet.enduring_life_strain.lack_education_opportunity },
+  { label: 'Exclusion from school', value: this.sheet.enduring_life_strain.exclusion_from_school },
+  { label: 'With disability', value: this.sheet.enduring_life_strain.with_disability }
+];
+
+// Dynamic function to add checkboxes with text and handle page breaks
+function addStrainsWithCheckbox(pdf, strains, startX, startY, pageHeight, footerHeight, rowHeight) {
+  let currentY = startY;
+  let leftColumnX = 20;
+  let rightColumnX = 120;
+  
+  strains.forEach((strain, index) => {
+    const x = index % 2 === 0 ? leftColumnX : rightColumnX; // Alternate between left and right columns
+    
+    if (currentY + rowHeight > pageHeight - footerHeight) {
+      // Check if we need to add a new page
+      pdf.addPage();
+      currentY = 20; // Reset Y position after a page break
+    }
+
+    drawCheckboxWithCheckmark(pdf, x, currentY, strain.value); // Draw the checkbox
+    pdf.text(strain.label, x + 10, currentY); // Text next to the checkbox
+    
+    if (index % 2 === 1) {
+      currentY += rowHeight; // Only increment Y after drawing for both columns
+    }
+  });
+
+  return currentY; // Return the updated Y position
+}
+
+// Start the checkboxes in two columns dynamically
+offset = addStrainsWithCheckbox(pdf, enduringLifeStrains, 20, offset, pageHeight, footerHeight, rowHeight);
+// Start with an initial offset based on where your last section ended
+offset += 12; // Adjust this to add some space after the previous section
+
+// Section C: Life Transition
+pdf.setFontSize(12);
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.text('C. Life Transition:', 20, offset);
+
+offset += 10; // Add some space after the section title
+
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+
+// Function to draw checkbox, checkmark, background, and outline color
+function drawCheckboxWithBackground(pdf, x, y, isChecked) {
+  const boxSize = 5; // Size of the checkbox
+
+  if (isChecked) {
+    // If checked, set the background color to blue and the border color to blue
+    pdf.setFillColor(0, 102, 255); // Blue background
+    pdf.setDrawColor(0, 102, 255); // Blue border
+    pdf.rect(x, y - boxSize + 1, boxSize, boxSize, 'FD'); // Filled rectangle with blue background and border
+  } else {
+    // If not checked, keep normal black border with no background
+    pdf.setDrawColor(0, 0, 0); // Black border
+    pdf.rect(x, y - boxSize + 1, boxSize, boxSize); // Regular rectangle with border
+  }
+
+  if (isChecked) {
+    // Draw checkmark if checked
+    pdf.setLineWidth(0.3);
+    pdf.setDrawColor(255, 255, 255); // White checkmark color
+    pdf.line(x + 1, y - 2, x + 2, y); // First part of checkmark
+    pdf.line(x + 2, y, x + 4, y - 3); // Second part of checkmark
+  }
+}
+
+// Define life transitions
+const lifeTransitions = [
+  { label: 'Moving from one neighbour to another', value: this.sheet.life_transition.moving_neighbour },
+  { label: 'Changing peer group', value: this.sheet.life_transition.changing_peer_group },
+  { label: 'Moving to another place of residence due to demolition', value: this.sheet.life_transition.moving_due_to_demolition },
+  { label: 'Moving to another place of residence due to disaster', value: this.sheet.life_transition.moving_due_to_disaster },
+  { label: 'Moving from biological family to a kinship/foster placement', value: this.sheet.life_transition.kinship_foster_placement },
+  { label: 'Beginning romantic relationship', value: this.sheet.life_transition.beginning_romantic_relationship },
+  { label: 'Beginning romantic relationship of parents', value: this.sheet.life_transition.beginning_parents_romantic_relationship },
+  { label: 'Others (pls. specify)', value: this.sheet.life_transition.others }
+];
+
+// Dynamic function to add life transitions with checkboxes and handle page breaks
+function addLifeTransitions(pdf, transitions, startY, pageHeight, footerHeight, rowHeight) {
+  let currentY = startY;
+
+  transitions.forEach((transition) => {
+    // Check if we need to add a new page
+    if (currentY + rowHeight > pageHeight - footerHeight) {
+      pdf.addPage();
+      currentY = 20; // Reset Y position after a page break
+    }
+
+    drawCheckboxWithBackground(pdf, 20, currentY, transition.value); // Draw checkbox
+    pdf.text(transition.label, 30, currentY); // Add text next to checkbox
+
+    currentY += rowHeight; // Move Y down for the next item
+  });
+
+  return currentY; // Return the updated Y position
+}
+
+// Start adding life transitions with the current dynamic offset
+offset = addLifeTransitions(pdf, lifeTransitions, offset, pageHeight, footerHeight, rowHeight);
+
+// Update the current offset dynamically after the previous section
+offset += 7; // Adjust this to add some space after the previous section
+
+// Section D: Development Changes
+pdf.setFontSize(12);
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.text('D. Development Changes:', 20, offset); // Use dynamic offset
+
+offset += 10; // Add some space after the section title
+
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+
+// Function to draw checkbox, checkmark, background, and outline color
+function drawCheckboxWithBackground(pdf, x, y, isChecked) {
+  const boxSize = 5; // Size of the checkbox
+
+  if (isChecked) {
+    // If checked, set the background color to blue and the border color to blue
+    pdf.setFillColor(0, 102, 255); // Blue background
+    pdf.setDrawColor(0, 102, 255); // Blue border
+    pdf.rect(x, y - boxSize + 1, boxSize, boxSize, 'FD'); // Filled rectangle with blue background and border
+  } else {
+    // If not checked, keep normal black border with no background
+    pdf.setDrawColor(0, 0, 0); // Black border
+    pdf.rect(x, y - boxSize + 1, boxSize, boxSize); // Regular rectangle with border
+  }
+
+  if (isChecked) {
+    // Draw checkmark if checked
+    pdf.setLineWidth(0.3);
+    pdf.setDrawColor(255, 255, 255); // White checkmark color
+    pdf.line(x + 1, y - 2, x + 2, y); // First part of checkmark
+    pdf.line(x + 2, y, x + 4, y - 3); // Second part of checkmark
+  }
+}
+
+// Dynamic function to add development changes with checkboxes and handle page breaks
+function addDevelopmentChanges(pdf, changes, startY, pageHeight, footerHeight, rowHeight) {
+  let currentY = startY;
+
+  changes.forEach((change) => {
+    // Check if we need to add a new page
+    if (currentY + rowHeight > pageHeight - footerHeight) {
+      pdf.addPage();
+      currentY = 20; // Reset Y position after a page break
+    }
+
+    drawCheckboxWithBackground(pdf, 20, currentY, change.value); // Draw checkbox
+    pdf.text(change.label, 30, currentY); // Add text next to checkbox
+
+    currentY += rowHeight; // Move Y down for the next item
+  });
+
+  return currentY; // Return the updated Y position
+}
+
+// Define development changes
+const developmentChanges = [
+  { label: 'Early childhood 1-6 yrs. Old', value: this.sheet.development_changes.early_childhood },
+  { label: 'School age 7-12 yrs. Old', value: this.sheet.development_changes.school_age },
+  { label: 'Adolescence 13-18 yrs. old', value: this.sheet.development_changes.adolescence }
+];
+
+// Add development changes dynamically with page break handling
+offset = addDevelopmentChanges(pdf, developmentChanges, offset, pageHeight, footerHeight, rowHeight);
+
+// Update the current offset dynamically after the previous section
+offset += 7; // Adjust this to add some space after the previous section
+
+// Section E: Normalization
+pdf.setFontSize(12);
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.text('E. Normalization:', 20, offset);
+
+offset += 10; // Add some space after the section title
+
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+
+// Function to dynamically add normalization items in a single column with page break handling
+function addNormalizationItemsSingleColumn(pdf, items, startY, pageHeight, footerHeight, rowHeight) {
+  let currentY = startY; // Start Y coordinate
+  const columnX = 25; // X coordinate for the single column
+
+  // Loop through all items to render in one column
+  items.forEach((item) => {
+    // Check for page break before rendering
+    if (currentY + rowHeight > pageHeight - footerHeight) {
+      pdf.addPage();
+      currentY = 20; // Reset Y position for the new page
+    }
+
+    // Apply indentation if necessary
+    const indent = (item.indent) ? 10 : 0;
+
+    // Render the checkbox and label
+    drawCheckboxWithBackground(pdf, columnX + indent - 5, currentY, item.value);
+    pdf.text(item.label, columnX + indent + 5, currentY);
+
+    // Increment Y position for the next item
+    currentY += rowHeight;
+  });
+
+  return currentY; // Return the updated Y position
+}
+
+// Define normalization items dynamically (including indents for requested items)
+const normalizationItems = [
+  { label: 'Legality/law enforcement (weak)', value: this.sheet.normalization.legality_law_enforcement },
+  { label: 'Availability of:', value: this.sheet.normalization.commercial_sex },
+  { label: 'Commercial sex', value: this.sheet.normalization.commercial_sex, indent: true },
+  { label: 'Substance/illegal drugs', value: this.sheet.normalization.substance_illegal_drugs, indent: true },
+  { label: 'Pornography materials to include video tapes', value: this.sheet.normalization.pornography_materials, indent: true },
+  { label: 'Red houses', value: this.sheet.normalization.red_houses, indent: true },
+  { label: 'Price (least expensive)', value: this.sheet.normalization.price_least_expensive },
+  { label: 'Advertisement/sponsorship/media presentation', value: this.sheet.normalization.advertisement_media },
+  { label: 'Advertisement promoting liquors/cigarettes/', value: this.sheet.normalization.advertisement_promoting_liquors, split: true, indent: true },
+  { label: 'Television shows', value: this.sheet.normalization.television_shows, indent: true },
+  { label: 'Movies', value: this.sheet.normalization.movies, indent: true },
+  { label: 'Printed materials', value: this.sheet.normalization.printed_materials, indent: true },
+  { label: 'Community acceptance', value: this.sheet.normalization.community_acceptance },
+  { label: 'Source of income', value: this.sheet.normalization.source_of_income, indent: true },
+  { label: 'Involved in actual trade/production', value: this.sheet.normalization.involve_in_trade, indent: true },
+  { label: 'Role of culture (culturally accepted)', value: this.sheet.normalization.role_of_culture },
+  { label: 'Smoking', value: this.sheet.normalization.smoking, indent: true },
+  { label: 'Drinking', value: this.sheet.normalization.drinking, indent: true },
+  { label: 'Abuse', value: this.sheet.normalization.abuse, indent: true },
+  { label: 'Gambling', value: this.sheet.normalization.gambling, indent: true },
+  { label: 'Illicit relationship', value: this.sheet.normalization.illicit_relationship, indent: true },
+  { label: 'Incest relationship', value: this.sheet.normalization.incest_relationship, indent: true },
+  { label: 'Rugby sniffing', value: this.sheet.normalization.rugby_sniffing, indent: true},
+  { label: 'Polygamous Relationship', value: this.sheet.normalization.polygamous_relationship, indent: true },
+  { label: 'Begging', value: this.sheet.normalization.begging, indent: true }
+];
+
+// Add normalization items dynamically in a single column with aligned Y coordinates
+offset = addNormalizationItemsSingleColumn(pdf, normalizationItems, offset, pageHeight, footerHeight, rowHeight);
+
+
+// Function to update the offset after each section
+function updateOffset(value) {
+  offset += value; // Increase offset by specified value
+}
+
+// Section F: Feelings / Behavior towards the incident
+pdf.setFontSize(12);
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.text('F. Feelings / Behaviour towards the incident:', 20, offset + 5);
+updateOffset(15); // Add space after the section title
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+
+// Function to dynamically add feelings and behavior items with aligned Y coordinates
+function addFeelingsItemsAligned(pdf, items, startY, pageHeight, footerHeight, rowHeight) {
+  let currentY = startY;
+  const leftColumnX = 25;
+  const middleColumnX = 90;
+  const rightColumnX = 155;
+
+  for (let i = 0; i < Math.ceil(items.length / 3); i++) {
+    const leftItem = items[i];
+    const middleItem = items[i + Math.ceil(items.length / 3)];
+    const rightItem = items[i + 2 * Math.ceil(items.length / 3)];
+
+    if (currentY + rowHeight > pageHeight - footerHeight) {
+      pdf.addPage();
+      currentY = 20; // Reset Y position for the new page
+    }
+
+    // Render the left column item
+    if (leftItem) {
+      drawCheckboxWithBackground(pdf, leftColumnX - 5, currentY, leftItem.value);
+      pdf.text(leftItem.label, leftColumnX + 5, currentY);
+    }
+
+    // Render the middle column item
+    if (middleItem) {
+      drawCheckboxWithBackground(pdf, middleColumnX - 5, currentY, middleItem.value);
+      pdf.text(middleItem.label, middleColumnX + 5, currentY);
+    }
+
+    // Render the right column item
+    if (rightItem) {
+      drawCheckboxWithBackground(pdf, rightColumnX - 5, currentY, rightItem.value);
+      pdf.text(rightItem.label, rightColumnX + 5, currentY);
+    }
+
+    currentY += rowHeight;
+  }
+
+  return currentY; // Return the updated Y position
+}
+
+// Define feelings and behavior items
+const feelingsItems = [
+  { label: 'stow away', value: this.sheet.behaviour_towards_incident.stow_away },
+  { label: 'irritable', value: this.sheet.behaviour_towards_incident.irritable },
+  { label: 'Delinquent behaviour', value: this.sheet.behaviour_towards_incident.delinquent_behaviour },
+  { label: 'stealing', value: this.sheet.behaviour_towards_incident.stealing },
+  { label: 'begging', value: this.sheet.behaviour_towards_incident.begging },
+  { label: 'staying in the street', value: this.sheet.behaviour_towards_incident.staying_in_street },
+  { label: 'indulge in illegal substance', value: this.sheet.behaviour_towards_incident.indulge_in_illegal_substance },
+  { label: 'unresponsive/ passive', value: this.sheet.behaviour_towards_incident.unresponsive_passive },
+  { label: 'withdrawal', value: this.sheet.behaviour_towards_incident.withdrawal },
+  { label: 'snatching', value: this.sheet.behaviour_towards_incident.snatching },
+  { label: 'others (pls. specify)', value: this.sheet.behaviour_towards_incident.others }
+];
+
+// Dynamically add feelings items to the PDF
+offset = addFeelingsItemsAligned(pdf, feelingsItems, offset, pageHeight, footerHeight, rowHeight);
+
+// Function to update the offset after each section
+function updateOffset(value) {
+  offset += value; // Increase offset by specified value
+}
+offset += -10; // Increment offset for each attachment item
+
+pdf.setFontSize(12);
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+updateOffset(10); // Add space after the section title
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+
+// Feelings items
+const feelingsItems1 = [
+  // Left column
+  { label: 'Feeling', value: this.sheet.normalization.feeling_of_freedom, x: 25 },
+  { label: 'Feeling of Freedom', value: this.sheet.normalization.feeling_of_freedom, x: 30 },
+  { label: 'Hatred', value: this.sheet.normalization.hatred, x: 30 },
+  { label: 'Independence', value: this.sheet.normalization.independence, x: 30 },
+  { label: 'Others (pls specify)', value: this.sheet.normalization.others, x: 30 },
+
+  // Right column
+  { label: 'Contented', value: this.sheet.normalization.contented, x: 90 },
+  { label: 'Belongingness', value: this.sheet.normalization.belongingness, x: 90 },
+  { label: 'Guilt', value: this.sheet.normalization.guilt, x: 90 },
+  { label: 'Rebellion', value: this.sheet.normalization.rebellion, x: 90 }
+];
+
+// Function to dynamically add Feelings section with page break handling
+function addFeelingsSection(pdf, items, startY, pageHeight, footerHeight, rowHeight) {
+  let currentY = startY;
+
+  // Loop through half of the items for the left column and another half for the right column
+  for (let i = 0; i < Math.ceil(items.length / 2); i++) {
+    const leftItem = items[i];
+    const rightItem = items[i + Math.ceil(items.length / 2)];
+
+    // Check for page break before rendering
+    if (currentY + rowHeight > pageHeight - footerHeight) {
+      pdf.addPage();
+      currentY = 20; // Reset Y position after a page break
+    }
+
+    // Render left column item
+    if (leftItem) {
+      drawCheckboxWithBackground(pdf, leftItem.x - 5, currentY, leftItem.value); // Checkbox
+      pdf.text(leftItem.label, leftItem.x + 5, currentY); // Label
+    }
+
+    // Render right column item
+    if (rightItem) {
+      drawCheckboxWithBackground(pdf, rightItem.x - 5, currentY, rightItem.value); // Checkbox
+      pdf.text(rightItem.label, rightItem.x + 5, currentY); // Label
+    }
+
+    // Increment Y position for the next row in both columns
+    currentY += rowHeight;
+  }
+
+  return currentY; // Return the updated Y position
+}
+
+// Function to check and add a new page if necessary
+function checkAndAddPage(pdf, offset, pageHeight, footerHeight) {
+  if (offset > pageHeight - footerHeight) {
+    pdf.addPage(); // Add a new page
+    return 20; // Reset Y offset for the new page
+  }
+  return offset; // Return the current offset if no new page is needed
+}
+
+// Define row height for attachments
+const rowHeight4 = 3; // Set the desired row height
+
+// Dynamically add feelings section to the PDF
+offset = addFeelingsSection(pdf, feelingsItems1, offset, pageHeight, footerHeight, rowHeight);
+
+// Section G: Attachments
+pdf.setFontSize(12);
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.text('G. Attachments:', 20, offset + 5);
+updateOffset(10); // Add space after the section title
+
+// Set the initial Y position for the attachments section using the updated offset
+const baseY = offset + 5; // Start from the current offset
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+
+// Define attachments items with their respective X positions for three columns
+const attachmentsItems = [
+  { label: 'Mother', value: this.sheet?.attachments?.mother || false },
+  { label: 'Grandmother', value: this.sheet?.attachments?.grandmother || false },
+  { label: 'Aunt', value: this.sheet?.attachments?.aunt || false },
+  { label: 'Neighbour', value: this.sheet?.attachments?.neighbour || false },
+  { label: 'Cousin', value: this.sheet?.attachments?.cousin || false },
+  { label: 'Father', value: this.sheet?.attachments?.father || false },
+  { label: 'Grandfather', value: this.sheet?.attachments?.grandfather || false },
+  { label: 'Uncle', value: this.sheet?.attachments?.uncle || false },
+  { label: 'Peer', value: this.sheet?.attachments?.peer || false },
+  { label: 'Schoolmate', value: this.sheet?.attachments?.schoolmate || false },
+  { label: 'Classmate', value: this.sheet?.attachments?.classmate || false }
+];
+
+// Define column X positions
+const columnX = [25, 90, 155]; // X positions for three columns
+
+// Loop through the items and add them to the PDF
+attachmentsItems.forEach((item, index) => {
+  const columnIndex = index % 3; // Determine column index
+  const rowIndex = Math.floor(index / 3); // Determine row index
+
+  // Calculate the X and Y coordinates
+  const x = columnX[columnIndex];
+  let y = baseY + (rowIndex * rowHeight4); // Y position based on rowHeight4
+
+  // Check and add a new page if necessary
+  offset = checkAndAddPage(pdf, y, pageHeight, footerHeight);
+  y = offset + (rowIndex * rowHeight4); // Recalculate Y position after potential page addition
+
+  drawCheckboxWithBackground(pdf, x - 5, y, item.value);
+  pdf.text(item.label, x + 5, y);
+});
+
+// Update offset after the last item
+offset += (Math.ceil(attachmentsItems.length / 3) * rowHeight4) + 10; // Add space after the section
+
+// Section H: Skills
+pdf.setFontSize(12);
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.text('H. Skills:', 20, offset);
+updateOffset(10); // Add space after the section title
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+
+// Define the skills array
+const skillsItems = [
+  { label: 'Problem solving', value: this.sheet.skills.problem_solving },
+  { label: 'Interpersonal relationship', value: this.sheet.skills.interpersonal_relationship },
+  { label: 'Communication skills', value: this.sheet.skills.communication_skills },
+  { label: 'Vocational skills', value: this.sheet.skills.vocational_skills },
+  { label: 'Critical thinking', value: this.sheet.skills.critical_thinking },
+  { label: 'Self-awareness', value: this.sheet.skills.self_awareness },
+  { label: 'Coping skills', value: this.sheet.skills.coping_skills },
+  { label: 'Survival skills', value: this.sheet.skills.survival_skills },
+  { label: 'Decision making skills', value: this.sheet.skills.decision_making_skills },
+  { label: 'Comprehension', value: this.sheet.skills.comprehension },
+  { label: 'Others', value: this.sheet.skills.others }
+];
+
+// Function to add skill items with checkboxes and styles
+function addSkillsItems(pdf, items, startY, pageHeight, footerHeight, rowHeight) {
+  let currentY = startY;
+
+  items.forEach((item, index) => {
+    // Determine column index and row index
+    const columnIndex = index % 3; // Three columns
+    const rowIndex = Math.floor(index / 3); // Row index based on item position
+
+    // Calculate the X and Y coordinates
+    const x = columnX[columnIndex];
+    let y = startY + (rowIndex * rowHeight); // Y position based on row index
+
+    // Check if the next item fits on the current page
+    if (y + rowHeight > pageHeight - footerHeight) {
+      pdf.addPage();
+      currentY = 20; // Reset Y position for the new page
+      y = currentY + (rowIndex * rowHeight); // Recalculate Y position
+    }
+
+    // Draw checkbox with background and outline
+    drawCheckboxWithBackground(pdf, x - 5, y, item.value);
+
+    // Draw the label next to the checkbox
+    pdf.text(item.label, x + 5, y);
+  });
+
+  return currentY + (Math.ceil(items.length / 3) * rowHeight); // Return the updated Y position
+}
+
+// Function to draw checkbox with optional checkmark
+function drawCheckbox(pdf, x, y, checked) {
+  pdf.rect(x, y - 5, 6, 6); // Draw the checkbox outline
+  if (checked) {
+    pdf.text('X', x + 1, y); // Draw checkmark
+  }
+}
+
+// Add skill items dynamically
+offset = addSkillsItems(pdf, skillsItems, offset, pageHeight, footerHeight, rowHeight);
+
+// Continue with the next section if needed after adding skills
+offset += 10; // Adjust spacing as needed for the next section
+const rowHeight2 = 6; // Row height for consistent spacing
+
+// Set the font size and style for the Resources section
+pdf.setFontSize(12);
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.text('Resources:', 20, offset);
+
+// Set font and size for content
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+offset += -1; // Add some spacing after the "Resources" title
+
+// Define the base X positions for the two columns
+const column1X = 20;  // X position for the first column
+const column2X = 100; // X position for the second column
+
+
+// Group Internal and External resources separately
+const internalResourcesItems = [
+  { label: 'Internal resources', value: this.sheet.resources.internal, column: 1 },
+  { label: 'Intelligence', value: this.sheet.resources.intelligence, indent: true, column: 1 },
+  { label: 'Spirituality', value: this.sheet.resources.spirituality, indent: true, column: 1 },
+  { label: 'Resourceful', value: this.sheet.resources.resourceful, indent: true, column: 1 },
+  { label: 'Obedient', value: this.sheet.resources.obedient, column: 1 },
+  { label: 'Others', value: this.sheet.resources.others, indent: true, column: 1 },
+  { label: 'Education', value: this.sheet.resources.education, indent: true, column: 2 },
+  { label: 'Discipline', value: this.sheet.resources.discipline, indent: true, column: 2 },
+  { label: 'Respectful', value: this.sheet.resources.respectful, indent: true, column: 2 },
+  { label: 'Submissive', value: this.sheet.resources.submissive, indent: true, column: 2 },
+  ];
+
+const externalResourcesItems = [
+  { label: 'External Resources', value: this.sheet.resources.external, column: 1 },
+  { label: 'Family', value: this.sheet.resources.family, indent: true, column: 1 },
+  { label: 'Peers', value: this.sheet.resources.peers, indent: true, column: 1 },
+  { label: 'Health services', value: this.sheet.resources.health_services, indent: true, column: 1 },
+  { label: 'Recreational services', value: this.sheet.resources.recreational_services, indent: true, column: 1 },
+  { label: 'NGOs existing in the community', value: this.sheet.resources.ngos, column: 1 },
+  { label: 'Civic Organization', value: this.sheet.resources.civic_organization, column: 1 },
+  { label: 'Others (pls. specify)', value: this.sheet.resources.others, column: 1 },
+
+  // Additional items from your HTML
+  { label: 'Other Street Children', value: this.sheet.resources.street_children, column: 2 },
+  { label: 'Street Educators', value: this.sheet.resources.street_educators, column: 2 },
+  { label: 'Vocational Services', value: this.sheet.resources.vocational_services, column: 2 },
+  { label: 'LGU Staff at All Levels', value: this.sheet.resources.lgu_staff, column: 2 },
+  { label: 'People’s Organization', value: this.sheet.resources.peoples_organization, column: 2 },
+  { label: 'Faith Based Organization', value: this.sheet.resources.faith_based_organization, column: 2 }
+];
+
+
+// Set base Y position for resources
+let resourceOffset = offset + 10;
+
+// Function to render a resource section
+function renderResourcesSection(pdf, items, column1X, column2X, rowHeight, resourceOffset, pageHeight, footerHeight) {
+  const leftColumnItems = items.filter(item => item.column === 1);
+  const rightColumnItems = items.filter(item => item.column === 2);
+  
+  const maxRows = Math.max(leftColumnItems.length, rightColumnItems.length);
+  
+  for (let i = 0; i < maxRows; i++) {
+    const y = resourceOffset + (i * rowHeight);
+
+    // Check if the next item fits on the current page
+    if (y + rowHeight > pageHeight - footerHeight) {
+      pdf.addPage();
+      resourceOffset = 20; // Reset Y position for the new page
+    }
+
+    if (leftColumnItems[i]) {
+      drawCheckboxWithCheckmark(pdf, column1X, resourceOffset + (i * rowHeight), leftColumnItems[i].value);
+      pdf.text(leftColumnItems[i].label, column1X + 10, resourceOffset + (i * rowHeight));
+    }
+
+    if (rightColumnItems[i]) {
+      drawCheckboxWithCheckmark(pdf, column2X, resourceOffset + (i * rowHeight), rightColumnItems[i].value);
+      pdf.text(rightColumnItems[i].label, column2X + 10, resourceOffset + (i * rowHeight));
+    }
+  }
+  
+  return resourceOffset + (maxRows * rowHeight);
+}
+
+// Render Internal Resources section
+pdf.setFont('arialbd', 'bold');
+pdf.setFont('Arial', 'normal');
+
+resourceOffset = renderResourcesSection(pdf, internalResourcesItems, column1X, column2X, rowHeight2, resourceOffset, pageHeight, footerHeight);
+
+// Add space between sections
+resourceOffset += 10; 
+
+resourceOffset = renderResourcesSection(pdf, externalResourcesItems, column1X, column2X, rowHeight2, resourceOffset, pageHeight, footerHeight);
+
+offset += 20;
+// Section for Activities or Source of Income
+pdf.setFontSize(12);
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');
+pdf.text('IV. Activities or source of income in the street:', 20, resourceOffset + 10);
+
+// Set constants for row height
+const rowHeight3 = 6; // Set your desired row height here
+
+// Set font and size for content
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+
+// Source of Income Section with aligned columns
+const incomeItems = [
+  { label: 'Vending', value: this.sheet.source_of_income_in_street.vending, column: 1 },
+  { label: 'Car wash boy', value: this.sheet.source_of_income_in_street.car_wash_boy, column: 1 },
+  { label: 'Rugby user', value: this.sheet.source_of_income_in_street.rugby_user, column: 1 },
+  { label: 'Porter', value: this.sheet.source_of_income_in_street.porter, column: 2 },
+  { label: 'Barker', value: this.sheet.source_of_income_in_street.barker, column: 2 }
+];
+
+// Set base Y position for income items
+let incomeOffset = resourceOffset + 20;
+
+// Function to check and add a new page if necessary
+function checkAndAddPage(pdf, currentOffset, pageHeight, footerHeight) {
+    if (currentOffset > pageHeight - footerHeight) {
+        pdf.addPage(); // Add a new page
+        return 20; // Reset offset to a new starting point on the new page
+    }
+    return currentOffset; // Return the current offset if no new page is added
+}
+
+// Separate items by column
+const column1Items = incomeItems.filter(item => item.column === 1);
+const column2Items = incomeItems.filter(item => item.column === 2);
+
+// Add income items for column 1
+column1Items.forEach((item, index) => {
+  const x = column1X; // Fixed X position for column 1
+  incomeOffset = checkAndAddPage(pdf, incomeOffset, pageHeight, footerHeight); // Check for page overflow
+  const y = incomeOffset + (index * rowHeight3); // Increment Y position using row height
+  drawCheckboxWithCheckmark(pdf, x, y, item.value);
+  pdf.text(item.label, x + 10, y);
+});
+
+// Add income items for column 2
+column2Items.forEach((item, index) => {
+  const x = column2X; // Fixed X position for column 2
+  incomeOffset = checkAndAddPage(pdf, incomeOffset, pageHeight, footerHeight); // Check for page overflow
+  const y = incomeOffset + (index * rowHeight3); // Increment Y position using row height
+  drawCheckboxWithCheckmark(pdf, x, y, item.value);
+  pdf.text(item.label, x + 10, y);
+});
+
+// Earnings/ Income Section
+incomeOffset += 20; // Adjust offset for earnings section
+incomeOffset = checkAndAddPage(pdf, incomeOffset, pageHeight, footerHeight); // Check for page overflow
+pdf.text('Earnings/ income:', 20, incomeOffset);
+pdf.text(this.sheet.earnings_income || '', 55, incomeOffset);
+pdf.setLineWidth(0.2);
+pdf.line(55, incomeOffset + 1, 200, incomeOffset + 1);
+
+// Hours of Stay in the Street
+incomeOffset += 10; // Adjust offset for hours section
+incomeOffset = checkAndAddPage(pdf, incomeOffset, pageHeight, footerHeight); // Check for page overflow
+pdf.text('Hours of stay in the street:', 20, incomeOffset);
+pdf.text(this.sheet.hrs_stay_in_street || '', 70, incomeOffset);
+pdf.line(70, incomeOffset + 1, 200, incomeOffset + 1);
+
+// Length of Stay in the Street
+incomeOffset += 10; // Adjust offset for length section
+incomeOffset = checkAndAddPage(pdf, incomeOffset, pageHeight, footerHeight); // Check for page overflow
+pdf.text('Length of stay in the street:', 20, incomeOffset);
+pdf.text(this.sheet.length_stay_in_street || '', 70, incomeOffset);
+pdf.line(70, incomeOffset + 1, 200, incomeOffset + 1);
+
+// Common Substance Used
+incomeOffset += 10; // Adjust offset for substance section
+incomeOffset = checkAndAddPage(pdf, incomeOffset, pageHeight, footerHeight); // Check for page overflow
+pdf.text('Common Substance used:', 20, incomeOffset);
+pdf.text(this.sheet.common_substance_used || '', 70, incomeOffset);
+pdf.line(70, incomeOffset + 1, 200, incomeOffset + 1);
+
+// Function to check and add a new page if necessary
+function checkAndAddPage(pdf, currentOffset, pageHeight, footerHeight) {
+    const maxHeight = pageHeight - footerHeight; // Define a maximum height before needing a new page
+    if (currentOffset > maxHeight) {
+        pdf.addPage(); // Add a new page
+        return 20; // Reset offset to a new starting point on the new page
+    }
+    return currentOffset; // Return the current offset if no new page is added
+}
+function addTextWithWrappingAndLines(pdf, text, x, y, maxWidth, pageHeight, footerHeight, rowHeight) {
+    const lines = pdf.splitTextToSize(text, maxWidth);
+    lines.forEach((line) => {
+        // Check if adding this line would exceed the page height
+        if (y + rowHeight > pageHeight - footerHeight) {
+            pdf.addPage(); // Add a new page
+            y = 20; // Reset y position
+        }
+        pdf.text(line, x, y);
+        pdf.line(x, y + 1, x + maxWidth, y + 1); // Draw line under the text
+        y += rowHeight; // Move down for the next line
     });
+    return y; // Return the new y position
+}
+// Initial Assessment
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');    
+const initialAssessmentY = incomeOffset + 10;
+pdf.text('INITIAL ASSESSMENT:', 20, initialAssessmentY);
 
-      // Footer
-    pdf.setFont('Times');
-    pdf.setFontSize(10);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text(`PAGE 3 of ${String(this.totalPages)}`, 108, 330, null, null, 'center');
-    pdf.setFont('helvetica', 'normal');
-    pdf.setLineWidth(0.5);
-    pdf.line(20, offset + 5, 210 - 30, offset + 5);
-    pdf.setFontSize(8);
-    pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
-    pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+let currentYS = initialAssessmentY + 10; // Start just below the title
 
-    // Add the footer image
-    const footerImageData = '/images/footerimg.png';
-    pdf.addImage(footerImageData, 'PNG', 182, offset, 20, 10);
-
-    pdf.addPage();
-    pdf.setFontSize(10);
-    pdf.setFont('helvetica', 'italic');
-    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
-
-    pdf.setFontSize(11);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('Resources:', 20, 30);
-
-    // Set font and size for content
-    pdf.setFont('helvetica', 'normal');
-
-    // Resources Section
-    const resourcesItems = [
-      { label: 'Internal resources', value: this.sheet.resources.internal, x: 20, y: 40 },
-      { label: 'Intelligence', value: this.sheet.resources.intelligence, x: 30, y: 50, indent: true },
-      { label: 'Spirituality', value: this.sheet.resources.spirituality, x: 30, y: 60, indent: true },
-      { label: 'Resourceful', value: this.sheet.resources.resourceful, x: 30, y: 70, indent: true },
-      { label: 'Obedient', value: this.sheet.resources.obedient, x: 120, y: 50 },
-      { label: 'Others', value: this.sheet.resources.others, x: 120, y: 60, indent: true },
-      { label: 'External Resources', value: this.sheet.resources.external, x: 20, y: 80 },
-      { label: 'Family', value: this.sheet.resources.family, x: 30, y: 90, indent: true },
-      { label: 'Peers', value: this.sheet.resources.peers, x: 30, y: 100, indent: true },
-      { label: 'Health services', value: this.sheet.resources.health_services, x: 30, y: 110, indent: true },
-      { label: 'Recreational services', value: this.sheet.resources.recreational_services, x: 30, y: 120, indent: true },
-      { label: 'NGOs existing in the community', value: this.sheet.resources.ngos, x: 120, y: 90, indent: true },
-      { label: 'Civic Organization', value: this.sheet.resources.civic_organization, x: 120, y: 100, indent: true },
-      { label: 'Others (pls. specify)', value: this.sheet.resources.others, x: 120, y: 110, indent: true }
-    ];
-
-    resourcesItems.forEach(item => {
-      pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
-    });
-
-    pdf.setFontSize(11);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text('IV. Activities or source of income in the street:', 20, 130);
-
-     // Set font and size for content
-     pdf.setFont('helvetica', 'normal');
-
-    // Source of Income Section
-    const incomeItems = [
-      { label: 'Vending', value: this.sheet.source_of_income_in_street.vending, x: 30, y: 140 },
-      { label: 'Car wash boy', value: this.sheet.source_of_income_in_street.car_wash_boy, x: 30, y: 150 },
-      { label: 'Rugby user', value: this.sheet.source_of_income_in_street.rugby_user, x: 30, y: 160 },
-      { label: 'Porter', value: this.sheet.source_of_income_in_street.porter, x: 120, y: 140 },
-      { label: 'Barker', value: this.sheet.source_of_income_in_street.barker, x: 120, y: 150 }
-    ];
-
-    incomeItems.forEach(item => {
-      pdf.text(`[${item.value ? 'X' : ' '}] ${item.label}`, item.x, item.y);
-    });
-
-  // Text fields
-  pdf.text('Earnings/ income:', 20, 170);
-  pdf.text(this.sheet.earnings_income || '', 55, 170);
-
-  // Set the line width to a thinner value
-  pdf.setLineWidth(0.3); // Adjust the value to make it thinner (0.5 is fairly thin)
-
-  // Draw a thin line under "Earnings/ income"
-  pdf.line(55, 171, 200, 171);
-
-  pdf.text('Hours of stay in the street:', 20, 180);
-  pdf.text(this.sheet.hrs_stay_in_street || '', 70, 180);
-
-  // Draw line under "Hours of stay in the street"
-  pdf.line(70, 181, 200, 181);
-
-  pdf.text('Length of stay in the street:', 20, 190);
-  pdf.text(this.sheet.length_stay_in_street || '', 70, 190);
-
-  // Draw line under "Length of stay in the street"
-  pdf.line(70, 191, 200, 191);
-
-  pdf.text('Common Substance used:', 20, 200);
-  pdf.text(this.sheet.common_substance_used || '', 70, 200);
-
-  // Draw line under "Common Substance used"
-  pdf.line(70, 201, 200, 201);
+// Add assessment lines using the utility function
+const initialAssessmentLines = (this.sheet.initial_assessment || '').split('\n');
+initialAssessmentLines.forEach(line => {
+    currentYS = addTextWithWrappingAndLines(pdf, line, 20, currentYS, 180, pageHeight, footerHeight, 10);
+});
 
 
-    // Initial Assessment
-    pdf.setFont("helvetica", "bold"); // Use "bold" for the bold style
-    pdf.text('INITIAL ASSESSMENT:', 20, 210);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(this.sheet.initial_assessment || '', 20, 220, {  indent: true, maxWidth: 180 });
-    pdf.line(20, 221, 200, 221);
-    pdf.line(20, 227, 200, 227);
-    pdf.line(20, 233, 200, 233);
-    pdf.line(20, 239, 200, 239);
-    // Recommendations
-    pdf.setFont("helvetica", "bold");
-    pdf.text('RECOMMENDATIONS:', 20, 250);
-    pdf.setFont("helvetica", "normal");
-    pdf.text(this.sheet.recommendations || '', 20, 260, {   maxWidth: 180 });
-    pdf.line(20, 261, 200, 261);
-    pdf.line(20, 267, 200, 267);
-    pdf.line(20, 273, 200, 273);
 
-    // Prepared by and Reviewed by
-    pdf.text('Prepared by:', 20, 290);
-    pdf.setFont("helvetica", "bold"); // Use "bold" for the bold style
-    // Define the text
-    const preparedByText = this.sheet.prepared_by || '';
+// Space before recommendations
+currentYS += 5; // Add space before recommendations
 
-    // Add the text
-    pdf.text(preparedByText, 20, 300);
 
-    // Calculate the width of the text
-    const textWidth = pdf.getTextWidth(preparedByText);
 
-    // Draw a line below the text, with the width matching the text's width
-    pdf.line(20, 301, 20 + textWidth, 301);
-    pdf.setFont("helvetica", "normal");
-    pdf.text('SWO __/Case Manager', 20, 305);
+// Recommendations
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');  
+pdf.text('RECOMMENDATIONS:', 20, currentYS);
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
 
-    pdf.text('Reviewed by:', 140, 290);
-    pdf.setFont("helvetica", "bold"); // Use "bold" for the bold style
-    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 140, 300);
-    pdf.line(140, 301, 200, 301); 
-    pdf.setFont("helvetica", "normal");
-    pdf.text('Center Head/SWO IV', 140, 305);
-    pdf.setFont('helvetica', 'bold');
+currentYS += 10; // Initialize Y position for recommendations
+const recommendationsLines = (this.sheet.recommendations || '').split('\n');
 
-    // Footer
-    pdf.setFont('Times');
-    pdf.setFontSize(10);
-    pdf.setFont('helvetica', 'bold');
-    pdf.text(`PAGE 4 of ${String(this.totalPages)}`, 108, 330, null, null, 'center');
-    pdf.setFont('helvetica', 'normal');
-    pdf.setLineWidth(0.5);
-    pdf.line(20, offset + 5, 210 - 30, offset + 5);
-    pdf.setFontSize(8);
-    pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 100, offset + 10, null, null, 'center');
-    pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, offset + 15, null, null, 'center');
+// Add recommendations lines using the utility function
+recommendationsLines.forEach(line => {
+    currentYS = addTextWithWrappingAndLines(pdf, line, 20, currentYS, 180, pageHeight, footerHeight, 10);
+});
 
-    // Add the footer image
-    const footerImgeData = '/images/footerimg.png';
-    pdf.addImage(footerImgeData, 'PNG', 182, offset, 20, 10);
+// Prepare for the next section with dynamic page check
+currentYS += 10; // Add additional space before the next section
+
+
+// Check and add a new page if necessary before "Prepared by"
+currentYS = checkAndAddPage(pdf, currentYS, pageHeight, footerHeight);
+pdf.text('Prepared by:', 20, currentYS);
+
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold');  
+const preparedByText = this.sheet.prepared_by || '';
+
+// Check and add a new page if necessary before the prepared by text
+currentYS = checkAndAddPage(pdf, currentYS, pageHeight, footerHeight);
+pdf.text(preparedByText, 20, currentYS + 10);
+
+// Calculate the width of the text
+const textWidth = pdf.getTextWidth(preparedByText);
+
+// Draw a line below the text, with the width matching the text's width
+pdf.line(20, currentYS + 11, 20 + textWidth, currentYS + 11);
+
+// Store the y-coordinate for Reviewed By to align later
+const reviewedByY = currentYS + 15; // Adjust as needed for spacing
+
+// Add SWO text
+currentYS += 15; // Move down for SWO text
+currentYS = checkAndAddPage(pdf, currentYS, pageHeight, footerHeight);
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+pdf.text('SWO __/Case Manager', 20, currentYS);
+
+// Reviewed by section
+currentYS = checkAndAddPage(pdf, reviewedByY, pageHeight, footerHeight); // Use the stored y-coordinate
+pdf.text('Reviewed by:', 130, reviewedByY - 15); // Align y-coordinate
+
+pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
+pdf.setFont('arialbd', 'bold'); 
+const reviewerText = 'ANGELIC B. PAÑA, RSW, MSSW';
+
+// Check and add a new page if necessary before the reviewer text
+currentYS = checkAndAddPage(pdf, reviewedByY, pageHeight, footerHeight);
+pdf.text(reviewerText, 130, reviewedByY ); // Align y-coordinate
+
+// Draw a line below the reviewer's name
+pdf.line(130, reviewedByY + 1, 200, reviewedByY + 1); 
+
+// Add position title
+currentYS += 15; // Move down for position title
+currentYS = checkAndAddPage(pdf, currentYS, pageHeight, footerHeight);
+pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
+pdf.setFont('Arial', 'normal');
+pdf.text('Center Head/SWO IV', 130, currentYS - 10);
+
+// Final offset update after the section
+incomeOffset = currentYS + 30; // Update incomeOffset for the next section
+
 
       // Save the PDF
       pdf.save('General Intake Sheet.pdf');

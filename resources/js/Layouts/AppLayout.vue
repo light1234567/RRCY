@@ -336,7 +336,6 @@
 
             <div class="flex flex-col items-center -mr-8 mt-1/2 ml-2">
               <ApplicationMark
-                :isSidebarCollapsed="isSidebarCollapsed"
                 :userName="userfName + userSName +  userlName"
                 :userImage="userImage"
               />

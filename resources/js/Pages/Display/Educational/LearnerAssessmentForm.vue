@@ -6,6 +6,12 @@
         {{ isEditable ? 'Cancel' : 'Edit' }}
       </button>
       <button v-if="isEditable" type="submit" @click="submitForm" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Export to PDF</span>
+    </button>
     </div>
 
     <!-- Success/Error Message -->
@@ -374,6 +380,10 @@
 
 <script>
 import axios from 'axios';
+import { jsPDF } from 'jspdf';
+import '../../../fonts/arial-normal.js'; 
+import '../../../fonts/times-normal.js'; 
+import '../../../fonts/arialbd-bold.js'; 
 
 export default {
   name: 'AssessmentForm',
@@ -551,6 +561,110 @@ fetchFormData() {
             this.messageClass = 'bg-red-100 text-red-800';
             console.error('Error fetching form data:', error.response ? error.response.data : error.message);
         });
+},
+exportToPdf() {
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+  const pageHeight = 297;
+  const marginBottom = 30;
+  const rowHeight = 8;
+  const lineHeight = 7;
+  const footerHeight = 5; // Adjust to fit the height of your footer
+  const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
+  const maxWidth = 170;
+  let contentYPos = 65; 
+  let initialX = 20;
+  let currentPage = 1;
+  let currentY = 40; // Initialize `currentY` for header positioning
+  
+  const addHeader = () => {
+  pdf.setFontSize(10);
+  pdf.setFont('Arial', 'bold');
+  pdf.text('PROTECTIVE SERVICES DIVISION', 160, 20, { align: 'center' });
+  currentY += 5;
+  pdf.text('REGIONAL REHABILITATION CENTER FOR YOUTH', 160, 25, { align: 'center' });
+  currentY += 5;
+  pdf.text('Youth/RFO XI', 160, 30, { align: 'center' });
+  currentY += 3;
+    pdf.setFontSize(9);
+    pdf.setFont('Times', 'italic');
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 35);
+  };
+
+  // Helper function to add a new page if content exceeds the page height
+  const addNewPageIfNeeded = () => {
+    if (contentYPos >= maxContentHeight) {
+      addFooter();
+      pdf.addPage();
+      addHeader();
+      currentPage++;
+      contentYPos = 40;
+      pdf.setFont('Arial', 'normal');
+      pdf.setFontSize(11);
+    }
+  };
+
+  const addFooter = () => {
+    pdf.setFontSize(9);
+    pdf.setFont('Times', 'bold');
+    pdf.setLineWidth(0.5);
+    pdf.line(17, 282, 173, 282); // Footer line
+
+    if (currentPage === 1) {
+      pdf.setFont('Times', 'normal');
+      const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
+      pdf.text(footerText, 95, 287, { align: 'center' });
+      pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, { align: 'center' });
+      const footerImgData = '/images/footerimg.png';
+      pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Make sure this path is valid and image exists
+    } else {
+      pdf.setFontSize(8.5);
+      pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, { align: 'center' });
+    }
+  };
+
+  // Add the header
+  addHeader();
+  // DSWD logo
+  const imgData = '/images/headerlogo2.png';
+  pdf.addImage(imgData, 'PNG', 10, 5, 70, 40); // Adjust the width and height
+
+
+
+  // Add main title
+  pdf.setFont('Arial', 'bold');
+  pdf.setFontSize(14);
+  pdf.text('LEARNER’S ASSESSMENT FORM', 105, 50, { align: 'center' });
+  pdf.setFont('Arial', 'normal');
+  contentYPos += 15;
+
+  // Insert content here
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Add the footer for the last page
+  addFooter();
+
+  const totalPages = pdf.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    pdf.setFontSize(9);
+    pdf.setFont('Times', 'bold');
+    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 280, { align: 'center' });
+  }
+
+  // Save the PDF with dynamic file name
+  const fileName = `Learner_AssessmentForm_${this.form?.name || 'Unknown'}.pdf`;
+  pdf.save(fileName);
 }
 
 

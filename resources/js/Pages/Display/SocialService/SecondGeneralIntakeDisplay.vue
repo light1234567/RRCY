@@ -111,58 +111,80 @@
       </div>
 
       <div class="mb-8">
-        <h2 class="text-lg font-semibold">I. Identifying Information:</h2>
-        <div class="space-y-2">
-          <div class="flex-grow flex items-center mr-4">
-            <label class="block text-base font-semibold text-gray-700 mr-4">Name of client:</label>
-            <input type="text" v-model="sheet.name" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="flex-grow flex items-center mr-4">
-              <label class="block text-base font-semibold text-gray-700 mr-4">Age:</label>
-              <input type="text" v-model="sheet.age" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
-            </div>
-            <div class="flex-grow flex items-center mr-4">
-              <label class="block text-base font-semibold text-gray-700 mr-4">Sex:</label>
-              <input type="text" v-model="sheet.sex" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
-            </div>
-          </div>
-          <div class="flex-grow flex items-center mr-4">
-            <label class="block text-base font-semibold text-gray-700 mr-4">Address:</label>
-            <input type="text" v-model="sheet.address" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
-          </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="flex-grow flex items-center mr-4">
-              <label class="block text-base font-semibold text-gray-700 mr-4">Date of Birth:</label>
-              <input type="date" v-model="sheet.date_of_birth" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
-            </div>
-            <div class="flex-grow flex items-center mr-4">
-              <label class="block text-base font-semibold text-gray-700 mr-4">Place of birth:</label>
-              <input type="text" v-model="sheet.place_of_birth" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
-            </div>
-          </div>
-          <div class="flex-grow flex items-center mr-4">
-            <label class="block text-base font-semibold text-gray-700 mr-4">Religion:</label>
-            <input type="text" v-model="sheet.religion" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
-          </div>
-          <div class="flex-grow flex items-center mr-4">
-            <label class="block text-base font-semibold text-gray-700 mr-4">Occupation:</label>
-            <input type="text" v-model="sheet.occupation" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
-          </div>
-          <div class="flex-grow flex items-center mr-4">
-            <label class="block text-base font-semibold text-gray-700 mr-4">Highest Educ'l Att't:</label>
-            <input type="text" v-model="sheet.highest_educ_att" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
-          </div>
-          <div class="flex-grow flex items-center mr-4">
-            <label class="block text-base font-semibold text-gray-700 mr-4">Name of School:</label>
-            <input type="text" v-model="sheet.school_name" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
-          </div>
-          <div class="flex-grow flex items-center mr-4">
-            <label class="block text-base font-semibold text-gray-700 mr-4">Class Adviser:</label>
-            <input type="text" v-model="sheet.class_adviser" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
-          </div>
-        </div>
+      <h2 class="text-lg font-semibold">I. Identifying Information:</h2>
+      <div class="space-y-2">
+        <div class="flex items-center mb-4">
+        
+          <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of client:</label>
+          <input type="text" v-model="sheet.name" class="mt-1 p-0 flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
       </div>
+  
+   <div class="grid grid-cols-2 gap-4">
+     <div class="flex items-center mb-4">
+       <div class="flex-grow flex items-center mr-4">
+         <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Age:</label>
+         <input type="text" v-model="sheet.age" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+       </div>
+     </div>
+     <div class="flex items-center mb-4">
+       <div class="flex-grow flex items-center mr-4">
+         <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Sex:</label>
+         <input type="text" v-model="sheet.sex" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+       </div>
+     </div>
+   </div>
+   <div class="flex items-center mb-4">
+     <div class="flex-grow flex items-center mr-4">
+       <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Address:</label>
+       <input type="text" v-model="sheet.address" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+     </div>
+   </div>
+   <div class="grid grid-cols-2 gap-4">
+     <div class="flex items-center mb-4">
+       <div class="flex-grow flex items-center mr-4">
+         <label class="mt-2 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Date of Birth:</label>
+         <input type="date" v-model="sheet.date_of_birth" class=" p-0  w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+       </div>
+     </div>
+     <div class="flex items-center mb-4">
+       <div class="flex-grow flex items-center mr-4">
+         <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Place of birth:</label>
+         <input type="text" v-model="sheet.place_of_birth" class=" p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+       </div>
+     </div>
+   </div>
+   <div class="flex items-center mb-4">
+     <div class="flex-grow flex items-center mr-4">
+       <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Religion:</label>
+       <input type="text" v-model="sheet.religion" class="-mt-3 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+     </div>
+   </div>
+   <div class="flex items-center mb-4">
+     <div class="flex-grow flex items-center mr-4">
+       <label class="mt-2 block text-base font-semibold text-gray-700 mr-4">Occupation:</label>
+       <input type="text" v-model="sheet.occupation" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+     </div>
+   </div>
+   <div class="flex items-center mb-4">
+ <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Highest Educ'l Att't:</label>
+ <input type="text" v-model="sheet.highest_educ_att" class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+</div>
+ 
+<div class="flex items-center mb-4">
+     <div class="flex-grow flex items-center mr-4">
+       <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of School:</label>
+       <input type="text" v-model="sheet.school_name" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+     </div>
+   </div>
+   <div class="flex items-center mb-4">
+     <div class="flex-grow flex items-center mr-4">
+       <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap ">Class Adviser:</label>
+       <input type="text" v-model="sheet.class_adviser" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+     </div>
+   </div>
+ </div>
+</div>
+
 
       <div class="mb-8">
         <h2 class="text-lg font-semibold">Vices/Start:</h2>
@@ -266,6 +288,10 @@
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
+import jsPDF from 'jspdf';
+import '../../../fonts/arial-normal.js'; 
+import '../../../fonts/times-normal.js'; 
+import '../../../fonts/arialbd-bold.js'; 
 
 export default {
   name: 'GeneralIntakeSheet',
@@ -521,7 +547,440 @@ export default {
         this.message = '';
         this.messageType = '';
       }, 3000);
+    },
+    exportToPdf() {
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+  const pageHeight = 297;
+  const marginBottom = 30;
+  const rowHeight = 8;
+  const lineHeight = 7;
+  const footerHeight = 5; // Adjust to fit the height of your footer
+  const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
+  const maxWidth = 170;
+  let contentYPos = 65; 
+  let initialX = 20;
+  let currentPage = 1;
+  
+  const addHeader = () => {
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'italic');
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+  };
+  
+  // Helper function to add a new page if content exceeds the page height
+  const addNewPageIfNeeded = () => {
+    if (contentYPos >= maxContentHeight) {
+      addFooter();
+      pdf.addPage();
+      addHeader();
+      currentPage++;
+      contentYPos = 40;
+      pdf.setFont('arial', 'normal');
+      pdf.setFontSize(12);
     }
+  };
+
+  const drawCheckbox = (isChecked, x, y) => {
+
+  pdf.setFillColor(0, 122, 255); 
+  pdf.setDrawColor(0, 0, 0);
+
+  pdf.setLineWidth(0.2); 
+
+  
+  pdf.rect(x, y, 5, 5, isChecked ? 'FD' : 'S'); 
+
+  if (isChecked) {
+   
+    pdf.setDrawColor(255, 255, 255);
+    pdf.setLineWidth(0.7); 
+
+
+    pdf.line(x + 1, y + 2.5, x + 2, y + 4);
+    pdf.line(x + 2, y + 4, x + 4, y + 1.5); 
+  }
+
+  
+  pdf.setLineWidth(0.2); 
+  pdf.setDrawColor(0, 0, 0);
+  pdf.setFillColor(255, 255, 255);
+};
+
+
+
+
+
+
+  const addFooter = () => {
+    if (currentPage === 1) {
+      pdf.setFontSize(9);
+      pdf.setFont('TimesNewRoman', 'bold');
+      pdf.setLineWidth(0.5);
+      pdf.line(17, 282, 173, 282);
+      pdf.setFont('times', 'normal');
+      const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
+      pdf.text(footerText, 95, 287, { align: 'center' });
+      pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, { align: 'center' });
+      const footerImgData = '/images/footerimg.png';
+      pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12);
+    } else {
+      pdf.setFontSize(8.5);
+      pdf.setFont('TimesNewRoman', 'bold');
+      pdf.setLineWidth(0.5);
+      pdf.line(17, 282, 193, 282);
+      pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, { align: 'center' });
+    }
+  };
+
+  addHeader();
+
+  // DSWD logo
+  const imgData = '/images/headerlogo2.png';
+  pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
+
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(20);
+  pdf.text('GENERAL INTAKE SHEET', 105, 48, { align: 'center' });
+  pdf.setFont('arial', 'normal');
+
+
+contentYPos += rowHeight;
+contentYPos += +-18;
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(13);
+pdf.text(`Date:`, initialX + 105, contentYPos);
+const dateValue = `${this.sheet.date || ''}`;
+const dateWidth = pdf.getTextWidth(dateValue);
+pdf.text(dateValue, initialX + 119, contentYPos);  
+pdf.line(initialX + 119, contentYPos + 1, initialX + 119 + dateWidth, contentYPos + 1); 
+
+contentYPos += rowHeight;
+  pdf.setFontSize(13);
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('I. Identifying Information:', initialX, contentYPos);
+
+  contentYPos += rowHeight;
+pdf.setFontSize(13);
+pdf.setFont('arial', 'normal');
+pdf.text(`Name of client:`, initialX, contentYPos);
+
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.name || ''}`, initialX+32, contentYPos);;
+pdf.line(52, contentYPos+1, 190, contentYPos+1); 
+
+contentYPos += rowHeight;
+pdf.setFontSize(13);
+pdf.setFont('arial', 'normal');
+pdf.text(`Age:`, initialX, contentYPos);
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.age || ''}`, initialX+12, contentYPos);;
+pdf.line(31, contentYPos+1, 115, contentYPos+1); 
+
+pdf.setFontSize(13);
+pdf.setFont('arial', 'normal');
+pdf.text(`Sex:`, initialX + 100, contentYPos);
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.sex || ''}`, initialX+110, contentYPos);;
+pdf.line(130, contentYPos+1, 190, contentYPos+1); 
+
+
+contentYPos += rowHeight;
+pdf.setFontSize(13);  
+pdf.setFont('arial', 'normal');
+pdf.text(`Address:`, initialX, contentYPos);
+
+pdf.setFontSize(10);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.address || ''}`, initialX+20, contentYPos);;
+pdf.line(40, contentYPos+1, 190, contentYPos+1); 
+
+
+contentYPos += rowHeight;
+pdf.setFontSize(13);
+pdf.setFont('arial', 'normal');
+pdf.text(`Date of Birth:`, initialX, contentYPos);
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.date_of_birth || ''}`, initialX+28, contentYPos);;
+pdf.line(48, contentYPos+1, 115, contentYPos+1);
+
+pdf.setFontSize(13);
+pdf.setFont('arial', 'normal');
+pdf.text(`Place of birth:`, initialX + 100, contentYPos);
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.place_of_birth || ''}`, initialX+130, contentYPos);;
+pdf.line(150, contentYPos+1, 190, contentYPos+1);
+
+
+contentYPos += rowHeight;
+pdf.setFontSize(13);  
+pdf.setFont('arial', 'normal');
+pdf.text(`Religion:`, initialX, contentYPos);
+
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.religion || ''}`, initialX+19, contentYPos);;
+pdf.line(38, contentYPos+1, 190, contentYPos+1);
+
+contentYPos += rowHeight;
+pdf.setFontSize(13);  
+pdf.setFont('arial', 'normal');
+pdf.text(`Occupation:`, initialX, contentYPos);
+
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.occupation || ''}`, initialX+25, contentYPos);;
+pdf.line(45, contentYPos+1, 190, contentYPos+1);
+
+contentYPos += rowHeight;
+pdf.setFontSize(13);  
+pdf.setFont('arial', 'normal');
+pdf.text(`Highest Educ'l Att't:`, initialX, contentYPos);
+
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.highest_educ_att || ''}`, initialX+42, contentYPos);;
+pdf.line(61, contentYPos+1, 190, contentYPos+1);
+
+
+
+contentYPos += rowHeight;
+pdf.setFontSize(13);  
+pdf.setFont('arial', 'normal');
+pdf.text(`Name of School:`, initialX, contentYPos);
+
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.school_name || ''}`, initialX+35, contentYPos);;
+pdf.line(54, contentYPos+1, 190, contentYPos+1);
+
+
+contentYPos += rowHeight;
+pdf.setFontSize(13);  
+pdf.setFont('arialbd', 'bold');
+pdf.text(`Class Adviser:`, initialX, contentYPos);
+
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.class_adviser || ''}`, initialX+34, contentYPos);;
+pdf.line(52, contentYPos+1, 190, contentYPos+1);
+
+
+
+contentYPos += rowHeight;
+contentYPos += 8;
+  pdf.setFontSize(13);
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('Vices/Start:', initialX, contentYPos);
+
+
+
+  contentYPos += rowHeight;
+  pdf.setFontSize(12);
+  pdf.setFont('arial', 'normal');
+  pdf.text('Gambling', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.vices.gambling, initialX, contentYPos - 4); // Adjust Y position to align checkbox
+  contentYPos += rowHeight;
+
+  pdf.setFont('arial', 'normal');
+  pdf.text('Drugs', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.vices.drugs, initialX, contentYPos - 4); // Adjust Y position to align checkbox
+  contentYPos += rowHeight;
+
+  pdf.setFont('arial', 'normal');
+  pdf.text('Cigarette', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.vices.cigarette, initialX, contentYPos - 4);
+  contentYPos += rowHeight;
+
+  pdf.setFont('arial', 'normal');
+  pdf.text('Liquor', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.vices.liquor, initialX, contentYPos - 4);
+  contentYPos += rowHeight;
+
+  pdf.setFont('arial', 'normal');
+  pdf.text('Computer Games', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.vices.computer_games, initialX, contentYPos - 4);
+
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(13);
+  contentYPos +=7;
+  pdf.text('Schools Activities Achievement:', initialX, contentYPos);
+
+  contentYPos +=7;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(12);
+  const school_activities_achievementlLog = `${this.sheet.school_activities_achievement || ''}`;
+  const school_activities_achievementlLogLines = pdf.splitTextToSize(school_activities_achievementlLog, maxWidth);
+
+  school_activities_achievementlLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFontSize(13);
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('Family:', initialX, contentYPos);
+
+
+  pdf.setLineWidth(0);
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+pdf.setFontSize(12);
+pdf.setFont('arialbd', 'bold');
+pdf.text(`Mother's Occupation:`, initialX, contentYPos);
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.occupation_of_mother || ''}`, initialX+45, contentYPos);;
+pdf.line(64, contentYPos+1, 112, contentYPos+1);
+
+
+pdf.setFontSize(12);
+pdf.setFont('arialbd', 'bold');
+pdf.text(`Father's Occupation:`, initialX + 95, contentYPos);
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.occupation_of_mother || ''}`, initialX+139, contentYPos);;
+pdf.line(158, contentYPos+1, 190, contentYPos+1);
+
+
+
+contentYPos += rowHeight;
+addNewPageIfNeeded();
+pdf.setFontSize(12);
+pdf.setFont('arial', 'normal');
+pdf.text(`Siblings:`, initialX, contentYPos);
+
+contentYPos += 7;
+addNewPageIfNeeded();
+pdf.setLineWidth(0);
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.siblings[0] || ''}`, initialX, contentYPos);;
+pdf.line(20, contentYPos+1, 190, contentYPos+1);
+
+
+contentYPos += 7;
+pdf.setLineWidth(0);
+addNewPageIfNeeded();
+pdf.text(`${this.sheet.siblings[1] || ''}`, initialX, contentYPos);;
+pdf.line(20, contentYPos+1, 190, contentYPos+1);
+
+contentYPos += 7;
+pdf.setLineWidth(0);
+addNewPageIfNeeded();
+pdf.text(`${this.sheet.siblings[2] || ''}`, initialX, contentYPos);;
+pdf.line(20, contentYPos+1, 190, contentYPos+1);
+
+
+contentYPos += rowHeight;
+contentYPos +=5;
+addNewPageIfNeeded();
+pdf.setLineWidth(0);
+pdf.setFontSize(12);
+pdf.setFont('arial', 'normal');
+pdf.text(`Responsible for Households Chores:`, initialX, contentYPos);
+
+contentYPos += 7;
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.responsible_for_households_chores || ''}`, initialX, contentYPos);;
+pdf.line(20, contentYPos+1, 190, contentYPos+1);
+
+
+
+contentYPos += rowHeight;
+  addNewPageIfNeeded();
+contentYPos += 5;
+  pdf.setFontSize(13);
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('Community:', initialX, contentYPos);
+
+  contentYPos += rowHeight;
+addNewPageIfNeeded();
+pdf.setFontSize(12);
+pdf.setFont('arial', 'normal');
+pdf.text(`No. of Days Detention/Jail/CSWD/MSWDO:`, initialX, contentYPos);
+
+contentYPos += 7;
+pdf.setFontSize(11);
+pdf.setLineWidth(0);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.detention_days || ''}`, initialX, contentYPos);;
+pdf.line(20, contentYPos+1, 190, contentYPos+1);
+
+
+contentYPos += rowHeight;
+  addNewPageIfNeeded();
+contentYPos += 5;
+  pdf.setFontSize(12);
+  pdf.setFont('arial', 'normal');
+  pdf.text('Water Source:', initialX, contentYPos);
+contentYPos += rowHeight;
+addNewPageIfNeeded();
+  pdf.setFontSize(12);
+  pdf.text('Water Source', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.community.water_source, initialX, contentYPos - 4); // Adjust Y position to align checkbox
+  contentYPos += rowHeight;
+
+
+  pdf.text('Light', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.community.light, initialX, contentYPos - 4); // Adjust Y position to align checkbox
+  contentYPos += rowHeight;
+
+
+  pdf.text('Barangay Facility', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.community.barangay_facility, initialX, contentYPos - 4);
+  contentYPos += rowHeight;
+
+
+  pdf.text('Health Center', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.community.health_center, initialX, contentYPos - 4);
+  contentYPos += rowHeight;
+
+
+  pdf.text('Internet', initialX+8, contentYPos);
+  drawCheckbox(this.sheet.community.internet, initialX, contentYPos - 4);
+
+
+  contentYPos += rowHeight;
+addNewPageIfNeeded();
+pdf.setFontSize(12);
+pdf.setFont('arialbd', 'bold');
+pdf.text(`House made of:`, initialX, contentYPos);
+
+contentYPos += 7;
+pdf.setFontSize(11);
+pdf.setFont('arial', 'normal');
+pdf.text(`${this.sheet.house_made_of || ''}`, initialX, contentYPos);;
+pdf.line(20, contentYPos+1, 190, contentYPos+1);
+
+
+
+addFooter();
+
+  // Pagination at the bottom
+  const totalPages = pdf.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'bold');
+    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 280, { align: 'center' }); // Update the footer with the correct total pages
+  }
+  // Save the PDF with a dynamic file name
+  pdf.save(`IntakeSheet_${this.sheet.name || 'Client'}.pdf`);
+},
+
   }
 };
 </script>

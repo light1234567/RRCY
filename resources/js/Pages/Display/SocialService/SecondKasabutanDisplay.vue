@@ -163,6 +163,9 @@
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
 import { jsPDF } from 'jspdf'; // Import jsPDF
+import '../../../fonts/arial-normal.js'; 
+import '../../../fonts/times-normal.js'; 
+import '../../../fonts/arialbd-bold.js'; 
 
 export default {
   components: {

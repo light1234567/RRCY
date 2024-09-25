@@ -1,31 +1,43 @@
 <template>
-  <div v-if="editMode" class="flex absolute p-4 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
+<!-- Tabs for Actions -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <!-- FontAwesome for Back -->
+      <i class="fas fa-arrow-left w-4 h-4"></i>
       <span>Back</span>
     </button>
-  </div>
+</div>
 
-  <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-    <Pagination :totalPages="totalPages" :currentPage="currentPage" @update:currentPage="updatePage" />
+<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+    <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
     <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
-      </svg>
+      <!-- FontAwesome for Edit -->
+      <i class="fas fa-edit w-4 h-4"></i>
       <span>Edit</span>
     </button>
 
-    <button v-if="editMode" @click="confirmSave" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
+    <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Save -->
+      <i class="fas fa-check w-4 h-4"></i>
       <span>Save</span>
     </button>
-  </div>
 
-  <div class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+    <!-- Download PDF Button 
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+    
+      <i class="fas fa-file-pdf w-4 h-4"></i>
+      <span>Export PDF</span>
+    </button> -->
+</div>
+  
+<div class="graph-background pt-0.5  -mr-9 -mb-16">
+
+  <div class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
     <div class="relative flex justify-between items-center mb-2">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
       <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
@@ -195,13 +207,18 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
+import Pagination from '@/Components/Pagination.vue';
 
 export default {
   name: 'InterventionPlan',
+  components: {
+    Pagination,
+  },
   data() {
     return {
       form: {
@@ -473,4 +490,9 @@ button:hover {
   0%, 100% { border-color: #a1b6cf; }
   50% { border-color: white; }
 }
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  } 
 </style>

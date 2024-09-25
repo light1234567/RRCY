@@ -1,36 +1,43 @@
 <template>
-  <!-- Tabs for Actions -->
-  <div v-if="editMode" class="flex absolute p-4 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
+<!-- Tabs for Actions -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <!-- FontAwesome for Back -->
+      <i class="fas fa-arrow-left w-4 h-4"></i>
       <span>Back</span>
     </button>
-  </div>
+</div>
 
-  <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-4">
-    <Pagination
-      :totalPages="totalPages"
-      :currentPage="currentPage"
-      @update:currentPage="updatePage"
+<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+    <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
     />
     <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
-      </svg>
+      <!-- FontAwesome for Edit -->
+      <i class="fas fa-edit w-4 h-4"></i>
       <span>Edit</span>
     </button>
 
-    <button v-if="editMode" @click="openSaveModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
+    <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Save -->
+      <i class="fas fa-check w-4 h-4"></i>
       <span>Save</span>
     </button>
-  </div>
 
-  <div class="max-w-3xl mx-auto mt-12 p-16 bg-white border border-gray-300 rounded-lg shadow-lg">
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for PDF Download -->
+      <i class="fas fa-file-pdf w-4 h-4"></i>
+      <span>Export PDF</span>
+    </button>
+</div>
+
+<div class="graph-background pt-0.5  -mr-9 -mb-16">
+
+  <div class="max-w-3xl mx-auto mt-8 p-12 bg-white border border-gray-400 rounded-lg shadow-lg">
     <!-- Header Section -->
     <div class="text-center mb-8">
       <div class="flex justify-between items-center mb-4">
@@ -265,10 +272,12 @@
     </div>
   </div>
   </div>
+  </div>
 </template>
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
+import jsPDF from 'jspdf';
 
 export default {
   name: 'IncidentReportForm',
@@ -557,7 +566,298 @@ fetchDrn(clientId) {
     updatePage(newPage) {
       this.currentPage = newPage;
       // Add logic to fetch data or change content based on the page
+    },
+    exportToPdf() {
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+  const pageHeight = 297;
+  const marginBottom = 30;
+  const rowHeight = 8;
+  const lineHeight = 7;
+  const footerHeight = 5; // Adjust to fit the height of your footer
+  const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
+  const maxWidth = 170;
+  let contentYPos = 65; 
+  let initialX = 20;
+  let currentPage = 1;
+  
+  const addHeader = () => {
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'italic');
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+  };
+  
+  // Helper function to add a new page if content exceeds the page height
+  const addNewPageIfNeeded = () => {
+    if (contentYPos >= maxContentHeight) {
+      addFooter();
+      pdf.addPage();
+      addHeader();
+      currentPage++;
+      contentYPos = 40;
+      pdf.setFont('arial', 'normal');
+      pdf.setFontSize(11);
     }
+  };
+
+  const addFooter = () => {
+    if (currentPage === 1) {
+      pdf.setFontSize(9);
+      pdf.setFont('TimesNewRoman', 'bold');
+      pdf.setLineWidth(0.5);
+      pdf.line(17, 282, 173, 282);
+      pdf.setFont('times', 'normal');
+      const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
+      pdf.text(footerText, 95, 287, { align: 'center' });
+      pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, { align: 'center' });
+      const footerImgData = '/images/footerimg.png';
+      pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12);
+    } else {
+      pdf.setFontSize(8.5);
+      pdf.setFont('TimesNewRoman', 'bold');
+      pdf.setLineWidth(0.5);
+      pdf.line(17, 282, 193, 282);
+      pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, { align: 'center' });
+    }
+  };
+
+  addHeader();
+
+  // DSWD logo
+  const imgData = '/images/headerlogo2.png';
+  pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
+
+
+  contentYPos += -25;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  pdf.text(`DRN :  ______________________ ${this.form.name || ''}`, initialX+110, contentYPos);
+
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(14);
+  pdf.text('INCIDENT REPORT', 105, 48, { align: 'center' });
+  contentYPos += 15;
+
+  // Content starts below title
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(12);
+  pdf.text('What was the incident: (Unsa nga Offense? Unsa rason ngano Nahitabo?)', initialX, contentYPos);
+
+  contentYPos +=7;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(12);
+  const incidentLog = `${this.form.incident || ''}`;
+  const incidentLogLines = pdf.splitTextToSize(incidentLog, maxWidth);
+
+  incidentLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(12);
+  pdf.text('WHEN IT HAPPENED', initialX+65, contentYPos);
+  contentYPos += rowHeight;
+  pdf.setFontSize(11);
+  pdf.setFont('arialbd', 'bold');
+  pdf.text(`Date of Incident:`, initialX, contentYPos);
+const date_of_incidentValue = `${this.form.date_of_incident || ''}`;
+const date_of_incidentWidth = pdf.getTextWidth(date_of_incidentValue);
+pdf.setFont('arial', 'normal');
+pdf.text(date_of_incidentValue, initialX + 34, contentYPos);  
+pdf.line(initialX + 34, contentYPos + 1, initialX + 34 + date_of_incidentWidth, contentYPos + 1); 
+
+// Function to convert 24-hour time to 12-hour time with AM/PM
+const convertTo12Hour = (time) => {
+  let [hours, minutes] = time.split(':');
+  hours = parseInt(hours);
+
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12; // Convert 24-hour to 12-hour format
+  return `${hours}:${minutes} ${ampm}`;
+};
+
+// Adjust Y position for time display
+contentYPos += 8;
+pdf.setFontSize(11);
+pdf.setFont('arialbd', 'bold');
+pdf.text(`Time:`, initialX, contentYPos);
+
+// Get the time_of_incident value (if it's available) and convert it to 12-hour format
+let time_of_incidentValue = `${this.form.time_of_incident || ''}`;
+if (time_of_incidentValue) {
+  time_of_incidentValue = convertTo12Hour(time_of_incidentValue); // Convert to 12-hour format with AM/PM
+}
+
+// Get the width of the time_of_incident value
+const time_of_incidentWidth = pdf.getTextWidth(time_of_incidentValue);
+
+pdf.setFont('arial', 'normal');
+pdf.text(time_of_incidentValue, initialX + 13, contentYPos);  
+
+// Add an underline for the time value
+pdf.line(initialX + 13, contentYPos + 1, initialX + 13 + time_of_incidentWidth, contentYPos + 1);
+
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(12);
+  contentYPos +=7;
+  pdf.text('Who are involved? (State name of residents)', initialX, contentYPos);
+
+  contentYPos +=7;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(12);
+  const involvedlLog = `${this.form.involved || ''}`;
+  const involvedlLogLines = pdf.splitTextToSize(involvedlLog, maxWidth);
+
+  involvedlLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(12);
+  pdf.text('Where it happened? (Exact place of the incident)', initialX, contentYPos);
+
+  contentYPos +=7;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(12);
+  const locationlLog = `${this.form.location || ''}`;
+  const locationlLogLines = pdf.splitTextToSize(locationlLog, maxWidth);
+
+  locationlLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(12);
+  pdf.text('Action Taken', initialX, contentYPos);
+
+  contentYPos +=7;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(12);
+  const action_takenlLog = `${this.form.action_taken || ''}`;
+  const action_takenlLogLines = pdf.splitTextToSize(action_takenlLog, maxWidth);
+
+  action_takenlLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(12);
+  pdf.text('Agreements Reached/Advice Given to Residents Involved', initialX, contentYPos);
+
+  contentYPos +=7;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(12);
+  const agreementslLog = `${this.form.agreements || ''}`;
+  const agreementslLogLines = pdf.splitTextToSize(agreementslLog, maxWidth);
+
+  agreementslLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(12);
+  pdf.text('Corrective Measure', initialX, contentYPos);
+
+  contentYPos +=7;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(12);
+  const corrective_measurelLog = `${this.form.corrective_measure || ''}`;
+  const corrective_measurelLogLines = pdf.splitTextToSize(corrective_measurelLog, maxWidth);
+
+  corrective_measurelLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+
+
+
+  contentYPos += rowHeight; 
+  addNewPageIfNeeded();
+  pdf.text('Prepared by:', initialX, contentYPos);
+  
+  contentYPos += rowHeight; 
+
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const prepared_byValue = `${this.form.prepared_by || ''}`;
+  const prepared_byWidth = pdf.getTextWidth(prepared_byValue);
+
+pdf.text(prepared_byValue, initialX, contentYPos);  
+pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1); 
+
+
+
+
+  // Noted by Section
+  contentYPos += rowHeight; 
+  contentYPos += 4;
+  pdf.setFontSize(11);
+  pdf.text('Reviewed by:', initialX, contentYPos);
+  pdf.text('Approved by:', initialX+100, contentYPos);
+  
+  contentYPos += rowHeight; 
+
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('VAN M. DE LEON', initialX, contentYPos);
+  contentYPos += 4; 
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(10);
+  pdf.line(20, contentYPos+-3, 55, contentYPos+-3);
+  pdf.text('HP III/SHP', initialX, contentYPos+2);
+
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('ANGELIC B. PAÑA', initialX+100, contentYPos+-4);
+  contentYPos += 5; 
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(10);
+  pdf.line(120, contentYPos+-8, 157, contentYPos+-8);
+  pdf.text('SWO IV / Center Head', initialX+100, contentYPos+-4);
+
+  // Add the footer for the last page
+  addFooter();
+
+  const totalPages = pdf.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'bold');
+    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 280, { align: 'center' }); // Update the footer with the correct total pages
+  }
+
+  // Save the PDF with dynamic file name
+  pdf.save(`Incident_Report_${this.form.name || ''}.pdf`);
+},
   }
 };
 </script>
@@ -570,4 +870,9 @@ fetchDrn(clientId) {
   margin: 0;
   vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
 }
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  } 
 </style>

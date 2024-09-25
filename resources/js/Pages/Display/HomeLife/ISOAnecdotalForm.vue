@@ -1,38 +1,45 @@
 <template>
 
-  <!-- Tabs for Actions -->
-   <div v-if="editMode" class="flex absolute p-6 -mt-2 space-x-4">
-     <button @click="cancelEdit" class="flex space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
-       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-       </svg>
-       <span class="">Back</span>
-     </button>
-     </div>
+<!-- Tabs for Actions -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <!-- FontAwesome for Back -->
+      <i class="fas fa-arrow-left w-4 h-4"></i>
+      <span>Back</span>
+    </button>
+</div>
 
-   <div class="flex justify-end bg-transparent border border-gray-300 p-4 rounded-md space-x-4 mt-2">
-       <!-- Pagination Component -->
-   <Pagination 
-     :totalPages="totalPages" 
-     :currentPage="currentPage" 
-     @update:currentPage="currentPage = $event" 
-   />
-     <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.3 2.7a1 1 0 011.4 0l1.3 1.3a1 1 0 010 1.4l-9.4 9.4a1 1 0 01-.6.3l-2.8.6a1 1 0 01-1.2-1.2l.6-2.8a1 1 0 01.3-.6l9.4-9.4z" />
-       </svg>
-       <span>Edit</span>
-     </button>
+<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+    <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+    <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Edit -->
+      <i class="fas fa-edit w-4 h-4"></i>
+      <span>Edit</span>
+    </button>
 
-     <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-       </svg>
-       <span>Save</span>
-     </button>
-   </div>
+    <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Save -->
+      <i class="fas fa-check w-4 h-4"></i>
+      <span>Save</span>
+    </button>
 
- <div class="max-w-3xl mx-auto mt-12 p-16 bg-white border border-gray-300 rounded-lg shadow-lg">
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for PDF Download -->
+      <i class="fas fa-file-pdf w-4 h-4"></i>
+      <span>Export PDF</span>
+    </button>
+</div>
+
+
+<div class="graph-background pt-0.5  -mr-9 -mb-16">
+
+ <div class="max-w-3xl mx-auto mt-8 p-16 bg-white border border-gray-400 rounded-lg shadow-lg">
    <!-- Header Section -->
    <div class="text-center mb-8">
      <div class="flex justify-between items-center mb-4">
@@ -296,12 +303,14 @@
      </div>
    </div>
  </div>
+</div>
 </template>
 
 
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
+import jsPDF from 'jspdf';
 
 export default {
  name: 'AnecdotalReportForm',
@@ -547,7 +556,301 @@ saveDrn() {
    updatePage(newPage) {
      this.currentPage = newPage;
      // Add logic to fetch data or change content based on the page
-   }
+   },
+   exportToPdf() {
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+  const pageHeight = 297; // Total page height in mm
+  const marginBottom = 30; // Bottom margin in mm
+  const rowHeight = 8; // Height of each row
+  const lineHeight = 7; // Space between lines
+  const footerHeight = 5; // Adjust to fit the height of your footer
+  const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
+  const maxWidth = 170; // Maximum width for text
+  let contentYPos = 65; // Start Y position for content
+  let initialX = 20; // X position for content
+  let currentPage = 1; // Start at page 1
+
+  
+  const addHeader = () => {
+    // Header text
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'italic');
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+  };
+  
+  // Helper function to add a new page if content exceeds the page height
+  const addNewPageIfNeeded = () => {
+    if (contentYPos >= maxContentHeight) {
+      addFooter(); // Add the footer for the current page
+      pdf.addPage(); // Add new page
+      addHeader(); // Add the header on the new page
+      currentPage++; // Increment page number
+      contentYPos = 40; // Reset Y position for the new page
+      pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
+      pdf.setFontSize(11); // Set font size back to what it was
+    }
+  };
+
+  const addFooter = () => {
+    if (currentPage === 1) {
+      // Footer for Page 1
+      pdf.setFontSize(9);
+      pdf.setFont('TimesNewRoman', 'bold');
+      pdf.setLineWidth(0.5);
+      pdf.line(17, 282, 173, 282); // Footer line
+
+      pdf.setFont('times', 'normal');
+      const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
+      pdf.text(footerText, 95, 287, { align: 'center' });
+      pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, { align: 'center' });
+
+      const footerImgData = '/images/footerimg.png';
+      pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Footer image
+    } else {
+      // Footer for Page 2 and beyond
+      pdf.setFontSize(8.5);
+      pdf.setFont('TimesNewRoman', 'bold');
+
+      pdf.setLineWidth(0.5);
+      pdf.line(17, 282, 193, 282); // Footer line extending further
+
+      pdf.setFont('times', 'bold');
+      pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, { align: 'center' });
+    }
+  };
+
+  addHeader();
+
+  // DSWD logo
+  const imgData = '/images/headerlogo2.png';
+  pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
+
+
+  contentYPos += -25;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  pdf.text(`DRN :  ______________________`, initialX+110, contentYPos);
+
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(14);
+  pdf.text('Anecdotal Report', 105, 48, { align: 'center' });
+  contentYPos += 15;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  pdf.text(`FOR THE MONTH OF _________________ `, initialX+40, contentYPos);
+
+  // Content starts below title
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+
+  contentYPos += 15;
+  pdf.text(`Pangalan:`, initialX, contentYPos);
+const nameValue = `${this.form.name || ''}`;
+const nameWidth = pdf.getTextWidth(nameValue);
+pdf.text(nameValue, initialX + 18, contentYPos); 
+pdf.line(initialX + 18, contentYPos + 1, initialX + 18 + nameWidth, contentYPos + 1); 
+
+
+pdf.text(`Petsa:`, initialX + 100, contentYPos);
+const dateValue = `${this.form.date || ''}`;
+const dateWidth = pdf.getTextWidth(dateValue);
+pdf.text(dateValue, initialX + 112, contentYPos);
+pdf.line(initialX + 112, contentYPos + 1, initialX + 112 + dateWidth, contentYPos + 1);
+
+
+
+
+
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('I. PHYSICAL :', initialX, contentYPos+5);
+  pdf.setFont('arial', 'normal');
+  pdf.text('Management of personal hygiene and improvement of self-care habits.', initialX+27, contentYPos+5);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const physicalLog = `${this.form.physical || ''}`;
+  const physicalLogLines = pdf.splitTextToSize(physicalLog, maxWidth);
+
+  physicalLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+4);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('II. EMOTIONAL :', initialX, contentYPos+5);
+  pdf.setFont('arial', 'normal');
+  pdf.text('The degree to which the resident displayed his coping capacity towards ill/guilty', initialX+31, contentYPos+5);
+  pdf.text('feelings and feelings of helplessness.', initialX, contentYPos+10);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const emotionallLog = `${this.form.emotional || ''}`;
+  const emotionallLogLines = pdf.splitTextToSize(emotionallLog, maxWidth);
+
+  emotionallLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+8);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('III. SOCIAL/BEHAVIORAL :', initialX, contentYPos+5);
+  pdf.setFont('arial', 'normal');
+  pdf.text('The level to which the resident demonstrated honesty, self-control,', initialX+50, contentYPos+5);
+  pdf.text('and a sense of responsibility.', initialX, contentYPos+10);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const behaviorallLog = `${this.form.behavioral || ''}`;
+  const behaviorallLogLines = pdf.splitTextToSize(behaviorallLog, maxWidth);
+
+  behaviorallLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+8);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('IV. SPIRITUAL :', initialX, contentYPos+5);
+  pdf.setFont('arial', 'normal');
+  pdf.text('Attitude displayed towards the acceptance of the present situation.', initialX+30, contentYPos+5);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const spirituallLog = `${this.form.spiritual || ''}`;
+  const spirituallLogLines = pdf.splitTextToSize(spirituallLog, maxWidth);
+
+  spirituallLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+4);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('V. RECOMMENDATION:', initialX, contentYPos+5);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const recommendationlLog = `${this.form.recommendation || ''}`;
+  const recommendationlLogLines = pdf.splitTextToSize(recommendationlLog, maxWidth);
+
+  recommendationlLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+4);
+    contentYPos += lineHeight;
+  });
+
+
+  contentYPos +=rowHeight;
+  addNewPageIfNeeded();
+
+  pdf.text(`Color:`, initialX, contentYPos);
+
+// Get the session value and its width
+const colorValue = `${this.form.color || ''}`;
+const colorWidth = pdf.getTextWidth(colorValue);
+
+// Display the session value and underline only the value
+pdf.text(colorValue, initialX + 12, contentYPos);  // Adjust the X position to align the value after the label
+pdf.setLineWidth(0);
+pdf.line(initialX + 12, contentYPos + 1, initialX + 12 + colorWidth, contentYPos + 1); // Underline for session value
+
+contentYPos +=10;
+  // Prepared by Section
+  contentYPos += rowHeight; 
+  addNewPageIfNeeded();
+  pdf.text('Prepared by:', initialX, contentYPos);
+  
+  contentYPos += rowHeight; 
+
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const prepared_byValue = `${this.form.prepared_by || ''}`;
+  const prepared_byWidth = pdf.getTextWidth(prepared_byValue);
+  pdf.setLineWidth(0);
+  pdf.text(prepared_byValue, initialX, contentYPos);  
+  pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1); 
+
+
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  pdf.text('Name and Signature of Houseparent', initialX, contentYPos+5);
+
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const signature_residentsValue = `${this.form.signature_residents || ''}`;
+  const signature_residentsWidth = pdf.getTextWidth(signature_residentsValue);
+  pdf.setLineWidth(0);
+  pdf.text(signature_residentsValue, initialX+100, contentYPos);  
+  pdf.line(initialX+100, contentYPos + 1, initialX+100 + signature_residentsWidth, contentYPos + 1); 
+
+
+
+
+  contentYPos += 5; 
+
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  pdf.text('Name & Signature of Residents', initialX+100, contentYPos);
+
+  // Noted by Section
+  contentYPos += rowHeight; 
+  contentYPos += 4;
+  pdf.setFontSize(11);
+  pdf.text('Noted by:', initialX, contentYPos);
+  pdf.text('Approved by:', initialX+100, contentYPos);
+  
+  contentYPos += rowHeight; 
+
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('VAN M. DE LEON', initialX, contentYPos);
+  contentYPos += 4; 
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  pdf.line(20, contentYPos+-3, 55, contentYPos+-3);
+  pdf.text('HP III/SHP', initialX, contentYPos+2);
+
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('ANGELIC B. PAÑA', initialX+100, contentYPos+-4);
+  contentYPos += 5; 
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  pdf.line(120, contentYPos+-8, 157, contentYPos+-8);
+  pdf.text('SWO IV / Center Head', initialX+100, contentYPos+-4);
+
+  // Add the footer for the last page
+  addFooter();
+
+  const totalPages = pdf.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'bold');
+    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 280, { align: 'center' }); // Update the footer with the correct total pages
+  }
+
+  // Save the PDF with dynamic file name
+  pdf.save(`Anecdotal_Report_${this.form.name || ''}.pdf`);
+},
  }
 };
 </script>
@@ -560,4 +863,9 @@ saveDrn() {
  margin: 0;
  vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
 }
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  } 
 </style>

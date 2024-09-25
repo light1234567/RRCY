@@ -22,106 +22,205 @@
       </div>
     </template>
 
+
+    
     <!-- Main Content Wrapper -->
-    <div class="-mb-12 -mt-4 flex flex-wrap lg:flex-nowrap p-8 gap-4">
-      <!-- Doughnut Chart (Case Status Overview) -->
-      <div class="ml-4 bg-gray-50 border-4 border-gray-50 rounded-lg shadow-md p-4 w-full lg:w-2/5 h-auto">
-        <h2 class="text-sm font-semibold">Case Status Overview</h2>
-        <div class="relative w-full h-64">
-          <Doughnut 
-            :data="caseStatusData"
-            :options="{
-              plugins: { 
-                legend: { 
-                  position: 'right', 
-                  labels: {
-                    font: { size: 10 },
-                    boxWidth: 10
-                  }
-                }
+    <div class="-mb-14 -mt-4 flex flex-wrap lg:flex-nowrap p-8 -gap-1">
+      <div class="flex flex-col space-y-4 w-1/2">
+        <!-- Horizontal Layout for Total Clients and Average Age -->
+        <div class="flex justify-between space-x-4 w-full lg:w-9/10">
+          <!-- Total Clients -->
+          <div class="ml-4 bg-white p-4 rounded-lg shadow-md flex justify-between items-center border-l-4 border-blue-600 w-full lg:w-1/2">
+            <div>
+              <h3 class="text-xs font-medium text-blue-600 uppercase">No. of CICL</h3>
+              <span class="text-2xl font-bold text-gray-800">{{ totalClients }}</span>
+            </div>
+            <i class="fa fa-users text-4xl text-blue-600"></i>
+          </div>
+
+          <!-- Average Age -->
+          <div class="bg-white -mr-2 p-4 rounded-lg shadow-md flex justify-between items-center border-l-4 border-blue-900 w-full lg:w-1/2">
+            <div>
+              <h3 class="text-xs font-medium text-blue-900 uppercase">Average Age of CICL</h3>
+              <span class="text-2xl font-bold text-gray-800">{{ averageAge }}</span>
+            </div>
+            <i class="fa fa-user-clock text-4xl text-blue-900"></i>
+          </div>
+        </div>
+        
+     <!-- Line Chart for Admissions by Month (Full Width) -->
+          <!-- Line Chart for Admissions by Month (Full Width) -->
+        <div class="flex justify-center">
+          <div class="bg-white ml-4 p-4 rounded-lg shadow-md w-full">
+            <h2 class="-mt-2 -ml-4 mb-4 pb-2 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm flex items-center justify-between">
+              Admission by Month
+              <button @click="openModal" class="focus:outline-none">
+                <i class="fas fa-expand"></i> <!-- Grid icon on the right -->
+              </button>
+            </h2>
+
+            <div class="flex justify-center">
+              <div class="-mt-12 relative h-80 w-full max-w-full">
+                <Line 
+                  :data="filteredDateAdmittedData"
+                  :options="{ plugins: { title: {display: true, font: { size: 15 } }}}"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- Doughnut Chart (Case Status Overview) -->
+<div class="-mr-2 ml-4 bg-gray-50 border-4 border-gray-50 shadow-md p-4 w-full lg:w-1/2 h-auto">
+  <h2 class="-mt-5 -ml-5 mb-12 pb-2 -mr-5 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm">
+    Case Status Overview
+  </h2>
+  
+  <!-- Adjust the height and width of the container -->
+  <div class="relative -mt-20 w-full h-[300px] lg:h-[390px]">  
+    <Doughnut 
+      :data="caseStatusData"
+      :options="{
+        layout: {
+          padding: {
+            top: 100,   // Add padding to top, bottom, and sides
+            bottom: 30,
+            left: 60,
+            right: 50,
+          },
+          margin:{
+           
+          }
+        },
+        plugins: {
+          legend: { 
+            position: 'right', 
+            labels: { 
+              font: { size: 10 }, 
+              boxWidth: 20, 
+              padding: 17,
+            },
+            // Add margin right to the entire legend
+            title: {
+              padding: {
+                top: 0,
+                bottom: 0,
+                left: 100,
               },
-              responsive: true,
-              maintainAspectRatio: false,
-            }"
-          />
-        </div>
-      </div>
+              margin:{
+                left: 20,
+              }
+            }
+          },
+          datalabels: {
+            anchor: 'end',  // Position the label outside
+            align: 'end',   // Align the label towards the outside of the chart
+            offset: 5,     // Push the labels further outside the chart
+            formatter: (value, context) => {
+              let total = context.chart._metasets[0].total;
+              let percentage = (value / total * 100).toFixed(1);
 
-      <!-- Total CICL and Average Age -->
-      <div class="flex flex-col space-y-4 w-full lg:w-1/5">
-        <!-- Total CICL -->
-        <div class="bg-white p-4 rounded-lg shadow-md flex-grow">
-          <h3 class="text-sm font-medium text-gray-500">Total CICL</h3>
-          <div class="flex items-center">
-            <span class="text-3xl font-bold">{{ totalCICL }}</span>
-          </div>
-          <!-- Progress Bar -->
-          <div class="mt-4 h-2 rounded-full bg-gray-200">
-            <div class="h-2 bg-blue-600 rounded-full w-3/4"></div>
-          </div>
-        </div>
+              // Show percentages greater than 0
+              return percentage > 0 ? percentage + '%' : '';
+            },
+            color: '#000',  // Black label color for better visibility outside the chart
+            font: {
+              weight: 'bold',
+              size: 12,
+            },
+       
+            listeners: {
+              beforeDraw: function(context) {
+                // Draw line from chart segment to label
+                const ctx = context.chart.ctx;
+                const meta = context.chart.getDatasetMeta(0);
+                meta.data.forEach((element, index) => {
+                  const dataset = context.chart.data.datasets[0];
+                  const value = dataset.data[index];
 
-        <!-- Average Age -->
-        <div class="bg-white p-4 rounded-lg shadow-md flex-grow">
-          <h3 class="text-sm font-medium text-gray-500">Average Age of Clients</h3>
-          <div class="flex items-center">
-            <i class="fa fa-user-clock text-2xl text-gray-600 mr-2"></i>
-            <span class="text-3xl font-bold">{{ averageAge }}</span>
-          </div>
-          <!-- Progress Bar -->
-          <div class="mt-4 h-2 rounded-full bg-gray-200">
-            <div class="h-2 bg-green-600 rounded-full w-4/5"></div>
-          </div>
-        </div>
-      </div>
+                  if (value > 0) { // Only for segments with data
+                    ctx.beginPath();
+                    ctx.moveTo(element.tooltipPosition().x, element.tooltipPosition().y); // Start from chart slice
+                    ctx.lineTo(element.tooltipPosition().x + 30, element.tooltipPosition().y); // Draw line towards label
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.closePath();
+                  }
+                });
+              }
+            }
+          }
+        },
+        responsive: true,
+        maintainAspectRatio: false, // Allow chart to fill the container
+        onClick: (e, activeEls) => {
+          if (activeEls.length > 0) {
+            const index = activeEls[0].index;
+            const status = caseStatusData.labels[index];
+            openCaseStatusModal(status); // Trigger modal
+          }
+        }
+      }"
+    />
+  </div>
+</div>
 
-      <!-- Line Chart for Admissions by Month -->
-      <div class="bg-white p-4 rounded-lg shadow-md w-full lg:w-2/5">
-        <h2 class="text-sm font-semibold">Admissions by Month</h2>
-        <div class="relative h-64 w-full">
-          <Line 
-            :data="filteredDateAdmittedData"
-            :options="{ plugins: { title: {display: true, font: { size: 15 } }}}"
-          />
-        </div>
-      </div>
     </div>
+
+  
 
     <!-- Main Body Content (Offense Committed, Age Distribution, Child Status) -->
     <div class="flex flex-wrap lg:flex-nowrap gap-4 p-8">
       
-<!-- Age Distribution Bar Chart -->
+
+  <!-- Child Status Distribution Pie Chart -->
 <div class="ml-4 bg-white p-4 rounded-lg shadow-md w-full lg:w-1/3">
-  <h2 class="text-sm font-semibold">Age Distribution</h2>
-  <div class="-mb-12 relative w-full" style="height: 310px;"> <!-- Custom height here -->
-    <Bar 
-      :data="filteredAgeData"
+  <h2 class="-mt-2 -ml-4 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm">
+          Child Status Distribution
+        </h2>   <div class="mt-2 flex justify-center relative h-[330px] mb-12 ">
+    <Pie 
+      :data="filteredChildStatusData"
       :options="{
-        maintainAspectRatio: false, // Allow chart to expand
         plugins: {
-          title: { display: true, font: { size: 15 } },
-          tooltip: { enabled: true }
+          title: { display: true, font: { size: 0 } },
+          legend: {
+            position: 'bottom',
+            labels: { font: { size: 12 }, margin: 10, boxWidth: 10, padding: 10 }
+          }
+        },
+        responsive: true,
+        onClick: (e, activeEls) => {
+          if (activeEls.length > 0) {
+            const index = activeEls[0].index;
+            const status = filteredChildStatusData.labels[index];
+            openChildStatusModal(status); // Trigger modal
+          }
         }
       }"
-      height="310"
     />
   </div>
 </div>
 <!-- Offense Committed Table -->
 <div class="bg-white p-6 rounded-lg shadow-md w-full lg:w-2/5">
-  <h2 class="text-sm mb-4 font-bold text-gray-800 pb-2">Offense Committed</h2>
+  <h2 class="-mt-4 -ml-6 mb-4 -mr-6 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm">
+    Offense Committed
+  </h2>
   <div class="overflow-hidden rounded-lg shadow">
     <!-- Set fixed height and enable scrolling -->
-    <div class="max-h-64 overflow-y-auto">
-      <table class="min-w-full leading-normal">
-        <thead class="bg-gray-100 text-gray-600 uppercase text-xs font-semibold">
+    <div class="max-h-80 overflow-y-auto hide-scrollbar"> <!-- Adjusted height to max-h-80 -->
+      <table class="min-w-full leading-normal table-auto relative"> <!-- Add 'relative' for positioning -->
+        <thead class="bg-white shadow-md text-black uppercase text-xs font-semibold sticky top-0 z-10"> <!-- Add sticky and z-index -->
           <tr>
-            <th class="px-5 py-3 border-b-2 border-gray-200 text-left">Offense</th>
-            <th class="px-5 py-3 border-b-2 border-gray-200 text-center">Count</th>
+            <th class="px-5 py-3 border-b-2 bg-transparent border-gray-200 text-left w-3/5">Offense</th> <!-- Adjusted width for offense -->
+            <th class="px-5 py-3 border-b-2 bg-transparent  border-gray-200 text-center w-2/5">Count</th> <!-- Adjusted width for count -->
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr v-for="([offense, count], index) in filteredOffenses" :key="index" class="hover:bg-gray-50 transition duration-150 ease-in-out">
+          <tr v-for="([offense, count], index) in filteredOffenses" :key="index"
+              class="hover:bg-teal-50 transition duration-150 ease-in-out" 
+              @click="openOffenseModal(offense)">
             <td class="px-5 py-4 text-sm font-medium text-gray-900">{{ offense }}</td>
             <td class="px-5 py-4 text-sm text-center font-semibold text-gray-700">{{ count }}</td>
           </tr>
@@ -131,95 +230,461 @@
   </div>
 </div>
 
-      <!-- Child Status Distribution Pie Chart -->
-      <div class="bg-white p-4 rounded-lg shadow-md w-full lg:w-1/3">
-        <h2 class="text-sm font-semibold">Child Status Distribution</h2>
-        <div class="flex justify-center relative h-72 ">
-          <Pie 
-            :data="filteredChildStatusData"
-            :options="{
-              plugins: {
-                title: { display: true, font: { size: 2 } },
-                legend: {
-                  position: 'bottom',
-                  labels: {  font: { size: 12 }, margin: 10, boxWidth: 20, padding: 5 }
-                }
-              },
-              responsive: true
-            }"
-          />
-        </div>
-      </div>
+
+
+<!-- Modal for showing clients who committed the selected offense -->
+<div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+  <div class="relative bg-white p-6 rounded-lg shadow-lg w-96">
+    <h2 class="text-xl font-bold mb-4">{{ selectedOffense }}</h2>
+    <p>Total Clients: {{ clientsByOffense.length }}</p> <!-- Total number of clients -->
+    
+    <!-- Table to separate client names and dates -->
+    <table class="table-auto w-full mt-4">
+      <thead>
+        <tr class="text-left text-gray-700">
+          <th class="text-sm font-semibold">Client Name</th>
+          <th class="text-sm font-semibold">Date Admitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="client in clientsByOffense" :key="client.id" class="border-t text-gray-700">
+          <td class="text-sm">{{ client.name }}</td>
+          <td class="text-sm">{{ client.date_admitted }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Close button with correct positioning inside the modal -->
+    <button @click="closeOffenseModal" class="absolute top-2 right-2 px-2 p-2 rounded-full">
+      <i class="fas fa-times text-red-600 text-xl"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Modal for showing clients who belong to the selected child status -->
+<div v-if="isChildStatusModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+  <div class="relative bg-white p-6 rounded-lg shadow-lg w-96">
+    <h2 class="text-lg font-bold mb-4">{{ selectedChildStatus }}</h2>
+    <p>Total Clients: {{ clientsByChildStatus.length }}</p> <!-- Total number of clients -->
+
+    <!-- Scrollable table container -->
+    <div class="overflow-y-auto max-h-60 mt-4">
+      <table class="table-auto w-full">
+        <thead>
+          <tr class="text-left text-gray-700">
+            <th class="text-sm font-semibold">Client Name</th>
+            <th class="text-sm font-semibold">Date Admitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="client in clientsByChildStatus" :key="client.id" class="border-t text-gray-700">
+            <td class="text-sm">{{ client.name }}</td>
+            <td class="text-sm">{{ client.date_admitted }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Buttons section -->
+    <div class="flex justify-between items-center mt-4">
+      <!-- Download Button -->
+      <button @click="downloadClientsByChildStatus" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download CSV</button>
+    </div>
+
+    <!-- Close button with icon placed at the top-right corner -->
+    <button @click="closeChildStatusModal" class="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-200">
+      <i class="fas fa-times text-red-600 text-xl"></i>
+    </button>
+  </div>
+</div>
+
+
+<!-- Modal for showing clients who belong to the selected case status -->
+<div v-if="isCaseStatusModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+  <div class="relative bg-white p-6 rounded-lg shadow-lg w-96">
+    <h2 class="text-lg font-bold mb-4">{{ selectedCaseStatus }}</h2>
+    <p>Total Clients: {{ clientsByCaseStatus.length }}</p> <!-- Total number of clients -->
+
+    <!-- Table to separate client names and dates -->
+    <table class="table-auto w-full mt-4">
+      <thead>
+        <tr class="text-left text-gray-700">
+          <th class="text-sm font-semibold">Client Name</th>
+          <th class="text-sm font-semibold">Date Admitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="client in clientsByCaseStatus" :key="client.id" class="border-t text-gray-700">
+          <td class="text-sm">{{ client.name }}</td>
+          <td class="text-sm">{{ client.date_admitted }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Close button with icon placed at the top-right corner -->
+    <button @click="closeCaseStatusModal" class="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-200">
+      <i class="fas fa-times text-red-600 text-xl"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Modal for showing clients within the selected age range -->
+<div v-if="isAgeDistributionModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+    <h2 class="text-lg font-bold mb-4">Age: {{ selectedAge }}</h2>
+    <p>Total Clients: {{ clientsByAge.length }}</p> <!-- Total number of clients -->
+
+    <!-- Scrollable table container -->
+    <div class="overflow-y-auto max-h-60 mt-4">
+      <table class="table-auto w-full">
+        <thead>
+          <tr class="text-left text-gray-700">
+            <th class="text-sm font-semibold">Client Name</th>
+            <th class="text-sm font-semibold">Date Admitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="client in clientsByAge" :key="client.id" class="border-t text-gray-700">
+            <td class="text-sm">{{ client.name }}</td>
+            <td class="text-sm">{{ client.date_admitted }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Close Button as Icon -->
+    <button @click="closeAgeDistributionModal" class="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-200">
+      <i class="fas fa-times text-red-600 text-xl"></i>
+    </button>
+
+    <!-- Buttons section -->
+    <div class="flex justify-between items-center mt-4">
+      <!-- Download Button -->
+      <button @click="downloadClientsByAge" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download CSV</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Age Distribution Bar Chart -->
+<div class="-mr-4 bg-white p-4 rounded-lg shadow-md w-full lg:w-1/3">
+  <h2 class="-mt-2 -ml-4 -mb-4 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm">
+          Age Distribution
+        </h2> 
+  <div class="-mb-12 relative w-full" style="height: 350px;">
+    <Bar 
+      :data="filteredAgeData"
+      :options="{
+        maintainAspectRatio: false, // Allow chart to expand
+        plugins: {
+          title: { display: true, font: { size: 15 } },
+          tooltip: { enabled: true }
+        },
+        onClick: (e, activeEls) => {
+          if (activeEls.length > 0) {
+            const index = activeEls[0].index;
+            const age = filteredAgeData.labels[index]; // Get the clicked age group
+            openAgeDistributionModal(age); // Trigger modal
+          }
+        }
+      }"
+      height="350"
+    />
+  </div>
+</div>
      
 
     </div>
 
-    <!-- Sidebar (Dashboard Filters) -->
-    <div :class="{ 'translate-x-full': !isSidebarOpen }" class="fixed right-0 top-0 w-64 h-full bg-white shadow-lg transition-transform duration-300 ease-in-out z-50">
-      <!-- Sidebar Header with Collapse Button -->
-      <div class=" p-4 flex justify-between items-center bg-gray-200">
-        <h2 class="text-lg font-semibold">Dashboard Filters</h2>
-        <button @click="toggleSidebar" class="text-gray-500 hover:text-gray-700">
-          <i class="fa fa-times"></i>
-        </button>
-      </div>
+ <!-- Sidebar (Dashboard Filters) -->
+<div :class="{ 'translate-x-full': !isSidebarOpen }" class="fixed right-0 top-0 w-64 h-full bg-white shadow-lg transition-transform duration-300 ease-in-out z-50">
+  <!-- Sidebar Header with Collapse Button -->
+  <div class="p-4 flex justify-between items-center bg-gray-200">
+    <h2 class="text-lg font-semibold">Dashboard Filters</h2>
+    <button @click="toggleSidebar" class="text-gray-500 hover:text-gray-700">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
 
-      <!-- Sidebar Filters (Year and Month) -->
-      <div class="p-4">
-        <div class="flex flex-col mb-4">
-          <div class="flex items-center space-x-2">
-            <i class="fa fa-calendar-alt text-gray-700"></i>
-            <div class="relative w-full">
-              <select v-model="selectedYear" id="year" class="appearance-none border rounded-md p-2 shadow-sm bg-white focus:ring-indigo-500 focus:border-indigo-500 w-full pr-8">
-                <option value="">All Years</option>
-                <option v-for="year in availableYears" :key="year" :value="year">{{ year }}</option>
-              </select>
-              <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex flex-col">
-          <div class="flex items-center space-x-2">
-            <i class="fa fa-calendar text-gray-700"></i>
-            <div class="relative w-full">
-              <select v-model="selectedMonth" id="month" class="appearance-none border rounded-md p-2 shadow-sm bg-white focus:ring-indigo-500 focus:border-indigo-500 w-full pr-8">
-                <option value="">All Months</option>
-                <option v-for="(monthName, index) in monthNames" :key="index" :value="index + 1">{{ monthName }}</option>
-              </select>
-              <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              </div>
-            </div>
-          </div>
+  <!-- Sidebar Filters (Year and Month) -->
+  <div class="p-4">
+    <div class="flex flex-col mb-4">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-calendar-alt text-gray-700"></i>
+        <div class="relative w-full">
+          <select v-model="selectedYear" id="year" class="appearance-none border rounded-md p-2 shadow-sm bg-white focus:ring-indigo-500 focus:border-indigo-500 w-full pr-8">
+            <option value="">All Years</option>
+            <option v-for="year in availableYears" :key="year" :value="year">{{ year }}</option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"></div>
         </div>
       </div>
     </div>
 
+    <div class="flex flex-col">
+      <div class="flex items-center space-x-2">
+        <i class="fa fa-calendar text-gray-700"></i>
+        <div class="relative w-full">
+          <select v-model="selectedMonth" id="month" class="appearance-none border rounded-md p-2 shadow-sm bg-white focus:ring-indigo-500 focus:border-indigo-500 w-full pr-8">
+            <option value="">All Months</option>
+            <option v-for="(monthName, index) in monthNames" :key="index" :value="index + 1">{{ monthName }}</option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"></div>
+        </div>
+      </div>
+    </div>
+     <!-- Button to Download All Data -->
+  <div class="flex justify-end w-full p-6 ">
+    <button @click="downloadAllData" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-lg shadow-md">
+      Download All Data (CSV)
+    </button>
+  </div>
+  </div>
+</div>
+
+
+
     <!-- Overlay when Sidebar is Open -->
-    <div v-if="isSidebarOpen" @click="toggleSidebar" class="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+    <div v-if="isSidebarOpen" @click="toggleSidebar" class="fixed inset-0 bg-black bg-opacity-70 z-40"></div>
 
     <!-- Toggle Sidebar Button -->
-    <button @click="toggleSidebar" class="-mt-3 fixed right-0 top-4 z-50 bg-gray-200 p-2 rounded-l-md text-gray-700 shadow-md hover:bg-gray-300">
-      <i :class="isSidebarOpen ? 'fa fa-chevron-right' : 'fa fa-chevron-left'"></i>
-    </button>
+    <button v-if="!isSidebarOpen" @click="toggleSidebar" class="mt-9 fixed right-0 top-4 z-50 bg-gray-200 p-2 rounded-l-md text-gray-700 shadow-md hover:bg-gray-300 flex items-center">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 mr-2">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        <circle cx="8" cy="6" r="2" fill="currentColor"></circle>
+        <circle cx="16" cy="12" r="2" fill="currentColor"></circle>
+        <circle cx="8" cy="18" r="2" fill="currentColor"></circle>
+    </svg>
+    Filter
+    
+</button>
+
+
+
   </AppLayout>
 </template>
 
 <script setup>
+
 import { ref, computed, onMounted } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Pie, Line, Bar, Doughnut } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, LinearScale, LineElement, PointElement, BarElement } from 'chart.js';
 import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.css';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-// Sidebar open state
-const isSidebarOpen = ref(false); // Added state for sidebar visibility
+ChartJS.register(ChartDataLabels);
+
+// Sidebar and modal open state
+const isSidebarOpen = ref(false);
+const isModalOpen = ref(false); // Modal visibility state
+const selectedOffense = ref(''); // The offense that was clicked
+const clientsByOffense = ref([]); // Clients who committed the selected offense
+const isChildStatusModalOpen = ref(false); // Child Status modal visibility state
+const selectedChildStatus = ref(''); // The selected child status
+const clientsByChildStatus = ref([]); // Clients who belong to the selected child status
+const isCaseStatusModalOpen = ref(false); // Case Status modal visibility state
+const selectedCaseStatus = ref(''); // The selected case status
+const clientsByCaseStatus = ref([]); // Clients who belong to the selected case status
+const isAgeDistributionModalOpen = ref(false); // Age Distribution modal visibility state
+const selectedAge = ref(''); // The selected age
+const clientsByAge = ref([]); // Clients who belong to the selected age group
+
+// Method to download all client data as a CSV file
+const downloadAllData = () => {
+  if (!clients.value.length) return;
+
+  // CSV column headers
+  const headers = ['Name', 'Age', 'Case Status', 'Child Status', 'Date Admitted', 'Offense Committed'];
+
+  // Create CSV content
+  const csvContent = [
+    headers.join(','), // Join headers with a comma
+    ...clients.value.map(client => {
+      return [
+        client.name,             // Name
+        client.age,              // Age
+        client.case_status,      // Case Status
+        client.child_status,     // Child Status
+        client.date_admitted,    // Date Admitted
+        client.offense_committed // Offense Committed
+      ].join(',');
+    })
+  ].join('\n'); // Separate rows by newlines
+
+  // Create a Blob from the CSV content
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+  // Create a link to download the CSV file
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.setAttribute('download', 'dashboard_all_clients_data.csv');
+
+  // Append the link, trigger the download, and then remove the link
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+// Method to download the clients by child status as a CSV file
+const downloadClientsByChildStatus = () => {
+  if (!clientsByChildStatus.value.length) return;
+
+  // CSV column headers
+  const headers = ['Name', 'Date Admitted'];
+
+  // Create CSV content
+  const csvContent = [
+    headers.join(','), // Join headers with a comma
+    ...clientsByChildStatus.value.map(client => `${client.name},${client.date_admitted}`) // Join each client's data
+  ].join('\n'); // Separate rows by newlines
+
+  // Create a Blob from the CSV content
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+  // Create a link to download the CSV file
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.setAttribute('download', `clients_child_status_${selectedChildStatus.value}.csv`);
+
+  // Append the link, trigger the download, and then remove the link
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+// Method to download the clients by age data as a CSV file
+const downloadClientsByAge = () => {
+  if (!clientsByAge.value.length) return;
+
+  // CSV column headers
+  const headers = ['Name', 'Date Admitted'];
+
+  // Create CSV content
+  const csvContent = [
+    headers.join(','), // Join headers with a comma
+    ...clientsByAge.value.map(client => `${client.name},${client.date_admitted}`) // Join each client's data
+  ].join('\n'); // Separate rows by newlines
+
+  // Create a Blob from the CSV content
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+  // Create a link to download the CSV file
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.setAttribute('download', `clients_age_${selectedAge.value}.csv`);
+
+  // Append the link, trigger the download, and then remove the link
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 
 // Method to toggle sidebar
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
+};
+
+const openAgeDistributionModal = (age) => {
+  selectedAge.value = age;
+  clientsByAge.value = clients.value.filter(client => {
+    const admittedDate = new Date(client.date_admitted);
+    const clientMonth = admittedDate.getMonth() + 1; // Month is 0-indexed
+    const clientYear = admittedDate.getFullYear();
+
+    // Check if client matches age, year, and month filters
+    const matchesFilter =
+      (!selectedYear.value || selectedYear.value == clientYear) &&
+      (!selectedMonth.value || selectedMonth.value == clientMonth) &&
+      client.age == age;
+
+    return matchesFilter;
+  });
+
+  isAgeDistributionModalOpen.value = true;
+};
+
+// Method to close the age distribution modal
+const closeAgeDistributionModal = () => {
+  isAgeDistributionModalOpen.value = false;
+};
+
+const openCaseStatusModal = (status) => {
+  selectedCaseStatus.value = status;
+  clientsByCaseStatus.value = clients.value.filter(client => {
+    const admittedDate = new Date(client.date_admitted);
+    const clientMonth = admittedDate.getMonth() + 1; // Month is 0-indexed
+    const clientYear = admittedDate.getFullYear();
+
+    // Check if client matches case status, year, and month filters
+    const matchesFilter =
+      (!selectedYear.value || selectedYear.value == clientYear) &&
+      (!selectedMonth.value || selectedMonth.value == clientMonth) &&
+      client.case_status === status;
+
+    return matchesFilter;
+  });
+
+  isCaseStatusModalOpen.value = true;
+};
+
+// Method to close the case status modal
+const closeCaseStatusModal = () => {
+  isCaseStatusModalOpen.value = false;
+};
+// Method to open the offense modal and get clients who committed that offense
+const openOffenseModal = (offense) => {
+  selectedOffense.value = offense;
+  clientsByOffense.value = clients.value.filter(client => {
+    const admittedDate = new Date(client.date_admitted);
+    const clientMonth = admittedDate.getMonth() + 1; // Month is 0-indexed
+    const clientYear = admittedDate.getFullYear();
+
+    // Check if client matches offense, year, and month filters
+    const matchesFilter =
+      (!selectedYear.value || selectedYear.value == clientYear) &&
+      (!selectedMonth.value || selectedMonth.value == clientMonth) &&
+      client.offense_committed === offense;
+
+    return matchesFilter;
+  });
+
+  isModalOpen.value = true;
+};
+// Method to close the offense modal
+const closeOffenseModal = () => {
+  isModalOpen.value = false;
+};
+
+const openChildStatusModal = (status) => {
+  selectedChildStatus.value = status;
+  clientsByChildStatus.value = clients.value.filter(client => {
+    const admittedDate = new Date(client.date_admitted);
+    const clientMonth = admittedDate.getMonth() + 1; // Month is 0-indexed
+    const clientYear = admittedDate.getFullYear();
+
+    // Check if client matches child status, year, and month filters
+    const matchesFilter =
+      (!selectedYear.value || selectedYear.value == clientYear) &&
+      (!selectedMonth.value || selectedMonth.value == clientMonth) &&
+      client.child_status === status;
+
+    return matchesFilter;
+  });
+
+  isChildStatusModalOpen.value = true;
+};
+
+// Method to close the child status modal
+const closeChildStatusModal = () => {
+  isChildStatusModalOpen.value = false;
 };
 
 // Register necessary chart components
@@ -238,7 +703,17 @@ const fetchClients = async () => {
     clients.value = response.data.map(client => {
       const { first_name, last_name, date_of_birth, child_status } = client;
       const admission = client.admissions[0]; // Assuming the first admission record is required
-      const age = new Date().getFullYear() - new Date(date_of_birth).getFullYear();
+      
+      // Accurate age calculation
+      const dob = new Date(date_of_birth);
+      const today = new Date();
+      let age = today.getFullYear() - dob.getFullYear();
+      const monthDiff = today.getMonth() - dob.getMonth();
+      
+      // Check if the birthday hasn't happened yet this year
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+      }
 
       return {
         id: client.id,
@@ -380,7 +855,7 @@ const filteredChildStatusData = computed(() => {
     datasets: [
       {
         label: 'Child Status',
-        backgroundColor: ['#FF0000', '#0000FF', '#FFFF00'],
+        backgroundColor: ['#0097A7', '#E53935', '#FBC02D'],
         data: Object.values(childStatusCounts),
       },
     ],
@@ -444,17 +919,28 @@ const filteredAgeData = computed(() => {
     datasets: [
       {
         label: 'Age Distribution',
-        backgroundColor: '#017995',
-        borderColor: '#388E3C',     // Darker green for border
+        backgroundColor: '#3949AB',
+        borderColor: '#3949AB',     // Darker green for border
         borderWidth: 1,
         data: Object.values(ageCounts),
       },
     ],
   };
 });
-// Calculate the total CICL clients (Adjust based on your data)
-const totalCICL = computed(() => {
-return clients.value.filter(client => client.client_type === 'CICL').length;});
+// Calculate the total number of clients affected by year and month filters
+const totalClients = computed(() => {
+  return clients.value.filter(client => {
+    const admittedDate = new Date(client.date_admitted);
+    const clientMonth = admittedDate.getMonth() + 1; // Month is 0-indexed
+    const clientYear = admittedDate.getFullYear();
+
+    // Return true if client matches the selected year and month filters
+    return (!selectedYear.value || selectedYear.value == clientYear) &&
+           (!selectedMonth.value || selectedMonth.value == clientMonth);
+  }).length;
+});
+
+
 </script>
 
 <style scoped>
@@ -472,5 +958,20 @@ return clients.value.filter(client => client.client_type === 'CICL').length;});
 /* Sidebar styles */
 .translate-x-full {
   transform: translateX(100%);
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}
+
+/* Hide scrollbar for IE and Edge */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Firefox */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
 }
 </style>
