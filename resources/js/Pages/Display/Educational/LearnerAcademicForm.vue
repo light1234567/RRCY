@@ -151,7 +151,7 @@
               v-model="center_head"
               type="text"
               class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm bg-gray-200"
-              :readonly="!editMode"
+              readonly
             >
           </div>
           <p class="text-sm mt-2">Center Head</p>
@@ -207,6 +207,7 @@ export default {
       console.error('client_id is missing in mounted. Cannot fetch the form data.');
     } else {
       this.fetchData();
+      this.fetchCenterHead();
     }
   },
   watch: {
@@ -240,40 +241,16 @@ export default {
           console.error('Error fetching data:', error.response?.data || error);
         });
     },
-    fetchCenterHead(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    // Make an API request using the client ID
-    axios.get(`/api/center-head/${clientId}`)
+    fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
       .then(response => {
-        this.center_head = response.data.center_head;
-        console.log("Fetched center head:", this.center_head); // Log the center head
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
       })
       .catch(error => {
-        console.error("Error fetching center head:", error);
+        console.error('Error fetching center head:', error);
       });
   },
-  // Save center head
-  saveCenterHead() {
-    const clientId = this.$route.params.id;
-    if (!this.center_head || !clientId) {
-      return;
-    }
-    axios
-      .put(`/api/update-center-head`, {
-        center_head: this.center_head,
-        client_id: clientId, // Use the correct client ID
-      })
-      .then(response => {
-        this.editMode = false;
-        this.fetchClientData(clientId); // Refetch the data to update the UI
-      })
-      .catch(error => {
-        console.error("Error updating center head:", error);
-      });
-  },
+  
   
 
   submitForm() {

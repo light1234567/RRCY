@@ -113,7 +113,7 @@
           <div class="space-y-2 mt-4">
             <label for="notedBy" class="block mb-12 mt-12 font-sm">Noted by:</label>
             <div class="flex flex-col">
-              <strong><input type="text" v-model="center_head" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode"></strong>
+              <strong><input type="text" v-model="center_head" class="block w-full p-0 border border-transparent rounded-md" :readonly></strong>
               <span>SWO IV / Center Head</span>
             </div>
           </div>
@@ -232,6 +232,7 @@ export default {
   mounted() {
     this.id = this.$route.params.id;
     this.fetchData();
+    this.fetchCenterHead();
   },
   watch: {
     '$route.params.id': function(newId) {
@@ -271,41 +272,16 @@ export default {
           });
       }
     },
-    fetchCenterHead(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    // Make an API request using the client ID
-    axios.get(`/api/center-head/${clientId}`)
+    fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
       .then(response => {
-        this.center_head = response.data.center_head;
-        console.log("Fetched center head:", this.center_head); // Log the center head
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
       })
       .catch(error => {
-        console.error("Error fetching center head:", error);
+        console.error('Error fetching center head:', error);
       });
   },
-  // Save center head
-  saveCenterHead() {
-    const clientId = this.$route.params.id;
-    if (!this.center_head || !clientId) {
-      return;
-    }
-    axios
-      .put(`/api/update-center-head`, {
-        center_head: this.center_head,
-        client_id: clientId, // Use the correct client ID
-      })
-      .then(response => {
-        this.editMode = false;
-        this.fetchClientData(clientId); // Refetch the data to update the UI
-      })
-      .catch(error => {
-        console.error("Error updating center head:", error);
-      });
-  },
-
+  
     toggleEdit() {
       this.editMode = !this.editMode;
     },

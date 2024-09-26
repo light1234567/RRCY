@@ -494,8 +494,8 @@
     v-if="client.admissions[0]" 
     type="text" 
     class="underline-input mt-1 text-center text-[15px] font-bold"
-    v-model="client.admissions[0].center_head" 
-    :readonly="!editMode"
+    v-model="center_head" 
+    readonly
     style="width: 200px;" 
   />
   <p class="text-[15px] -mt-3">Center Head/SWO IV</p>
@@ -543,6 +543,7 @@ export default {
     return {
       clients: [],
       admission_id: null, // Admission ID used for update logic
+      center_head: '',
       editMode: false,
       isModalOpen: false,
       isSaveResultModalOpen: false,
@@ -584,7 +585,6 @@ export default {
           designation: '',
           office_address: '',
           date_time: '',
-          center_head: '',
           referring_party_signature: null,
         },
         distinguishing_marks: {
@@ -606,6 +606,7 @@ export default {
   mounted() {
     this.id = this.$route.params.id;
     this.fetchClientsData();
+    this.fetchCenterHead();
   },
   goBack() {
     if (window.history.length > 1) {
@@ -624,6 +625,15 @@ export default {
   },
   methods: {
 
+    fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
+      .then(response => {
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
+      })
+      .catch(error => {
+        console.error('Error fetching center head:', error);
+      });
+  },
     knownDocuments() {
     return ["SCSR", "Court Order", "Medical Certificates", "Consent from Parents", "School Records"];
   },
@@ -715,7 +725,6 @@ getSignatureUrl(signaturePath) {
         designation: admission.designation || '',
         office_address: admission.office_address || '',
         date_time: admission.date_time || '',
-        center_head: admission.center_head || ''
       },
       distinguishing_marks: {
         tattoo_scars: admission.distinguishing_marks?.[0]?.tattoo_scars || '',

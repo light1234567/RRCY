@@ -18,10 +18,11 @@
         <!-- Left: Client Image and Details -->
         <div class="flex items-center space-x-6">
           <img
-            :src="client.profile_image ? `/storage/${client.profile_image}` : defaultImage"
-            alt="Client Profile Image"
-            class="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
-          />
+  :src="client.profile_image ? `/profile_images/${client.profile_image}` : defaultImage"
+  alt="Client Profile Image"
+  class="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
+/>
+
           <div>
             <h1 class="text-2xl font-bold text-gray-900">{{ client.first_name }} {{ client.last_name }}</h1>
             <div class="mt-2 text-gray-700 space-y-1">
@@ -120,16 +121,38 @@ export default {
   methods: {
     // Fetch individual client data
     async fetchClient(clientId) {
-      try {
-        const { data } = await axios.get(`/api/clients/${clientId}`);
-        this.client = data;
+  try {
+    // First API call to get the client data
+    const clientResponse = await axios.get(`/api/clients/${clientId}`);
+    const clientData = clientResponse.data;
 
-        // Once client data is fetched, search for matching clients
-        this.fetchMatchingClients(data.first_name, data.last_name, data.date_of_birth);
-      } catch (error) {
-        console.error('Error fetching client data:', error);
-      }
-    },
+    if (!clientData) {
+      console.warn("No client data found.");
+      return;
+    }
+
+    this.client = clientData; // Set client data
+
+    // Proceed to fetch the profile image, but don't block the rest of the process if it's not found
+    try {
+      const nursingResponse = await axios.get(`/api/nursing-care-services/client/${clientId}`);
+
+      // If the profile_image is available, set it, otherwise use default
+      this.client.profile_image = nursingResponse.data && nursingResponse.data.profile_image 
+        ? nursingResponse.data.profile_image 
+        : null;  // Or leave it empty and let the template handle it with the default image
+    } catch (error) {
+      console.warn("Error fetching profile image, using default image.");
+      this.client.profile_image = null; // Ensure that if there's no image, defaultImage will be used
+    }
+
+    // Fetch matching clients based on first name, last name, and date of birth
+    await this.fetchMatchingClients(clientData.first_name, clientData.last_name, clientData.date_of_birth);
+
+  } catch (error) {
+    console.error('Error fetching client data:', error);
+  }
+},
 
     // Fetch clients with matching first name, last name, and DOB
     async fetchMatchingClients(firstName, lastName, dob) {

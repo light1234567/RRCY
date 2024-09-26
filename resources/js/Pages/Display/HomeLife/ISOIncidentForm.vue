@@ -196,7 +196,7 @@
             id="approvedBy"
             v-model="center_head"
             class="font-semibold  mt-1 w-3/4 text-sm underline-input p-0 shadow-sm"
-            :readonly="!editMode"
+            readonly
           >
           <p class="font-semibold text-sm">SWO IV / Center Head</p>
         </div>
@@ -319,14 +319,13 @@ export default {
   mounted() {
     const clientId = this.$route.params.id;
     this.fetchData(clientId);
-    this.fetchCenterHead(clientId);
     this.fetchSHP(clientId);
     this.fetchDrn(clientId);
+    this.fetchCenterHead();
   },
   watch: {
     '$route.params.id': function(newId) {
       this.fetchData(newId);
-      this.fetchCenterHead(newId);
       this.fetchSHP(newId);
       this.fetchDrn(newId);
     }
@@ -359,40 +358,16 @@ export default {
       });
     }
   },
-    fetchCenterHead(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    // Make an API request using the client ID
-    axios.get(`/api/center-head/${clientId}`)
+  fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
       .then(response => {
-        this.center_head = response.data.center_head;
-        console.log("Fetched center head:", this.center_head); // Log the center head
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
       })
       .catch(error => {
-        console.error("Error fetching center head:", error);
+        console.error('Error fetching center head:', error);
       });
   },
-  // Save center head
-  saveCenterHead() {
-    const clientId = this.$route.params.id;
-    if (!this.center_head || !clientId) {
-      return;
-    }
-    axios
-      .put(`/api/update-center-head`, {
-        center_head: this.center_head,
-        client_id: clientId, // Use the correct client ID
-      })
-      .then(response => {
-        this.editMode = false;
-        this.fetchClientData(clientId); // Refetch the data to update the UI
-      })
-      .catch(error => {
-        console.error("Error updating center head:", error);
-      });
-  },
+  
   fetchSHP(clientId) {
     if (!clientId) {
       console.error("Client ID is missing.");

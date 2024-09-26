@@ -137,7 +137,7 @@
           </div>
         </div>
         <div class=" mt-16">
-          <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode">        
+          <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" readonly>        
           <p class="-mt-1">Center Head/SWO IV</p>
         </div>
       </div>
@@ -199,8 +199,8 @@ export default {
     const clientId = this.$route.params.id;
     if (clientId) {
       this.fetchClientData(clientId);
-      this.fetchCenterHead(clientId);
       this.fetchCaseManager(clientId);
+      this.fetchCenterHead();
     }
   },
   watch: {
@@ -230,40 +230,15 @@ export default {
         this.errorMessage = 'Error fetching client data.';
       }
     },
-    fetchCenterHead(clientId) {
-  if (!clientId) {
-    console.error("Client ID is missing.");
-    return;
-  }
-  // Make an API request using the client ID
-  axios.get(`/api/center-head/${clientId}`)  // Updated endpoint to match the route
-    .then(response => {
-      this.center_head = response.data.center_head;
-      console.log("Fetched center head:", this.center_head); // Log the center head
-    })
-    .catch(error => {
-      console.error("Error fetching center head:", error);
-    });
-},
-saveCenterHead() {
-  const clientId = this.$route.params.id; // Get the clientId from the route params
-  if (!this.center_head || !clientId) {
-    return;
-  }
-  axios
-    .put(`/api/update-center-head`, {
-      center_head: this.center_head,
-      client_id: clientId, // Use the correct client ID
-    })
-    .then(response => {
-      this.editMode = false;
-      this.fetchClientData(clientId); // Refetch the data to update the UI
-    })
-    .catch(error => {
-      console.error("Error updating center head:", error);
-    });
-},
-
+    fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
+      .then(response => {
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
+      })
+      .catch(error => {
+        console.error('Error fetching center head:', error);
+      });
+  },
 fetchCaseManager(clientId) {
     // Fetch the case manager based on the client ID
     if (!clientId) {

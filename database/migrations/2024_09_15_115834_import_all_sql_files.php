@@ -19,6 +19,7 @@ class ImportAllSqlFiles extends Migration
             database_path('sql/province.sql'),
             database_path('sql/citymuni.sql'),
             database_path('sql/brgy.sql'),
+            database_path('sql/centerhead.sql'),
         ];
 
         // Loop through each file and execute the SQL statements

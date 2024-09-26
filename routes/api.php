@@ -31,6 +31,8 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\CaseManagerController;
 use App\Http\Controllers\SHPController;
 use App\Http\Controllers\DrnController;
+use App\Http\Controllers\CenterHeadController;
+
 
 Route::post('/check-email', [UserController::class, 'checkEmail']);
 Route::post('/validate-password', [UserController::class, 'validatePassword']);
@@ -206,8 +208,9 @@ Route::middleware(['web', 'auth'])->group(function () {
 Route::get('/nursing-care-services', [NursingCareServiceController::class, 'index']);
 Route::get('/nursing-care-services/{id}', [NursingCareServiceController::class, 'show']);
 Route::post('/nursing-care-services', [NursingCareServiceController::class, 'storeOrUpdate']);
-Route::put('/nursing-care-services/{id}', [NursingCareServiceController::class, 'storeOrUpdate']); // Combined route for store and update
+Route::put('/nursing-care-services/{id}', [NursingCareServiceController::class, 'storeOrUpdate']);
 Route::delete('/nursing-care-services/{id}', [NursingCareServiceController::class, 'destroy']);
+Route::get('/nursing-care-services/client/{clientId}', [NursingCareServiceController::class, 'getByClientId']);
 });
 Route::middleware(['web', 'auth'])->group(function () {
 Route::get('/performance-observation-reports', [PerformanceObservationReportController::class, 'index']);
@@ -259,3 +262,6 @@ Route::put('/update-shp/{clientId}', [SHPController::class, 'storeSHP']);
 // DRN API Routes
 Route::post('/drn', [DrnController::class, 'storeDrn']); // This should handle both create and update
 Route::get('/drn/{clientId}', [DrnController::class, 'getDrn']);
+
+// routes/api.php
+Route::get('/center-head', [CenterHeadController::class, 'getCenterHead']);

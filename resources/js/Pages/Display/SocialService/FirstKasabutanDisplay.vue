@@ -133,7 +133,7 @@
       </div>
 
       <div class="text-left mt-16">
-        <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode">        <p>Center Head/SWO IV</p>
+        <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" readonly>        <p>Center Head/SWO IV</p>
       </div>
 
       <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
@@ -195,7 +195,7 @@ export default {
     console.log('Client ID fetched:', clientId); // Console log showing client ID
     if (clientId) {
       this.fetchClientData(clientId);
-      this.fetchCenterHead(clientId);
+      this.fetchCenterHead();
       this.fetchCaseManager(clientId);
     }
   },
@@ -227,40 +227,15 @@ export default {
         console.error('Error fetching client data:', error);
       }
     },
-    fetchCenterHead(clientId) {
-  if (!clientId) {
-    console.error("Client ID is missing.");
-    return;
-  }
-  // Make an API request using the client ID
-  axios.get(`/api/center-head/${clientId}`)  // Updated endpoint to match the route
-    .then(response => {
-      this.center_head = response.data.center_head;
-      console.log("Fetched center head:", this.center_head); // Log the center head
-    })
-    .catch(error => {
-      console.error("Error fetching center head:", error);
-    });
-},
-saveCenterHead() {
-  const clientId = this.$route.params.id; // Get the clientId from the route params
-  if (!this.center_head || !clientId) {
-    return;
-  }
-  axios
-    .put(`/api/update-center-head`, {
-      center_head: this.center_head,
-      client_id: clientId, // Use the correct client ID
-    })
-    .then(response => {
-      this.editMode = false;
-      this.fetchClientData(clientId); // Refetch the data to update the UI
-    })
-    .catch(error => {
-      console.error("Error updating center head:", error);
-    });
-},
-
+    fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
+      .then(response => {
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
+      })
+      .catch(error => {
+        console.error('Error fetching center head:', error);
+      });
+  },
 fetchCaseManager(clientId) {
     // Fetch the case manager based on the client ID
     if (!clientId) {

@@ -154,4 +154,31 @@ class NursingCareServiceController extends Controller
         }
         return response()->json(['message' => 'Not found'], 404);
     }
+
+    public function getByClientId($clientId)
+{
+    try {
+        // Fetch the NursingCareService entry by client_id
+        $nursingCareService = NursingCareService::where('client_id', $clientId)->first();
+
+        if (!$nursingCareService) {
+            return response()->json(['message' => 'Nursing Care Service not found'], 404);
+        }
+
+        // Fetch the corresponding client
+        $client = Client::find($clientId);
+
+        if (!$client) {
+            return response()->json(['message' => 'Client not found'], 404);
+        }
+
+        return response()->json([
+            'client' => $client,
+            'profile_image' => $nursingCareService->profile_image
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Server Error'], 500);
+    }
+}
+
 }

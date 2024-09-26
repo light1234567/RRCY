@@ -135,7 +135,7 @@
         </div>
         <div>
           <label class="font-semibold">Noted by:</label>
-          <input type="text" v-model="center_head" :readonly="!editMode" class="w-full border border-transparent p-1" />          
+          <input type="text" v-model="center_head" class="w-full border border-transparent p-1" />          
           <div class="text-xs mt-1">SWO IV / Center Head</div>
         </div>
       </div>
@@ -259,6 +259,7 @@ export default {
     const clientId = this.$route.params.id;
     console.log('Client ID on mounted:', clientId);
     this.fetchData(clientId);
+    this.fetchCenterHead();
   },
   watch: {
     '$route.params.id': function(newId) {
@@ -316,38 +317,13 @@ export default {
           this.resetForm(clientId);
         });
     },
-    fetchCenterHead(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    // Make an API request using the client ID
-    axios.get(`/api/center-head/${clientId}`)
+    fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
       .then(response => {
-        this.center_head = response.data.center_head;
-        console.log("Fetched center head:", this.center_head); // Log the center head
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
       })
       .catch(error => {
-        console.error("Error fetching center head:", error);
-      });
-  },
-  // Save center head
-  saveCenterHead() {
-    const clientId = this.$route.params.id;
-    if (!this.center_head || !clientId) {
-      return;
-    }
-    axios
-      .put(`/api/update-center-head`, {
-        center_head: this.center_head,
-        client_id: clientId, // Use the correct client ID
-      })
-      .then(response => {
-        this.editMode = false;
-        this.fetchClientData(clientId); // Refetch the data to update the UI
-      })
-      .catch(error => {
-        console.error("Error updating center head:", error);
+        console.error('Error fetching center head:', error);
       });
   },
     resetForm(clientId) {

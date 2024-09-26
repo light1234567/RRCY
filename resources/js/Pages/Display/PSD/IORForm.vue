@@ -286,7 +286,7 @@
           type="text"
           id="notedBy"
           v-model="center_head"
-          :readonly="!editMode"
+          readonly
           class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm "
         >
       </div>
@@ -432,6 +432,7 @@ export default {
   },
   mounted() {
     this.fetchReportData();
+    this.fetchCenterHead();
   },
   watch: {
     '$route.params.id': 'fetchReportData',
@@ -505,13 +506,21 @@ export default {
                 this.fetchClientData(clientId);
             });
     },
-
+    fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
+      .then(response => {
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
+      })
+      .catch(error => {
+        console.error('Error fetching center head:', error);
+      });
+  },
+  
     fetchClientData(clientId) {
         axios.get(`/api/clients/${clientId}`)
             .then(response => {
                 const client = response.data;
 
-                this.center_head = response.data.center_head;
                 this.form.client_id = client.id; // Set the client_id
                 this.form.name = `${client.first_name} ${client.last_name}`;
                 this.fetchCenterHead(clientId);
@@ -523,43 +532,6 @@ export default {
                 
                 
             });
-    },
-    fetchCenterHead(clientId) {
-        if (!clientId) {
-            console.error("Client ID is missing, skipping center head fetch.");
-            return;
-        }
-        axios.get(`/api/center-head/${clientId}`)
-            .then(response => {
-                this.center_head = response.data.center_head || 'No Center Head Assigned';
-                console.log("Fetched center head:", this.center_head);
-            })
-            .catch(error => {
-                console.error("Error fetching center head:", error);
-            });
-    },
-  // Save center head
-  saveCenterHead() {
-        const clientId = this.$route.params.id || this.form.client_id;
-        if (!this.center_head || !clientId) {
-            return;
-        }
-        axios.put(`/api/update-center-head`, {
-            center_head: this.center_head,
-            client_id: clientId, // Use the correct client ID
-        })
-        .then(response => {
-            this.editMode = false;
-            this.message = 'Center Head updated successfully!';
-            this.messageType = 'success';
-            this.clearMessageAfterDelay();
-        })
-        .catch(error => {
-            console.error("Error updating center head:", error);
-            this.message = 'Failed to update Center Head.';
-            this.messageType = 'error';
-            this.clearMessageAfterDelay();
-        });
     },
     submitForm() {
         console.log("Submitting form with data:", this.form);
