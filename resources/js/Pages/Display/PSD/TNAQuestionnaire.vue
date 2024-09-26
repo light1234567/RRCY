@@ -340,7 +340,7 @@
   <div class="w-1/2 ml-auto">
 <div class="flex items-center">
   <input
-    v-model="form.center_head_signature"
+    v-model="center_head"
     type="text"
     id="centerHeadSignature"
     class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none"
@@ -476,6 +476,7 @@ data() {
 mounted() {
   this.id = this.$route.params.id;
   this.fetchData();
+  this.fetchCenterHead();
 },
 watch: {
   '$route.params.id': function(newId) {
@@ -491,6 +492,15 @@ methods: {
       this.editMode = true;
       this.originalForm = JSON.parse(JSON.stringify(this.form)); // store the original form data before editing
     }
+  },
+  fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
+      .then(response => {
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
+      })
+      .catch(error => {
+        console.error('Error fetching center head:', error);
+      });
   },
   toggleEducation(level) {
     const index = this.form.education.findIndex(edu => edu.education_level === level);

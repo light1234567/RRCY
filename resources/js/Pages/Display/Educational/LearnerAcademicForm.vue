@@ -254,7 +254,6 @@ export default {
   
 
   submitForm() {
-      this.saveCenterHead();
       if (!this.form.client_id) {
         this.message = 'Client ID is missing. Cannot submit the form.';
         this.messageType = 'error';

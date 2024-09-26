@@ -287,7 +287,6 @@ fetchCaseManager(clientId) {
       this.isModalOpen = false;
     },
     async confirmSave() {
-      this.saveCenterHead();
       this.saveCaseManager();
       try {
         const response = await axios[this.form.id ? 'put' : 'post'](`/api/kasabutan${this.form.id ? '/' + this.form.id : ''}`, this.form);

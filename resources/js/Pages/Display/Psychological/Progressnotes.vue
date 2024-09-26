@@ -298,7 +298,6 @@ export default {
     confirmSave() {
       this.isModalOpen = false;
       this.submitForm();
-      this.saveCenterHead();
     },
 
     closeModal() {

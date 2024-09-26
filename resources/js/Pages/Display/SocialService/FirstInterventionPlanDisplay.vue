@@ -349,7 +349,6 @@ export default {
     },
     confirmSave() {
       this.saveData();
-      this.saveCenterHead();
       this.closeModal();
       this.editMode = false;
     },

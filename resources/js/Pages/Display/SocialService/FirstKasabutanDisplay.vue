@@ -291,7 +291,6 @@ fetchCaseManager(clientId) {
       try {
         await this.saveData();
         this.saveResultTitle = 'Success';
-        this.saveCenterHead();
         this.saveCaseManager();
         this.saveResultMessage = 'Data saved successfully!';
       } catch (error) {

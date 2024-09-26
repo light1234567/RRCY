@@ -998,14 +998,14 @@ export default {
     this.clientId = this.$route.params.id;
     console.log('Client ID fetched:', this.clientId); // Console log showing client ID
     this.fetchClientData(this.clientId);
-    this.fetchCenterHead();
     this.fetchCaseManager(this.clientId);
+    this.fetchCenterHead();
+
   },
   watch: {
     '$route.params.id'(newId) {
       this.clientId = newId;
       this.fetchClientData(this.clientId);
-      this.fetchCenterHead();
       this.fetchCaseManager(this.clientId);
     }
   },
@@ -1104,7 +1104,6 @@ calculateAge(birthDate) {
     },
     confirmSave() {
       this.saveData();
-      this.saveCenterHead();
       this.saveCaseManager(); 
       this.closeModal();
       this.editMode = false;
