@@ -11,117 +11,92 @@ class PsychologicalInterventionPlanController extends Controller
 {
     public function store(Request $request)
     {
-        Log::info("Creating or updating a Psychological Intervention Plan");
-
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
             'as_of_date' => 'nullable|date',
             'progress_notes' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
             'noted_by' => 'nullable|string|max:50',
-            'items' => 'array',
+            'items' => 'required|array', // Ensure the items are an array
             'items.*.objectives' => 'nullable|string',
             'items.*.activities' => 'nullable|string',
             'items.*.responsible_person' => 'nullable|string|max:50',
             'items.*.time_frame' => 'nullable|string|max:20',
             'items.*.expected_output' => 'nullable|string',
             'items.*.progress' => 'nullable|string',
-        ]);        
+        ]);
 
         try {
-            $plan = PsychologicalInterventionPlan::updateOrCreate(
-                ['client_id' => $request->client_id],
-                $validatedData
-            );
-
-            // Sync the related items
-            if (isset($validatedData['items'])) {
-                $itemData = [];
-                foreach ($validatedData['items'] as $item) {
-                    $itemData[] = [
-                        'plan_id' => $plan->id,
-                        'objectives' => $item['objectives'] ?? null,
-                        'activities' => $item['activities'] ?? null,
-                        'responsible_person' => $item['responsible_person'] ?? null,
-                        'time_frame' => $item['time_frame'] ?? null,
-                        'expected_output' => $item['expected_output'] ?? null,
-                        'progress' => $item['progress'] ?? null,
-                    ];
-                }
-                PsychologicalInterventionPlanItem::upsert($itemData, ['plan_id', 'objectives']);
-            }
-
-            return response()->json([
-                'message' => 'Plan saved successfully.',
-                'plan' => $plan
+            $plan = PsychologicalInterventionPlan::create([
+                'client_id' => $validatedData['client_id'],
+                'as_of_date' => $validatedData['as_of_date'],
+                'progress_notes' => $validatedData['progress_notes'],
+                'prepared_by' => $validatedData['prepared_by'],
+                'noted_by' => $validatedData['noted_by'],
+                'items' => json_encode($validatedData['items']), // Store items as JSON
             ]);
+
+            return response()->json($plan, 201);
         } catch (\Exception $e) {
-            Log::error("Failed to save Psychological Intervention Plan: " . $e->getMessage());
-            return response()->json([
-                'message' => 'Failed to save the plan.',
-                'error' => $e->getMessage()
-            ], 500);
+            Log::error('Error storing Psychological Intervention Plan: ' . $e->getMessage());
+            return response()->json(['message' => 'Failed to save the plan.'], 500);
         }
     }
 
     public function show($id)
     {
-        Log::info("Fetching Psychological Intervention Plan for client: " . $id);
-
-        $plan = PsychologicalInterventionPlan::with('items')->where('client_id', $id)->first();
+        $plan = PsychologicalInterventionPlan::where('client_id', $id)->first();
 
         if ($plan) {
-            return response()->json([
-                'plan' => $plan
-            ]);
+            $plan->items = json_decode($plan->items, true); // Decode JSON items to array
+            return response()->json($plan);
         } else {
-            return response()->json([
-                'message' => 'Plan not found.'
-            ], 404);
+            return response()->json(['message' => 'Plan not found.'], 404);
         }
+    }
+
+    public function destroy($id)
+    {
+        $plan = PsychologicalInterventionPlan::find($id);
+        if ($plan) {
+            $plan->delete();
+            return response()->json(['message' => 'Deleted successfully']);
+        }
+        return response()->json(['message' => 'Not found'], 404);
     }
 
 
     public function update(Request $request, $id)
     {
-        Log::info("Attempting to update Psychological Intervention Plan for client_id: $id");
-
         $validatedData = $request->validate([
             'as_of_date' => 'nullable|date',
             'progress_notes' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
             'noted_by' => 'nullable|string|max:50',
-            'items' => 'array',
+            'items' => 'required|array', // Ensure the items are an array
             'items.*.objectives' => 'nullable|string',
             'items.*.activities' => 'nullable|string',
             'items.*.responsible_person' => 'nullable|string|max:50',
-            'items.*.time_frame' => 'nullable|string|max:50',
+            'items.*.time_frame' => 'nullable|string|max:20',
             'items.*.expected_output' => 'nullable|string',
             'items.*.progress' => 'nullable|string',
-        ]); 
+        ]);
 
         try {
             $plan = PsychologicalInterventionPlan::where('client_id', $id)->firstOrFail();
 
-            $plan->update($validatedData);
-
-            $items = [];
-            foreach ($validatedData['items'] as $itemData) {
-                $items[] = new PsychologicalInterventionPlanItem($itemData);
-            }
-            $plan->items()->delete(); // Clear old items
-            $plan->items()->saveMany($items); // Save new items
-
-            Log::info("Successfully updated Psychological Intervention Plan", $plan->toArray());
-            return response()->json($plan->load('items'), 200);
-        } catch (\Exception $e) {
-            Log::error("Error updating Psychological Intervention Plan", [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'data' => $validatedData
+            $plan->update([
+                'as_of_date' => $validatedData['as_of_date'],
+                'progress_notes' => $validatedData['progress_notes'],
+                'prepared_by' => $validatedData['prepared_by'],
+                'noted_by' => $validatedData['noted_by'],
+                'items' => json_encode($validatedData['items']), // Update items as JSON
             ]);
 
-            return response()->json(['message' => 'Failed to update plan', 'error' => $e->getMessage()], 500);
+            return response()->json($plan);
+        } catch (\Exception $e) {
+            Log::error('Error updating Psychological Intervention Plan: ' . $e->getMessage());
+            return response()->json(['message' => 'Failed to update the plan.'], 500);
         }
     }
 }

@@ -18,17 +18,17 @@ class PsychologicalInterventionPlan extends Model
         'progress_notes',
         'prepared_by',
         'noted_by',
-        'updated_by'
+        'items',
+    ];
+
+    // Cast items as an array
+    protected $casts = [
+        'items' => 'array',  // Casts items to an array when retrieved
     ];
 
     public function client()
     {
         return $this->belongsTo(Client::class);
-    }
-
-    public function items()
-    {
-        return $this->hasMany(PsychologicalInterventionPlanItem::class, 'plan_id');
     }
    
     // Boot method to handle logging and updating fields

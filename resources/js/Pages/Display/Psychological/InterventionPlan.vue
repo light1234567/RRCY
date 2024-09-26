@@ -269,19 +269,13 @@ export default {
   },
   methods: {
     fetchData(clientId) {
-      if (!clientId) {
-        console.error('Client ID is missing!');
-        return;
-      }
-
-      console.log('Fetching client data for ID:', clientId);
+      if (!clientId) return;
+      console.log('Fetching client data for client ID:', clientId);
 
       axios.get(`/api/clients/${clientId}`)
         .then(response => {
           console.log('Client data fetched:', response.data);
-          this.fetchCenterHead(clientId);
           const client = response.data;
-
           this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
           this.age = this.calculateAge(client.date_of_birth);
           this.dateAdmitted = client.admissions[0]?.date_admitted;
@@ -292,31 +286,32 @@ export default {
           this.fetchPlanData(clientId);
         })
         .catch(error => {
+          console.error('Error fetching client data:', error);
           this.message = 'Error fetching data.';
           this.messageType = 'error';
-          console.error('Error fetching client data:', error);
         });
     },
     fetchPlanData(clientId) {
-      console.log('Fetching intervention plan data for client ID:', clientId);
+  console.log('Fetching intervention plan data for client ID:', clientId);
 
-      axios.get(`/api/psychological-intervention-plans/${clientId}`)
-        .then(response => {
-          console.log('Intervention plan data fetched:', response.data);
-          if (response.data && response.data.plan) {
-            this.form = {
-              ...response.data.plan,
-              items: response.data.plan.items || []
-            };
-          } else {
-            this.resetForm(clientId);
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching intervention plan:', error);
-          this.resetForm(clientId);
-        });
-    },
+  axios.get(`/api/psychological-intervention-plans/${clientId}`)
+    .then(response => {
+      console.log('Intervention plan data fetched:', response.data);
+      
+      // Check if the response contains data
+      if (response.data && response.data.items) {
+        // Set the fetched plan data to form
+        this.form = { ...response.data, items: response.data.items || [] };
+        console.log('Plan data set in form:', this.form);
+      } else {
+        console.log('No plan data found, resetting form.');
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching intervention plan data:', error);
+    });
+}
+,
     fetchCenterHead() {
     axios.get('/api/center-head')  // Replace with the correct API route
       .then(response => {
@@ -326,27 +321,6 @@ export default {
         console.error('Error fetching center head:', error);
       });
   },
-    resetForm(clientId) {
-      console.log('Resetting form for client ID:', clientId);
-      this.form = {
-        id: null,
-        client_id: clientId,
-        as_of_date: '',
-        items: [
-          {
-            objectives: '',
-            activities: '',
-            responsible_person: '',
-            time_frame: '',
-            expected_output: '',
-            progress: ''
-          }
-        ],
-        progress_notes: '',
-        prepared_by: '',
-        noted_by: ''
-      };
-    },
     addItem() {
       this.form.items.push({
         objectives: '',
@@ -380,7 +354,6 @@ export default {
     },
     confirmSave() {
       this.saveData();
-      this.saveCenterHead();
       this.closeModal();
     },
     cancelEdit() {

@@ -15,10 +15,11 @@ class CreatePsychologicalInterventionPlansTable extends Migration
             $table->text('progress_notes')->nullable();
             $table->string('prepared_by', 50)->nullable();
             $table->string('noted_by', 50)->nullable();
+            $table->json('items'); // Store items as JSON
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-        });        
+        });
     }
 
     public function down()
@@ -26,4 +27,3 @@ class CreatePsychologicalInterventionPlansTable extends Migration
         Schema::dropIfExists('psychological_intervention_plans');
     }
 }
-
