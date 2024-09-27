@@ -44,6 +44,7 @@ class IndicatorsOfSocialFunctioning extends Model
         'general_score',
         'interpretation',
         'prepared_by',
+        'indicators_case_manager',
         'discussed_with',
         'updated_by'
     ];

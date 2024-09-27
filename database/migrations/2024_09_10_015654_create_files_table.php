@@ -12,7 +12,7 @@ class CreateFilesTable extends Migration
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');
             $table->unsignedMediumInteger('folder_id')->nullable();
-            $table->string('filename', 25);
+            $table->string('filename',100);
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

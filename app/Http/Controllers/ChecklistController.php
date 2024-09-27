@@ -20,6 +20,7 @@ class ChecklistController extends Controller
             $checklist = Checklist::create([
                 'client_id' => $clientId,
                 'admitting_officer' => '',
+                'checklist_case_manager' => '',
                 'documents' => json_encode([]), // Empty JSON for documents
                 'rrcy_forms' => json_encode([]), // Empty JSON for forms
             ]);
@@ -43,7 +44,7 @@ public function store(Request $request)
     $validatedData = $request->validate([
         'client_id' => 'required|exists:clients,id',
         'admitting_officer' => 'nullable|string|max:50', 
-        'case_manager' => 'nullable|string|max:50', 
+        'checklist_case_manager' => 'nullable|string|max:50', 
         'documents' => 'nullable|array',
         'documents.*.document' => 'nullable|string|max:50', 
         'documents.*.yes' => 'nullable|boolean',
@@ -75,7 +76,7 @@ public function store(Request $request)
         ['client_id' => $validatedData['client_id']],
         [
             'admitting_officer' => $validatedData['admitting_officer'],
-            'case_manager' => $validatedData['case_manager'],
+            'checklist_case_manager' => $validatedData['checklist_case_manager'],
             'documents' => json_encode($documents),  // Store as JSON
             'rrcy_forms' => json_encode($validatedData['rrcy_forms']),
         ]
@@ -95,14 +96,14 @@ public function store(Request $request)
 
         $validatedData = $request->validate([
             'admitting_officer' => 'nullable|string|max:255',
-            'case_manager' => 'nullable|string|max:255',
+            'checklist_case_manager' => 'nullable|string|max:255',
             'documents' => 'nullable|array',
             'rrcy_forms' => 'nullable|array',
         ]);
 
         $checklist->update([
             'admitting_officer' => $validatedData['admitting_officer'] ?? $checklist->admitting_officer,
-            'case_manager' => $validatedData['case_manager'] ?? $checklist->case_manager,
+            'checklist_case_manager' => $validatedData['checklist_case_manager'] ?? $checklist->case_manager,
             'documents' => $validatedData['documents'] ? json_encode($validatedData['documents']) : $checklist->documents,
             'rrcy_forms' => $validatedData['rrcy_forms'] ? json_encode($validatedData['rrcy_forms']) : $checklist->rrcy_forms,
         ]);

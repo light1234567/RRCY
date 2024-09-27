@@ -38,6 +38,7 @@ class GeneralIntakeSheet extends Model
         'initial_assessment',
         'recommendations',
         'prepared_by',
+        'first_intake_case_manager',
         'reviewed_by',
         'updated_by'
     ];

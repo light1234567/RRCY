@@ -35,6 +35,7 @@ class CreateGeneralIntakeSheetsTable extends Migration
             $table->text('initial_assessment')->nullable();
             $table->text('recommendations')->nullable();
             $table->string('prepared_by', 50)->nullable();
+            $table->string('first_intake_case_manager', 50)->nullable();
             $table->string('reviewed_by', 50)->nullable();
             $table->timestamps();
         

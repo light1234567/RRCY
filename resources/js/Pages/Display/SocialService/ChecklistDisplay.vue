@@ -204,7 +204,7 @@
       </p>
       <p class="text-[15px] mb-4">Received by:</p>
       <p class="text-[15px]">
-        <input v-model="caseManager" class="w-1/2 font-semibold border-b border-black p-0 text-[15px]" :readonly="!editMode" style="border: none; border-bottom: 1px solid black;"/>
+        <input v-model="checklist_case_manager" class="w-1/2 font-semibold border-b border-black p-0 text-[15px]" :readonly="!editMode" style="border: none; border-bottom: 1px solid black;"/>
         <br>Case Manager
       </p>
 
@@ -249,7 +249,7 @@ export default {
     return {
       editMode: false,
       admittingOfficer: '',
-      caseManager: '',
+      checklist_case_manager: '',
       message: '',
       messageType: '',
       currentPage: 1,
@@ -348,44 +348,13 @@ export default {
     }
 
     this.admittingOfficer = clientData.admitting_officer || '';
-    this.caseManager = clientData.case_manager || '';
+    this.checklist_case_manager = clientData.checklist_case_manager || '';
 
   } catch (error) {
     console.error('Error fetching client data:', error);
   }
 }
 ,
-async fetchCaseManager(clientId) {
-    console.log(`Fetching case manager for client: ${clientId}`); // Log the clientId for debugging
-    try {
-        const response = await axios.get(`/api/case-manager/${clientId}`);
-        console.log('Fetched case manager response:', response.data); // Log the response for debugging
-        this.caseManager = response.data.case_manager; // Assign the case manager name to your data property
-        console.log('Case Manager:', this.caseManager); // Log the case manager for debugging
-    } catch (error) {
-        console.error('Error fetching case manager:', error);
-    }
-},
-async saveCaseManager() {
-    console.log('Saving Case Manager');
-    try {
-        const payload = {
-            client_id: this.clientId,
-            name: this.caseManager,
-        };
-
-        console.log('Payload:', payload);
-
-        // Remove the Authorization header and directly make the POST request
-        const response = await axios.post('/api/case-manager', payload);
-
-        console.log('Response:', response.data);
-        this.showSaveResultModal('Success', 'Case Manager saved successfully.');
-    } catch (error) {
-        console.error('Error saving case manager:', error);
-        this.showSaveResultModal('Error', 'Error saving case manager. Please try again.');
-    }
-},
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -404,7 +373,6 @@ async saveCaseManager() {
     },
     confirmSave() {
       this.saveData();
-      this.saveCaseManager();
       this.closeModal();
       this.editMode = false;
     },
@@ -421,7 +389,7 @@ async saveCaseManager() {
   const payload = {
     client_id: this.clientId,
     admitting_officer: this.admittingOfficer,
-    case_manager: this.caseManager,
+    checklist_case_manager: this.checklist_case_manager,
     documents: this.checklist.map(item => ({
       document: item.document,
       yes: item.yes ? 1 : 0,   // Convert to number for backend
@@ -826,7 +794,7 @@ pdf.text('Received by:', 18, y);
 y += 10; // Adjust y position for input box
 
 // Draw underline and text for the 'Received by' section (Case Manager)
-const caseManagerText = this.caseManager || ''; // Use manager's name if available, otherwise blank
+const caseManagerText = this.checklist_case_manager || ''; // Use manager's name if available, otherwise blank
 const caseManagerWidth = pdf.getTextWidth(caseManagerText); // Get the width of the name text
 
 // If caseManager name exists, draw it in bold and underline
@@ -851,14 +819,12 @@ y += 25; // Add space after the signature
   mounted() {
     this.clientId = this.$route.params.id;
     this.fetchData();
-    this.fetchCaseManager(this.clientId);
 }
 ,
   watch: {
     '$route.params.id': function(newId) {
       this.clientId = newId;
       this.fetchData();
-      this.fetchCaseManager(this.clientId);
     }
   }
 };

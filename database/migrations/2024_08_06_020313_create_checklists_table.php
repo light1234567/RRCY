@@ -13,7 +13,7 @@ class CreateChecklistsTable extends Migration
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');
             $table->string('admitting_officer', 50)->nullable(); 
-            $table->string('case_manager', 50)->nullable(); 
+            $table->string('checklist_case_manager', 50)->nullable(); 
             $table->json('documents')->nullable(); 
             $table->json('rrcy_forms')->nullable(); 
             $table->timestamps();

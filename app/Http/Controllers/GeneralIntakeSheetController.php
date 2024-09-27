@@ -46,6 +46,7 @@ class GeneralIntakeSheetController extends Controller
         'initial_assessment' => 'nullable|string',
         'recommendations' => 'nullable|string',
         'prepared_by' => 'nullable|string|max:50',
+        'first_intake_case_manager' => 'nullable|string|max:50',
         'reviewed_by' => 'nullable|string|max:50',
     ]);    
 

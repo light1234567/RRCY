@@ -124,7 +124,7 @@
             <label class="block text-base -mt-1">Pangalan/Pirma sa Ginikanan/Guardian</label>
           </div>
           <div>
-            <input type="text" v-model="case_manager" 
+            <input type="text" v-model="form.first_kasabutan_case_manager" 
               class="underline-input w-1/3 px-2 mt-12 py-1 text-xs" 
               :readonly="!editMode"/>
             <label class="block text-base -mt-1">Case Manager</label>
@@ -172,12 +172,12 @@ export default {
       editMode: false,
       message: '',
       messageType: '',
-      case_manager: '',
       center_head: '',
       form: {
         client_id: null,
         client_resident: '',
         parent_guardian: '',
+        first_kasabutan_case_manager: '',
         id: null
       },
       clientName: '',
@@ -196,7 +196,6 @@ export default {
     if (clientId) {
       this.fetchClientData(clientId);
       this.fetchCenterHead();
-      this.fetchCaseManager(clientId);
     }
   },
   watch: {
@@ -205,7 +204,6 @@ export default {
       if (newId) {
         this.fetchClientData(newId);
         this.fetchCenterHead(newId);
-        this.fetchCaseManager(newId);
       }
     }
   },
@@ -221,6 +219,7 @@ export default {
         const kasabutan = kasabutanResponse.data;
         this.form.client_resident = kasabutan.client_resident || '';
         this.form.parent_guardian = kasabutan.parent_guardian || '';
+        this.form.first_kasabutan_case_manager = kasabutan.first_kasabutan_case_manager || '';
         this.form.id = kasabutan.id;
       } catch (error) {
         this.errorMessage = 'Error fetching client data.';
@@ -236,44 +235,6 @@ export default {
         console.error('Error fetching center head:', error);
       });
   },
-fetchCaseManager(clientId) {
-    // Fetch the case manager based on the client ID
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    axios.get(`/api/case-manager/${clientId}`)
-      .then(response => {
-        this.case_manager = response.data.case_manager || '';
-        console.log("Fetched case manager:", this.case_manager); // Log the case manager
-      })
-      .catch(error => {
-        console.error("Error fetching case manager:", error);
-      });
-  },
-  saveCaseManager() {
-    const clientId = this.$route.params.id;  // Get the clientId from the route
-    console.log("Saving case manager:", this.case_manager, "for client:", clientId); // Log the data before the request
-
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    axios.put(`/api/update-case-manager/${clientId}`, { 
-      client_id: clientId,  // Include the client_id here
-      name: this.case_manager 
-    })
-    .then(response => {
-      console.log("Case manager saved successfully:", response.data); // Log the response
-      this.editMode = false;
-      this.fetchCaseManager(clientId);  // Refetch to update the UI
-    })
-    .catch(error => {
-      console.error("Error updating case manager:", error);
-    });
-  }
-,
-
     toggleEdit() {
       if (this.editMode) {
         this.openModal();
@@ -291,7 +252,6 @@ fetchCaseManager(clientId) {
       try {
         await this.saveData();
         this.saveResultTitle = 'Success';
-        this.saveCaseManager();
         this.saveResultMessage = 'Data saved successfully!';
       } catch (error) {
         this.saveResultTitle = 'Error';
@@ -403,7 +363,7 @@ pdf.text('Pangalan/Pirma sa Ginikanan/Guardian', 20, contentYPos); // Label belo
 
 // Case Manager underline and label
 contentYPos += 30;
-pdf.text(`${this.case_manager || ''}`, initialX, contentYPos+-2);
+pdf.text(`${this.sheet.first_kasabutan_case_manager || ''}`, initialX, contentYPos+-2);
 pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
 contentYPos += 5; // Move Y position down for the text
 pdf.text('Case Manager', 20, contentYPos); // Label below the underline
@@ -460,7 +420,7 @@ printContent() {
         <div style="margin-bottom: 32px;">
           <p>Client/Resident: <span style="border-bottom: 2px solid black;">${this.form.client_resident}</span></p>
           <p>Pangalan/Pirma sa Ginikanan/Guardian: <span style="border-bottom: 2px solid black;">${this.form.parent_guardian}</span></p>
-          <p>Case Manager: <span style="border-bottom: 2px solid black;">${this.case_manager}</span></p>
+          <p>Case Manager: <span style="border-bottom: 2px solid black;">${this.sheet.first_kasabutan_case_manager}</span></p>
         </div>
 
         <div style="text-align: left; margin-top: 64px;">

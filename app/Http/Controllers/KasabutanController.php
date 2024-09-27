@@ -19,7 +19,8 @@ class KasabutanController extends Controller
             'client_id' => 'nullable|exists:clients,id',
             'client_resident' => 'nullable|string|max:50', 
             'parent_guardian' => 'nullable|string|max:50', 
-            'case_manager' => 'nullable|string|max:50', 
+            'first_kasabutan_case_manager' => 'nullable|string|max:50', 
+            'second_kasabutan_case_manager' => 'nullable|string|max:50',
         ]);
 
         $kasabutan = Kasabutan::create($validatedData);
@@ -43,7 +44,8 @@ class KasabutanController extends Controller
                 'client_id' => 'nullable|exists:clients,id',
                 'client_resident' => 'nullable|string|max:50', 
                 'parent_guardian' => 'nullable|string|max:50', 
-                'case_manager' => 'nullable|string|max:50', 
+                'first_kasabutan_case_manager' => 'nullable|string|max:50', 
+                'second_kasabutan_case_manager' => 'nullable|string|max:50',
             ]);
 
             $kasabutan->update($validatedData);

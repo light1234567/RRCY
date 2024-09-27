@@ -43,6 +43,7 @@ class CreateIndicatorsOfSocialFunctioningTable extends Migration
             $table->decimal('general_score')->nullable();
             $table->text('interpretation')->nullable();
             $table->string('prepared_by', 50)->nullable();
+            $table->string('indicators_case_manager', 50)->nullable();
             $table->string('discussed_with', 50)->nullable();
             $table->timestamps();
 

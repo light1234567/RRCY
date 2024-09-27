@@ -19,7 +19,7 @@ class Talambuhay extends Model
         'about_my_family',
         'about_my_self',
         'about_my_case',
-        'case_manager',
+        'talambuhay_case_manager',
         'date',
         'updated_by'
     ];

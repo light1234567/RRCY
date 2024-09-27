@@ -16,7 +16,8 @@ class Kasabutan extends Model
         'client_id',
         'client_resident',
         'parent_guardian',
-        'case_manager',
+        'first_kasabutan_case_manager',
+        'second_kasabutan_case_manager',
         'updated_by'
     ];
 

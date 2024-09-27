@@ -20,7 +20,7 @@ class TalambuhayController extends Controller
             'about_my_family' => 'nullable|string',
             'about_my_self' => 'nullable|string',
             'about_my_case' => 'nullable|string',
-            'case_manager' => 'nullable|string|max:50',
+            'talambuhay_case_manager' => 'nullable|string|max:50',
             'date' => 'nullable|date',
         ]);
 
@@ -46,7 +46,7 @@ class TalambuhayController extends Controller
                 'about_my_family' => 'nullable|string',
                 'about_my_self' => 'nullable|string',
                 'about_my_case' => 'nullable|string',
-                'case_manager' => 'nullable|string|max:50',
+                'talambuhay_case_manager' => 'nullable|string|max:50',
                 'date' => 'nullable|date',
             ]);
 

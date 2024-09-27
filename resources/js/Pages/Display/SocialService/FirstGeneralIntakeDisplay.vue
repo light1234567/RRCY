@@ -776,7 +776,7 @@
     <div class="flex justify-between mb-8">
       <div class="flex flex-col items-start">
         <label class="block text-base font-semibold text-gray-700 mb-1">Prepared by:</label>
-        <input type="text" v-model="case_manager" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+        <input type="text" v-model="sheet.first_intake_case_manager" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
         <p>SWO __/Case Manager</p>
       </div>
       <div class="flex flex-col items-end">
@@ -825,7 +825,6 @@ export default {
       message: '',
       messageType: '',
       center_head: '',
-      case_manager:'',
       totalPages: 4,
       clientId: null,
       currentPage: 1,
@@ -849,6 +848,7 @@ export default {
         date: '',  // New date field
         problem_presented: '',
         brief_physical_description: '',
+        first_intake_case_manager:'',
         major_life_event: {
           death_of_parents: false,
           separation_from_family: false,
@@ -998,7 +998,6 @@ export default {
     this.clientId = this.$route.params.id;
     console.log('Client ID fetched:', this.clientId); // Console log showing client ID
     this.fetchClientData(this.clientId);
-    this.fetchCaseManager(this.clientId);
     this.fetchCenterHead();
 
   },
@@ -1006,7 +1005,6 @@ export default {
     '$route.params.id'(newId) {
       this.clientId = newId;
       this.fetchClientData(this.clientId);
-      this.fetchCaseManager(this.clientId);
     }
   },
   methods: {
@@ -1040,45 +1038,6 @@ export default {
         console.error('Error fetching center head:', error);
       });
   },
-fetchCaseManager(clientId) {
-      // Fetch the case manager based on the client ID
-      if (!clientId) {
-        console.error("Client ID is missing.");
-        return;
-      }
-      axios.get(`/api/case-manager/${clientId}`)
-        .then(response => {
-          this.case_manager = response.data.case_manager || '';
-          console.log("Fetched case manager:", this.case_manager); // Log the case manager
-        })
-        .catch(error => {
-          console.error("Error fetching case manager:", error);
-        });
-    },
-
-    saveCaseManager() {
-  console.log("Saving case manager:", this.case_manager, "for client:", this.clientId); // Log the data before the request
-  
-  if (!this.clientId) {
-    console.error("Client ID is missing.");
-    return;
-  }
-
-  axios.put(`/api/update-case-manager/${this.clientId}`, { 
-    client_id: this.clientId,  // Include the client_id here
-    name: this.case_manager 
-  })
-  .then(response => {
-    console.log("Case manager saved successfully:", response.data); // Log the response
-    this.editMode = false;
-    this.fetchCaseManager(this.clientId);  // Refetch to update the UI
-  })
-  .catch(error => {
-    console.error("Error updating case manager:", error);
-  });
-}
-,
-
 calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);
@@ -1104,7 +1063,6 @@ calculateAge(birthDate) {
     },
     confirmSave() {
       this.saveData();
-      this.saveCaseManager(); 
       this.closeModal();
       this.editMode = false;
     },
