@@ -15,6 +15,7 @@ class CreateMonthlyInventoriesTable extends Migration
             $table->string('resident_name', 50)->nullable();
             $table->string('houseparent_name', 50)->nullable();
             $table->string('inventory_shp', 50)->nullable();
+            $table->json('items')->nullable(); // Store items as JSON
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
