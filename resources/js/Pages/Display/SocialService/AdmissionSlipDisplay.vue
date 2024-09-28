@@ -16,11 +16,12 @@
       :currentPage="currentPage" 
       @update:currentPage="currentPage = $event" 
     />
-    <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-      <!-- FontAwesome for Edit -->
-      <i class="fas fa-edit w-4 h-4"></i>
-      <span>Edit</span>
-    </button>
+
+  <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+    <!-- FontAwesome for Edit -->
+    <i class="fas fa-edit w-4 h-4"></i>
+    <span>Edit</span>
+  </button>
 
     <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
       <!-- FontAwesome for Save -->
