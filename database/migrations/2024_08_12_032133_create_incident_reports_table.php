@@ -21,7 +21,7 @@ class CreateIncidentReportsTable extends Migration
             $table->text('agreements')->nullable();
             $table->text('corrective_measure')->nullable();
             $table->string('prepared_by', 50)->nullable();
-            $table->string('reviewed_by', 50)->nullable();
+            $table->string('incident_report_shp', 50)->nullable();
             $table->string('approved_by', 50)->nullable();
             $table->timestamps();
 

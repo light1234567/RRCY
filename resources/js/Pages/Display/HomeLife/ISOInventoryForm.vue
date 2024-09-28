@@ -156,7 +156,7 @@
     <!-- Noted by Section -->
     <div class="w-1/2 mr-12">
       <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
-      <input type="text" v-model="shp" 
+      <input type="text" v-model="form.inventory_shp" 
     class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 py-1 text-xs" 
     :readonly="!editMode"/>      
     <p class="text-sm">HP III/SHP</p>
@@ -252,6 +252,7 @@ data() {
       month: '',
       resident_name: '',
       houseparent_name: '',
+      inventory_shp: '',
       items: [
         { name: '', description: '', qty: '', brand: '', size: '', color: '', old: '', new: '', remarks: '' },
         // add other items as necessary
@@ -267,20 +268,17 @@ data() {
     saveResultMessage: '',
     currentPage: 1,
     totalPages: 1,
-    shp: '',
     drn: '',
   };
 },
 mounted() {
   const clientId = this.$route.params.id;
     this.fetchData(clientId);
-    this.fetchSHP(clientId);
     this.fetchDrn(clientId);
 },
 watch: {
   '$route.params.id': function(newId) {
       this.fetchData(newId);
-      this.fetchSHP(newId);
       this.fetchDrn(newId);
   }
 },
@@ -308,9 +306,6 @@ methods: {
           console.log('Fetch data response:', response.data); // Debugging
           if (response.data.inventory) {
             this.form = response.data.inventory;
-            this.form.month = response.data.report.month;
-            this.form.resident_name = response.data.report.resident_name;
-            this.form.houseparent_name = response.data.report.houseparent_name;
             this.form.client_id = clientId;
             this.originalForm = JSON.parse(JSON.stringify(this.form)); // Capture the original state
           } else {
@@ -324,41 +319,6 @@ methods: {
         });
     }
   },
-  fetchSHP(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    axios.get(`/api/shp/${clientId}`)
-      .then(response => {
-        this.shp = response.data.shp || '';
-        console.log("Fetched SHP:", this.shp);
-      })
-      .catch(error => {
-        console.error("Error fetching SHP:", error);
-      });
-  },
-  saveSHP() {
-    const clientId = this.$route.params.id;
-    console.log("Saving SHP:", this.shp, "for client:", clientId);
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    axios.put(`/api/update-shp/${clientId}`, { 
-      client_id: clientId,
-      name: this.shp
-    })
-    .then(response => {
-      console.log("SHP saved successfully:", response.data);
-      this.editMode = false;
-      this.fetchSHP(clientId);
-    })
-    .catch(error => {
-      console.error("Error updating SHP:", error);
-    });
-  }
-,
 fetchDrn(clientId) {
   if (!clientId) {
     console.error("Client ID is missing.");
@@ -396,6 +356,10 @@ saveDrn() {
     console.error("Error saving DRN:", error.response.data); // Log detailed error message
   });
 },
+removeItem(index) {
+      this.form.items.splice(index, 1);
+      console.log('Item removed from form at index:', index, 'Remaining items:', this.form.items);
+    },
   toggleEdit() {
     if (this.editMode) {
       this.openModal();
@@ -415,7 +379,6 @@ saveDrn() {
 
   confirmSave() {
     this.submitForm();
-    this.saveSHP();
     this.saveDrn();
     this.closeModal();
   },

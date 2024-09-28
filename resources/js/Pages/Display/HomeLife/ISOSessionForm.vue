@@ -116,7 +116,7 @@
         <input
           type="text"
           id="notedBy"
-          v-model="shp"
+          v-model="form.session_shp"
           class="font-semibold mt-1 w-3/4 underline-input text-sm shadow-sm"
           :readonly="!editMode"
         >
@@ -221,7 +221,6 @@ export default {
   data() {
     return {
       center_head: '',
-      shp: '',
       drn: '',
       form: {
         client_id: null,
@@ -234,7 +233,7 @@ export default {
         highlight: '',
         outcome: '',
         prepared_by: '',
-        noted_by: 'VAN M. DE LEON',
+        session_shp: '',
         approved_by: 'ANGELIC B. PAÑA',
       },
       originalForm: null,  // To store the original form data
@@ -252,7 +251,6 @@ export default {
   mounted() {
     const clientId = this.$route.params.id;
     this.fetchData(clientId);
-    this.fetchSHP(clientId);  
     this.fetchDrn(clientId);
     this.fetchCenterHead();
   },
@@ -260,7 +258,6 @@ export default {
   watch: {
     '$route.params.id': function(newId) {
       this.fetchData(newId);
-      this.fetchSHP(newId);
       this.fetchDrn(newId);
     }
   },
@@ -293,40 +290,6 @@ export default {
       });
   },
   
-  fetchSHP(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    axios.get(`/api/shp/${clientId}`)
-      .then(response => {
-        this.shp = response.data.shp || '';
-        console.log("Fetched SHP:", this.shp);
-      })
-      .catch(error => {
-        console.error("Error fetching SHP:", error);
-      });
-  },
-  saveSHP() {
-    const clientId = this.$route.params.id;
-    console.log("Saving SHP:", this.shp, "for client:", clientId);
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    axios.put(`/api/update-shp/${clientId}`, { 
-      client_id: clientId,
-      name: this.shp
-    })
-    .then(response => {
-      console.log("SHP saved successfully:", response.data);
-      this.editMode = false;
-      this.fetchSHP(clientId);
-    })
-    .catch(error => {
-      console.error("Error updating SHP:", error);
-    });
-  },
   fetchDrn(clientId) {
   if (!clientId) {
     console.error("Client ID is missing.");
@@ -383,8 +346,6 @@ saveDrn() {
 
     confirmSave() {
       this.submitForm();
-      this.saveCenterHead();
-      this.saveSHP();
       this.saveDrn();
       this.closeModal();
     },

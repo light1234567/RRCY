@@ -213,7 +213,7 @@
        <input
          type="text"
          id="notedBy"
-         v-model="shp"
+         v-model="form.anecdotal_shp"
          class="mt-1 w-3/4 underline-input text-sm shadow-sm"
          :readonly="!editMode"
        >
@@ -321,10 +321,10 @@ export default {
    return {
     center_head: '',
     drn: '',
-    shp: '',
      form: {
        client_id: null,
        name: '',
+       anecdotal_shp:'',
        date: '',
        month: '',
        color: '',
@@ -333,7 +333,6 @@ export default {
        behavioral: '',
        spiritual: '',
        recommendation: '',
-       noted_by: 'VAN M. DE LEON',
        approved_by: 'ANGELIC B. PAÑA',
        prepared_by: '',
        signature_residents: '',
@@ -352,15 +351,12 @@ export default {
  },
  mounted() {
    const clientId = this.$route.params.id;
-   this.fetchCenterHead(clientId);
-   this.fetchSHP(clientId);
+   this.fetchCenterHead();
    this.fetchDrn(clientId);
    this.fetchData(clientId);
  },
  watch: {
     '$route.params.id': function(newId) {
-      this.fetchCenterHead(newId);
-     this.fetchSHP(newId);
      this.fetchDrn(newId);
      this.fetchData(newId);
    }
@@ -392,66 +388,14 @@ export default {
   });
 }
 ,
-   fetchCenterHead(clientId) {
-     if (!clientId) {
-       console.error("Client ID is missing.");
-       return;
-     }
-     axios.get(`/api/center-head/${clientId}`).then(response => {
-       this.center_head = response.data.center_head;
-       console.log("Fetched center head:", this.center_head); 
-     }).catch(error => {
-       console.error("Error fetching center head:", error);
-     });
-   },
-
-   saveCenterHead() {
-     const clientId = this.$route.params.id; 
-     if (!this.center_head || !clientId) {
-       return;
-     }
-     axios.put(`/api/update-center-head`, {
-       center_head: this.center_head,
-       client_id: clientId,
-     }).then(() => {
-       this.fetchData(clientId); 
-     }).catch(error => {
-       console.error("Error updating center head:", error);
-     });
-   },
-   fetchSHP(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    axios.get(`/api/shp/${clientId}`)
+fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
       .then(response => {
-        this.shp = response.data.shp || '';
-        console.log("Fetched SHP:", this.shp);
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
       })
       .catch(error => {
-        console.error("Error fetching SHP:", error);
+        console.error('Error fetching center head:', error);
       });
-  },
-  saveSHP() {
-    const clientId = this.$route.params.id;
-    console.log("Saving SHP:", this.shp, "for client:", clientId);
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    axios.put(`/api/update-shp/${clientId}`, { 
-      client_id: clientId,
-      name: this.shp
-    })
-    .then(response => {
-      console.log("SHP saved successfully:", response.data);
-      this.editMode = false;
-      this.fetchSHP(clientId);
-    })
-    .catch(error => {
-      console.error("Error updating SHP:", error);
-    });
   },
   fetchDrn(clientId) {
   if (!clientId) {
@@ -511,8 +455,6 @@ saveDrn() {
 
    confirmSave() {
      this.submitForm();
-     this.saveCenterHead();
-     this.saveSHP();
      this.saveDrn();
      this.closeModal();
    },

@@ -26,7 +26,7 @@ class CreateSwappingFormsTable extends Migration
             $table->text('purpose')->nullable();
             $table->string('requested_by', 50)->nullable();
             $table->string('accepted_by', 50)->nullable();
-            $table->string('noted_by', 50)->default('VAN M. DE LEON');
+            $table->string('swapping_shp', 50)->default();
             $table->string('approved_by', 50)->default('ANGELIC B. PAÑA');
             $table->timestamps();
 

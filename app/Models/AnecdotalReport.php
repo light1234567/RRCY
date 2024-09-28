@@ -23,7 +23,7 @@ class AnecdotalReport extends Model
         'behavioral',
         'spiritual',
         'recommendation',
-        'noted_by',
+        'anecdotal_shp',
         'approved_by',
         'prepared_by',
         'house_parents',

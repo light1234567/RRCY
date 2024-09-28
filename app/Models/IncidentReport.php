@@ -23,7 +23,7 @@ class IncidentReport extends Model
         'agreements',
         'corrective_measure',
         'prepared_by',
-        'reviewed_by',
+        'incident_report_shp',
         'approved_by',
         'updated_by'
     ];

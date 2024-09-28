@@ -20,7 +20,7 @@ class CreateCiclSessionsTable extends Migration
             $table->text('highlight')->nullable();
             $table->text('outcome')->nullable();
             $table->string('prepared_by', 50)->nullable();
-            $table->string('noted_by', 50)->nullable();
+            $table->string('session_shp', 50)->nullable();
             $table->string('approved_by', 50)->nullable();
             $table->timestamps();
 

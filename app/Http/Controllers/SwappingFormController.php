@@ -34,7 +34,7 @@ class SwappingFormController extends Controller
             'purpose' => 'nullable|string',
             'requested_by' => 'nullable|string|max:50',
             'accepted_by' => 'nullable|string|max:50',
-            'noted_by' => 'nullable|string|max:50',
+            'swapping_shp' => 'nullable|string|max:50',
             'approved_by' => 'nullable|string|max:50',
         ]);        
 
@@ -90,6 +90,7 @@ class SwappingFormController extends Controller
             'purpose' => 'nullable|string',
             'requested_by' => 'nullable|string|max:50',
             'accepted_by' => 'nullable|string|max:50',
+            'swapping_shp' => 'nullable|string|max:50',
             'noted_by' => 'nullable|string|max:50',
             'approved_by' => 'nullable|string|max:50',
         ]);

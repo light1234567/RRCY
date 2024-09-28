@@ -24,8 +24,9 @@ class MonthlyInventoryController extends Controller
         'month' => 'nullable|string|max:10',
         'resident_name' => 'nullable|string|max:50',
         'houseparent_name' => 'nullable|string|max:50',
-        'items' => 'required|array',
-        'items.*.name' => 'required|string|max:20',
+        'inventory_shp' => 'nullable|string|max:50',
+        'items' => 'nullable|array',
+        'items.*.name' => 'nullable|string|max:20',
         'items.*.description' => 'nullable|string|max:50',
         'items.*.qty' => 'nullable|integer',
         'items.*.brand' => 'nullable|string|max:20',
@@ -47,6 +48,7 @@ class MonthlyInventoryController extends Controller
             'month' => $validatedData['month'],
             'resident_name' => $validatedData['resident_name'],
             'houseparent_name' => $validatedData['houseparent_name'],
+            'inventory_shp' => $validatedData['inventory_shp'],
         ]);
 
         $inventory->save();
@@ -99,8 +101,9 @@ class MonthlyInventoryController extends Controller
             'month' => 'nullable|string|max:20',
             'resident_name' => 'nullable|string|max:50',
             'houseparent_name' => 'nullable|string|max:50',
-            'items' => 'required|array',
-            'items.*.name' => 'required|string|max:20',
+            'inventory_shp' => 'nullable|string|max:50',
+            'items' => 'nullable|array',
+            'items.*.name' => 'nullable|string|max:20',
             'items.*.description' => 'nullable|string|max:50',
             'items.*.qty' => 'nullable|integer',
             'items.*.brand' => 'nullable|string|max:20',

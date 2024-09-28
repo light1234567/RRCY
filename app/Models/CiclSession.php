@@ -23,7 +23,7 @@ class CiclSession extends Model
         'highlight',
         'outcome',
         'prepared_by',
-        'noted_by',
+        'session_shp',
         'approved_by',
         'updated_by'
     ];

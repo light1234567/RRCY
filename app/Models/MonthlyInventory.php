@@ -17,6 +17,7 @@ class MonthlyInventory extends Model
         'month',
         'resident_name',
         'houseparent_name',
+        'inventory_shp',
         'updated_by'
     ];
 

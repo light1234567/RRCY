@@ -20,7 +20,7 @@ class CreateAnecdotalReportsTable extends Migration
             $table->text('behavioral')->nullable();
             $table->text('spiritual')->nullable();
             $table->text('recommendation')->nullable();
-            $table->string('noted_by', 50)->nullable();
+            $table->string('anecdotal_shp', 50)->nullable();
             $table->string('approved_by', 50)->nullable();
             $table->string('prepared_by', 50)->nullable();
             $table->string('house_parents', 50)->nullable();

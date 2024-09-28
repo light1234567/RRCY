@@ -29,7 +29,7 @@ class IncidentReportController extends Controller
             'agreements' => 'nullable|string',
             'corrective_measure' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
-            'reviewed_by' => 'nullable|string|max:50',
+            'incident_report_shp' => 'nullable|string|max:50',
             'approved_by' => 'nullable|string|max:50',
         ]);        
 
@@ -81,7 +81,7 @@ class IncidentReportController extends Controller
         'agreements' => 'nullable|string',
         'corrective_measure' => 'nullable|string',
         'prepared_by' => 'nullable|string|max:50',
-        'reviewed_by' => 'nullable|string|max:50',
+        'incident_report_shp' => 'nullable|string|max:50',
         'approved_by' => 'nullable|string|max:50',
     ]);    
 

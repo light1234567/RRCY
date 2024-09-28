@@ -28,7 +28,7 @@ class SwappingForm extends Model
         'purpose',
         'requested_by',
         'accepted_by',
-        'noted_by',
+        'swapping_shp',
         'approved_by',
         'updated_by'
     ];

@@ -535,7 +535,6 @@ export default {
     },
     submitForm() {
         console.log("Submitting form with data:", this.form);
-        this.saveCenterHead();
         if (!this.form.client_id) {
             this.message = 'Failed to save data: Missing client ID';
             this.messageType = 'error';
