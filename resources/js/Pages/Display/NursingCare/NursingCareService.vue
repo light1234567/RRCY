@@ -1,21 +1,48 @@
 <template>
-  <!-- Edit and Save Buttons -->
-  <div class="flex justify-end space-x-4 mb-4">
-        <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-          <span v-if="!editMode">Edit</span>
-          <span v-else>Cancel</span>
-        </button>
-        <button v-if="editMode" @click="saveData" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-          Save
-        </button>
-      </div>
-  
+<!-- Tabs for Actions -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="-ml-4 flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <!-- FontAwesome for Back -->
+      <i class="fas fa-arrow-left w-4 h-4"></i>
+      <span>Back</span>
+    </button>
+</div>
+
+<div class="flex -ml-8 justify-end -mr-[52px] bg-transparent border  border-gray-300 p-4 space-x-4 -mt-[52px]">
+    <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+    <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+  <!-- FontAwesome for Edit -->
+  <i class="fas fa-edit w-4 h-4"></i>
+  <span>Edit</span>
+</button>
+
+    <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for Save -->
+      <i class="fas fa-check w-4 h-4"></i>
+      <span>Save</span>
+    </button>
+
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <!-- FontAwesome for PDF Download -->
+      <i class="fas fa-file-pdf w-4 h-4"></i>
+      <span>Export PDF</span>
+    </button>
+</div>
+
       <!-- Success/Error Message -->
   <div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
     {{ message }}
   </div>
+  <div class="graph-background pt-0.5 -ml-4 -mr-12 -mb-16">
+
   
-    <div class="p-8 bg-white max-w-screen-md mx-auto border border-gray-300 rounded-lg shadow-lg">
+    <div ref="pdfContent" class="max-w-3xl border-gray-400 p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border ">
       <!-- Header Section -->
       <div class="text-center border-b pb-2 mb-4">
         <div class="flex justify-between items-center">
@@ -38,7 +65,7 @@
       <input type="text" v-model="form.client_name" class="w-56 border-none p-1 text-xs" readonly>
     </div>
   
-    <div class="flex col-span-1 -ml-20">
+    <div class="flex col-span-1 -ml-10">
       <label class="border-none flex items-center block font-bold text-xs">BIRTHDATE:</label>
       <input type="date" v-model="form.birthdate" class="w-full border-none p-1 text-xs" readonly>
     </div>
@@ -307,15 +334,25 @@
             </div>
           </div>
         </div>
-  
+      </div>
     </div>
   </template>
   <script>
   import axios from 'axios';
-  
+  import { jsPDF } from 'jspdf';
+  import '../../../fonts/arial-normal.js'; 
+  import '../../../fonts/times-normal.js'; 
+  import '../../../fonts/arialbd-bold.js'; 
+  import Pagination from '@/Components/Pagination.vue';
+
   export default {
+    components: {
+    Pagination
+  },
     data() {
       return {
+        totalPages: 1,
+        currentPage: 1,
         center_head: '',
         showCamera: false,
     videoStream: null,
@@ -596,7 +633,311 @@
     setTimeout(() => {
       this.message = '';
     }, 3000); // Clear the message after 3 seconds
-  }
+  },
+  exportToPdf() { 
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
+  const pageHeight = 297; // Total page height in mm
+  const marginBottom = 30; // Bottom margin in mm
+  const rowHeight = 8; // Height of each row
+  const lineHeight = 5; // Space between lines
+  const footerHeight = 5; // Adjust to fit the height of your footer
+  const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
+  const maxWidth = 100; // Maximum width for text
+  let contentYPos = 0; // Start Y position for content (initialize contentYPos)
+  let initialX = 20; // X position for content
+
+
+  
+
+  // Add header logo
+  const logoImg = "/images/headerlogo3.png"; 
+  pdf.addImage(logoImg, "PNG", 15, 15, 90, 20); 
+  contentYPos += 40; 
+
+  // Add title and header text
+  pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text('REGIONAL REHABILITATION CENTER FOR YOUTH', 150, 22, { align: 'center' });
+  contentYPos += 10;
+
+  pdf.text('RRCY/FIELD OFFICE XI', 150, 27, { align: 'center' });
+  contentYPos += 10;
+
+  pdf.setFontSize(8);
+  pdf.setFont('times', 'italic','bold');
+  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 150, 32, { align: 'center' });
+  contentYPos += 10;
+
+
+  pdf.setFontSize(18);
+  pdf.setTextColor(50, 50, 255);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text('NURSING CARE SERVICE', 105, 48, { align: 'center' });
+
+
+  pdf.setTextColor(0, 0, 0);
+  contentYPos += -14;
+  pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text(`CLIENT'S NAME: ${this.form.client_name || ''}`, initialX+-9, contentYPos);
+  pdf.text(`BIRTHDATE: ${this.form.birthdate || ''}`, initialX+120, contentYPos);
+
+  contentYPos += 6;
+  pdf.text(`AGE: ${this.form.age || ''}`, initialX+-9, contentYPos);
+  pdf.text(`CURRENT MEDICAL STATUS: ${this.form.current_medical_status || ''}`, initialX+30, contentYPos);
+  pdf.text(`RELIGION: ${this.form.religion || ''}`, initialX+120, contentYPos);
+
+  contentYPos += 6;
+  pdf.text(`ADDRESS:`, initialX+-9, contentYPos);
+  pdf.setFontSize(9);
+  pdf.text(`${this.form.address || ''}`, initialX+10, contentYPos);
+  pdf.setFontSize(10);
+  pdf.text(`DATE OF ADMISSION: ${this.form.date_of_admission || ''}`, initialX+120, contentYPos);
+
+  pdf.setFontSize(16);
+  pdf.setTextColor(50, 50, 255);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text('MONTHLY BMI MONITORING 2024', 105, 77, { align: 'center' });
+
+
+contentYPos += 16;
+pdf.setFontSize(10);
+pdf.setTextColor(0, 0, 0);
+pdf.setFont('arialbd', 'bold'); 
+pdf.text(`VITAL SIGNS / BMI`, initialX+15, contentYPos);
+pdf.text(`APRIL`, initialX+125, contentYPos);
+
+contentYPos += 5;
+pdf.setFont('arial', 'normal'); 
+pdf.text(`TEMPERATURE`, initialX+-9, contentYPos);
+const temperature = this.form.temperature || ''; // Get the temperature value
+pdf.text(`${temperature}`, 136, 89); 
+const tempTextWidth = pdf.getTextWidth(`${temperature}`);
+pdf.text('degree celsius', 136 + tempTextWidth + 2, 89);
+
+contentYPos += 5;
+pdf.setFont('arial', 'normal'); 
+pdf.text(`PULSE RATE`, initialX+-9, contentYPos);
+const pulsrate = this.form.pulse_rate || ''; // Get the temperature value
+pdf.text(`${pulsrate}`, 145, contentYPos); 
+const pulsrateTextWidth = pdf.getTextWidth(`${pulsrate}`);
+pdf.text('bpm', 145 + pulsrateTextWidth + 2, contentYPos);
+
+contentYPos += 5;
+pdf.setFont('arial', 'normal'); 
+pdf.text(`RESPIRATORY RATE`, initialX+-9, contentYPos);
+const respiratory_rate = this.form.respiratory_rate || ''; // Get the temperature value
+pdf.text(`${respiratory_rate}`, 145, contentYPos); 
+const respiratory_rateTextWidth = pdf.getTextWidth(`${respiratory_rate}`);
+pdf.text('bpm', 145 + respiratory_rateTextWidth + 2, contentYPos);
+
+contentYPos += 5;
+pdf.setFont('arial', 'normal'); 
+pdf.text(`BLOOD PRESSURE`, initialX+-9, contentYPos);
+const blood_pressure = this.form.blood_pressure || ''; // Get the temperature value
+pdf.text(`${blood_pressure}`, 147, contentYPos); 
+const blood_pressureTextWidth = pdf.getTextWidth(`${blood_pressure}`);
+pdf.text('mmHg', 147 + blood_pressureTextWidth + 2, contentYPos);
+
+contentYPos += 5;
+pdf.setFont('arial', 'normal'); 
+pdf.text(`HEIGHT (cm)`, initialX+-9, contentYPos);
+pdf.text(`${this.form.height_cm || ''}`, 150, contentYPos, { align: 'center' });
+
+contentYPos += 5;
+pdf.setFont('arial', 'normal'); 
+pdf.text(`WEIGHT (kg)`, initialX+-9, contentYPos);
+pdf.text(`${this.form.weight_kg || ''}`, 150, contentYPos, { align: 'center' });
+
+
+contentYPos += 5;
+pdf.setFont('arial', 'normal'); 
+pdf.text(`BODY MASS INDEX (BMI)`, initialX+-9, contentYPos);
+pdf.text(`${this.form.bmi || ''}`, 150, contentYPos, { align: 'center' });
+
+contentYPos += 5;
+pdf.setFont('arial', 'normal'); 
+pdf.text(`BMI REMARKS`, initialX+-9, contentYPos);
+pdf.setFont('arialbd', 'bold'); 
+pdf.text(`${this.form.bmi_remarks || ''}`, 150, contentYPos, { align: 'center' });
+
+
+pdf.setFontSize(14);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text('GENERAL APPEARANCE', 105, 132, { align: 'center' });
+
+  contentYPos += 15;
+  pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text(`EYES:`, initialX+-9, contentYPos);
+  pdf.setFontSize(9);
+  pdf.setFont('arial', 'normal'); 
+  pdf.text(`${this.form.eyes_status || ''}`, initialX+3, contentYPos);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.setFontSize(10);
+  pdf.text(`NAILS:`, initialX+91, contentYPos);
+  pdf.setFontSize(9);
+  pdf.setFont('arial', 'normal'); 
+  pdf.text(`${this.form.nails_status || ''}`, initialX+104, contentYPos);
+
+  contentYPos += 5;
+  pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text(`EARS:`, initialX+-9, contentYPos);
+  pdf.setFontSize(9);
+  pdf.setFont('arial', 'normal'); 
+  pdf.text(`${this.form.ears_status || ''}`, initialX+3, contentYPos);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.setFontSize(10);
+  pdf.text(`SKIN:`, initialX+91, contentYPos);
+  pdf.setFontSize(9);
+  pdf.setFont('arial', 'normal'); 
+  pdf.text(`${this.form.skin_status || ''}`, initialX+102, contentYPos);
+
+  contentYPos += 5;
+  pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text(`MOUTH & TEETH:`, initialX+-9, contentYPos);
+  pdf.setFontSize(9);
+  pdf.setFont('arial', 'normal'); 
+  pdf.text(`${this.form.mouth_teeth_status || ''}`, initialX+22, contentYPos);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.setFontSize(10);
+  pdf.text(`HAIR:`, initialX+91, contentYPos);
+  pdf.setFontSize(9);
+  pdf.setFont('arial', 'normal'); 
+  pdf.text(`${this.form.hair_status || ''}`, initialX+103, contentYPos);
+
+  contentYPos += 10;
+  pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text(`SERVICES GIVEN:`, initialX+-9, contentYPos);
+
+  contentYPos = 164;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  const services_givenLog = `${this.form.services_given || ''}`;
+  const services_givenLines = pdf.splitTextToSize(services_givenLog, maxWidth);
+
+  services_givenLines.forEach(line => {
+    pdf.text(line, initialX+-9, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos = 199;
+  pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text(`REMARKS:`, initialX+-9, contentYPos);
+
+  contentYPos = 204;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  const remarksLog = `${this.form.remarks || ''}`;
+  const remarksLines = pdf.splitTextToSize(remarksLog, maxWidth);
+
+  remarksLines.forEach(line => {
+    pdf.text(line, initialX+-9, contentYPos);
+    contentYPos += lineHeight;
+  });
+
+  const profileImage = this.form.profile_image 
+      ? `/profile_images/${this.form.profile_image}` 
+      : this.previewImage || '';
+
+  const img = new Image();
+
+  img.onload = () => {
+      // Add the profile image to the PDF
+      pdf.addImage(img, 'PNG', initialX + 90, contentYPos+-84, 90, 81); // Adjust size as necessary
+
+
+
+
+  contentYPos = 240;
+  pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text(`PREPARED BY:`, initialX+-9, contentYPos);
+
+  pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold'); 
+  pdf.text(`NOTED BY:`, initialX+81, contentYPos);
+
+
+
+
+
+
+contentYPos += 10;
+
+
+pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('PHILIP ROY D. CONTANGCO, RN', initialX+5, contentYPos+10);
+  pdf.text('CARLBRIAN T. BAUZON, RN', initialX+8, contentYPos+15);
+  contentYPos += 5; 
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  pdf.line(27, contentYPos+11, 82, contentYPos+11);
+  pdf.text('RESIDENT NURSES RRCY', initialX+12, contentYPos+15);
+
+
+
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text('ANGELIC B. PAÑA,RSW', initialX+105, contentYPos+5);
+  contentYPos += 5; 
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(10);
+  pdf.line(125, contentYPos+1, 170, contentYPos+1);
+  pdf.text('SWO IV / Center Head', initialX+110, contentYPos+5);
+
+
+
+  pdf.setLineWidth(0.5);
+  pdf.rect(10, 10, 190, 277); 
+
+  pdf.line(10, 40, 200, 40); 
+  pdf.line(10, 52, 200, 52); 
+  pdf.line(10, 58, 200, 58); 
+  pdf.line(10, 64, 200, 64); 
+  pdf.line(10, 69, 200, 69); 
+  pdf.line(10, 80, 200, 80); 
+  pdf.line(10, 85, 200, 85); 
+  pdf.line(10, 90, 200, 90); 
+  pdf.line(10, 95, 200, 95); 
+  pdf.line(10, 100, 200, 100); 
+  pdf.line(10, 105, 200,105); 
+  pdf.line(10, 110, 200, 110); 
+  pdf.line(10, 115, 200, 115); 
+  pdf.line(10, 120, 200, 120); 
+  pdf.line(10, 125, 200, 125); 
+  pdf.line(10, 135, 200, 135); 
+  pdf.line(10, 155, 200, 155); 
+  pdf.line(10, 195, 110, 195); 
+  pdf.line(10, 236, 200, 236); 
+
+  pdf.line(100, 236, 100, 287); 
+  pdf.line(110, 135, 110, 155); 
+  pdf.line(90, 80 , 90, 125); 
+
+  pdf.setLineWidth(0);
+
+  pdf.line(139, 52 , 139, 64); 
+  pdf.line(49, 58 , 49, 64); 
+
+
+
+  // Save the PDF with a dynamic file name
+  pdf.save(`Nursing_Care_${this.form.name || ''}.pdf`);
+};
+img.onerror = (err) => {
+      console.error('Image loading error:', err);
+  };
+
+  img.src = profileImage; // Set the image source
+},
+
+
 }
   };
   </script>
@@ -609,6 +950,11 @@
     padding: 0;
     margin: 0;
     vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
+  }
+  .graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
   }
   </style>
   

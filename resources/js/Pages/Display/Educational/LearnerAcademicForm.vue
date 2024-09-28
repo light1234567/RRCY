@@ -1,31 +1,50 @@
 <template>
 
-<div class="flex justify-end space-x-4 mb-4">
-  <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-    <span v-if="!editMode">Edit</span>
-    <span v-else>Cancel</span>
-  </button>
-  <button v-if="editMode" @click="submitForm" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-  Save
-</button>
-<div class="flex justify-end space-x-4">
-        <button @click="toggleEdit" type="button" class="bg-blue-500 text-white px-4 py-2 rounded">
-          {{ editMode ? 'Cancel' : 'Edit' }}
-        </button>
-        <button v-if="editMode" type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-
-        <button @click="exportToPdf" type="button" class="bg-red-500 text-white px-4 py-2 rounded">
-        Export to PDF
-      </button>
-      </div>
+<!-- Tabs for Actions -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class=" flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+        <!-- FontAwesome for Back -->
+        <i class="fas fa-arrow-left w-4 h-4"></i>
+        <span>Back</span>
+    </button>
 </div>
+
+<div class="flex justify-end -mr-9  bg-transparent border border-gray-300 p-4 space-x-4 -mt-9">
+    <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+    
+    <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for Edit -->
+        <i class="fas fa-edit w-4 h-4"></i>
+        <span>Edit</span>
+      </button>
+
+    <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for Save -->
+        <i class="fas fa-check w-4 h-4"></i>
+        <span>Save</span>
+    </button>
+
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center mr-8 space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for PDF Download -->
+        <i class="fas fa-file-pdf w-4 h-4"></i>
+        <span>Export PDF</span>
+    </button>
+</div>
+
+<div class="graph-background pt-0.5 -ml-4 -mr-9 -mb-16">
 
 <!-- Success/Error Message -->
 <div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
   {{ message }}
 </div>
 
-  <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+  <div class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
     <!-- Header Section with Logo and Document Details -->
     <div class="relative flex justify-between items-center mb-4">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48">
@@ -156,21 +175,46 @@
           </div>
           <p class="text-sm mt-2">Center Head</p>
         </div>
-      </div>
 
+      </div>
+      <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-between items-center">
+          
+          <!-- Left Section: Page number -->
+          <div class="flex flex-col flex-grow">
+            <!-- Page number centered -->
+            <p class="text-center -mb-1 font-bold">PAGE 1 of {{ totalPages }}</p>
+
+          <!-- Continuous horizontal line, moved to the left with space on the right -->
+          <div style="border-top: 2px solid black; width: 103%; margin-top: 4px; margin-left: -24px;"></div>
+
+
+            <!-- Text under the line -->
+            <p style="text-align: center; font-weight: bold; margin-top: -1px;">LEARNER’S ACADEMIC BEHAVIORAL FORM</p>
+            <p class="-ml-6 text-[10px]"style="text-align: center; margin-top: -1px;">DSWD  I FIELD OFFICE XI I PROTECTIVE SERVICES DIVISION I REGIONAL REHABILITATION CENTER FOR YOUTH, DAVAO CITY PHILIPPINES 8000
+            </p>
+          </div>
+      </div>
+</div>
       
     </form>
+  </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import jsPDF from 'jspdf';
-
+import Pagination from '@/Components/Pagination.vue';
 export default {
+  components: {
+    Pagination
+  },
   name: 'LearnerBehaviorForm',
   data() {
     return {
+      totalPages: 1,
+      currentPage: 1,
       form: {
         client_id: null,
         month: '',
@@ -600,5 +644,10 @@ th, td {
 input[type="text"], textarea {
   border-width: 1px;
 }
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  }
 </style>
       

@@ -42,10 +42,12 @@
     <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
     <div class="graph-background pt-0.5  -mr-9 -mb-16">
 
-  <div class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+
+
+  <div v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
     <!-- Header -->
     <div class="relative flex justify-between items-center mb-4">
-      <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48">
+      <img src="/images/headerlogo2.png" alt="Logo" class=" h-32 w-64 relative z-10">
       <div class="text-right">
         <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
         <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth RFO XI</p>
@@ -135,7 +137,7 @@
     <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
         <div class="flex justify-between items-center">
           <div class="flex flex-col">
-            <p class="ml-24 -mb-2 font-bold">PAGE 1 of 2</p>
+            <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
             <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
             <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
@@ -149,7 +151,7 @@
 
 
 
-  <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+  <div v-if="currentPage === 2" class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
 
     <!-- General Information -->
     <div class="mb-6 grid grid-cols-2 gap-4">
@@ -297,7 +299,7 @@
     <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
         <div class="flex justify-between items-center">
           <div class="flex flex-col">
-            <p class="ml-24 -mb-2 font-bold">PAGE 2 of 2</p>
+            <p class="ml-24 -mb-4 font-bold">PAGE 2 of {{ totalPages }}</p>
             <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
             <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
@@ -425,7 +427,7 @@ export default {
       editMode: false,
       originalForm: null,
       message: '',
-      totalPages: 1,
+      totalPages: 2,
       currentPage: 1,
       messageType: '',
     };

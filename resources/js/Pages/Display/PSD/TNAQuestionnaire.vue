@@ -1,12 +1,51 @@
 <template>
-  
-  <div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+  <!-- Tabs for Actions (Back button visible only in edit mode) -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+  <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+    <!-- FontAwesome for Back -->
+    <i class="fas fa-arrow-left w-4 h-4"></i>
+    <span>Back</span>
+  </button>
+</div>
+
+<!-- Main Action Buttons -->
+<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+
+  <!-- Pagination Component -->
+  <Pagination 
+    :totalPages="totalPages" 
+    :currentPage="currentPage" 
+    @update:currentPage="currentPage = $event" 
+  />
+
+  <!-- Edit Button (visible only when not in edit mode) -->
+  <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+    <!-- FontAwesome for Edit -->
+    <i class="fas fa-edit w-4 h-4"></i>
+    <span>Edit</span>
+  </button>
+
+  <!-- Save Button (visible only in edit mode) -->
+  <button v-else @click="submitForm" type="button" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
+
+  <!-- Export PDF Button (commented out for now, uncomment to use) -->
+  <!--
+  <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+    <i class="fas fa-file-pdf w-4 h-4"></i>
+    <span>Export PDF</span>
+  </button>
+  -->
+</div>
+
+<div class="graph-background pt-0.5  -mr-9 -mb-16">
+
+  <div v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
   <!-- Success/Error Message -->
   <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
 <!-- Header -->
 <div class="relative flex justify-between items-center mb-4">
-    <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48">
-    <div class="text-right">
+  <img src="/images/headerlogo2.png" alt="Logo" class=" h-32 w-64 relative z-10">    
+  <div class="text-right">
       <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
       <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth RFO XI</p>
       <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
@@ -190,7 +229,7 @@
   <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
       <div class="flex justify-between items-center">
         <div class="flex flex-col">
-          <p class="ml-24 -mb-2 font-bold">PAGE 1 of 2</p>
+          <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
           <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
           <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
         </div>
@@ -205,7 +244,7 @@
 </div>
 
 
-<div class="max-w-3xl p-8 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-200">
+<div  v-if="currentPage === 2" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
   <!-- Automotive Sector -->
   <tr class="bg-gray-200">
     <th class="border p-2 text-center"></th>
@@ -355,7 +394,7 @@
   <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
       <div class="flex justify-between items-center">
         <div class="flex flex-col">
-          <p class="ml-24 -mb-2 font-bold">PAGE 2 of 2</p>
+          <p class="ml-24 -mb-4 font-bold">PAGE 2 of {{ totalPages }}</p>
           <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
           <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
         </div>
@@ -365,18 +404,24 @@
       </div>
     </div>
 
-
+</div>
 </div>
 
 </template>
 
 <script>
 import axios from 'axios';
+import Pagination from '@/Components/Pagination.vue';
 
 export default {
+  components: {
+    Pagination,
+  },
 name: "TrainingNeedsAssessment",
 data() {
   return {
+    totalPages: 2,
+    currentPage: 1,
     form: {
       client_id: null,
       name: '',
@@ -770,4 +815,9 @@ background-color: #f3f4f6; /* Tailwind gray-100 */
 .table-title {
 font-weight: bold;
 }
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  } 
 </style>

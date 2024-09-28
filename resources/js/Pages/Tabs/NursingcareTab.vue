@@ -42,7 +42,7 @@
       <div v-if="loading" class="text-center py-4">Loading client data...</div>
       <div v-else>
         <div class="">
-          <ul class="flex border-b overflow-x-auto whitespace-nowrap">
+          <ul class="flex overflow-x-auto whitespace-nowrap">
             <li 
               v-for="(tab, index) in tabs" 
               :key="index" 

@@ -1,18 +1,46 @@
 <template>
-  <div class="max-w-3xl p-8 bg-white shadow-xl mx-auto my-8 border border-gray-200">
-    <!-- Buttons for Edit and Save -->
-    <div class="flex justify-end gap-4">
-      <button type="button" @click="isEditable = !isEditable" class="bg-blue-500 text-white px-4 py-2 rounded">
-        {{ isEditable ? 'Cancel' : 'Edit' }}
-      </button>
-      <button v-if="isEditable" type="submit" @click="submitForm" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-      <span>Export to PDF</span>
+
+<!-- Tabs for Actions -->
+<div v-if="isEditable" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+        <!-- FontAwesome for Back -->
+        <i class="fas fa-arrow-left w-4 h-4"></i>
+        <span>Back</span>
     </button>
-    </div>
+</div>
+
+<div class="flex justify-end -mr-9 bg-transparent border border-gray-300 p-4 space-x-4 -mt-9">
+    <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+
+    <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for Edit -->
+        <i class="fas fa-edit w-4 h-4"></i>
+        <span>Edit</span>
+      </button>
+    <button v-if="isEditable" type="submit" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for Save -->
+        <i class="fas fa-check w-4 h-4"></i>
+        <span>Save</span>
+    </button>
+
+    <!-- Download PDF Button -->
+    <button @click="exportToPdf" class="flex items-center mr-8 space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for PDF Download -->
+        <i class="fas fa-file-pdf w-4 h-4"></i>
+        <span>Export PDF</span>
+    </button>
+</div>
+
+<div class="graph-background pt-0.5 -ml-4 -mr-9 -mb-16">
+
+  <div class="max-w-3xl p-12 bg-white shadow-xl mx-auto my-8 border border-gray-400">
+    <!-- Buttons for Edit and Save -->
+
 
     <!-- Success/Error Message -->
     <div v-if="message" :class="messageClass" class="p-4 mb-4 rounded">
@@ -376,6 +404,7 @@
       </div>
     </form>
   </div>
+  </div>
 </template>
 
 <script>
@@ -384,11 +413,17 @@ import { jsPDF } from 'jspdf';
 import '../../../fonts/arial-normal.js'; 
 import '../../../fonts/times-normal.js'; 
 import '../../../fonts/arialbd-bold.js'; 
+import Pagination from '@/Components/Pagination.vue';
 
 export default {
   name: 'AssessmentForm',
+  components:{
+    Pagination
+  },
   data() {
     return {
+      totalPages: 1,
+      currentPage: 1,
       isEditable: false, // State to toggle edit mode
       message: '', // State to hold the success/error message
       messageClass: '', // Class to style the message (success/error)
@@ -676,5 +711,9 @@ exportToPdf() {
 
 
 <style scoped>
-/* Add any custom styling here */
-</style>
+.graph-background {
+    background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                      linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+    background-size: 15px 15px; /* Adjust size as per your need */
+  }
+  </style>
