@@ -253,10 +253,7 @@ data() {
       resident_name: '',
       houseparent_name: '',
       inventory_shp: '',
-      items: [
-        { name: '', description: '', qty: '', brand: '', size: '', color: '', old: '', new: '', remarks: '' },
-        // add other items as necessary
-      ]
+      items: [],
     },
     originalForm: null, // To store the original form data
     editMode: false,

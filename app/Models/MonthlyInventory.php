@@ -18,14 +18,14 @@ class MonthlyInventory extends Model
         'resident_name',
         'houseparent_name',
         'inventory_shp',
+        'items',
         'updated_by'
     ];
 
-    public function items()
-    {
-        return $this->hasMany(InventoryItem::class);
-    }
-
+    protected $casts = [
+        'items' => 'array', // Cast items as array
+    ];
+    
     public function client()
     {
         return $this->belongsTo(Client::class);
