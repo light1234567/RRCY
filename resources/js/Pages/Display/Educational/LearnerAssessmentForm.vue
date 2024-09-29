@@ -627,7 +627,7 @@ exportToPdf() {
   };
 
   const addPage = () => {
-    if (currentY+70 >= (pageHeight - marginBottom - footerHeight)) {
+    if (currentY+80 >= (pageHeight - marginBottom - footerHeight)) {
       addFooter(); // Add footer before new page
       pdf.addPage(); // Create new page
       currentY = 40; // Reset Y position for new page
@@ -652,15 +652,15 @@ exportToPdf() {
   pdf.setFontSize(11);
   pdf.text(`School Year: ${this.form.school_year}`, 105, 55, "center"); 
   pdf.text(`Grading Period: ${this.form.grading_period}`, 105, 60, "center"); 
-  pdf.text(`Learner's Name: ${this.form.learner_name}`, 20, 75); 
-  pdf.text(`Grade: ${this.form.grade}`, 100, 75); 
-  pdf.text(`Date: ${this.form.date}`, 150, 75); currentY += lineHeight +75;
+  pdf.text(`Learner's Name: ${this.form.learner_name}`, 20, 70); 
+  pdf.text(`Grade: ${this.form.grade}`, 100, 70); 
+  pdf.text(`Date: ${this.form.date}`, 150, 70); ;
 
   // Reading Assessment Table
   pdf.setFont('Arial', 'bold');
-  pdf.text('Reading Assessment', 20, 85); ;
+  pdf.text('Reading Assessment', 20, 75); ;
   pdf.setFont('Arial', 'normal');
-  currentY= 90;
+  currentY= 80;
 
   addPage();
   // Reading Assessment Table
@@ -700,6 +700,29 @@ exportToPdf() {
   });
 
   // Update currentY after the table
+  currentY = 20;
+  currentY += pdf.autoTable.previous.finalY ;
+  addPage();
+
+
+  // After the Reading Assessment Table
+
+
+// Setup autoTable for the new table
+pdf.autoTable({
+    head: [['','', 'Remarks']], // Header for the new table
+    body: [
+        ['Advance', 'He can identify details from the text. He can give insightful evidence to support his conclusions and to make inferences. He can interpret unfamiliar words based on context. He demonstrates a sophisticated understanding of the concepts and competencies relevant to the expected learning.', this.form.assessments.reading.advance_remarks],
+        ['Proficient', 'He can identify the main and details about the text. He can give evidence from the text to support conclusions. His ability to make inferences is limited as he can understand familiar words, but he has trouble interpreting new words. He demonstrates a complete understanding of the concepts and competencies relevant to the expected learning.', this.form.assessments.reading.advance_remarks],
+        ['Developing', 'He can identify the main idea and a few details about the text. He struggles to provide evidence and make inferences. He can understand familiar words when they are used in familiar contexts. He demonstrates a partial understanding of the concepts and competencies relevant to the expected learning.', this.form.assessments.reading.advance_remarks],
+        ['Emerging', 'His ability to interpret individual words significantly limits his understanding of the text. He can identify the main idea of the text, but he cannot give details or textual evidence to support conclusions about the text. He demonstrates an initial understanding of the concepts and competencies relevant to the expected learning.', this.form.assessments.reading.advance_remarks],
+        ['Beginning', 'He cannot understand the words in the text well enough to be able to identify the main idea or any details about the text.', this.form.assessments.reading.advance_remarks], 
+    ],
+    startY: currentY, // Use the updated currentY for vertical positioning
+    theme: 'grid', // Maintain the grid theme
+    styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // White background, black text
+    headStyles: { fillColor: [192, 192, 192], textColor: 0 }, // Light gray header background
+});
   currentY= 20;
   currentY += pdf.autoTable.previous.finalY ;
   addPage();
