@@ -294,12 +294,15 @@ export default {
     saveData() {
       this.isModalOpen = true;
     },
-
     confirmSave() {
       this.isModalOpen = false;
       this.submitForm();
+      this.closeModal();
     },
-
+    openModal() {
+      this.isModalOpen = true;
+      console.log('Modal opened');
+    },
     closeModal() {
       this.isModalOpen = false;
     },

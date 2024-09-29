@@ -530,9 +530,15 @@ export default {
     confirmSave() {
       this.isModalOpen = false;
       this.submitForm();
+      this.closeModal();
+    },
+    openModal() {
+      this.isModalOpen = true;
+      console.log('Modal opened');
     },
     closeModal() {
       this.isModalOpen = false;
+      console.log('Modal closed');
     },
     closeSaveResultModal() {
       this.isSaveResultModalOpen = false;

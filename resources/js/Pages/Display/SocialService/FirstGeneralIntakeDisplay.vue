@@ -245,11 +245,13 @@
       <label><input type="checkbox" v-model="sheet.major_life_event.disability" :disabled="!editMode" /> acquired disability</label><br />
       
       <!-- Other specify field with small text input and underline -->
-      <label class="flex items-center whitespace-nowrap">
-        <input type="checkbox" v-model="sheet.life_transition.others" :disabled="!editMode" />
-        <span class="ml-2">Others (pls. specify)</span>
-      </label>
-    </div>
+      <div class="flex items-center whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.major_life_event.othersEnabled" :disabled="!editMode" @change="focusInput('majorLifeEvent')" />
+  <label class="ml-2">
+    Others(<span v-if="sheet.major_life_event.othersEnabled" ref="majorLifeEvent" contenteditable="true" @input="updateMajorLifeEventOthers" class="editable">{{ sheet.major_life_event.others }}</span><span v-else>pls. specify</span>)
+  </label>
+</div>
+    </div>  
   </div>
 </div>
 
@@ -262,8 +264,13 @@
            <label><input type="checkbox" v-model="sheet.enduring_life_strain.physical_illness" :disabled="!editMode" /> Physical illness</label><br />
            <label><input type="checkbox" v-model="sheet.enduring_life_strain.lack_recreational_facilities" :disabled="!editMode" /> Lack of recreational facilities</label><br />
            <label><input type="checkbox" v-model="sheet.enduring_life_strain.exclusion_from_peers" :disabled="!editMode" /> Exclusion from peers</label><br />
-           <label><input type="checkbox" v-model="sheet.enduring_life_strain.other" :disabled="!editMode" /> other (pls. specify)</label><br />
-         </div>
+           <div class="flex items-center whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.enduring_life_strain.othersEnabled" :disabled="!editMode" @change="focusInput('enduringLifeStrain')" />
+  <label class="ml-2">
+    Others(<span v-if="sheet.enduring_life_strain.othersEnabled" ref="enduringLifeStrain" contenteditable="true" @input="updateEnduringLifeStrainOthers" class="editable">{{ sheet.enduring_life_strain.others }}</span><span v-else>pls. specify</span>)
+  </label>
+</div>  
+    </div>
          <div>
            <label><input type="checkbox" v-model="sheet.enduring_life_strain.constant_need_to_earn" :disabled="!editMode" /> constant need to earn for the family</label><br />
            <label><input type="checkbox" v-model="sheet.enduring_life_strain.lack_education_opportunity" :disabled="!editMode" /> lack of educational/ opportunity</label><br />
@@ -350,7 +357,7 @@
         <span class="ml-2">Legality/law enforcement (weak)</span>
       </label>
       <label class="flex items-center whitespace-nowrap">
-        <input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" />
+        <input type="checkbox" v-model="sheet.normalization.availability_of" :disabled="!editMode" />
         <span class="ml-2">Availability of:</span>
       </label>
       <div class="ml-16">
@@ -474,8 +481,13 @@
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.delinquent_behaviour" :disabled="!editMode" /> Delinquent behaviour</label><br />
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.stealing" :disabled="!editMode" /> stealing</label><br />
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.begging" :disabled="!editMode" /> begging</label><br />
-           <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.others" :disabled="!editMode" /> others (pls. specify)</label><br />
-         </div>
+           <div class="flex items-center whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.behaviour_towards_incident.othersEnabled1" :disabled="!editMode" @change="focusInput('behaviourTowardsIncident1')" />
+  <label class="ml-2">
+    Others(<span v-if="sheet.behaviour_towards_incident.othersEnabled1" ref="behaviourTowardsIncident1" contenteditable="true" @input="updateBehaviourTowardsIncidentOthers1" class="editable">{{ sheet.behaviour_towards_incident.others1 }}</span><span v-else>pls. specify</span>)
+  </label>
+</div>       
+    </div>
          <div>
           <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.indulge_in_illegal_substance" :disabled="!editMode" /> indulge in illegal substance</label><br />
            <label><input type="checkbox" v-model="sheet.behaviour_towards_incident.unresponsive_passive" :disabled="!editMode" /> unresponsive/ passive</label><br />
@@ -486,7 +498,7 @@
  
     <div>
       <label class="flex items-center whitespace-nowrap">
-        <input type="checkbox" v-model="sheet.normalization.commercial_sex" :disabled="!editMode" />
+        <input type="checkbox" v-model="sheet.normalization.feelings" :disabled="!editMode" />
         <span class="ml-2">Feelings</span>
       </label>
       <div class="grid grid-cols-2 gap-x-8">
@@ -503,10 +515,12 @@
           <input type="checkbox" v-model="sheet.normalization.independence" :disabled="!editMode" />
           <span>Independence</span>
         </label>
-        <label class="flex items-center space-x-1 whitespace-nowrap">
-          <input type="checkbox" v-model="sheet.normalization.others" :disabled="!editMode" />
-          <span>Others (pls specify)</span>
-        </label>
+        <div class="flex items-center space-x-1 whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.normalization.othersEnabled" :disabled="!editMode" @change="focusInput('attachments')" />
+  <label class="ml-2">
+    Others(<span v-if="sheet.normalization.othersEnabled" ref="attachments" contenteditable="true" @input="updatenNormalizationOthers" class="editable">{{ sheet.normalization.others }}</span><span v-else>pls. specify</span>)
+  </label>
+</div>
       </div>
     <div class="ml-24">
         <label class="flex items-center space-x-1 whitespace-nowrap">
@@ -543,9 +557,14 @@
            <label><input type="checkbox" v-model="sheet.attachments.aunt" :disabled="!editMode" /> Aunt</label><br />
            <label><input type="checkbox" v-model="sheet.attachments.neighbour" :disabled="!editMode" /> Neighbour</label><br />
            <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Cousin</label><br />
-           <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Teacher</label><br />
-           <label><input type="checkbox" v-model="sheet.attachments.cousin" :disabled="!editMode" /> Othe</label><br />
-         </div>
+           <label><input type="checkbox" v-model="sheet.attachments.teacher" :disabled="!editMode" /> Teacher</label><br />
+           <div class="flex items-center whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.attachments.othersEnabled" :disabled="!editMode" @change="focusInput('attachments')" />
+  <label class="ml-2">
+    Others(<span v-if="sheet.attachments.othersEnabled" ref="attachments" contenteditable="true" @input="updateAttachmentsOthers" class="editable">{{ sheet.attachments.others }}</span><span v-else>pls. specify</span>)
+  </label>
+</div>      
+    </div>
          <div>
            <label><input type="checkbox" v-model="sheet.attachments.father" :disabled="!editMode" /> father</label><br />
            <label><input type="checkbox" v-model="sheet.attachments.grandfather" :disabled="!editMode" /> grand father</label><br />
@@ -566,8 +585,13 @@
            <label><input type="checkbox" v-model="sheet.skills.communication_skills" :disabled="!editMode" /> Communication skills</label><br />
            <label><input type="checkbox" v-model="sheet.skills.vocational_skills" :disabled="!editMode" /> Vocational skills</label><br />
            <label><input type="checkbox" v-model="sheet.skills.critical_thinking" :disabled="!editMode" /> Critical thinking</label><br />
-           <label><input type="checkbox" v-model="sheet.skills.others" :disabled="!editMode" /> Others</label><br />
-         </div>
+           <div class="flex items-center whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.skills.othersEnabled" :disabled="!editMode" @change="focusInput('skills')" />
+  <label class="ml-2">
+    Others(<span v-if="sheet.skills.othersEnabled" ref="skills" contenteditable="true" @input="updateSkillsOthers" class="editable">{{ sheet.skills.others }}</span><span v-else>pls. specify</span>)
+  </label>
+</div>     
+    </div>
          <div>
            <label><input type="checkbox" v-model="sheet.skills.coping_skills" :disabled="!editMode" /> coping skills</label><br />
            <label><input type="checkbox" v-model="sheet.skills.survival_skills" :disabled="!editMode" /> survival skills</label><br />
@@ -626,10 +650,12 @@
                 <input type="checkbox" v-model="sheet.resources.obedient" :disabled="!editMode" />
                 <span>Obedient</span>
               </label>
-              <label class="flex items-center space-x-1 whitespace-nowrap">
-                <input type="checkbox" v-model="sheet.resources.others" :disabled="!editMode" />
-                <span>Others</span>
-              </label>
+              <div class="flex items-center space-x-1 whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.resources.othersEnabled1" :disabled="!editMode" @change="focusInput('resources1')" />
+  <label class="ml-2">
+    Others(<span v-if="sheet.resources.othersEnabled1" ref="resources1" contenteditable="true" @input="updateResourcesOthers1" class="editable">{{ sheet.resources.others1 }}</span><span v-else>pls. specify</span>)
+  </label>
+</div>
             </div>
             <div class="ml-8">
               <label class="flex items-center space-x-1 whitespace-nowrap">
@@ -688,10 +714,12 @@
                 <input type="checkbox" v-model="sheet.resources.civic_organization" :disabled="!editMode" />
                 <span>Civic Organization</span>
               </label>
-              <label class="flex items-center space-x-1 whitespace-nowrap">
-                <input type="checkbox" v-model="sheet.resources.others_external" :disabled="!editMode" />
-                <span>Others (pls. specify)</span>
-              </label>
+              <div class="flex items-center space-x-1 whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.resources.othersEnabled2" :disabled="!editMode" @change="focusInput('resources2')" />
+  <label class="ml-2">
+    Others(<span v-if="sheet.resources.othersEnabled2" ref="resources2" contenteditable="true" @input="updateResourcesOthers2" class="editable">{{ sheet.resources.others2 }}</span><span v-else>pls. specify</span>)
+  </label>
+</div>
             </div>
             <div class="ml-44">
               <label class="flex items-center space-x-1 whitespace-nowrap">
@@ -863,18 +891,20 @@ export default {
           sexual_abuse: false,
           verbal_abuse: false,
           disability: false,
-          others: false,
+          othersEnabled: false,
+          others: ''
         },
         enduring_life_strain: {
           poverty: false,
           physical_illness: false,
           lack_recreational_facilities: false,
           exclusion_from_peers: false,
-          other: false,
           constant_need_to_earn: false,
           lack_education_opportunity: false,
           exclusion_from_school: false,
           disability: false,
+          othersEnabled: false,
+          others: ''
         },
         life_transition: {
           moving_neighbour: false,
@@ -912,7 +942,11 @@ export default {
           illicit_relationship: false,
           incest_relationship: false,
           begging: false,
+          feelings: false,
+          availability_of: false,
           rugby_sniffing: false,
+          othersEnabled: false,
+          others: ''
         },
         behaviour_towards_incident: {
           stow_away: false,
@@ -920,12 +954,15 @@ export default {
           delinquent_behaviour: false,
           stealing: false,
           begging: false,
-          others: false,
           withdrawal: false,
           unresponsive_passive: false,
           indulge_in_illegal_substance: false,
           snatching: false,
           staying_in_street: false,
+          othersEnabled1: false,
+          others1: '',
+          othersEnabled2: false,
+          others2: ''
         },
         attachments: {
           mother: false,
@@ -933,12 +970,15 @@ export default {
           aunt: false,
           neighbour: false,
           cousin: false,
+          teacher: false,
           father: false,
           grandfather: false,
           uncle: false,
           peer: false,
           schoolmate: false,
           classmate: false,
+          othersEnabled: false,
+          others: ''
         },
         skills: {
           problem_solving: false,
@@ -946,12 +986,13 @@ export default {
           communication_skills: false,
           vocational_skills: false,
           critical_thinking: false,
-          others: false,
           coping_skills: false,
           survival_skills: false,
           decision_making_skills: false,
           comprehension: false,
           self_awareness: false,
+          othersEnabled: false,
+          others: ''
         },
         resources: {
           internal: false,
@@ -967,7 +1008,10 @@ export default {
           recreational_services: false,
           ngos: false,
           civic_organization: false,
-          others: false,
+          othersEnabled1: false,
+          others1: '',
+          othersEnabled2: false,
+          others2: '',
         },
         source_of_income_in_street: {
           vending: false,
@@ -1113,7 +1157,40 @@ calculateAge(birthDate) {
         this.messageType = '';
       }, 3000);
     },
-
+    updateMajorLifeEventOthers(event) {
+      this.sheet.major_life_event.others = event.target.innerText;
+    },
+    updateEnduringLifeStrainOthers(event) {
+      this.sheet.enduring_life_strain.others = event.target.innerText;
+    },
+    updateBehaviourTowardsIncidentOthers1(event) {
+      this.sheet.behaviour_towards_incident.others1 = event.target.innerText;
+    },
+    updateBehaviourTowardsIncidentOthers2(event) {
+      this.sheet.behaviour_towards_incident.others2 = event.target.innerText;
+    },
+    updateAttachmentsOthers(event) {
+      this.sheet.attachments.others = event.target.innerText;
+    },
+    updateSkillsOthers(event) {
+      this.sheet.skills.others = event.target.innerText;
+    },
+    updateResourcesOthers1(event) {
+      this.sheet.resources.others1 = event.target.innerText;
+    },
+    updateResourcesOthers2(event) {
+      this.sheet.resources.others2 = event.target.innerText;
+    },
+    updateNormalizationOthers(event) {
+      this.sheet.normalization.others = event.target.innerText;
+    },
+    focusInput(refName) {
+      this.$nextTick(() => {
+        if (this.$refs[refName]) {
+          this.$refs[refName].focus();
+        }
+      });
+    },
     exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
@@ -1445,7 +1522,7 @@ const majorLifeEvents = [
   { label: 'Victim of sexual abuse', value: this.sheet.major_life_event.sexual_abuse },
   { label: 'Victim of verbal abuse', value: this.sheet.major_life_event.verbal_abuse },
   { label: 'Acquired disability', value: this.sheet.major_life_event.disability },
-  { label: 'Others (pls. Specify)', value: this.sheet.major_life_event.others }
+  { label: 'Others (pls. Specify)', value: this.sheet.major_life_event.others },
 ];
 
 // Split the events into two columns (left and right)
@@ -1734,7 +1811,7 @@ function addNormalizationItemsSingleColumn(pdf, items, startY, pageHeight, foote
 // Define normalization items dynamically (including indents for requested items)
 const normalizationItems = [
   { label: 'Legality/law enforcement (weak)', value: this.sheet.normalization.legality_law_enforcement },
-  { label: 'Availability of:', value: this.sheet.normalization.commercial_sex },
+  { label: 'Availability of:', value: this.sheet.normalization.availability_of },
   { label: 'Commercial sex', value: this.sheet.normalization.commercial_sex, indent: true },
   { label: 'Substance/illegal drugs', value: this.sheet.normalization.substance_illegal_drugs, indent: true },
   { label: 'Pornography materials to include video tapes', value: this.sheet.normalization.pornography_materials, indent: true },
