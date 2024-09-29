@@ -439,6 +439,7 @@ pdf.setFont("arialbd", "bold");
 // Header text for "Learner Skills"
 pdf.text("LEARNER SKILLS", 21, currentY+6);
 
+
 // Header text for "Outstanding" (wrapped)
 let wrappedOutstanding = pdf.splitTextToSize("OUTSTANDING Well performed. Tasks are fully completed, all relevant information provided accurately and adequately where necessary. *Relevant tasks well performed; no tasks left incomplete", 25);
 wrappedOutstanding.forEach((line, index) => {
@@ -469,7 +470,7 @@ currentY += maxHeaderLines * 5; // Adjust Y based on the tallest wrapped text
 
 // Draw header lines
 currentY += 3;
-pdf.line(20, currentY - 70, 200, currentY - 70);
+pdf.line(20, currentY - 75, 200, currentY - 75);
 pdf.line(20, currentY, 200, currentY); // Bottom horizontal line of the header (no top line)
 
 // Draw vertical lines for the entire table (headers and rows)

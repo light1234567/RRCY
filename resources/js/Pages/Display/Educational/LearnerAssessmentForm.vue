@@ -51,19 +51,19 @@
     <div class="relative flex justify-between items-center mb-4">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48">
       <div class="text-right flex flex-col justify-center">
-        <p class="text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
-        <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
-        <p class="text-sm font-semibold">Youth/RFO XI</p>
-        <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="text-sm font-semibold flex justify-center">PROTECTIVE SERVICES DIVISION</p>
+        <p class="text-sm font-semibold flex justify-center">Regional Rehabilitation Center for Youth</p>
+        <p class="text-sm font-semibold flex justify-center">Youth/RFO XI</p>
+        <p class="text-xs flex justify-center">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
       </div>
     </div>
 
     <form @submit.prevent="submitForm">
       <!-- Learner's Information -->
-      <h1 class="font-bold text-xl mb-4">LEARNER’S ASSESSMENT FORM</h1>
+      <h1 class="font-bold text-xl mb-4 flex justify-center">LEARNER’S ASSESSMENT FORM</h1>
       <div class="grid grid-cols-3 gap-4 mb-4">
         <div>
-          <label for="schoolYear" class="block font-medium">School Year:</label>
+          <label for="schoolYear" class="block font-medium ">School Year:</label>
           <input type="text" id="schoolYear" class="block w-full p-2 border border-gray-300" v-model="form.school_year" :readonly="!isEditable" />
         </div>
         <div>
@@ -90,7 +90,7 @@
       <table class="w-full border-collapse mb-6">
         <thead>
           <tr class="bg-gray-200">
-            <th class="border p-2 text-left">Aspect</th>
+            <th class="border p-2 text-left"></th>
             <th class="border p-2 text-left">1</th>
             <th class="border p-2 text-left">2</th>
             <th class="border p-2 text-left">3</th>
@@ -127,12 +127,12 @@
       </table>
 
       <!-- Reading Remarks -->
-      <h2 class="font-bold text-lg mb-4">Reading Remarks</h2>
+      <h2 class="font-bold text-lg mb-4"></h2>
       <table class="w-full border-collapse mb-6">
         <thead>
           <tr class="bg-gray-200">
-            <th class="border p-2 text-left">Level</th>
-            <th class="border p-2 text-left">Description</th>
+            <th class="border p-2 text-left"></th>
+            <th class="border p-2 text-left"></th>
             <th class="border p-2 text-left" rowspan="5">Remarks</th>
           </tr>
         </thead>
@@ -182,7 +182,7 @@
 <table class="w-full border-collapse mb-6">
   <thead>
     <tr class="bg-gray-200">
-      <th class="border p-2 text-left">Aspect</th>
+      <th class="border p-2 text-left"></th>
       <th class="border p-2 text-left">Excellent</th>
       <th class="border p-2 text-left">Good</th>
       <th class="border p-2 text-left">Fair</th>
@@ -192,7 +192,7 @@
   </thead>
   <tbody>
     <tr>
-      <td class="border p-2">Punctuation</td>
+      <td class="border p-2">Punctuation:He uses accurate punctuation</td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.punctuation[0]" @change="selectOnlyOne('punctuation', 0)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.punctuation[1]" @change="selectOnlyOne('punctuation', 1)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.punctuation[2]" @change="selectOnlyOne('punctuation', 2)" /></td>
@@ -200,7 +200,7 @@
       <td class="border p-2"><input type="text" class="w-full p-1 border border-gray-300" v-model="form.assessments.writing.punctuation_remarks" :readonly="!isEditable" /></td>
     </tr>
     <tr>
-      <td class="border p-2">Capitalization</td>
+      <td class="border p-2">Capitalization: He uses capital letters to begin sentences and for names</td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.capitalization[0]" @change="selectOnlyOne('capitalization', 0)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.capitalization[1]" @change="selectOnlyOne('capitalization', 1)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.capitalization[2]" @change="selectOnlyOne('capitalization', 2)" /></td>
@@ -208,7 +208,7 @@
       <td class="border p-2"><input type="text" class="w-full p-1 border border-gray-300" v-model="form.assessments.writing.capitalization_remarks" :readonly="!isEditable" /></td>
     </tr>
     <tr>
-      <td class="border p-2">Grammar</td>
+      <td class="border p-2">Grammar: He uses subject/verb agreement and writes complete sentences that make sense.</td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.grammar[0]" @change="selectOnlyOne('grammar', 0)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.grammar[1]" @change="selectOnlyOne('grammar', 1)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.grammar[2]" @change="selectOnlyOne('grammar', 2)" /></td>
@@ -216,7 +216,7 @@
       <td class="border p-2"><input type="text" class="w-full p-1 border border-gray-300" v-model="form.assessments.writing.grammar_remarks" :readonly="!isEditable" /></td>
     </tr>
     <tr>
-      <td class="border p-2">Content/Ideas</td>
+      <td class="border p-2">Content/Ideas: He writes on topic and adds details</td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.content_ideas[0]" @change="selectOnlyOne('content_ideas', 0)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.content_ideas[1]" @change="selectOnlyOne('content_ideas', 1)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.content_ideas[2]" @change="selectOnlyOne('content_ideas', 2)" /></td>
@@ -224,7 +224,7 @@
       <td class="border p-2"><input type="text" class="w-full p-1 border border-gray-300" v-model="form.assessments.writing.content_ideas_remarks" :readonly="!isEditable" /></td>
     </tr>
     <tr>
-      <td class="border p-2">Spelling</td>
+      <td class="border p-2">Spelling: He writes most sight words correctly and applies spelling rules</td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.spelling[0]" @change="selectOnlyOne('spelling', 0)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.spelling[1]" @change="selectOnlyOne('spelling', 1)" /></td>
       <td class="border p-2"><input type="checkbox" class="form-checkbox" :disabled="!isEditable" v-model="form.assessments.writing.spelling[2]" @change="selectOnlyOne('spelling', 2)" /></td>
@@ -240,8 +240,8 @@
       <table class="w-full border-collapse mb-6">
         <thead>
           <tr class="bg-gray-200">
-            <th class="border p-2 text-left">Level</th>
-            <th class="border p-2 text-left">Description</th>
+            <th class="border p-2 text-left"></th>
+            <th class="border p-2 text-left"></th>
             <th class="border p-2 text-left" rowspan="4">Remarks</th>
           </tr>
         </thead>
@@ -410,6 +410,7 @@
 <script>
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 import '../../../fonts/arial-normal.js'; 
 import '../../../fonts/times-normal.js'; 
 import '../../../fonts/arialbd-bold.js'; 
@@ -598,109 +599,221 @@ fetchFormData() {
         });
 },
 exportToPdf() {
-  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
-  const pageHeight = 297;
-  const marginBottom = 30;
-  const rowHeight = 8;
-  const lineHeight = 7;
-  const footerHeight = 5; // Adjust to fit the height of your footer
-  const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
-  const maxWidth = 170;
-  let contentYPos = 65; 
-  let initialX = 20;
-  let currentPage = 1;
-  let currentY = 40; // Initialize `currentY` for header positioning
-  
+  const pdf = new jsPDF('p', 'mm', 'a4'); // Create a new PDF document
+  const pageHeight = 297; // A4 page height in mm
+  const marginBottom = 30; // Space for footer
+  const marginTop = 20;
+  const footerHeight = 20; // Space for footer
+  const lineHeight = 10; // Height for each line
+  let currentY = 40; // Start Y position for content
+  let currentPage = 1; // Track current page
+
   const addHeader = () => {
-  pdf.setFontSize(10);
-  pdf.setFont('Arial', 'bold');
-  pdf.text('PROTECTIVE SERVICES DIVISION', 160, 20, { align: 'center' });
-  currentY += 5;
-  pdf.text('REGIONAL REHABILITATION CENTER FOR YOUTH', 160, 25, { align: 'center' });
-  currentY += 5;
-  pdf.text('Youth/RFO XI', 160, 30, { align: 'center' });
-  currentY += 3;
+    pdf.setFontSize(10);
+    pdf.setFont('Arial', 'bold');
+    pdf.text('PROTECTIVE SERVICES DIVISION', 160, 20, { align: 'center' });
+    pdf.text('REGIONAL REHABILITATION CENTER FOR YOUTH', 160, 25, { align: 'center' });
+    pdf.text('Youth/RFO XI', 160, 30, { align: 'center' });
     pdf.setFontSize(9);
     pdf.setFont('Times', 'italic');
     pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 35);
   };
 
-  // Helper function to add a new page if content exceeds the page height
-  const addNewPageIfNeeded = () => {
-    if (contentYPos >= maxContentHeight) {
-      addFooter();
-      pdf.addPage();
-      addHeader();
-      currentPage++;
-      contentYPos = 40;
-      pdf.setFont('Arial', 'normal');
-      pdf.setFontSize(11);
-    }
-  };
-
   const addFooter = () => {
     pdf.setFontSize(9);
-    pdf.setFont('Times', 'bold');
-    pdf.setLineWidth(0.5);
-    pdf.line(17, 282, 173, 282); // Footer line
+    pdf.setFont('Times', 'normal');
+    pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 105, pageHeight - marginBottom + 10, { align: 'center' });
+    pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, pageHeight - marginBottom + 15, { align: 'center' });
+  };
 
-    if (currentPage === 1) {
-      pdf.setFont('Times', 'normal');
-      const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
-      pdf.text(footerText, 95, 287, { align: 'center' });
-      pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, { align: 'center' });
-      const footerImgData = '/images/footerimg.png';
-      pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Make sure this path is valid and image exists
-    } else {
-      pdf.setFontSize(8.5);
-      pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, { align: 'center' });
+  const addPage = () => {
+    if (currentY+70 >= (pageHeight - marginBottom - footerHeight)) {
+      addFooter(); // Add footer before new page
+      pdf.addPage(); // Create new page
+      currentY = 40; // Reset Y position for new page
+      currentPage++;
     }
   };
 
-  // Add the header
+  // Add header to the first page
   addHeader();
+
   // DSWD logo
   const imgData = '/images/headerlogo2.png';
   pdf.addImage(imgData, 'PNG', 10, 5, 70, 40); // Adjust the width and height
-
-
 
   // Add main title
   pdf.setFont('Arial', 'bold');
   pdf.setFontSize(14);
   pdf.text('LEARNER’S ASSESSMENT FORM', 105, 50, { align: 'center' });
   pdf.setFont('Arial', 'normal');
-  contentYPos += 15;
 
-  // Insert content here
+  // Learner's Information
+  pdf.setFontSize(11);
+  pdf.text(`School Year: ${this.form.school_year}`, 105, 55, "center"); 
+  pdf.text(`Grading Period: ${this.form.grading_period}`, 105, 60, "center"); 
+  pdf.text(`Learner's Name: ${this.form.learner_name}`, 20, 75); 
+  pdf.text(`Grade: ${this.form.grade}`, 100, 75); 
+  pdf.text(`Date: ${this.form.date}`, 150, 75); currentY += lineHeight +75;
 
+  // Reading Assessment Table
+  pdf.setFont('Arial', 'bold');
+  pdf.text('Reading Assessment', 20, 85); ;
+  pdf.setFont('Arial', 'normal');
+  currentY= 90;
 
+  addPage();
+  // Reading Assessment Table
+  pdf.autoTable({
+    head: [['', '1', '2', '3', '4', 'Remarks']],
+    body: [
+      [
+        'Pronunciation of Words',
+        'The learner struggles to pronounce the words.',
+        'Some words are pronounced correctly',
+        'Most words are pronounced correctly',
+        'All words are pronounced correctly',
+        this.form.assessments.reading.pronunciation_remarks || ''
+      ],
+      [
+        'Fluency of Reading',
+        'Struggles to read.',
+        'Reads word for word',
+        'Words are grouped together logically',
+        'Reading is easy and fluent',
+        this.form.assessments.reading.fluency_remarks || ''
+      ],
+      [
+        'Use of Punctuation',
+        'Punctuation marks are ignored.',
+        'Punctuation marks replaced with a breath',
+        'Punctuation is observed, but tends to stop at the end of a line.',
+        'Punctuation is used correctly and efficiently',
+        this.form.assessments.reading.punctuation_remarks || ''
+      ]
+    ],
+    startY: currentY,
+    theme: 'grid',
+    styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
+    headStyles: { fillColor: [192, 192, 192], textColor: 0 }, // Set header background to light gray and text color to black
+    columnStyles: { 0: { cellWidth: 50 } } // Adjust as needed
+  });
 
+  // Update currentY after the table
+  currentY= 20;
+  currentY += pdf.autoTable.previous.finalY ;
+  addPage();
 
+  // Writing Assessment Table
+  pdf.setFont('Arial', 'bold');
+  pdf.text('Writing Assessment', 20, currentY); currentY += lineHeight;
+  pdf.setFont('Arial', 'normal');
 
+  pdf.autoTable({
+    head: [['', 'Excellent', 'Good', 'Fair', 'Needs Improvement', 'Remarks']],
+    body: [
+      ['Punctuation: He uses accurate punctuation', '', '', '', '', this.form.assessments.writing.punctuation_remarks || ''],
+      ['Capitalization: He uses capital letters to begin sentences and for names', '', '', '', '', this.form.assessments.writing.capitalization_remarks || ''],
+      ['Grammar: He uses subject/verb agreement and writes complete sentences that make sense.', '', '', '', '', this.form.assessments.writing.grammar_remarks || ''],
+      ['Content/Ideas: He writes on topic and adds details', '', '', '', '', this.form.assessments.writing.content_ideas_remarks || ''],
+      ['Spelling: He writes most sight words correctly and applies spelling rules', '', '', '', '', this.form.assessments.writing.spelling_remarks || ''],
+    ],
+    startY: currentY,
+    theme: 'grid',
+    styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
+    headStyles: { fillColor: [192, 192, 192], textColor: 0 }, // Set header background to light gray and text color to black
+  });
 
+  // Update currentY after the table
+  currentY=20;
+  currentY += pdf.autoTable.previous.finalY;
+  addPage();
 
+  // Numeracy Assessment Table
+  pdf.setFont('Arial', 'bold');
+  pdf.text('Numeracy Assessment', 20, currentY); currentY += lineHeight;
+  pdf.setFont('Arial', 'normal');
 
+  pdf.autoTable({
+    head: [['', 'Remarks']],
+    body: [
+      ['Advance', this.form.assessments.numeracy.advance_remarks || ''],
+      ['Proficient', ''],
+      ['Developing', ''],
+      ['Emerging', '']
+    ],
+    startY: currentY,
+    theme: 'grid',
+    styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
+    headStyles: { fillColor: [192, 192, 192], textColor: 0 }, // Set header background to light gray and text color to black
+  });
 
+  // Update currentY after the table
+  currentY= 20;
+  currentY += pdf.autoTable.previous.finalY;
+  addPage();
 
+  // Group-work Assessment Table
+  pdf.setFont('Arial', 'bold');
+  pdf.text('Group-work Assessment', 20, currentY); currentY += lineHeight;
+  pdf.setFont('Arial', 'normal');
 
+  pdf.autoTable({
+    head: [['', 'All The Time', 'Some of the Time', 'Never', 'Remarks']],
+    body: [
+      ['Participated in group work', '', '', '', this.form.assessments.group_work.participation_remarks || ''],
+      ['Maintained focus on the task at hand', '', '', '', this.form.assessments.group_work.focus_remarks || ''],
+      ['Offered help to others, or sought help when needed', '', '', '', this.form.assessments.group_work.help_remarks || ''],
+      ['Asked questions that moved the discussion along', '', '', '', this.form.assessments.group_work.questions_remarks || ''],
+      ['Contributed ideas, opinions, and feelings', '', '', '', this.form.assessments.group_work.ideas_remarks || ''],
+      ['Provided positive feedback to other group members', '', '', '', this.form.assessments.group_work.feedback_remarks || ''],
+    ],
+    startY: currentY,
+    theme: 'grid',
+    styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
+    headStyles: { fillColor: [192, 192, 192], textColor: 0 }, // Set header background to light gray and text color to black
+  });
 
+  // Update currentY after the table
+  currentY= 5;
+  currentY += pdf.autoTable.previous.finalY + 10;
+  addPage();
 
-  // Add the footer for the last page
-  addFooter();
+  // Recommendation Section
+  pdf.setFont('Arial', 'bold');
+  pdf.text('Recommendation/s:', 20, currentY); currentY += lineHeight;
+  pdf.setFont('Arial', 'normal');
+  pdf.text(this.form.recommendations || '', 20, currentY, { maxWidth: 170 }); // Add recommendation text
+  currentY += lineHeight * 3; // Add some space for the recommendation section
+  addPage();
 
+  // Signatures Section
+  pdf.setFont('Arial', 'bold');
+  pdf.text('Prepared by:', 20, currentY); currentY += lineHeight;
+  pdf.setFont('Arial', 'normal');
+  pdf.text(this.form.prepared_by || '', 20, currentY); currentY += lineHeight;
+  pdf.text('Noted by:', 20, currentY); currentY += lineHeight;
+  pdf.text(this.form.noted_by || '', 20, currentY);
+
+  // Add footer to the last page
+  
+
+  // Page number handling
   const totalPages = pdf.internal.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     pdf.setPage(i);
     pdf.setFontSize(9);
     pdf.setFont('Times', 'bold');
-    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 280, { align: 'center' });
+    pdf.text(`PAGE ${i} of ${totalPages}`, 105, pageHeight - marginBottom + 5, { align: 'center' });
+    addFooter();
+    marginBottom;
   }
 
-  // Save the PDF with dynamic file name
-  const fileName = `Learner_AssessmentForm_${this.form?.name || 'Unknown'}.pdf`;
+  // Save the PDF with a dynamic file name
+  const fileName = `Learner_AssessmentForm_${this.form.learner_name || 'Unknown'}.pdf`;
   pdf.save(fileName);
 }
+
 
 
 
