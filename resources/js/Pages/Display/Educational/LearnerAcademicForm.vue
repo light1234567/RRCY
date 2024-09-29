@@ -444,11 +444,12 @@ export default {
         body: skillsData,
 
         startY: currentY,
+        margin: { left: 20 }, // Set left margin to 20
         theme: 'grid',
         styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
         headStyles: { fillColor: [192, 192, 192], textColor: 0 }, // Set header background to light gray and text color to black
         columnStyles: {
-            0: { cellWidth: 40 }, // Adjust cell width for Learner Skills
+            0: { cellWidth: 35 }, // Adjust cell width for Learner Skills
             1: { cellWidth: 35 },
             2: { cellWidth: 35 },
             3: { cellWidth: 35 },
