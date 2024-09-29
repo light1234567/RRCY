@@ -190,11 +190,20 @@
         <h2 class="text-lg font-semibold">Vices/Start:</h2>
         <div class="space-y-2">
           <label><input type="checkbox" v-model="sheet.vices.gambling" :disabled="!editMode" /> Gambling</label><br />
-          <label><input type="checkbox" v-model="sheet.vices.drugs" :disabled="!editMode" /> Drugs (_______)</label><br />
-          <label><input type="checkbox" v-model="sheet.vices.cigarette" :disabled="!editMode" /> Cigarette</label><br />
+          <div class="flex items-center space-x-1 whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.vices.othersEnabled1" :disabled="!editMode" @change="focusInput('resources2')" />
+  <label class="ml-2">
+    Drugs (<span v-if="sheet.vices.othersEnabled1" ref="resources2" contenteditable="true" @input="updateVicesOthers1" class="editable">{{ sheet.vices.others1 }}</span><span v-else>________</span>)
+  </label>
+</div>          <label><input type="checkbox" v-model="sheet.vices.cigarette" :disabled="!editMode" /> Cigarette</label><br />
           <label><input type="checkbox" v-model="sheet.vices.liquor" :disabled="!editMode" /> Liquor</label><br />
-          <label><input type="checkbox" v-model="sheet.vices.computer_games" :disabled="!editMode" /> Computer Games (_______ hrs)</label><br />
-        </div>
+          <div class="flex items-center space-x-1 whitespace-nowrap">
+  <input type="checkbox" v-model="sheet.vices.othersEnabled2" :disabled="!editMode" @change="focusInput('resources2')" />
+  <label class="ml-2">
+    Computer Games (<span v-if="sheet.vices.othersEnabled2" ref="resources2" contenteditable="true" @input="updateVicesOthers2" class="editable">{{ sheet.vices.others2 }}</span><span v-else>________</span>)
+  </label>
+</div>         
+</div>
       </div>
     </div>
 
@@ -327,9 +336,13 @@ export default {
         vices: {
           gambling: false,
           drugs: false,
+          others1: '',
+          othersEnabled1: false,
           cigarette: false,
           liquor: false,
           computer_games: false,
+          others2: '',
+          othersEnabled2: false,
         },
         school_activities_achievement: '',
         occupation_of_mother: '',
@@ -383,16 +396,20 @@ export default {
       const generalIntakeResponse = await axios.get(`/api/general-intake-sheets?client_id=${id}`);
       const generalIntake = generalIntakeResponse.data[0]; // Assuming first sheet is the correct one
 
-      // Populate general intake sheet fields
-      this.sheet.occupation = generalIntake.occupation;
-      this.sheet.highest_educ_att = generalIntake.highest_educ_att;
-      this.sheet.school_name = generalIntake.school_name;
-      this.sheet.class_adviser = generalIntake.class_adviser;
+      if (generalIntake) {
+        // Populate general intake sheet fields
+        this.sheet.occupation = generalIntake.occupation;
+        this.sheet.highest_educ_att = generalIntake.highest_educ_att;
+        this.sheet.school_name = generalIntake.school_name;
+        this.sheet.class_adviser = generalIntake.class_adviser;
 
-      // Store general intake ID for further use
-      this.sheet.general_intake_id = generalIntake.id;
+        // Store general intake ID for further use
+        this.sheet.general_intake_id = generalIntake.id;
 
-      console.log('General Intake data mapped to sheet:', this.sheet);
+        console.log('General Intake data mapped to sheet:', this.sheet);
+      } else {
+        console.warn('No general intake sheet found for this client.');
+      }
     } catch (error) {
       if (error.response && error.response.status === 404) {
         console.warn('General Intake Sheet not found. Proceeding without it.');
@@ -424,10 +441,7 @@ export default {
   } catch (error) {
     console.error('Error fetching client data:', error);
   }
-}
-
-,
-
+},
     calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);
@@ -534,9 +548,20 @@ export default {
       this.isModalOpen = false;
       this.isSaveResultModalOpen = true;
     });
-}
-
-,
+},
+    updateVicesOthers1(event) {
+      this.sheet.vices.others1 = event.target.innerText;
+    },
+    updateVicesOthers2(event) {
+      this.sheet.vices.others2 = event.target.innerText;
+    },
+    focusInput(refName) {
+      this.$nextTick(() => {
+        if (this.$refs[refName]) {
+          this.$refs[refName].focus();
+        }
+      });
+    },
     closeSaveResultModal() {
       this.isSaveResultModalOpen = false;
       this.saveResultTitle = '';

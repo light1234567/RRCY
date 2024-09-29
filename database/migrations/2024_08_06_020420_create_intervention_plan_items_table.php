@@ -11,11 +11,11 @@ class CreateInterventionPlanItemsTable extends Migration
         Schema::create('intervention_plan_items', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('plan_id');
-            $table->string('objectives', 50); 
-            $table->string('activities', 50); 
-            $table->string('time_frame', 20); 
-            $table->string('responsible_person', 50); 
-            $table->string('expected_outcome', 100); 
+            $table->string('objectives', 50)->nullable(); 
+            $table->string('activities', 50)->nullable(); 
+            $table->string('time_frame', 20)->nullable(); 
+            $table->string('responsible_person', 50)->nullable(); 
+            $table->string('expected_outcome', 100)->nullable(); 
             $table->string('remarks', 150)->nullable(); 
             $table->timestamps();
         

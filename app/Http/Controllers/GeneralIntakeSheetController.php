@@ -8,12 +8,23 @@ use Illuminate\Support\Facades\Log;
 
 class GeneralIntakeSheetController extends Controller
 {
-    public function index()
-    {
-        $sheets = GeneralIntakeSheet::all();
-        return response()->json($sheets);
-    }
+    public function index(Request $request)
+{
+    try {
+        if ($request->has('client_id')) {
+            // Filter general intake sheets by client_id if provided
+            $sheets = GeneralIntakeSheet::where('client_id', $request->client_id)->get();
+        } else {
+            // Return all general intake sheets if no client_id is provided
+            $sheets = GeneralIntakeSheet::all();
+        }
 
+        return response()->json($sheets);
+    } catch (\Exception $e) {
+        Log::error("Error fetching general intake sheets: " . $e->getMessage());
+        return response()->json(['message' => 'Server Error'], 500);
+    }
+}
     public function store(Request $request)
 {
     // Log the start of the method and incoming request data
@@ -112,32 +123,49 @@ public function update(Request $request, $id)
     $sheet = GeneralIntakeSheet::find($id);
     if ($sheet) {
         $validatedData = $request->validate([
-                'client_id' => 'required|exists:clients,id',
-                'date' => 'nullable|date',
-                'occupation' => 'nullable|string|max:100',
-                'highest_educ_att' => 'nullable|string|max:150',
-                'school_name' => 'nullable|string|max:100',
-                'class_adviser' => 'nullable|string|max:100',
-                'problem_presented' => 'nullable|string',
-                'brief_physical_description' => 'nullable|string',
-                'major_life_event' => 'nullable|array',
-                'enduring_life_strain' => 'nullable|array',
-                'life_transition' => 'nullable|array',
-                'development_changes' => 'nullable|array',
-                'normalization' => 'nullable|array',
-                'behaviour_towards_incident' => 'nullable|array',
-                'attachments' => 'nullable|array',
-                'skills' => 'nullable|array',
-                'resources' => 'nullable|array',
-                'earnings_income' => 'nullable|string|max:100',
-                'source_of_income_in_street' => 'nullable|array',
-                'hrs_stay_in_street' => 'nullable|string|max:50',
-                'length_stay_in_street' => 'nullable|string|max:50',
-                'common_substance_used' => 'nullable|string|max:100',
-                'initial_assessment' => 'nullable|string',
-                'recommendations' => 'nullable|string',
-                'prepared_by' => 'nullable|string|max:100',
-                'reviewed_by' => 'nullable|string|max:100',
+        'client_id' => 'required|exists:clients,id',
+        'date' => 'nullable|date',
+        'occupation' => 'nullable|string|max:20',
+        'highest_educ_att' => 'nullable|string|max:20',
+        'school_name' => 'nullable|string|max:50',
+        'class_adviser' => 'nullable|string|max:50',
+        'problem_presented' => 'nullable|string|max:150',
+        'brief_physical_description' => 'nullable|string|max:150',
+        'major_life_event' => 'nullable|array',
+        'major_life_event.othersEnabled' => 'nullable|boolean',
+        'major_life_event.others' => 'nullable|string|max:150',
+        'enduring_life_strain' => 'nullable|array',
+        'enduring_life_strain.othersEnabled' => 'nullable|boolean',
+        'enduring_life_strain.others' => 'nullable|string|max:150',
+        'life_transition' => 'nullable|array',
+        'development_changes' => 'nullable|array',
+        'normalization' => 'nullable|array',
+        'normalization.othersEnabled' => 'nullable|boolean',
+        'normalization.others' => 'nullable|string|max:150',
+        'behaviour_towards_incident' => 'nullable|array',
+        'behaviour_towards_incident.othersEnabled1' => 'nullable|boolean',
+        'behaviour_towards_incident.others1' => 'nullable|string|max:150',
+        'behaviour_towards_incident.othersEnabled2' => 'nullable|boolean',
+        'behaviour_towards_incident.others2' => 'nullable|string|max:150',
+        'attachments' => 'nullable|array',
+        'attachments.othersEnabled' => 'nullable|boolean',
+        'attachments.others' => 'nullable|string|max:150',
+        'skills' => 'nullable|array',
+        'skills.othersEnabled' => 'nullable|boolean',
+        'skills.others' => 'nullable|string|max:150',
+        'resources' => 'nullable|array',
+        'resources.othersEnabled1' => 'nullable|boolean',
+        'resources.others1' => 'nullable|string|max:150',
+        'earnings_income' => 'nullable|string|max:20',
+        'source_of_income_in_street' => 'nullable|array',
+        'hrs_stay_in_street' => 'nullable|string|max:10',
+        'length_stay_in_street' => 'nullable|string|max:10',
+        'common_substance_used' => 'nullable|string|max:20',
+        'initial_assessment' => 'nullable|string',
+        'recommendations' => 'nullable|string',
+        'prepared_by' => 'nullable|string|max:50',
+        'first_intake_case_manager' => 'nullable|string|max:50',
+        'reviewed_by' => 'nullable|string|max:50',
             ]); 
 
             $sheet->update($validatedData);

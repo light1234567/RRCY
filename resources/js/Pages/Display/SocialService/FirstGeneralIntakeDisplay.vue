@@ -1053,26 +1053,73 @@ export default {
   },
   methods: {
     async fetchClientData(id) {
-      try {
-        const response = await axios.get(`/api/clients/${id}`);
-        const client = response.data;
+  try {
+    // Fetch client data based on client_id
+    const clientResponse = await axios.get(`/api/clients/${id}`);
+    const client = clientResponse.data;
 
-        this.sheet.name = `${client.first_name} ${client.last_name}`;
-        this.sheet.age = this.calculateAge(client.date_of_birth);
-        this.sheet.sex = client.sex;
-        this.sheet.address = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
-        this.sheet.date_of_birth = client.date_of_birth;
-        this.sheet.place_of_birth = client.place_of_birth;
-        this.sheet.religion = client.religion;
+    // Populate client-related fields
+    this.sheet.name = `${client.first_name} ${client.last_name}`;
+    this.sheet.age = this.calculateAge(client.date_of_birth);
+    this.sheet.sex = client.sex;
+    this.sheet.address = `${client.street}, ${client.barangay}, ${client.city}, ${client.province}`;
+    this.sheet.date_of_birth = client.date_of_birth;
+    this.sheet.place_of_birth = client.place_of_birth;
+    this.sheet.religion = client.religion;
 
-        const sheetResponse = await axios.get(`/api/general-intake-sheets/${id}`);
-        const clientSheet = sheetResponse.data;
+    console.log('Client data mapped to sheet:', this.sheet);
 
-        Object.assign(this.sheet, clientSheet);
-      } catch (error) {
-        console.error('Error fetching client data:', error);
+    // Fetch general intake sheet data based on client_id
+    try {
+      const generalIntakeResponse = await axios.get(`/api/general-intake-sheets`, { params: { client_id: id } });
+      const generalIntake = generalIntakeResponse.data[0]; // Assuming first sheet is the correct one
+
+      if (generalIntake) {
+        // Populate general intake sheet fields
+        this.sheet.occupation = generalIntake.occupation;
+        this.sheet.highest_educ_att = generalIntake.highest_educ_att;
+        this.sheet.school_name = generalIntake.school_name;
+        this.sheet.class_adviser = generalIntake.class_adviser;
+
+        // Store general intake ID for further use
+        this.sheet.general_intake_id = generalIntake.id;
+
+        console.log('General Intake data mapped to sheet:', this.sheet);
+      } else {
+        console.warn('No general intake sheet found for this client.');
       }
-    },
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.warn('General Intake Sheet not found. Proceeding without it.');
+      } else {
+        console.error('Error fetching general intake sheet:', error);
+      }
+    }
+
+    // Fetch second intake sheet data using the general_intake_id
+    if (this.sheet.general_intake_id) {
+      try {
+        const secondIntakeResponse = await axios.get(`/api/second-intake-sheets`, { params: { general_intake_id: this.sheet.general_intake_id } });
+        if (secondIntakeResponse.data.length > 0) {
+          const secondIntake = secondIntakeResponse.data[0]; // Assuming first record is the correct one
+
+          // Map second intake sheet data to the sheet object
+          Object.assign(this.sheet, secondIntake);
+          this.sheet.id = secondIntake.id; // Set second intake sheet ID
+
+          console.log('Second Intake data mapped to sheet:', this.sheet);
+        } else {
+          console.log('No second intake sheet found for this general intake.');
+        }
+      } catch (error) {
+        console.error('Error fetching second intake sheet:', error);
+      }
+    }
+
+  } catch (error) {
+    console.error('Error fetching client data:', error);
+  }
+},
     fetchCenterHead() {
     axios.get('/api/center-head')  // Replace with the correct API route
       .then(response => {

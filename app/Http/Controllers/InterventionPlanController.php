@@ -17,16 +17,16 @@ class InterventionPlanController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'period' => 'required|string|max:15',
-            'date_prepared' => 'required|date',
+            'period' => 'nullable|string|max:15',
+            'date_prepared' => 'nullable|date',
             'prepared_by' => 'nullable|string|max:50',
             'conformed_by' => 'nullable|string|max:50',
-            'items' => 'required|array', // Expect an array for items
-            'items.*.objectives' => 'required|string|max:50',
-            'items.*.activities' => 'required|string|max:50',
-            'items.*.time_frame' => 'required|string|max:20',
-            'items.*.responsible_person' => 'required|string|max:50',
-            'items.*.expected_outcome' => 'required|string|max:100',
+            'items' => 'nullable|array', // Expect an array for items
+            'items.*.objectives' => 'nullable|string|max:50',
+            'items.*.activities' => 'nullable|string|max:50',
+            'items.*.time_frame' => 'nullable|string|max:20',
+            'items.*.responsible_person' => 'nullable|string|max:50',
+            'items.*.expected_outcome' => 'nullable|string|max:100',
             'items.*.remarks' => 'nullable|string|max:150',
         ]);
 
@@ -43,16 +43,16 @@ class InterventionPlanController extends Controller
         if ($plan) {
             $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
-                'period' => 'required|string|max:15',
-                'date_prepared' => 'required|date',
+                'period' => 'nullable|string|max:15',
+                'date_prepared' => 'nullable|date',
                 'prepared_by' => 'nullable|string|max:50',
                 'conformed_by' => 'nullable|string|max:50',
-                'items' => 'required|array',
-                'items.*.objectives' => 'required|string|max:50',
-                'items.*.activities' => 'required|string|max:50',
-                'items.*.time_frame' => 'required|string|max:20',
-                'items.*.responsible_person' => 'required|string|max:50',
-                'items.*.expected_outcome' => 'required|string|max:100',
+                'items' => 'nullable|array',
+                'items.*.objectives' => 'nullable|string|max:50',
+                'items.*.activities' => 'nullable|string|max:50',
+                'items.*.time_frame' => 'nullable|string|max:20',
+                'items.*.responsible_person' => 'nullable|string|max:50',
+                'items.*.expected_outcome' => 'nullable|string|max:100',
                 'items.*.remarks' => 'nullable|string|max:150',
             ]);
 

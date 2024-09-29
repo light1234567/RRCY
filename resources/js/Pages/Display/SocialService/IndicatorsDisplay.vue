@@ -161,7 +161,7 @@
               <td class="py-2 px-4 border border-black">Practices adequate self-care habits but still needs monitoring and supervision to maintain such</td>
               <td class="py-2 px-4 border border-black">Practices adequate self-care habits even without monitoring and supervision</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score1" :readonly="!editMode" @input="validateRawScore('physical_raw_score1')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score1" :readonly="!editMode" @input="validateRawScore('physical_raw_score1')">
               </td>
               <td class="py-2 px-4 border border-black" rowspan="2">
                 <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_score_per_area1" readonly>
@@ -171,7 +171,7 @@
               <td class="py-2 px-4 border border-black">With very limited skills to manage physical disability which causes him or her to unnecessarily require assistance from others at times</td>
               <td class="py-2 px-4 border border-black">Has appropriate skills to function within capacity</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score2" :readonly="!editMode" @input="validateRawScore('physical_raw_score2')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score2" :readonly="!editMode" @input="validateRawScore('physical_raw_score2')">
               </td>
 
               </tbody>
@@ -222,10 +222,10 @@
               <td class="py-2 px-4 border border-black">Experiences sadness / loneliness which he or she allows to interfere in the performance of daily tasks and dealings with others.</td>
               <td class="py-2 px-4 border border-black">Copes well with sadness or loneliness as he or she does not let such emotion interfere both in daily tasks and social relationship.</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score1" :readonly="!editMode" @input="validateRawScore('emotional_raw_score1')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score1" :readonly="!editMode" @input="validateRawScore('emotional_raw_score1')">
               </td>
               <td class="py-2 px-4 border border-black" rowspan="6">
-                <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_score_per_area1" readonly>
+                <input type="text" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_score_per_area1" readonly>
               </td>
             </tr> 
             <td class="py-2 px-4 border border-black">Feels hopeless most of the time which is manifested through the following:
@@ -237,7 +237,7 @@
               <td class="py-2 px-4 border border-black">Feels hopeless at times and allows such emotion to negatively affect performance of tasks and social relationship. However, he or she shows no suicidal tendency</td>
               <td class="py-2 px-4 border border-black">Is generally optimistic despite difficult situations which enable him or her to perform tasks or roles</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score2" :readonly="!editMode" @input="validateRawScore('emotional_raw_score2')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score2" :readonly="!editMode" @input="validateRawScore('emotional_raw_score2')">
               </td>
               <tr>
               
@@ -245,7 +245,7 @@
               <td class="py-2 px-4 border border-black">Sometimes experiences fear as a result of traumatic event. With constant encouragement; however, he or she tries not to allow such to affect dealings with others and performance of tasks</td>
               <td class="py-2 px-4 border border-black">Copes well with traumatic events as evident by his or her social and functional adjustment even with very minimal requirement for support from others</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score3" :readonly="!editMode" @input="validateRawScore('emotional_raw_score3')">
+                <input type="number" step="0.01" min="0" max="3"class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score3" :readonly="!editMode" @input="validateRawScore('emotional_raw_score3')">
               </td>
             </tr> 
             
@@ -316,7 +316,7 @@
                 <li>believes that there are people who are genuinely interested in his or her welfare</li>
               </td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score4" :readonly="!editMode" @input="validateRawScore('emotional_raw_score4')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score4" :readonly="!editMode" @input="validateRawScore('emotional_raw_score4')">
               </td>
               <td class="py-2 px-4 border border-black" rowspan="6">
                 
@@ -329,7 +329,7 @@
               <td class="py-2 px-4 border border-black">Feels guilty for grave offense committed which make him or her at times doubt capacity to be a good person</td>
               <td class="py-2 px-4 border border-black">Because of feelings of guilt for an offense committed, he or she strives to change negative attitudes that cause damage to others</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score5" :readonly="!editMode" @input="validateRawScore('emotional_raw_score5')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score5" :readonly="!editMode" @input="validateRawScore('emotional_raw_score5')">
               </td>
               
             </tr> 
@@ -340,7 +340,7 @@
               <td class="py-2 px-4 border border-black">Sometimes think that she is to blame because of family disintegration due to the case she filed against her perpetrator</td>
               <td class="py-2 px-4 border border-black">Believes that revealing the truth about the abuse she experienced and taking legal action are appropriate. Feels good about self for taking the right action against her perpetrator.</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score6" :readonly="!editMode" @input="validateRawScore('emotional_raw_score6')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score6" :readonly="!editMode" @input="validateRawScore('emotional_raw_score6')">
               </td>
             </tr> 
             
@@ -405,7 +405,7 @@
                 <li>avoids display of inappropriate sexual behavior</li>
               </td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score1" :readonly="!editMode" @input="validateRawScore('social_raw_score1')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score1" :readonly="!editMode" @input="validateRawScore('social_raw_score1')">
               </td>
               <td class="py-2 px-4 border border-black" rowspan="6">
                 <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_score_per_area1" readonly>
@@ -418,7 +418,7 @@
               <td class="py-2 px-4 border border-black">Carries out responsibilities but requires supervision and close monitoring</td>
               <td class="py-2 px-4 border border-black">Performs responsibilities to the best of his or her ability even without prodding. He or she may at times express complaints but does so only when task given is not within his or her own capacity and not against religious beliefs and principles</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score2" :readonly="!editMode" @input="validateRawScore('social_raw_score2')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score2" :readonly="!editMode" @input="validateRawScore('social_raw_score2')">
               </td>    
           </tbody>
         </table>
@@ -479,7 +479,7 @@
                 <li>active participation in center's activities</li>
               </td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score3" :readonly="!editMode" @input="validateRawScore('social_raw_score3')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score3" :readonly="!editMode" @input="validateRawScore('social_raw_score3')">
               </td>
               <td class="py-2 px-4 border border-black" rowspan="6">
               </td>
@@ -497,7 +497,7 @@
               <td class="py-2 px-4 border border-black">Respects others at all times</td>
               
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score4" :readonly="!editMode" @input="validateRawScore('social_raw_score4')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score4" :readonly="!editMode" @input="validateRawScore('social_raw_score4')">
               </td>
               
             </tr> 
@@ -508,7 +508,7 @@
               <td class="py-2 px-4 border border-black">Makes decisions but always needs the confirmation of others</td>
               <td class="py-2 px-4 border border-black">Decides for himself or herself but refers to others for assistance when appropriate</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score5" :readonly="!editMode" @input="validateRawScore('social_raw_score5')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score5" :readonly="!editMode" @input="validateRawScore('social_raw_score5')">
               </td>
             </tr> 
         </tbody>
@@ -567,7 +567,7 @@
               </td>
 
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score6" :readonly="!editMode" @input="validateRawScore('social_raw_score6')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score6" :readonly="!editMode" @input="validateRawScore('social_raw_score6')">
               </td>
               <td class="py-2 px-4 border border-black" rowspan="8">
                 
@@ -580,7 +580,7 @@
               <td class="py-2 px-4 border border-black">Has the tendency to steal but shows remorse by returning stolen items and expressing the need to be restrained from committing such act</td>
               <td class="py-2 px-4 border border-black">Does not steal</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score7" :readonly="!editMode" @input="validateRawScore('social_raw_score7')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score7" :readonly="!editMode" @input="validateRawScore('social_raw_score7')">
               </td>
              
             </tr> 
@@ -591,7 +591,7 @@
               <td class="py-2 px-4 border border-black">Has the tendency to lie in some occasions but avoids that may harm or damage others</td>
               <td class="py-2 px-4 border border-black">Strives to be honest at all times</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score8" :readonly="!editMode" @input="validateRawScore('social_raw_score8')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score8" :readonly="!editMode" @input="validateRawScore('social_raw_score8')">
               </td>
              
             </tr> 
@@ -604,7 +604,7 @@
               <td class="py-2 px-4 border border-black">Does not blame God for his or her crises and failures in life but doubts whether God cares for him or her at all</td>
               <td class="py-2 px-4 border border-black">Recognizes that God cares for him or her and is ready to provide needed strength to cope with the crisis and failures in life</td>
               <td class="py-2 px-4 border border-black">
-                <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_raw_score1" :readonly="!editMode" @input="validateRawScore('spiritual_raw_score1')">
+                <input type="number" step="0.01" min="0" max="3" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_raw_score1" :readonly="!editMode" @input="validateRawScore('spiritual_raw_score1')">
               </td>
               <td class="py-2 px-4 border border-black">
                 <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_score_per_area1" readonly>
@@ -673,9 +673,7 @@
     </td>
     <td class="py-2 px-4 border border-black">
         <input
-            type="number"
-            min="0"
-            max="100"
+            type="number" step="0.01" min="0" max="3" 
             class="w-full mt-1 p-2 border border-black rounded-md"
             v-model="form.educational_raw_score"
             :readonly="!editMode"
@@ -709,9 +707,7 @@
     </td>
     <td class="py-2 px-4 border border-black">
         <input
-            type="number"
-            min="0"
-            max="100"
+            type="number" step="0.01" min="0" max="3"
             class="w-full mt-1 p-2 border border-black  rounded-md"
             v-model="form.economic_raw_score"
             :readonly="!editMode"
@@ -929,14 +925,14 @@ export default {
     },
 
     validateRawScore(field) {
-      if (this.form[field] < 0) {
-        this.form[field] = 0;
-      } else if (this.form[field] > 100) {
-        this.form[field] = 100;
-      }
-      this.form[field] = parseInt(this.form[field], 10) || 0;
-      this.calculateScores();
-    },
+  if (this.form[field] < 0) {
+    this.form[field] = 0;
+  } else if (this.form[field] > 3) {
+    this.form[field] = 3;
+  }
+  this.form[field] = parseFloat(this.form[field]) || 0;
+  this.calculateScores();
+},
 
     calculateScores() {
       this.form.physical_score_per_area1 =
@@ -993,39 +989,35 @@ export default {
     },
 
     async saveData() {
-      if (!this.form.client_id || !this.form.admission_id) {
-        this.message = 'Client or Admission ID is missing.';
-        this.messageType = 'error';
-        return;
-      }
+  if (!this.form.client_id || !this.form.admission_id) {
+    this.message = 'Client or Admission ID is missing.';
+    this.messageType = 'error';
+    return;
+  }
 
-      try {
-        const response = await axios({
-          method: this.form.id ? 'put' : 'post',
-          url: `/api/indicators-of-social-functioning${this.form.id ? '/' + this.form.id : ''}`,
-          data: this.form
-        });
+  try {
+    const response = await axios({
+      method: 'put',
+      url: `/api/indicators-of-social-functioning/${this.form.client_id}/${this.form.admission_id}`,
+      data: this.form
+    });
 
-        this.saveResultTitle = 'Success';
-        this.saveResultMessage = 'Data saved successfully!';
+    this.saveResultTitle = 'Success';
+    this.saveResultMessage = 'Data updated successfully!';
 
-        if (!this.form.id) {
-          this.form.id = response.data.id;
-        }
+    // Refetch data to ensure it's updated
+    this.fetchData(this.form.client_id);
 
-        // Refetch data to ensure it's updated
-        this.fetchData(this.form.client_id);
-
-        this.editMode = false;
-      } catch (error) {
-        this.saveResultTitle = 'Error';
-        this.saveResultMessage = 'Error saving data.';
-        console.error('Error saving data:', error);
-      } finally {
-        this.closeModal();
-        this.isSaveResultModalOpen = true;
-      }
-    },
+    this.editMode = false;
+  } catch (error) {
+    this.saveResultTitle = 'Error';
+    this.saveResultMessage = 'Error updating data.';
+    console.error('Error updating data:', error);
+  } finally {
+    this.closeModal();
+    this.isSaveResultModalOpen = true;
+  }
+},
 
     openModal() {
       this.isModalOpen = true;

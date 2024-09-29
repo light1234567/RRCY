@@ -21,23 +21,32 @@ class IndicatorOfSocialFunctioningController extends Controller
         return response()->json($indicator, 201);
     }
 
-    public function update(Request $request, $id)
-    {
-        $indicator = IndicatorsOfSocialFunctioning::find($id);
-        if ($indicator) {
-            $validatedData = $this->validateRequest($request);
+    public function update(Request $request, $client_id, $admission_id)
+{
+    // Find the existing record based on client_id and admission_id
+    $indicator = IndicatorsOfSocialFunctioning::where('client_id', $client_id)
+        ->where('admission_id', $admission_id)
+        ->first();
 
-            // Automatically calculate the score per area fields based on raw scores
-            $validatedData = $this->calculateScorePerArea($validatedData);
+    $validatedData = $this->validateRequest($request);
 
-            // Recalculate the general score
-            $validatedData['general_score'] = $this->calculateGeneralScore($validatedData);
+    // Automatically calculate the score per area fields based on raw scores
+    $validatedData = $this->calculateScorePerArea($validatedData);
 
-            $indicator->update($validatedData);
-            return response()->json($indicator);
-        }
-        return response()->json(['message' => 'Not found'], 404);
+    // Recalculate the general score
+    $validatedData['general_score'] = $this->calculateGeneralScore($validatedData);
+
+    if ($indicator) {
+        $indicator->update($validatedData);
+        return response()->json($indicator);
+    } else {
+        // If no record exists, create a new one
+        $validatedData['client_id'] = $client_id;
+        $validatedData['admission_id'] = $admission_id;
+        $indicator = IndicatorsOfSocialFunctioning::create($validatedData);
+        return response()->json($indicator, 201);
     }
+}
 
     // Add this method to check for existing records
     public function checkExisting($client_id, $admission_id)
@@ -56,33 +65,33 @@ class IndicatorOfSocialFunctioningController extends Controller
     private function validateRequest(Request $request)
     {
         return $request->validate([
-            'client_id' => 'required|exists:clients,id',
+         'client_id' => 'required|exists:clients,id',
         'admission_id' => 'required|exists:admissions,id',
         'date_administered' => 'nullable|date',
-        'physical_raw_score1' => 'nullable|integer|min:0|max:5',
+        'physical_raw_score1' => 'nullable|numeric|min:0|max:3',
         'physical_score_per_area1' => 'nullable|numeric|min:0|max:5',  // Decimal score per area
-        'physical_raw_score2' => 'nullable|integer|min:0|max:5',
-        'emotional_raw_score1' => 'nullable|integer|min:0|max:5',
+        'physical_raw_score2' => 'nullable|numeric|min:0|max:3',
+        'emotional_raw_score1' => 'nullable|numeric|min:0|max:3',
         'emotional_score_per_area1' => 'nullable|numeric|min:0|max:5',  // Decimal score per area
-        'emotional_raw_score2' => 'nullable|integer|min:0|max:5',
-        'emotional_raw_score3' => 'nullable|integer|min:0|max:5',
-        'emotional_raw_score4' => 'nullable|integer|min:0|max:5',
-        'emotional_raw_score5' => 'nullable|integer|min:0|max:5',
-        'emotional_raw_score6' => 'nullable|integer|min:0|max:5',
-        'social_raw_score1' => 'nullable|integer|min:0|max:5',
+        'emotional_raw_score2' => 'nullable|numeric|min:0|max:3',
+        'emotional_raw_score3' => 'nullable|numeric|min:0|max:3',
+        'emotional_raw_score4' => 'nullable|numeric|min:0|max:3',
+        'emotional_raw_score5' => 'nullable|numeric|min:0|max:3',
+        'emotional_raw_score6' => 'nullable|numeric|min:0|max:3',
+        'social_raw_score1' => 'nullable|numeric|min:0|max:3',
         'social_score_per_area1' => 'nullable|numeric|min:0|max:5',  // Decimal score per area
-        'social_raw_score2' => 'nullable|integer|min:0|max:5',
-        'social_raw_score3' => 'nullable|integer|min:0|max:5',
-        'social_raw_score4' => 'nullable|integer|min:0|max:5',
-        'social_raw_score5' => 'nullable|integer|min:0|max:5',
-        'social_raw_score6' => 'nullable|integer|min:0|max:5',
-        'social_raw_score7' => 'nullable|integer|min:0|max:5',
-        'social_raw_score8' => 'nullable|integer|min:0|max:5',
-        'spiritual_raw_score1' => 'nullable|integer|min:0|max:5',
+        'social_raw_score2' => 'nullable|numeric|min:0|max:3',
+        'social_raw_score3' => 'nullable|numeric|min:0|max:3',
+        'social_raw_score4' => 'nullable|numeric|min:0|max:3',
+        'social_raw_score5' => 'nullable|numeric|min:0|max:3',
+        'social_raw_score6' => 'nullable|numeric|min:0|max:3',
+        'social_raw_score7' => 'nullable|numeric|min:0|max:3',
+        'social_raw_score8' => 'nullable|numeric|min:0|max:3',
+        'spiritual_raw_score1' => 'nullable|numeric|min:0|max:3',
         'spiritual_score_per_area1' => 'nullable|numeric|min:0|max:5',  // Decimal score per area
-        'educational_raw_score' => 'nullable|integer|min:0|max:5',
+        'educational_raw_score' => 'nullable|numeric|min:0|max:3',
         'educational_score_per_area' => 'nullable|numeric|min:0|max:5',  // Decimal score per area
-        'economic_raw_score' => 'nullable|integer|min:0|max:5',
+        'economic_raw_score' => 'nullable|numeric|min:0|max:3',
         'economic_score_per_area' => 'nullable|numeric|min:0|max:5',  // Decimal score per area
         'general_score' => 'nullable|numeric|min:0|max:5',  // Decimal general score
         'interpretation' => 'nullable|string',
