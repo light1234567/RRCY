@@ -29,12 +29,13 @@
   <button v-else @click="submitForm" type="button" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
 
   <!-- Export PDF Button (commented out for now, uncomment to use) -->
-  <!--
-  <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+  
+  
+  <button @click="generatePdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
     <i class="fas fa-file-pdf w-4 h-4"></i>
     <span>Export PDF</span>
   </button>
-  -->
+
 </div>
 
 <div class="graph-background pt-0.5  -mr-9 -mb-16">
@@ -262,7 +263,7 @@
   <tr v-for="(item, index) in automotiveSector" :key="'automotive-' + index">
     <td class="border p-2 text-center">{{ index + 1 }}</td>
     <td class="border p-2">{{ item.name }}</td>
-    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="1" v-model="item.rank"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="1" v-model="item.rank" @change="logRank(item)"></td>
     <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="2" v-model="item.rank"></td>
     <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="3" v-model="item.rank"></td>
     <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="4" v-model="item.rank"></td>
@@ -412,6 +413,8 @@
 <script>
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable'; // Optional for table generation
 
 export default {
   components: {
@@ -522,6 +525,7 @@ mounted() {
   this.id = this.$route.params.id;
   this.fetchData();
   this.fetchCenterHead();
+  console.log('Automotive Sector Data on mount:', this.automotiveSector);
 },
 watch: {
   '$route.params.id': function(newId) {
@@ -800,6 +804,375 @@ getYearOrGradeForLevel(level) {
 },
   addNewTraining() {
     this.form.trainings.push({ title: '', duration: '', location_outside: '', location_inside: '' });
+  },
+
+  generatePdf() {
+        console.log('Current selected education level:', this.form.selectedEducationLevel);
+        // Call your PDF generation logic here
+        this.exportToPdf(); // Assuming this method generates the PDF
+    },
+
+    logRank(item) {
+      console.log(`Selected Rank for ${item.name} is ${item.rank}`);
+    },
+
+  exportToPdf() {
+    const pdf = new jsPDF('p', 'mm', 'a4'); // A4 PDF
+    const pageHeight = 297; // A4 page height in mm
+    const marginBottom = 30; // Space for footer
+    const footerHeight = 20; // Space for footer
+    let currentY = 140; // Start Y position for content
+    let currenty = 140;
+    let currentPage = 1; // Track current page
+  
+      const addHeader = () => {
+          pdf.setFontSize(10);
+          pdf.setFont('Arial', 'bold');
+          pdf.text('PROTECTIVE SERVICES DIVISION', 160, 20, { align: 'center' });
+          pdf.text('REGIONAL REHABILITATION CENTER FOR YOUTH', 160, 25, { align: 'center' });
+          pdf.text('Youth/RFO XI', 160, 30, { align: 'center' });
+          pdf.setFontSize(9);
+          pdf.setFont('Times', 'italic');
+          pdf.text('DSWD-GF-010 | REV 02 | 22 SEP 2023', 135, 35);
+          pdf.line(10,37,200,37);
+      };
+  
+      const addFooter = () => {
+          pdf.setFontSize(9); 
+          pdf.addImage(imgData2, 'PNG', 172, 270, 25, 15);
+          pdf.setFont('Times', 'normal');
+          pdf.text('DSWD FOXI, Regional Rehabilitation Center for Youth, Bago Oshiro, Davao City, Philippines 8000', 105, pageHeight - marginBottom + 10, { align: 'center' });
+          pdf.text('Email:rrcy.fo11.dswd.gov.ph; Tel No.(082) 293-0306', 105, pageHeight - marginBottom + 15, { align: 'center' });
+      };
+
+
+      const addPage = () => {
+          
+          if (currentY >= (pageHeight - marginBottom - footerHeight)) {
+        addFooter(); // Add footer before new page
+        pdf.addPage(); // Create new page
+        currentY = 40; // Reset Y position for new page
+        currentPage++;
+      }
+      };
+
+      // Add header to the first page
+      addHeader();
+  
+
+    // Add logo image (replace with the actual base64 or URL)
+    const imgData = '/images/headerlogo2.png';  // Example, replace with actual path or base64 image
+    pdf.addImage(imgData, 'PNG', 10, 5, 70, 40); // Add image (left, top, width, height)
+
+    const imgData2 = '/images/footerimg.png';  // Example, replace with actual path or base64 image
+   
+
+    
+    
+
+    // Form title
+    pdf.setFontSize(16);
+    pdf.setFont('Arial', 'bold')
+    pdf.text('TRAINING NEEDS ASSESSMENT', 105, 45, null, null, 'center');
+
+    // Add fields like "FOR THE" and "Date of Admission"
+    pdf.setFontSize(12);
+    pdf.text(`FOR THE: ${this.form.period}` , 105, 50, "center");
+    
+    pdf.text(`Date of Admission: ${this.form.period}`, 105, 55, "center");
+    
+
+    pdf.setFontSize(11);
+    pdf.text(`Petsa sa Pagtubag ${this.form.period}`, 160, 65, "center"); // Example name
+    
+    // Add personal information fields
+    pdf.text(`Pangalan: ${this.form.name}`, 20, 75);
+    
+    
+
+    pdf.text(`Adlaw nga Natawhan: ${this.form.birthdate}`, 20, 85);
+    
+    
+
+    pdf.text(`Edad: ${this.form.age}`, 130, 85);
+    
+
+    // Education Section
+    
+
+    pdf.setFontSize(10);
+    pdf.setFont('Arial', 'bold'); // Ensure Arial is registered properly
+    pdf.text('Natapos nga Grado:', 20, 95);
+    pdf.setFont('Arial', 'normal');
+
+    // Using ASCII representation for checkmarks
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Wala Naka eskwela' ? 'X' : ' '} ] Wala Naka eskwela`, 30, 105);
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Elementary Level' ? 'X' : ' '} ] Elementary Level (Grade `, 30, 115);
+    pdf.text(`${this.form.elementaryGrade} )`, 80, 115); // Display the grade if applicable
+   
+
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Elementary Graduate' ? 'X' : ' '} ] Elementary Graduate`, 30, 125);
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Junior High School Level' ? 'X' : ' '} ] Junior High School Level (Year `, 100, 105);
+    pdf.text(`${this.form.juniorHighYear} )`, 165, 105); // Display the year if applicable
+   
+
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Senior High School Level' ? 'X' : ' '} ] Senior High School Level (Year `, 100, 115);
+    pdf.text(`${this.form.seniorHighYear} )`, 165, 115); // Display the year if applicable
+    
+
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Senior High School Graduate' ? 'X' : ' '} ] Senior High School Graduate`, 100, 125);
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'College Level' ? 'X' : ' '} ] College Level (Year `, 100, 130);
+    pdf.text(`${this.form.collegeYear} )`, 150, 130); // Display the year if applicable
+    
+
+
+
+    // Add fields for social worker, houseparent, and parents' names
+    
+    pdf.setFont('Arial', 'normal');
+    pdf.text(`Pangalan sa imong Social Worker: ${this.form.social_worker}`, 20, currenty);
+  
+
+    pdf.text(`Pangalan sa imong Houseparent: ${this.form.houseparent}`, 20, currenty+5);
+    
+    pdf.setFont('Arial', 'bold');
+    pdf.text(`Pangalan sa Ginikanan:`, 20, currenty+15);
+    
+    pdf.setFont('Arial', 'normal');
+    pdf.text(`Amahan: ${this.form.father}`, 20, currenty+20);
+    
+
+    pdf.text(`Inahan: ${this.form.mother}`, 20,  currenty+ 25);
+    
+
+    // Address and other details
+    pdf.text(`Pinuy-Anan: ${this.form.address}`, 20, currenty + 35);
+    
+
+    pdf.text(`Kadugayon sa Pagpuyo sa Center: ${this.form.center_duration}`, 20, currenty + 40);
+    
+
+    // Training Section
+    pdf.setFont('Arial', 'bold');
+    pdf.text(`Skills Training nga human na nga naapilan diri sa sulod CENTER ug sa gawas sa center`, 20, currenty + 50);
+    pdf.setFont('Arial', 'normal');
+
+    // Define the table headers
+    const tableHeaders = [ 
+      { title: 'Title sa Training nga Naapilan', dataKey: 'title' },
+      { title: 'Kadugayon sa Training', dataKey: 'duration' },
+      { title: 'Lugar sa Gi-Trainingan (Sa Gawas)', dataKey: 'location_outside' },
+      { title: 'Lugar sa Gi-Trainingan (Sa Center)', dataKey: 'location_inside' }
+    ];
+
+    // Prepare the table data (assuming `this.form.trainings` holds the data)
+    const tableData = this.form.trainings.map(training => ({
+      title: training.title,
+      duration: training.duration,
+      location_outside: training.location_outside,
+      location_inside: training.location_inside
+    }));
+
+    // Generate the table using autoTable
+    pdf.autoTable({
+      head: [tableHeaders.map(header => header.title)],  // Array of headers
+      body: tableData.map(training => [
+        training.title,
+        training.duration,
+        training.location_outside,
+        training.location_inside
+      ]),  // Array of rows
+      startY: currentY + 55,  // Adjust the Y position to start the table
+      styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
+    headStyles: { fillColor: [192, 192, 192], textColor: 0 },  // Optional: header style
+      margin: { left: 20, right: 20, bottom: 30 },  // Adjust margins if necessary
+    });
+    currentY = pdf.autoTable.previous.finalY;
+    addPage();
+
+
+    // Title
+   
+    
+    // Column headers
+    const columns1 = [
+        { title: " ", dataKey: "number" }, // Placeholder for numbers
+        { title: "Skills Training Nga Gustong Apilan Diri Sulod sa CENTER", dataKey: "skills" },
+        { title: "Pamili ug lima (5) ka skills o kahanas nga gusto nimo matun-an o prioridad nga maapilan diri sa sulod sa center kung diin ang 1 pinakagusto nga unang maapilan ug ang 5 ang pinakaulahi nga gustong maapilan o matun-an.", dataKey: "description" }
+    ];
+    const columns = [
+        { title: "No.", dataKey: "number" },
+        { title: "Training", dataKey: "training" },
+        { title: "1", dataKey: "rank1" },
+        { title: "2", dataKey: "rank2" },
+        { title: "3", dataKey: "rank3" },
+        { title: "4", dataKey: "rank4" },
+        { title: "5", dataKey: "rank5" },
+        { title: "Ikasugyot/Remarks", dataKey: "remarks" }
+    ];
+
+    // Data for the table
+    const data = [];
+
+    // Automotive Sector
+this.automotiveSector.forEach((item, index) => {
+    data.push({
+        number: index + 1,
+        training: item.name,
+        rank1: item.rank === "1" ? 'X' : '',
+        rank2: item.rank === "2" ? 'X' : '',
+        rank3: item.rank === "3" ? 'X' : '',
+        rank4: item.rank === "4" ? 'X' : '',
+        rank5: item.rank === "5" ? 'X' : '',
+        remarks: item.remarks
+    });
+});
+
+// Agricultural Sector
+this.agriculturalSector.forEach((item, index) => {
+    data.push({
+        number: index + 1,
+        training: item.name,
+        rank1: item.rank === "1" ? 'X' : '',
+        rank2: item.rank === "2" ? 'X' : '',
+        rank3: item.rank === "3" ? 'X' : '',
+        rank4: item.rank === "4" ? 'X' : '',
+        rank5: item.rank === "5" ? 'X' : '',
+        remarks: item.remarks
+    });
+});
+
+// Health Sector
+this.healthSector.forEach((item, index) => {
+    data.push({
+        number: index + 1,
+        training: item.name,
+        rank1: item.rank === "1" ? 'X' : '',
+        rank2: item.rank === "2" ? 'X' : '',
+        rank3: item.rank === "3" ? 'X' : '',
+        rank4: item.rank === "4" ? 'X' : '',
+        rank5: item.rank === "5" ? 'X' : '',
+        remarks: item.remarks
+    });
+});
+
+// ICT Sector
+this.ictSector.forEach((item, index) => {
+    data.push({
+        number: index + 1,
+        training: item.name,
+        rank1: item.rank === "1" ? 'X' : '',
+        rank2: item.rank === "2" ? 'X' : '',
+        rank3: item.rank === "3" ? 'X' : '',
+        rank4: item.rank === "4" ? 'X' : '',
+        rank5: item.rank === "5" ? 'X' : '',
+        remarks: item.remarks
+    });
+});
+
+// Metals Sector
+this.metalsSector.forEach((item, index) => {
+    data.push({
+        number: index + 1,
+        training: item.name,
+        rank1: item.rank === "1" ? 'X' : '',
+        rank2: item.rank === "2" ? 'X' : '',
+        rank3: item.rank === "3" ? 'X' : '',
+        rank4: item.rank === "4" ? 'X' : '',
+        rank5: item.rank === "5" ? 'X' : '',
+        remarks: item.remarks
+    });
+});
+
+// Tourism Sector
+this.tourismSector.forEach((item, index) => {
+    data.push({
+        number: index + 1,
+        training: item.name,
+        rank1: item.rank === "1" ? 'X' : '',
+        rank2: item.rank === "2" ? 'X' : '',
+        rank3: item.rank === "3" ? 'X' : '',
+        rank4: item.rank === "4" ? 'X' : '',
+        rank5: item.rank === "5" ? 'X' : '',
+        remarks: item.remarks
+    });
+});
+
+// Construction Sector
+this.constructionSector.forEach((item, index) => {
+    data.push({
+        number: index + 1,
+        training: item.name,
+        rank1: item.rank === "1" ? 'X' : '',
+        rank2: item.rank === "2" ? 'X' : '',
+        rank3: item.rank === "3" ? 'X' : '',
+        rank4: item.rank === "4" ? 'X' : '',
+        rank5: item.rank === "5" ? 'X' : '',
+        remarks: item.remarks
+    });
+});
+
+// Basic Trainings
+this.basicTrainings.forEach((item, index) => {
+    data.push({
+        number: index + 1,
+        training: item.name,
+        rank1: item.rank === "1" ? 'X' : '',
+        rank2: item.rank === "2" ? 'X' : '',
+        rank3: item.rank === "3" ? 'X' : '',
+        rank4: item.rank === "4" ? 'X' : '',
+        rank5: item.rank === "5" ? 'X' : '',
+        remarks: item.remarks
+    });
+});
+    // Create the auto table
+    currentY = pdf.autoTable.previous.finalY;
+    const data1 = [['', '', '']]; // Placeholder row for columns1
+    pdf.autoTable({
+        head: [columns1.map(col => col.title)],
+        body: data1,
+        startY: currentY+10, // Starting position for columns1
+        margin: { top: 30, left: 20, right: 20, bottom:30 },
+        theme: 'grid',
+        styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
+        headStyles: { fillColor: [192, 192, 192], textColor: 0 },  // Optional: header style   
+        columnStyles: {
+            0: { cellWidth: 'auto' },    // Width for the first column
+            1: { cellWidth: '80%' },     // Skills Training column (60% width)
+            2: { cellWidth: '20%' }      // Description column (40% width)
+        }, 
+    });
+
+    pdf.autoTable({
+        head: [columns.map(col => col.title)],
+        body: data.map(item => [item.number, item.training, item.rank1, item.rank2, item.rank3, item.rank4, item.rank5, item.remarks]),
+        startY: currentY+30, // Adjust starting Y position for the table
+        styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
+        headStyles: { fillColor: [192, 192, 192], textColor: 0 },  // Optional: header style
+        margin: { top: 30, left: 20, right: 20, bottom:30 }, // Adjust margins if necessary
+        theme: 'grid', // Optional: adds a grid to the table
+    });
+    
+
+    pdf.text(`${this.center_head}`, 160, currenty+94, "center");
+    pdf.line(130, currenty+95, 190, currenty+95);
+    pdf.text("Pangalan ug Pirma sa Residente", 160, currenty+100, "center");
+
+    // Footer
+    
+    addFooter();
+    const totalPages = pdf.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(9);
+      pdf.setFont('Times', 'bold');
+      pdf.text(`PAGE ${i} of ${totalPages}`, 105, pageHeight - marginBottom + 5, { align: 'center' });
+      addFooter();
+      marginBottom;
+    }
+
+    // Save the PDF
+    pdf.save('Training_Needs_Assessment.pdf');
   }
 }
 };
