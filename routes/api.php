@@ -265,3 +265,8 @@ Route::get('/drn/{clientId}', [DrnController::class, 'getDrn']);
 
 // routes/api.php
 Route::get('/center-head', [CenterHeadController::class, 'getCenterHead']);
+
+
+use App\Http\Controllers\CrimeController;
+
+Route::get('/crimes', [CrimeController::class, 'getCrimes']);

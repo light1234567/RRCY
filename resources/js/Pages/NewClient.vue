@@ -407,18 +407,59 @@
                   required
                 />
               </div>
-              <div class="mb-2">
-                <label for="offenseCommitted" class="block mb-1 text-sm">
-                  Offense Committed: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="offenseCommitted"
-                  v-model="form.admission.offense_committed"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                />
-              </div>
+<!-- Crime Category Dropdown -->
+<!-- Crime Category Dropdown -->
+<div class="mb-2">
+  <label for="crimeCategory" class="block mb-1 text-sm">
+    Crime Category: <span class="text-red-500">*</span>
+  </label>
+  <select
+    id="crimeCategory"
+    v-model="selectedCategory"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+    required
+  >
+    <option value="" disabled>Select a category</option>
+    <option v-for="category in crimeCategories" :key="category.id" :value="category.id">
+      {{ category.category_name }}
+    </option>
+  </select>
+</div>
+
+<!-- Offense Committed Dropdown (visible only after selecting a category) -->
+<div class="mb-2" v-if="selectedCategory">
+  <label for="offenseCommitted" class="block mb-1 text-sm">
+    Offense Committed: <span class="text-red-500">*</span>
+  </label>
+  <select
+    id="offenseCommitted"
+    v-model="form.admission.offense_committed"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+    required
+  >
+    <option value="" disabled>Select an offense</option>
+    <option v-for="crime in filteredCrimes" :key="crime.id" :value="crime.crime_name">
+      {{ crime.crime_name }}
+    </option>
+    <option value="Other">Other</option> <!-- "Other" option -->
+  </select>
+</div>
+
+<!-- Input field for custom offense, visible only if "Other" is selected -->
+<div class="mb-2" v-if="form.admission.offense_committed === 'Other'">
+  <label for="customOffense" class="block mb-1 text-sm">
+    Custom Offense Committed: <span class="text-red-500">*</span>
+  </label>
+  <input
+    type="text"
+    id="customOffense"
+    v-model="customOffenseCommitted"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+    placeholder="Enter custom offense committed"
+    required
+  />
+</div>
+
               <div class="mb-2">
                 <label for="dateAdmitted" class="block mb-1 text-sm">
                   Date Admitted: <span class="text-red-500">*</span>
@@ -686,6 +727,7 @@
   </AppLayout>
 </template>
 
+
 <script setup>
 import { ref, watch, onMounted, computed } from 'vue';
 import axios from 'axios';
@@ -740,7 +782,11 @@ const form = ref({
     others: ''
   }
 });
-
+// Variables for categories and crimes
+const crimeCategories = ref([]); // Stores all crime categories
+const selectedCategory = ref(''); // Stores the selected category ID
+const filteredCrimes = ref([]);   // Stores crimes based on selected category
+const customOffenseCommitted = ref(''); // Custom value for "Other" offense committed
 const provinces = ref([]);
 const cityMunis = ref([]);
 const barangays = ref([]);
@@ -749,6 +795,29 @@ const showModal = ref(false);
 const modalType = ref('success');
 const modalMessage = ref('');
 
+
+// Fetch crime categories and crimes
+const fetchCrimeCategoriesAndCrimes = async () => {
+  try {
+    const response = await axios.get('/api/crimes'); // Fetch categories and crimes from API
+    crimeCategories.value = response.data;
+  } catch (error) {
+    console.error('Error fetching crime categories:', error);
+  }
+};
+
+// Watch for changes in selected category and filter crimes
+watch(selectedCategory, (newCategoryId) => {
+  if (newCategoryId) {
+    const category = crimeCategories.value.find(c => c.id === parseInt(newCategoryId));
+    filteredCrimes.value = category ? category.crimes : [];
+  } else {
+    filteredCrimes.value = [];
+  }
+});
+
+// Load crime categories and crimes when component is mounted
+onMounted(fetchCrimeCategoriesAndCrimes);
 // Function to fetch provinces
 const fetchProvinces = async () => {
   try {
@@ -815,6 +884,9 @@ if (form.value.distinguishing_marks.colour_of_eye === 'Other') {
     // Check if the religion is "Other" and set it to the custom religion input value
     if (form.value.client.religion === 'Other') {
       form.value.client.religion = form.value.client.customReligion; // Replace 'Other' with custom religion
+    }
+    if (form.value.admission.offense_committed === 'Other') {
+      form.value.admission.offense_committed = customOffenseCommitted.value; // Use the custom offense entered by the user
     }
     if (!form.value.client.suffix) {
       form.value.client.suffix = ''; // Default to empty string if no suffix is selected
