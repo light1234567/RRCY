@@ -526,6 +526,9 @@
           body: rows,
           startY: 70, // Adjust as necessary to fit with other content
           margin: { top: 20, bottom: 30 }, // Add margin for the table
+          theme: 'grid',
+          styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
+          headStyles: { fillColor: [192, 192, 192], textColor: 0 }, // Set header background to light gray and text color to black
           didDrawPage: function (data) {
               if (data.pageCount > currentPage) {
                 

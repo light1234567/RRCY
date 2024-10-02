@@ -61,26 +61,31 @@
     <form @submit.prevent="submitForm">
       <!-- Learner's Information -->
       <h1 class="font-bold text-xl mb-4 flex justify-center">LEARNER’S ASSESSMENT FORM</h1>
-      <div class="grid grid-cols-3 gap-4 mb-4">
-        <div>
+      
+      <div class="flex flex-wrap justify-center gap-4 mb-4">
           <label for="schoolYear" class="block font-medium ">School Year:</label>
-          <input type="text" id="schoolYear" class="block w-full p-2 border border-gray-300" v-model="form.school_year" :readonly="!isEditable" />
+          <input type="text" id="schoolYear" class="block w-1/4 p-2 border border-gray-300" v-model="form.school_year" :readonly="!isEditable" />
         </div>
-        <div>
+        
+        <div class="flex flex-wrap justify-center gap-4 mb-4">
           <label for="gradingPeriod" class="block font-medium">Grading Period:</label>
-          <input type="text" id="gradingPeriod" class="block w-full p-2 border border-gray-300" v-model="form.grading_period" :readonly="!isEditable" />
+          <input type="text" id="gradingPeriod" class="block w-1/4 p-2 border border-gray-300" v-model="form.grading_period" :readonly="!isEditable" />
         </div>
+
+      <div class="flex gap-4 mb-4">
+        
+        
         <div>
           <label for="name" class="block font-medium">Name:</label>
-          <input type="text" id="name" class="block w-full p-2 border border-gray-300" v-model="form.learner_name" readonly />
+          <input type="text" id="name" class="block w-60% p-2 border border-gray-300" v-model="form.learner_name" readonly />
         </div>
         <div>
           <label for="grade" class="block font-medium">Grade:</label>
-          <input type="text" id="grade" class="block w-full p-2 border border-gray-300" v-model="form.grade" :readonly="!isEditable" />
+          <input type="text" id="grade" class="block w-20% p-2 border border-gray-300" v-model="form.grade" :readonly="!isEditable" />
         </div>
         <div>
   <label for="date" class="block font-medium">Date:</label>
-  <input type="date" id="date" v-model="form.date" class="block w-full p-2 border border-gray-300" :readonly="!isEditable" />
+  <input type="date" id="date" v-model="form.date" class="block w-20% p-2 border border-gray-300" :readonly="!isEditable" />
 </div>
 
       </div>
@@ -369,9 +374,9 @@
       </div>
 
       <!-- Signatures Section -->
-      <div class="mb-6 flex gap-4">
+      
         <!-- Prepared by Signature -->
-        <div class="w-1/2">
+        <div class="flex-wrap justify-start w-1/2 gap-4 mt-4">
           <label for="preparedBy" class="block text-sm font-medium">Prepared by:</label>
           <div class="flex items-center">
             <input type="text" id="preparedBy" class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm" v-model="form.prepared_by" :readonly="!isEditable">
@@ -380,14 +385,14 @@
         </div>
 
         <!-- Noted by Signature -->
-        <div class="w-1/2">
-          <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
+        <div class="flex-wrap justify-end w-1/2 gap-4 mt-4">
+          <label for="notedBy" class=" block text-sm font-medium">Noted by:</label>
           <div class="flex items-center">
             <input type="text" id="preparedBy" class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm" v-model="form.noted_by" :readonly="!isEditable">
           </div>
-          <p class="text-sm mt-2">HP I / Educational Section Head</p>
+          <p class="text-sm mt-2 justify-center">HP I / Educational Section Head</p>
         </div>
-      </div>
+      
 
       <!-- Footer Section -->
       <div class="border-t border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
@@ -614,13 +619,13 @@ exportToPdf() {
     pdf.text('PROTECTIVE SERVICES DIVISION', 160, 20, { align: 'center' });
     pdf.text('REGIONAL REHABILITATION CENTER FOR YOUTH', 160, 25, { align: 'center' });
     pdf.text('Youth/RFO XI', 160, 30, { align: 'center' });
-    pdf.setFontSize(9);
+    pdf.setFontSize(8);
     pdf.setFont('Times', 'italic');
     pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 35);
   };
 
   const addFooter = () => {
-    pdf.setFontSize(9);
+    pdf.setFontSize(8);
     pdf.setFont('Times', 'normal');
     pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 105, pageHeight - marginBottom + 10, { align: 'center' });
     pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, pageHeight - marginBottom + 15, { align: 'center' });
@@ -813,10 +818,17 @@ pdf.autoTable({
   // Signatures Section
   pdf.setFont('Arial', 'bold');
   pdf.text('Prepared by:', 20, currentY); currentY += lineHeight;
+  pdf.line(20, currentY+1, 45, currentY+1);
   pdf.setFont('Arial', 'normal');
+  
   pdf.text(this.form.prepared_by || '', 20, currentY); currentY += lineHeight;
-  pdf.text('Noted by:', 20, currentY); currentY += lineHeight;
-  pdf.text(this.form.noted_by || '', 20, currentY);
+  pdf.text('EMAR Teacher:', 20, currentY-5); currentY += lineHeight;
+  
+  pdf.text('Noted by:', 140, currentY); currentY += lineHeight;
+  pdf.line(140, currentY+1, 185, currentY+1);
+  
+  pdf.text(this.form.noted_by || '', 140, currentY);
+  pdf.text('HP I / Educational Section Head', 140, currentY+5); currentY += lineHeight;
 
   // Add footer to the last page
   

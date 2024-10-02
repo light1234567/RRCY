@@ -52,7 +52,7 @@
         <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
         <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
         <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-        <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="text-xs ">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
       </div>
     </div>
 
@@ -62,19 +62,24 @@
       <div class="text-center mb-6">
         <h1 class="font-bold text-xl">LEARNER’S ACADEMIC BEHAVIORAL FORM</h1>
         <div class="flex justify-center gap-4 mt-4">
-          <div>
+          <div class="flex justify-center">
             <label for="month" class="block font-medium">For the Month of:</label>
             <input v-model="form.month" type="text" id="month" class="block w-32 p-1 border border-gray-300 mx-auto text-sm" />
           </div>
-          <div>
+          
+        </div>
+        <div class="flex justify-center gap-4 mt-4">
+
+          <div class="flex justify-center">
             <label for="schoolYear" class="block font-medium">School Year:</label>
             <input v-model="form.school_year" type="text" id="schoolYear" class="block w-32 p-1 border border-gray-300 mx-auto text-sm" />
           </div>
+          </div>
         </div>
-      </div>
+        
 
-      <div class="flex flex-wrap gap-4 mb-6">
-        <div class="w-1/2 sm:w-1/3">
+      <div class="flex flex-wrap justify-center gap-4 mb-6">
+        <div class=" w-1/2 sm:w-1/3 ">
           <label for="learnerName" class="block font-medium text-sm">Learner’s Name:</label>
           <input v-model="form.learner_name" type="text" id="learnerName" class="block w-full p-1 border border-gray-300 text-sm" readonly />
         </div>
@@ -91,6 +96,7 @@
           <input v-model="form.status" type="text" id="status" class="block w-full p-1 border border-gray-300 text-sm" />
         </div>
       </div>
+      
 
       <div class="mb-6">
         <table class="w-full border-collapse">
@@ -120,9 +126,9 @@
         <textarea v-model="form.observation_feedback" id="observationFeedback" rows="6" class="block w-full p-2 border border-gray-300"></textarea>
       </div>
 
-      <div class="mb-6 flex gap-4">
-        <div class="w-1/2">
-          <label for="learnerSignature" class="block text-sm font-medium">Learner</label>
+      <div class="mb-6 flex gap-3">
+        <div class="w-1/2 ">
+          <label for="learnerSignature" class="block text-sm font-medium"></label>
           <div class="flex items-center">
             <input
               v-model="form.learner_name"
@@ -131,11 +137,13 @@
               class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
             >
           </div>
-          <p class="text-sm mt-2">Learner</p>
+          <p class="text-sm mt-2 font-bold">Learner</p>
         </div>
 
         <div class="w-1/2">
-          <label for="categoryAdviserSignature" class="block text-sm font-medium">Category Adviser</label>
+
+          
+          <label for="categoryAdviserSignature" class="block text-sm font-medium"></label>
           <div class="flex items-center">
             <input
               v-model="form.category_adviser_signature"
@@ -144,13 +152,11 @@
               class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
             >
           </div>
-          <p class="text-sm mt-2">Category Adviser</p>
+          <p class="text-sm mt-2 font-bold">Category Adviser</p>
         </div>
-      </div>
-
-      <div class="mb-6 flex gap-4">
+        
         <div class="w-1/2">
-          <label for="educationalSectionHeadSignature" class="block text-sm font-medium">Educational Section Head</label>
+          <label for="educationalSectionHeadSignature" class="block text-sm font-medium"></label>
           <div class="flex items-center">
             <input
               v-model="form.educational_section_head_signature"
@@ -160,11 +166,10 @@
               :readonly="!editMode"
             >
           </div>
-          <p class="text-sm mt-2">Educational Section Head</p>
+          <p class="text-sm mt-2 font-bold">Educational Section Head</p>
         </div>
-
         <div class="w-1/2">
-          <label for="centerHeadSignature" class="block text-sm font-medium">Center Head</label>
+          <label for="centerHeadSignature" class="block text-sm font-medium"></label>
           <div class="flex items-center">
             <input
               v-model="center_head"
@@ -173,10 +178,12 @@
               readonly
             >
           </div>
-          <p class="text-sm mt-2">Center Head</p>
+          <p class="text-sm mt-2 font-bold">Center Head</p>
         </div>
 
+
       </div>
+
       <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
         <div class="flex justify-between items-center">
           
@@ -501,12 +508,12 @@ export default {
     pdf.text("Learner", 40, currentY + 7, 'center'); // Draw Learner label
 
     pdf.setFont('Arial','normal');
-    drawLine(pdf, this.form.category_adviser_signature || "", 87, currentY, 40); // Draw Category Adviser signature
-    pdf.text("Category Adviser", 87, currentY + 7, 'center'); // Draw Category Adviser label
+    drawLine(pdf, this.form.category_adviser_signature || "", 85, currentY, 40); // Draw Category Adviser signature
+    pdf.text("Category Adviser", 85, currentY + 7, 'center'); // Draw Category Adviser label
 
     pdf.setFont('Arial','normal');
-    drawLine(pdf, this.form.educational_section_head_signature || "Raldie Lloyd D. Adolfo, LPT", 132, currentY, 40); // Draw Educational Section Head signature
-    pdf.text("Educational Section Head", 132, currentY + 7, 'center'); // Draw Educational Section Head label
+    drawLine(pdf, this.form.educational_section_head_signature || "Raldie Lloyd D. Adolfo, LPT", 130, currentY, 40); // Draw Educational Section Head signature
+    pdf.text("Educational Section Head", 130, currentY + 7, 'center'); // Draw Educational Section Head label
 
     pdf.setFont('Arial','normal');
     drawLine(pdf, this.form.center_head_signature || "Angelic B. Pańa, RSW, MSSW", 180, currentY, 40); // Draw Center Head signature
