@@ -364,7 +364,7 @@
   <select
     id="rtcProvince"
     v-model="selectedProvince"
-    class="w-full px-2 py-1 border rounded-md text-sm"
+    class="w-1/3 px-2 py-1 border rounded-md text-sm"
     required
   >
     <option value="" disabled>Select a province</option>
@@ -382,7 +382,7 @@
   <select
     id="committingCourt"
     v-model="form.admission.committing_court"
-    class="w-full px-2 py-1 border rounded-md text-sm"
+    class="w-1/3 px-2 py-1 border rounded-md text-sm"
     required
   >
     <option value="" disabled>Select a branch</option>
