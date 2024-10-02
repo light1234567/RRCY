@@ -50,9 +50,9 @@
       <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48">
       <div class="text-right">
         <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
-        <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
-        <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-        <p class="text-xs ">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="flex justify-center text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
+        <p class="flex justify-center text-sm font-semibold">Youth/RFO XI</p>
+        <p class="text-xs flex justify-center">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
       </div>
     </div>
 
@@ -61,61 +61,141 @@
 
       <div class="text-center mb-6">
         <h1 class="font-bold text-xl">LEARNER’S ACADEMIC BEHAVIORAL FORM</h1>
-        <div class="flex justify-center gap-4 mt-4">
-          <div class="flex justify-center">
-            <label for="month" class="block font-medium">For the Month of:</label>
-            <input v-model="form.month" type="text" id="month" class="block w-32 p-1 border border-gray-300 mx-auto text-sm" />
-          </div>
-          
-        </div>
+        <div class="flex justify-center gap-2 mt-4">
+  <div class="flex items-center">
+    <label for="month" class="block font-medium">For the month of</label>
+    <input 
+      v-model="form.month" 
+      type="text" 
+      id="month" 
+      class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+      style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
+    />
+  </div>
+</div>
+
         <div class="flex justify-center gap-4 mt-4">
 
           <div class="flex justify-center">
             <label for="schoolYear" class="block font-medium">School Year:</label>
-            <input v-model="form.school_year" type="text" id="schoolYear" class="block w-32 p-1 border border-gray-300 mx-auto text-sm" />
+            <input 
+            v-model="form.school_year" 
+            type="text" 
+            id="schoolYear" 
+            class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+            style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
+            />
+            
           </div>
           </div>
         </div>
         
 
-      <div class="flex flex-wrap justify-center gap-4 mb-6">
-        <div class=" w-1/2 sm:w-1/3 ">
-          <label for="learnerName" class="block font-medium text-sm">Learner’s Name:</label>
-          <input v-model="form.learner_name" type="text" id="learnerName" class="block w-full p-1 border border-gray-300 text-sm" readonly />
-        </div>
-        <div class="w-1/2 sm:w-1/3">
-          <label for="grade" class="block font-medium text-sm">Grade:</label>
-          <input v-model="form.grade" type="text" id="grade" class="block w-full p-1 border border-gray-300 text-sm" />
-        </div>
-        <div class="w-1/2 sm:w-1/3">
-          <label for="lrn" class="block font-medium text-sm">LRN:</label>
-          <input v-model="form.lrn" type="text" id="lrn" class="block w-full p-1 border border-gray-300 text-sm" />
-        </div>
-        <div class="w-1/2 sm:w-1/3">
-          <label for="status" class="block font-medium text-sm">Status:</label>
-          <input v-model="form.status" type="text" id="status" class="block w-full p-1 border border-gray-300 text-sm" />
-        </div>
-      </div>
+        <div class="flex flex-wrap justify-start gap-4 mb-6">
+            <div class="flex">
+              <label for="learnerName" class="block font-medium text-sm">Learner’s Name:</label>
+              <input 
+                v-model="form.learner_name" 
+                type="text" 
+                id="learnerName" 
+                class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+                style="margin-right:240px;margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
+                readonly 
+              />
+            </div>
+            
+            <div class="flex">
+              <label for="grade" class="block font-medium text-sm">Grade:</label>
+              <input 
+                v-model="form.grade" 
+                type="text" 
+                id="grade" 
+                class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+                style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
+              />
+            </div>
+            
+            <div class="flex">
+              <label for="lrn" class="block font-medium text-sm">LRN:</label>
+              <input 
+                v-model="form.lrn" 
+                type="text" 
+                id="lrn" 
+                class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+                style="margin-right:310px; margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
+              />
+            </div>
+  
+            <div class="flex">
+              <label for="status" class="block font-medium text-sm">Status:</label>
+              <input 
+                v-model="form.status" 
+                type="text" 
+                id="status" 
+                class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+                style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
+              />
+            </div>
+    </div>
+
       
 
       <div class="mb-6">
         <table class="w-full border-collapse">
           <thead>
             <tr>
-              <th class="border p-2 text-left">Learner Skill</th>
-              <th class="border p-2">Outstanding</th>
-              <th class="border p-2">Very Satisfactory</th>
-              <th class="border p-2">Satisfactory</th>
-              <th class="border p-2">Fairly Satisfactory</th>
+              <th class="border p-2 text-left align-top" style="width: 25%;">Learner Skill</th>
+              <th class="border p-2 text-left align-top"><div>Outstanding</div> 
+                <div class="text-xs font-light whitespace-normal">*Well performed. Tasks are fully completed, all relevant information provided accurately andadequately where necessary.*Relevant tasks well performed; no tasks left incomplete
+                                     </div></th>
+              <th class="border p-2 text-left align-top"><div>Very Satisfactory</div> 
+                                      <div class="text-xs font-light whitespace-normal">
+                                        *General
+                                      satisfactory with
+                                      only minor
+                                      omissions and
+                                      inadequacies. Part
+                                      of it is well
+                                      attempted but
+                                      overall, just
+                                      satisfactory
+                                      because of some
+                                      major omissions
+                                      and the limited
+                                      coverage of the
+                                      information.
+                                      </div></th>
+              <th class="border p-2 text-left align-top"> 
+                                    <div>Satisfactory</div> 
+                                      <div class="text-xs font-light whitespace-normal">
+                                        *Revealing
+                                      significant
+                                      omission and
+                                      inadequacies. Very
+                                      limited coverage
+                                      performed.
+                                      </div></th>
+              <th class="border p-2 text-left align-top">
+                                      <div>
+                                        Fairly Satisfactory
+                                      </div> 
+                                      <div class="text-xs font-light whitespace-normal">
+                                        *Very
+                                      unsatisfactory,
+                                      important task(s)
+                                      are poorly done or
+                                      not attempted to
+                                      do so.
+                                      </div></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(row, index) in form.skills" :key="index">
-              <td class="border p-2">{{ row.skill }}</td>
-              <td class="border p-2"><input v-model="row.outstanding" type="text" class="w-full p-1 border border-gray-300" /></td>
-              <td class="border p-2"><input v-model="row.verySatisfactory" type="text" class="w-full p-1 border border-gray-300" /></td>
-              <td class="border p-2"><input v-model="row.satisfactory" type="text" class="w-full p-1 border border-gray-300" /></td>
-              <td class="border p-2"><input v-model="row.fairlySatisfactory" type="text" class="w-full p-1 border border-gray-300" /></td>
+              <td class="border p-2 " style="font-size: 55%;font: bold;font-weight: bold">{{ row.skill }}</td>
+              <td class="border p-2 "><input v-model="row.outstanding" type="text" class="w-full p-1 border border-gray-300 text-center" style="border-color: transparent;"></td>
+              <td class="border p-2"><input v-model="row.verySatisfactory" type="text" class="w-full p-1 border border-gray-300 text-center" style="border-color: transparent;"/></td>
+              <td class="border p-2"><input v-model="row.satisfactory" type="text" class="w-full p-1 border border-gray-300 text-center" style="border-color: transparent;"/></td>
+              <td class="border p-2"><input v-model="row.fairlySatisfactory" type="text" class="w-full p-1 border border-gray-300 text-center" style="border-color: transparent;"/></td>
             </tr>
           </tbody>
         </table>
@@ -126,21 +206,22 @@
         <textarea v-model="form.observation_feedback" id="observationFeedback" rows="6" class="block w-full p-2 border border-gray-300"></textarea>
       </div>
 
-      <div class="mb-6 flex gap-3">
-        <div class="w-1/2 ">
+      <div class="mb-6 flex gap-3 ">
+        <div class="w-1/2 mt-5">
           <label for="learnerSignature" class="block text-sm font-medium"></label>
           <div class="flex items-center">
             <input
               v-model="form.learner_name"
               type="text"
               id="learner"
-              class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+              class="block w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+              style=" font-size:65%; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
             >
           </div>
-          <p class="text-sm mt-2 font-bold">Learner</p>
+          <p class="flex justify-center text-xs mt-2 font-bold">Learner</p>
         </div>
 
-        <div class="w-1/2">
+        <div class="w-1/2 mt-5">
 
           
           <label for="categoryAdviserSignature" class="block text-sm font-medium"></label>
@@ -149,36 +230,40 @@
               v-model="form.category_adviser_signature"
               type="text"
               id="categoryAdviserSignature"
-              class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm"
+              class="block w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+              style=" font-size:65%;padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
             >
           </div>
-          <p class="text-sm mt-2 font-bold">Category Adviser</p>
+          <p class="flex justify-center text-xs mt-2 font-bold">Category Adviser</p>
         </div>
         
-        <div class="w-1/2">
+        <div class="w-1/2 mt-5">
           <label for="educationalSectionHeadSignature" class="block text-sm font-medium"></label>
           <div class="flex items-center">
             <input
               v-model="form.educational_section_head_signature"
               type="text"
               id="educationalSectionHeadSignature"
-              class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm bg-gray-200"
+              class="block w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+              style=" font-size:65%; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
               :readonly="!editMode"
             >
           </div>
-          <p class="text-sm mt-2 font-bold">Educational Section Head</p>
+          <p class="flex justify-center text-xs mt-2 font-bold">Educational Section Head</p>
         </div>
-        <div class="w-1/2">
+
+        <div class="w-1/2 mt-5">
           <label for="centerHeadSignature" class="block text-sm font-medium"></label>
           <div class="flex items-center">
             <input
               v-model="center_head"
               type="text"
-              class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm bg-gray-200"
+              class="block w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+              style=" font-size:65%; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
               readonly
             >
           </div>
-          <p class="text-sm mt-2 font-bold">Center Head</p>
+          <p class="flex justify-center text-xs mt-2 font-bold">Center Head</p>
         </div>
 
 
@@ -193,7 +278,7 @@
             <p class="text-center -mb-1 font-bold">PAGE 1 of {{ totalPages }}</p>
 
           <!-- Continuous horizontal line, moved to the left with space on the right -->
-          <div style="border-top: 2px solid black; width: 103%; margin-top: 4px; margin-left: -24px;"></div>
+          <div style="border-top: 2px solid black; width: 103%; margin-bottom: 4px;margin-top: 4px; margin-left: -24px;"></div>
 
 
             <!-- Text under the line -->
@@ -386,7 +471,7 @@ export default {
     // Add form title
     pdf.setFontSize(16);
     pdf.setFont('TimesNewRoman', 'Bold');
-    pdf.text("_______________________________________________________________", 105, currentY - 8, null, null, "center");
+    pdf.line(10, 50,210,50)
 
     pdf.setFontSize(11);
     pdf.setFont('arialbd', 'bold');
@@ -447,23 +532,31 @@ export default {
     
     // Setup autoTable
     pdf.autoTable({
-        head: [['Learner Skills', 'Outstanding *Well performed. Tasks are fully completed, all relevant information provided accurately and adequately where necessary.*Relevant tasks well performed; no tasks left incomplete', 'Very Satisfactory *General satisfactory with only minor omissions and inadequacies. Part of it is well attempted but overall, just satisfactory because of some major omissions and the limited coverage of the information.', 'Satisfactory *Revealing significant omission and inadequacies. Very limited coverage performed.', 'Fairly Satisfactory *Very unsatisfactory, important task(s) are poorly done or not attempted to do so.']],
-        body: skillsData,
-
-        startY: currentY,
-        margin: { left: 20 }, // Set left margin to 20
-        theme: 'grid',
-        styles: { fontSize: 10, fillColor: [255, 255, 255], textColor: 0 }, // Set background color to white and text color to black
-        headStyles: { fillColor: [192, 192, 192], textColor: 0 }, // Set header background to light gray and text color to black
-        columnStyles: {
-            0: { cellWidth: 35 }, // Adjust cell width for Learner Skills
-            1: { cellWidth: 35 },
-            2: { cellWidth: 35 },
-            3: { cellWidth: 35 },
-            4: { cellWidth: 35 },
-        }
+    head: [['Learner Skills', 'Outstanding *Well performed. Tasks are fully completed, all relevant information provided accurately and adequately where necessary.*Relevant tasks well performed; no tasks left incomplete', 'Very Satisfactory *General satisfactory with only minor omissions and inadequacies. Part of it is well attempted but overall, just satisfactory because of some major omissions and the limited coverage of the information.', 'Satisfactory *Revealing significant omission and inadequacies. Very limited coverage performed.', 'Fairly Satisfactory *Very unsatisfactory, important task(s) are poorly done or not attempted to do so.']],
+    body: skillsData,
+    startY: currentY,
+    margin: { left: 20 }, // Set left margin to 20
+    theme: 'grid',
+    styles: {
+        fontSize: 9,
+        fillColor: [255, 255, 255],
+        textColor: 0,
         
-    });
+    },
+    headStyles: {
+        fillColor: [192, 192, 192],
+        textColor: 0,
+        fontStyle: 'normal', // Make the header text bold
+        lineColor: [0, 0, 0] // Set the border color to black (RGB)
+    },
+    columnStyles: {
+        0: { cellWidth: 45, halign: 'center' }, // Center-align specific columns if needed
+        1: { cellWidth: 30, halign: 'center' },
+        2: { cellWidth: 30, halign: 'center' },
+        3: { cellWidth: 30, halign: 'center' },
+        4: { cellWidth: 30, halign: 'center' }
+    }
+});
     
 
     currentY = pdf.autoTable.previous.finalY + 10; // Update currentY after the table
@@ -504,20 +597,20 @@ export default {
 
     // Signature lines and labels, adjusted for spacing and alignment
     pdf.setFont('Arial','normal');
-    drawLine(pdf, this.form.learner_name || "", 40, currentY, 40); // Draw Learner name
-    pdf.text("Learner", 40, currentY + 7, 'center'); // Draw Learner label
+    drawLine(pdf, this.form.learner_name || "", 35, currentY, 40); // Draw Learner name
+    pdf.text("Learner", 35, currentY + 7, 'center'); // Draw Learner label
 
     pdf.setFont('Arial','normal');
-    drawLine(pdf, this.form.category_adviser_signature || "", 85, currentY, 40); // Draw Category Adviser signature
-    pdf.text("Category Adviser", 85, currentY + 7, 'center'); // Draw Category Adviser label
+    drawLine(pdf, this.form.category_adviser_signature || "", 80, currentY, 40); // Draw Category Adviser signature
+    pdf.text("Category Adviser", 80, currentY + 7, 'center'); // Draw Category Adviser label
 
     pdf.setFont('Arial','normal');
-    drawLine(pdf, this.form.educational_section_head_signature || "Raldie Lloyd D. Adolfo, LPT", 130, currentY, 40); // Draw Educational Section Head signature
-    pdf.text("Educational Section Head", 130, currentY + 7, 'center'); // Draw Educational Section Head label
+    drawLine(pdf, this.form.educational_section_head_signature || "Raldie Lloyd D. Adolfo, LPT", 125, currentY, 40); // Draw Educational Section Head signature
+    pdf.text("Educational Section Head", 125, currentY + 7, 'center'); // Draw Educational Section Head label
 
     pdf.setFont('Arial','normal');
-    drawLine(pdf, this.form.center_head_signature || "Angelic B. Pańa, RSW, MSSW", 180, currentY, 40); // Draw Center Head signature
-    pdf.text("Center Head", 180, currentY + 7, 'center'); // Draw Center Head label
+    drawLine(pdf, this.form.center_head_signature || "Angelic B. Pańa, RSW, MSSW", 175, currentY, 40); // Draw Center Head signature
+    pdf.text("Center Head", 175, currentY + 7, 'center'); // Draw Center Head label
 
     currentY += 20; // Adjust currentY for the next section if needed
 
@@ -532,16 +625,17 @@ export default {
         pdf.setFont("arialbd", "bold");
         pdf.text(`PAGE ${pageNum} of ${totalPages}`, 105, footerY - 5, null, null, 'center');
         pdf.setFontSize(16);
-        pdf.text("_________________________________________________________________", 110, footerY - 5, null, null, 'center');
+        
+        pdf.line(10, footerY-4, 210, footerY-4);
 
         // Form name
         pdf.setFontSize(8);
         pdf.text("LEARNER’S ACADEMIC BEHAVIORAL FORM", 105, footerY, null, null, 'center');
         
         // Footer text (DSWD info)
-        pdf.setFontSize(6);
-        pdf.setFont("Arial", "normal");
-        pdf.text("DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION REGIONAL REHABILITATION CENTER FOR YOUTH, DAVAO CITY PHILIPPINES 8000", 105, footerY + 3, null, null, 'center');
+        pdf.setFontSize(8);
+        pdf.setFont("Times New Roman", "normal");
+        pdf.text("DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION REGIONAL REHABILITATION CENTER FOR YOUTH, DAVAO CITY PHILIPPINES 8000", 110, footerY + 3, null, null, 'center');
     };
 
     // Track how many pages were created after adding all content
