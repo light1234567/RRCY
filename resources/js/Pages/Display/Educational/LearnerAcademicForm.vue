@@ -283,7 +283,7 @@
 
             <!-- Text under the line -->
             <p style="text-align: center; font-weight: bold; margin-top: -1px;">LEARNER’S ACADEMIC BEHAVIORAL FORM</p>
-            <p class="-ml-6 text-[10px]"style="text-align: center; margin-top: -1px;">DSWD  I FIELD OFFICE XI I PROTECTIVE SERVICES DIVISION I REGIONAL REHABILITATION CENTER FOR YOUTH, DAVAO CITY PHILIPPINES 8000
+            <p class="-ml-6 text-[9px]"style="text-align: center; margin-top: -1px;">DSWD  I FIELD OFFICE XI I PROTECTIVE SERVICES DIVISION I REGIONAL REHABILITATION CENTER FOR YOUTH, DAVAO CITY PHILIPPINES 8000
             </p>
           </div>
       </div>
