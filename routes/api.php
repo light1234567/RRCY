@@ -270,3 +270,9 @@ Route::get('/center-head', [CenterHeadController::class, 'getCenterHead']);
 use App\Http\Controllers\CrimeController;
 
 Route::get('/crimes', [CrimeController::class, 'getCrimes']);
+
+
+use App\Http\Controllers\RtcController;
+
+// Route to fetch all RTC provinces with branches
+Route::get('/rtcBranches', [RtcController::class, 'getRtcBranches']);

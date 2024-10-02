@@ -357,42 +357,57 @@
          
           <div class="grid grid-cols-1 gap-2">
           <!-- Committing Court -->
-<div class="mb-2">
-  <label for="committingCourt" class="block mb-1 text-sm">Committing Court:</label><span class="text-red-500">*</span>
+          <div class="mb-2">
+  <label for="rtcProvince" class="block mb-1 text-sm">
+    RTC Province: <span class="text-red-500">*</span>
+  </label>
+  <select
+    id="rtcProvince"
+    v-model="selectedProvince"
+    class="w-full px-2 py-1 border rounded-md text-sm"
+    required
+  >
+    <option value="" disabled>Select a province</option>
+    <option v-for="province in rtcProvinces" :key="province.id" :value="province.id">
+      {{ province.province_name }}
+    </option>
+  </select>
+</div>
+
+<!-- RTC Branch Dropdown (visible only after selecting a province) -->
+<div class="mb-2" v-if="selectedProvince">
+  <label for="committingCourt" class="block mb-1 text-sm">
+    Committing Court: <span class="text-red-500">*</span>
+  </label>
   <select
     id="committingCourt"
     v-model="form.admission.committing_court"
-    required
     class="w-full px-2 py-1 border rounded-md text-sm"
+    required
   >
-    <option value="">Select Committing Court</option>
-    <option value="Supreme Court of the Philippines">Supreme Court of the Philippines</option>
-    <option value="Court of Appeals">Court of Appeals</option>
-    <option value="Sandiganbayan">Sandiganbayan</option>
-    <option value="Court of Tax Appeals">Court of Tax Appeals</option>
-    <option value="Regional Trial Court">Regional Trial Court</option>
-    <option value="Metropolitan Trial Court">Metropolitan Trial Court</option>
-    <option value="Municipal Trial Court">Municipal Trial Court</option>
-    <option value="Municipal Circuit Trial Court">Municipal Circuit Trial Court</option>
-    <option value="Shari'a District Court">Shari'a District Court</option>
-    <option value="Shari'a Circuit Court">Shari'a Circuit Court</option>
-    <option value="Other">Other</option>
+    <option value="" disabled>Select a branch</option>
+    <option v-for="branch in filteredBranches" :key="branch.id" :value="branch.branch_name">
+      {{ branch.branch_name }}
+    </option>
+    <option value="Other">Other</option> <!-- "Other" option -->
   </select>
-  
 </div>
 
-<!-- Custom Committing Court Input (Only when "Other" is selected) -->
-<div v-if="form.admission.committing_court === 'Other'" class="mb-2">
-  <label for="customCommittingCourt" class="block mb-1 text-sm">Specify Committing Court:</label>
+<!-- Input field for custom committing court, visible only if "Other" is selected -->
+<div class="mb-2" v-if="form.admission.committing_court === 'Other'">
+  <label for="customCourt" class="block mb-1 text-sm">
+    Custom Committing Court: <span class="text-red-500">*</span>
+  </label>
   <input
     type="text"
-    id="customCommittingCourt"
-    v-model="form.admission.custom_committing_court"
+    id="customCourt"
+    v-model="customCommittingCourt"
     class="w-full px-2 py-1 border rounded-md text-sm"
-    placeholder="Enter court name"
+    placeholder="Enter custom committing court"
     required
   />
 </div>
+
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
               <div class="mb-2">
@@ -510,7 +525,7 @@
                 >
                   <option value="">Select Case Status</option>
                   <option value="On trial">On trial</option>
-                  <option value="Acquitted">Acquitted/Dismissed</option>
+                  <option value="Acquitted/Dismissed">Acquitted/Dismissed</option>
                   <option value="Provisionally Dismissed">Provisionally Dismissed</option>
                   <option value="Rehabilitation">Rehabilitated</option>
                   <option value="Diversion">Diversion</option>
@@ -787,6 +802,10 @@ const crimeCategories = ref([]); // Stores all crime categories
 const selectedCategory = ref(''); // Stores the selected category ID
 const filteredCrimes = ref([]);   // Stores crimes based on selected category
 const customOffenseCommitted = ref(''); // Custom value for "Other" offense committed
+const rtcProvinces = ref([]); // Stores all RTC provinces
+const selectedProvince = ref(''); // Stores the selected province ID
+const filteredBranches = ref([]); // Stores branches based on selected province
+const customCommittingCourt = ref(''); // Custom value for "Other" committing court
 const provinces = ref([]);
 const cityMunis = ref([]);
 const barangays = ref([]);
@@ -795,6 +814,29 @@ const showModal = ref(false);
 const modalType = ref('success');
 const modalMessage = ref('');
 
+
+// Fetch RTC provinces and branches
+const fetchRtcProvincesAndBranches = async () => {
+  try {
+    const response = await axios.get('/api/rtcBranches'); // Fetch provinces and branches from API
+    rtcProvinces.value = response.data;
+  } catch (error) {
+    console.error('Error fetching RTC provinces:', error);
+  }
+};
+
+// Watch for changes in selected province and filter branches
+watch(selectedProvince, (newProvinceId) => {
+  if (newProvinceId) {
+    const province = rtcProvinces.value.find(p => p.id === parseInt(newProvinceId));
+    filteredBranches.value = province ? province.branches : [];
+  } else {
+    filteredBranches.value = [];
+  }
+});
+
+// Load RTC provinces and branches when component is mounted
+onMounted(fetchRtcProvincesAndBranches);
 
 // Fetch crime categories and crimes
 const fetchCrimeCategoriesAndCrimes = async () => {
@@ -879,8 +921,9 @@ if (form.value.distinguishing_marks.colour_of_eye === 'Other') {
 
     // Check if "Other" is selected for Committing Court and set custom value
     if (form.value.admission.committing_court === 'Other') {
-      form.value.admission.committing_court = form.value.admission.custom_committing_court;
-    }
+  form.value.admission.committing_court = customCommittingCourt.value; // Use the custom committing court entered by the user
+}
+
     // Check if the religion is "Other" and set it to the custom religion input value
     if (form.value.client.religion === 'Other') {
       form.value.client.religion = form.value.client.customReligion; // Replace 'Other' with custom religion
