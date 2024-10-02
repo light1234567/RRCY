@@ -79,6 +79,7 @@
   
   <!-- Adjust the height and width of the container -->
   <div class="relative -mt-20 w-full h-[300px] lg:h-[390px]">  
+    
     <Doughnut 
       :data="caseStatusData"
       :options="{
@@ -164,6 +165,8 @@
         }
       }"
     />
+    <h3 class="font-semibold text-gray-700">Suspended Sentence Total</h3>
+    <p class="text-xl text-gray-900">{{ suspendedSentenceTotal }} case</p>
   </div>
 </div>
 
@@ -785,10 +788,8 @@ const filteredOffenses = computed(() => {
 const filteredCaseStatusCountsArray = computed(() => {
   const statuses = [
     { label: 'On trial', icon: 'gavel', color: '#36A2EB' }, // Blue
-    { label: 'Suspended sentence', icon: 'pause-circle', color: '#FFCE56' }, // Yellow
-    { label: 'Acquitted', icon: 'check-circle', color: '#4BC0C0' }, // Green
-    { label: 'Dismissed', icon: 'times-circle', color: '#FF6384' }, // Red
-    { label: 'Rehabilitation', icon: 'heart', color: '#9966FF' }, // Purple
+    { label: 'Acquitted/Dismissed', icon: 'check-circle', color: '#4BC0C0' }, // Green
+    { label: 'Rehabilitated', icon: 'heart', color: '#9966FF' }, // Purple
     { label: 'Provisionally Dismissed', icon: 'clock', color: '#FF9F40' }, // Orange
     { label: 'Diversion', icon: 'random', color: '#33FF57' }, // Light Green
     { label: 'Disposition Measure', icon: 'balance-scale-right', color: '#FF5733' }, // Dark Red
@@ -860,6 +861,17 @@ const filteredChildStatusData = computed(() => {
       },
     ],
   };
+});
+
+
+const suspendedSentenceTotal = computed(() => {
+  const diversion = filteredCaseStatusCountsArray.value.find(status => status.label === 'Diversion');
+  const dispositionMeasure = filteredCaseStatusCountsArray.value.find(status => status.label === 'Disposition Measure');
+
+  const diversionCount = diversion ? diversion.count : 0;
+  const dispositionMeasureCount = dispositionMeasure ? dispositionMeasure.count : 0;
+
+  return diversionCount + dispositionMeasureCount;
 });
 
 // Filtered Date Admitted Data for the Line Chart

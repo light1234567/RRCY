@@ -469,11 +469,9 @@
                 >
                   <option value="">Select Case Status</option>
                   <option value="On trial">On trial</option>
-                  <option value="Suspended sentence">Suspended sentence</option>
-                  <option value="Acquitted">Acquitted</option>
-                  <option value="Dismissed">Dismissed</option>
+                  <option value="Acquitted">Acquitted/Dismissed</option>
                   <option value="Provisionally Dismissed">Provisionally Dismissed</option>
-                  <option value="Rehabilitation">Rehabilitation</option>
+                  <option value="Rehabilitation">Rehabilitated</option>
                   <option value="Diversion">Diversion</option>
                   <option value="Disposition Measure">Disposition Measure</option>
                   <option value="Child-at-risk (CAR)">Child-at-risk (CAR)</option>

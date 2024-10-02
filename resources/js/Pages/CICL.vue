@@ -176,7 +176,7 @@ const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-const caseStatuses = ["On trial", "Suspended sentence", "Acquitted", "Dismissed", "Provisionally Dismissed", "Rehabilitation", "Diversion", "Disposition Measure", "Child-at-risk (CAR)"];
+const caseStatuses = ["On trial",  "Acquitted/Dismissed", "Provisionally Dismissed", "Rehabilitated", "Diversion", "Disposition Measure", "Child-at-risk (CAR)"];
 
 const childStatuses = ["Still at the Center (SATC)", "Discharge", "Leave without Permission (LWOP)"];
 
