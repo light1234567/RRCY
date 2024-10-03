@@ -130,8 +130,8 @@
   
     <!-- Name and Signature of Houseparent -->
     <div class="mb-6 flex justify-between items-center">
-      <div class="w-1/2 mr-12">
-        <label for="preparedBy" class="block text-sm font-medium">Prepared by:</label>
+      <div class="w-1/2  mr-12">
+        <label for="preparedBy" class="mb-6 block text-sm font-medium">Prepared by:</label>
         <div class="flex items-center">
           <input
             type="text"
@@ -145,7 +145,7 @@
       </div>
   
       <!-- Name and Signature of Residents -->
-      <div class="w-1/2">
+      <div class="w-100% justify-last">
         <label for="signatureResidents" class="block font-medium invisible">Prepared by:</label>
         <div class="flex items-center">
           <input
@@ -160,22 +160,22 @@
       </div>
     </div>
   
-    <div class="mb-6 flex justify-between items-start">
+    <div class="mb-6 flex justify-center items-center">
       <!-- Noted by Section -->
-      <div class="w-1/2 mr-12">
+      <div class=" ">
         <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
         <input type="text" v-model="form.inventory_shp" 
-      class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 py-1 text-xs" 
+      class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-100% px-2 mt-12 py-1 text-xs text-center" 
       :readonly="!editMode"/>      
-      <p class="text-sm">HP III/SHP</p>
+      <p class="text-sm flex-wrap justify-center text-center w-100%">HP III/SHP</p>
       </div>
     </div>
   
   <!-- Footer Section -->
-  <div class=" pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-        <div class="flex justify-between items-center">
+  <div class=" pt-4 text-center text-xs " style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-center w-full items-center">
           <div class="flex flex-col">
-            <p class="font-bold">PAGE 1 of 1</p>
+            <p class="mr-6 font-bold text-center ">PAGE 1 of 1</p>
             <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
             <p>Email: <span class="text-blue-600 underline">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
