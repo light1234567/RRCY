@@ -1,7 +1,21 @@
 <template>
-  <!-- Edit and Save Buttons -->
-  <div class="flex justify-end space-x-4 mb-4">
-        <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+<!-- Tabs for Actions -->
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <!-- FontAwesome for Back -->
+      <i class="fas fa-arrow-left w-4 h-4"></i>
+      <span>Back</span>
+    </button>
+</div>
+
+<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-[52px]">
+    <!-- Pagination Component -->
+    <Pagination 
+      :totalPages="totalPages" 
+      :currentPage="currentPage" 
+      @update:currentPage="currentPage = $event" 
+    />
+    <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
           <span v-if="!editMode">Edit</span>
           <span v-else>Cancel</span>
         </button>
@@ -9,20 +23,24 @@
           Save
         </button>
 
-
-        
-        <button @click="exportToPdf" type="button" class="bg-red-500 text-white px-4 py-2 rounded">
-        Export to PDF
-      </button>
-
-      </div>
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+    
+      <i class="fas fa-file-pdf w-4 h-4"></i>
+      <span>Export PDF</span>
+    </button> 
+</div>
+  
   
       <!-- Success/Error Message -->
   <div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
     {{ message }}
   </div>
-  
-    <div class="p-8 bg-white max-w-screen-md mx-auto border border-gray-300 rounded-lg shadow-lg">
+  <div class="graph-background pt-0.5  -mr-9 -mb-16">
+
+    <div class="p-12 mt-8 bg-white max-w-screen-md mx-auto border border-gray-400 rounded-lg shadow-lg">
+      <div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
+    {{ message }}
+  </div>
       <!-- Header Section -->
       <div class="text-center border-b pb-2 mb-4">
         <div class="flex justify-between items-center">
@@ -321,7 +339,7 @@
             </div>
           </div>
         </div>
-  
+        </div>
     </div>
   </template>
   <script>
@@ -330,11 +348,16 @@
 import '../../../fonts/arial-normal.js'; 
 import '../../../fonts/times-normal.js'; 
 import '../../../fonts/arialbd-bold.js'; 
-
+import Pagination from '@/Components/Pagination.vue';
 
   export default {
+    components:{
+      Pagination,
+    },
     data() {
       return {
+        totalPages: 1,
+        currentPage: 1,
         center_head: '',
         showCamera: false,
     videoStream: null,
@@ -936,5 +959,10 @@ img.onerror = (err) => {
     margin: 0;
     vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
   }
+  .graph-background {
+      background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
+                        linear-gradient(to bottom, #cccccc 1px, transparent 1px);
+      background-size: 15px 15px; /* Adjust size as per your need */
+    } 
   </style>
   

@@ -14,8 +14,6 @@
   <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
   
   <!-- Add Row Button -->
-
-
   <!-- Pagination Component -->
   <Pagination :totalPages="totalPages" :currentPage="currentPage" @update:currentPage="updatePage" />
   <button v-if="editMode" @click="addItem" class="flex items-center space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
@@ -25,10 +23,11 @@
     <span>Add Row</span>
   </button>
   <!-- Edit Button -->
-  <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-    <i class="fas fa-edit w-4 h-4"></i>
-    <span>Edit</span>
-  </button>
+  <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for Edit -->
+        <i class="fas fa-edit w-4 h-4"></i>
+        <span>Edit</span>
+      </button>
 
   <!-- Save Button (shown only in edit mode) -->
   <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
@@ -36,11 +35,12 @@
     <span>Save</span>
   </button>
 
-  <!-- Export to PDF Button -->
-  <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-    <i class="fas fa-file-pdf w-4 h-4"></i>
-    <span>Export PDF</span>
-  </button>
+<!-- Export to PDF Button -->
+<button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+  <i class="fas fa-file-pdf w-4 h-4"></i>
+  <span>Export PDF</span>
+</button>
+
 
 </div>
 
@@ -48,7 +48,7 @@
   <div class="graph-background p-0.5 -mr-9 -mb-16">
 
   <div v-if="currentPage === 1">
-    <div class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+    <div class="max-w-7xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
       <div class="relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
         <p class="text-[10px] -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
@@ -59,23 +59,23 @@
         <div v-if="message" :class="`p-2 mt-4 text-white rounded-md text-xs ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
           {{ message }}
         </div>
-        <div class="mb-4 text-xs">
+        <div class="mb-4 text-[14px]">
           <div class="grid grid-cols-2 gap-2">
             <div class="flex items-center">
-              <label class="font-semibold w-1/5">Name:</label>
+              <label class="font-semibold w-1/5">NAME:</label>
               <input type="text" v-model="plan.name" :class="{'twinkle-border': editMode}" class="w-3/4 border border-transparent p-1" readonly>
             </div>
             <div class="flex items-center">
-              <label class="font-semibold w-1/5">Age:</label>
-              <input type="text" v-model="plan.age" :class="{'twinkle-border': editMode}" class="w-3/4 border border-transparent p-1" readonly>
+              <label class="font-semibold w-1/5">AGE:</label>
+              <input type="text" v-model="plan.age" :class="{'twinkle-border': editMode}" class="ml-[53px] w-3/4 border border-transparent p-1" readonly>
             </div>
             <div class="flex items-center">
-              <label class="font-semibold w-1/5">Period:</label>
+              <label class="font-semibold w-1/5">PERIOD:</label>
               <input type="text" v-model="plan.period" :class="{'twinkle-border': editMode}" class="w-3/4 border border-transparent p-1" :readonly="!editMode">
             </div>
             <div class="flex items-center relative">
-              <label class="font-semibold w-1/5">Date Prepared:</label>
-              <input type="date" v-model="plan.date_prepared" :class="{'twinkle-border': editMode}" class="w-3/4 border border-transparent p-1" :readonly="!editMode">
+              <label class="font-semibold w-1/5 whitespace-nowrap">DATE PREPARED:</label>
+              <input type="date" v-model="plan.date_prepared" :class="{'twinkle-border': editMode}" class="ml-12 w-3/4 border border-transparent p-1" :readonly="!editMode">
               <span class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" @click="openCalendar">
                 
               </span>
@@ -241,7 +241,10 @@
 import axios from 'axios';
 import Pagination from '@/Components/Pagination.vue';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import '../../../fonts/arial-normal.js'; 
+import '../../../fonts/times-normal.js'; 
+import '../../../fonts/arialbd-bold.js'; 
+import "jspdf-autotable";
 
 export default {
   components: {
@@ -305,8 +308,7 @@ export default {
     });
 
   console.log('Fetched client ID:', this.clientId);
-}
-,
+},
     calculateAge(birthDate) {
       const today = new Date();
       const birthDateObj = new Date(birthDate);
@@ -417,28 +419,284 @@ export default {
       document.querySelector('input[type="date"]').showPicker();
     },
     exportToPdf() {
-      const element = document.querySelector('.max-w-3xl'); // Select the element you want to export
-      html2canvas(element).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'pt', 'a4');
-        const imgWidth = 595.28;
-        const pageHeight = 841.89;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        let heightLeft = imgHeight;
+  const pdf = new jsPDF("landscape", "mm", [216, 356]); // Initialize jsPDF
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const footerMargin = 20; // Margin from the bottom for the footer
+  let totalPages = 0; // To keep track of the total number of pages
 
-        let position = 0;
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+  // Adjustable gap between table and signature section (in mm)
+  const signatureGap = 30;
 
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
+  /**
+   * Function to add header for the first page
+   */
+  const addHeaderFirstPage = () => {
+    const imgData = '/images/headerlogo2.png'; // Path to your header image
+    pdf.addImage(imgData, 'PNG', 13, 10, 75, 35); // Add header image
+
+    pdf.setFont('Times', 'italic'); // Use built-in 'Times' font in italic
+    pdf.setFontSize(9);
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 285, 24);
+
+    pdf.addFont('arialbd-bold.ttf', 'Arial', 'bold');
+    pdf.setFont('Arial', 'bold');    
+    pdf.setFontSize(14);
+    pdf.text('HELPING/INTERVENTION PLAN', pageWidth / 2, 47, { align: 'center' });
+  };
+
+  /**
+   * Function to add header for subsequent pages
+   */
+  const addHeaderOtherPages = () => {
+    pdf.setFont('Times', 'italic'); // Use built-in 'Times' font in italic
+    pdf.setFontSize(9);
+    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 285, 10);
+  };
+
+  /**
+   * Function to add footer for the first page
+   * @param {number} pageNumber - Current page number
+   * @param {number} totalPages - Total number of pages
+   */
+  const addFooterFirstPage = (pageNumber, totalPages) => {
+    pdf.setPage(pageNumber); // Set the current page
+    const footerY = pageHeight - footerMargin + 5;
+    pdf.setFont('Times', 'normal'); // Use built-in 'Times' font
+    pdf.setFontSize(10);
+
+    // Set consistent line width and color
+    pdf.setDrawColor(0, 0, 0); // Black color
+    pdf.setLineWidth(0.6); // Consistent line width
+    pdf.line(15, footerY - 5, pageWidth - 35, footerY - 5); // Draw footer line
+
+    // Add footer image
+    const imgData = '/images/footerimg.png'; // Path to your footer image
+    pdf.addImage(imgData, 'PNG', pageWidth - 35, footerY - 10, 22, 12); // Add footer image
+
+    // Footer text
+    pdf.text('DSWD Field Office XI, Ramon Magsaysay Avenue corner Damaso Suazo Street, Davao City', pageWidth / 2, footerY - 1, { align: 'center' });
+
+    // Contact information
+    pdf.text('Email:', 117, footerY + 4);
+    pdf.text('Website:', 192, footerY + 4);
+
+    // Add clickable links
+    pdf.setTextColor(0, 0, 255); // Blue color for links
+    pdf.textWithLink('fo11@dswd.gov.ph', 127, footerY + 4, { url: 'mailto:fo11@dswd.gov.ph' });
+    pdf.textWithLink('http://www.dswd.gov.ph', 205, footerY + 4, { url: 'http://www.dswd.gov.ph' });
+
+    pdf.setTextColor(0, 0, 0); // Reset text color to black
+    pdf.text('Tel. No.:(082) 227-1964', pageWidth / 2 - 22, footerY + 4);
+
+    // Add page numbering
+    pdf.setFont('Times', 'bold'); // Use built-in 'Times' bold font
+    pdf.text(`PAGE ${pageNumber} of ${totalPages}`, pageWidth / 2, footerY - 7, { align: 'center' });
+  };
+
+  /**
+   * Function to add footer for subsequent pages
+   * @param {number} pageNumber - Current page number
+   * @param {number} totalPages - Total number of pages
+   */
+  const addFooterOtherPages = (pageNumber, totalPages) => {
+    pdf.setPage(pageNumber); // Set the current page
+    const footerY = pageHeight - footerMargin + 5;
+    pdf.setFont('Times', 'normal'); // Use built-in 'Times' font
+    pdf.setFontSize(10);
+
+    // Set consistent line width and color
+    pdf.setDrawColor(0, 0, 0); // Black color
+    pdf.setLineWidth(0.6); // Consistent line width
+    pdf.line(15, footerY - 5, pageWidth - 15, footerY - 5); // Draw footer line
+
+    // Footer text
+    pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', pageWidth / 2, footerY - 1, { align: 'center' });
+
+    // Add page numbering
+    pdf.setFont('Times', 'bold'); // Use built-in 'Times' bold font
+    pdf.text(`PAGE ${pageNumber} of ${totalPages}`, pageWidth / 2, footerY - 7, { align: 'center' });
+  };
+
+  /**
+   * Function to add the table with headers
+   * @param {number} startY - Y-coordinate to start the table
+   * @param {Array} tableRows - Data rows for the table
+   */
+  const addTable = (startY, tableRows) => {
+    pdf.autoTable({
+      startY: startY,
+      head: [[
+        "OBJECTIVES", 
+        "ACTIVITIES", 
+        "TIME FRAME", 
+        "RESPONSIBLE PERSON", 
+        "EXPECTED OUTCOME", 
+        "REMARKS"
+      ]],
+      body: tableRows,
+      theme: "plain",
+      headStyles: {
+        halign: 'center',
+        fontStyle: 'bold',
+        textTransform: 'uppercase'
+      },
+      styles: {
+        fontSize: 10, 
+        overflow: 'linebreak',
+        cellPadding: 2, 
+        lineWidth: 0.2, 
+        lineColor: [100, 100, 100],
+        textColor: [50, 50, 50]
+      },
+      margin: { bottom: footerMargin + 10 }, // Ensure space above footer
+      columnStyles: {
+        0: { halign: 'center', valign: 'middle' },
+        1: { halign: 'center', valign: 'middle' },
+        2: { halign: 'center', valign: 'middle' },
+        3: { halign: 'center', valign: 'middle' },
+        4: { halign: 'center', valign: 'middle' },
+        5: { halign: 'center', valign: 'middle' },
+      },
+      didDrawPage: (data) => {
+        const currentPage = pdf.internal.getCurrentPageInfo().pageNumber;
+
+        if (currentPage === 1) {
+          addHeaderFirstPage();
+        } else {
+          addHeaderOtherPages();
+          data.settings.startY = 25; // Adjust startY for subsequent pages
         }
-        pdf.save(`${this.plan.name}_Intervention_Plan.pdf`);
-      });
-    },
+        // Footer will be added after all content is generated
+      }
+    });
+  };
+
+ /**
+ * Function to add the signature section
+ * @param {number} startY - Y-coordinate to start the signature section
+ */
+const addSignatureSection = (startY) => {
+    const signatureHeight = 30; // Height required for the signature section
+    const requiredSpace = 10 + signatureHeight + 5; // LineY + signatureHeight + padding
+
+    // Calculate available space on the current page
+    const availableSpace = pageHeight - startY - footerMargin;
+
+    if (requiredSpace > availableSpace) {
+        // Not enough space, add a new page
+        pdf.addPage();
+        addHeaderOtherPages(); // Add header to the new page
+        startY = 30; // Reset startY for the new page
+    }
+
+    const finalLineY = startY + 10;
+    const finalLabelY = finalLineY + 5;
+
+    pdf.setFont('Arial', 'normal');     
+    pdf.setFontSize(12); // Set font size once
+
+    // Function to get the width of a string in points
+    function getTextWidth(pdf, text) {
+        return pdf.getTextWidth(text); // Using jsPDF's built-in getTextWidth
+    }
+
+    // Helper function to add a signature block
+    const addSignatureBlock = (label, name, xPosition, title) => {
+        // Calculate widths
+        const labelWidth = getTextWidth(pdf, label);
+        const nameWidth = getTextWidth(pdf, name);
+
+        // Add label
+        pdf.text(label, xPosition, finalLineY - 25); // Label above the name
+
+        // Add name
+        pdf.text(name, xPosition, finalLineY - 10); // Name above the line
+
+        // Draw signature line based on name width
+        pdf.line(xPosition, finalLineY - 9, xPosition + nameWidth, finalLineY - 9); // Signature line below the name
+
+        // Add title below the signature line, centered with the name
+        const titleX = xPosition;
+        pdf.text(title, titleX, finalLabelY - 10);
+    };
+
+    // 'Prepared by' section - Left aligned
+    const preparedByLabel = 'Prepared by:';
+    const preparedByName = this.plan.prepared_by; // Fetch the prepared by name
+    addSignatureBlock(preparedByLabel, preparedByName, 15, 'Social Welfare Officer I');
+
+    // 'Conformed by' section - Center aligned
+    const conformedByLabel = 'Conformed by:';
+    const conformedByName = this.plan.conformed_by; // Fetch the conformed by name
+    const conformedByX = (pageWidth / 2 - 20) - getTextWidth(pdf, conformedByLabel) / 2; // Adjust x to center the label
+    addSignatureBlock(conformedByLabel, conformedByName, conformedByX, 'Resident');
+
+    // 'Noted by' section - Right aligned
+    const notedByLabel = 'Noted by:';
+    const notedByName = this.center_head; // Fetch the center head name
+    const notedByLabelWidth = getTextWidth(pdf, notedByLabel);
+    const notedByX = pageWidth - 95; // Starting x position for 'Noted by'
+    addSignatureBlock(notedByLabel, notedByName, notedByX, 'Center Head/ SWO IV');
+};
+
+
+  /**
+   * Function to generate the PDF content
+   */
+  const generatePdfContent = () => {
+    // Add header for the first page
+    addHeaderFirstPage();
+    pdf.addFont('arialbd-bold.ttf', 'Arial', 'bold');
+    pdf.setFont('Arial', 'bold');       
+    pdf.setFontSize(11);
+
+    // Add metadata
+    const metadataY = 61;
+    pdf.text(`NAME: ${this.plan.name || ''}`, 15, metadataY);
+    pdf.text(`AGE: ${this.plan.age || ''}`, pageWidth / 2, metadataY);
+    pdf.text(`PERIOD: ${this.plan.period || ''}`, 15, metadataY + 6);
+    pdf.text(`DATE PREPARED: ${this.plan.date_prepared || ''}`, pageWidth / 2, metadataY + 6);
+
+    // Prepare table rows
+    const tableRows = this.plan.items.map((item) => [
+      item.objectives || '',
+      item.activities || '',
+      item.time_frame || '',
+      item.responsible_person || '',
+      item.expected_outcome || '',
+      item.remarks || '',
+    ]);
+
+    const tableStartY = metadataY + 10;
+    addTable(tableStartY, tableRows);
+
+    // After adding the table, get the last Y position
+    const lastY = pdf.lastAutoTable ? pdf.lastAutoTable.finalY : tableStartY;
+
+    // Add signature section with adjustable gap
+    const signatureStartY = lastY + signatureGap;
+    addSignatureSection(signatureStartY);
+
+    // After all content is added, set totalPages
+    totalPages = pdf.getNumberOfPages();
+
+    // Now, add footers to all pages
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1) {
+        addFooterFirstPage(i, totalPages);
+      } else {
+        addFooterOtherPages(i, totalPages);
+      }
+    }
+
+    // Save the PDF with the plan name
+    pdf.save(`helping-intervention-plan-${this.plan.name}.pdf`);
+  };
+
+  // Generate the PDF content
+  generatePdfContent();
+},
     printPage() {
       window.print();
     },
@@ -453,9 +711,38 @@ export default {
       this.clientId = newId;
       this.fetchClientData();
       this.fetchCenterHead(this.clientId);
-    }
+    },
+     // Fetch client and intervention plan data
+    fetchClientData() {
+      axios.get(`/api/clients/${this.clientId}`)
+        .then(response => {
+          const client = response.data;
+          this.plan.name = `${client.first_name} ${client.last_name}`;
+          this.plan.age = this.calculateAge(client.date_of_birth);
+
+          return axios.get(`/api/intervention-plans/${this.clientId}`);
+        })
+        .then(response => {
+          const clientPlan = response.data;
+
+          this.plan.id = clientPlan.id;
+          this.plan.period = clientPlan.period;
+          this.plan.date_prepared = clientPlan.date_prepared;
+          this.plan.prepared_by = clientPlan.prepared_by || '';
+          this.plan.conformed_by = clientPlan.conformed_by || '';
+
+          this.plan.items = clientPlan.items ? clientPlan.items : [];
+
+          this.updateTotalPages();
+        })
+        .catch(error => {
+          console.error('Error fetching client data:', error);
+        });
+    },
+    
   }
 };
+
 </script>
 
 <style scoped>
