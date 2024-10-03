@@ -26,7 +26,7 @@
   </button>
 
   <!-- Save Button (visible only in edit mode) -->
-  <button v-else @click="submitForm" type="button" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
+  <button v-else @click="saveData" type="button" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
 
   <!-- Export PDF Button (commented out for now, uncomment to use) -->
   
@@ -37,12 +37,13 @@
   </button>
 
 </div>
+  <!-- Success/Error Message -->
+  <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
+
 
 <div class="graph-background pt-0.5  -mr-9 -mb-16">
 
   <div v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
-  <!-- Success/Error Message -->
-  <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
 <!-- Header -->
 <div class="relative flex justify-between items-center mb-4">
   <img src="/images/headerlogo2.png" alt="Logo" class=" h-32 w-64 relative z-10">    
@@ -65,7 +66,7 @@
         </div>
         <div class="flex items-center justify-center mb-6">
           <p class="text-md font-semibold mr-4">Date of Admission:</p>
-          <input type="text" v-model="form.period" class="underline-input bg-transparent border-b-2 border-gray-300 text-center text-xs" />
+          <input type="date" v-model="form.date_of_admission" class="underline-input bg-transparent border-b-2 border-gray-300 text-center text-xs" />
         </div>
       </th>
     </tr>
@@ -185,41 +186,49 @@
 
 
     <!-- Page 2: Trainings -->
-    <table class="w-full border-collapse border mt-4">
-      <thead>
-        <tr>
-          <th colspan="4" class="text-center p-2 border bg-gray-300">Skills Training nga human na nga naapilan diri sa sulod CENTER ug sa gawas sa center</th>
-        </tr>
-        <tr class="bg-gray-200">
-          <th class="border p-2 text-center">Title sa Training nga Naapilan</th>
-          <th class="border p-2 text-center">Kadugayon sa Training</th>
-          <th class="border p-2 text-center">Lugar sa Gi-Trainingan (Sa Gawas)</th>
-          <th class="border p-2 text-center">Lugar sa Gi-Trainingan (Sa Center)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(training, index) in form.trainings" :key="index">
-          <td class="p-2 border">
-            <input type="text" v-model="training.title" class="w-full border" :readonly="!editMode">
-          </td>
-          <td class="p-2 border">
-            <input type="text" v-model="training.duration" class="w-full border" :readonly="!editMode">
-          </td>
-          <td class="p-2 border">
-            <input type="text" v-model="training.location_outside" class="w-full border" :readonly="!editMode">
-          </td>
-          <td class="p-2 border">
-            <input type="text" v-model="training.location_inside" class="w-full border" :readonly="!editMode">
-          </td>
-        </tr>
-        <!-- Option to add a new training -->
-        <tr v-if="editMode">
-          <td colspan="4" class="p-2 text-center">
-            <button type="button" @click="addNewTraining" class="px-4 py-2 bg-blue-500 text-white rounded">Add Training</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<table class="w-full border-collapse border mt-4">
+  <thead>
+    <tr>
+      <th colspan="5" class="text-center p-2 border bg-gray-300">Skills Training nga human na nga naapilan diri sa sulod CENTER ug sa gawas sa center</th>
+    </tr>
+    <tr class="bg-gray-200">
+      <th class="border p-2 text-center">Title sa Training nga Naapilan</th>
+      <th class="border p-2 text-center">Kadugayon sa Training</th>
+      <th class="border p-2 text-center">Lugar sa Gi-Trainingan (Sa Gawas)</th>
+      <th class="border p-2 text-center">Lugar sa Gi-Trainingan (Sa Center)</th>
+      <th class="border p-2 text-center"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(training, index) in form.trainings" :key="index">
+      <td class="p-2 border">
+        <input type="text" v-model="training.title" class="w-full border" :readonly="!editMode">
+      </td>
+      <td class="p-2 border">
+        <input type="text" v-model="training.duration" class="w-full border" :readonly="!editMode">
+      </td>
+      <td class="p-2 border">
+        <input type="text" v-model="training.location_outside" class="w-full border" :readonly="!editMode">
+      </td>
+      <td class="p-2 border">
+        <input type="text" v-model="training.location_inside" class="w-full border" :readonly="!editMode">
+      </td>
+      <td class="p-2 border text-center">
+        <!-- Remove Button -->
+        <button type="button" @click="removeTraining(index)" class="px-2 py-1 bg-red-500 text-white rounded" v-if="editMode">
+          Remove
+        </button>
+      </td>
+    </tr>
+    <!-- Option to add a new training -->
+    <tr v-if="editMode">
+      <td colspan="5" class="p-2 text-center">
+        <button type="button" @click="addNewTraining" class="px-4 py-2 bg-blue-500 text-white rounded">Add Training</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
     
     <div>
       <table class="w-full border-collapse border">
@@ -444,7 +453,7 @@ data() {
       mother: '',
       address: '',
       center_duration: '',
-      for_the: '',
+      period: '',
       date_of_admission: '',
     },
     automotiveSector: [
@@ -595,118 +604,121 @@ methods: {
 }
 
 ,
-  fetchData() {
-  const clientId = this.$route.params.id;
+fetchData() {
+    const clientId = this.$route.params.id;
 
-  if (clientId) {
-      this.form.client_id = clientId;
-      axios.get(`/api/training-needs-assessment/${clientId}`)
-          .then(response => {
-              // Log the entire response to understand the data structure
-              console.log('Raw Report Data:', response.data.report);
+    if (clientId) {
+        this.form.client_id = clientId;
+        axios.get(`/api/training-needs-assessment/${clientId}`)
+            .then(response => {
+                // Log the entire response to understand the data structure
+                console.log('Raw Report Data:', response.data.report);
 
-              const report = response.data.report;
+                const report = response.data.report || {};  // Safeguard for null report
+                const educationDetails = report.education_details || [];  // Default to empty array if null
+                const trainingDetails = report.training_details || [];  // Default to empty array if null
+                const trainingSectorDetails = report.training_sector_details || [];  // Default to empty array if null
 
-              const educationDetails = report.education_details;
-              const trainingDetails = report.training_details;
-              const trainingSectorDetails = report.training_sector_details;
+                // Log each of these to verify
+                console.log('Education Details:', educationDetails);
+                console.log('Training Details:', trainingDetails);
+                console.log('Training Sector Details:', trainingSectorDetails);
 
-              // Log each of these to verify
-              console.log('Education Details:', educationDetails);
-              console.log('Training Details:', trainingDetails);
-              console.log('Training Sector Details:', trainingSectorDetails);
+                // Populate the form with the report data (if available)
+                Object.assign(this.form, report);
+                this.fetchClientData(clientId);
 
-              // Populate the form with the report data
-              Object.assign(this.form, report);
-              this.fetchClientData(clientId);
+                // Populate the education fields
+                if (Array.isArray(educationDetails) && educationDetails.length > 0) {
+                    const education = educationDetails[0];
+                    this.form.selectedEducationLevel = education.education_level;
 
-              // Populate the education fields
-              if (Array.isArray(educationDetails) && educationDetails.length > 0) {
-                  const education = educationDetails[0];
-                  this.form.selectedEducationLevel = education.education_level;
+                    switch (education.education_level) {
+                        case 'Elementary Level':
+                            this.form.elementaryGrade = education.year_or_grade;
+                            break;
+                        case 'Junior High School Level':
+                            this.form.juniorHighYear = education.year_or_grade;
+                            break;
+                        case 'Senior High School Level':
+                            this.form.seniorHighYear = education.year_or_grade;
+                            break;
+                        case 'College Level':
+                            this.form.collegeYear = education.year_or_grade;
+                            break;
+                    }
+                } else {
+                    console.warn('No education details found.');
+                }
 
-                  switch (education.education_level) {
-                      case 'Elementary Level':
-                          this.form.elementaryGrade = education.year_or_grade;
-                          break;
-                      case 'Junior High School Level':
-                          this.form.juniorHighYear = education.year_or_grade;
-                          break;
-                      case 'Senior High School Level':
-                          this.form.seniorHighYear = education.year_or_grade;
-                          break;
-                      case 'College Level':
-                          this.form.collegeYear = education.year_or_grade;
-                          break;
-                  }
-              }
+                // Populate the trainings fields
+                if (Array.isArray(trainingDetails) && trainingDetails.length > 0) {
+                    this.form.trainings = trainingDetails.map(detail => ({
+                        title: detail.title,
+                        duration: detail.duration,
+                        location_outside: detail.location_outside,
+                        location_inside: detail.location_inside,
+                    }));
+                } else {
+                    this.form.trainings = [];
+                    console.warn('No training details found.');
+                }
 
-              // Populate the trainings fields
-              if (Array.isArray(trainingDetails)) {
-                  this.form.trainings = trainingDetails.map(detail => ({
-                      title: detail.title,
-                      duration: detail.duration,
-                      location_outside: detail.location_outside,
-                      location_inside: detail.location_inside,
-                  }));
-              } else {
-                  this.form.trainings = [];
-                  console.warn('No training details found.');
-              }
+                // Populate the training sectors
+                if (Array.isArray(trainingSectorDetails) && trainingSectorDetails.length > 0) {
+                    trainingSectorDetails.forEach(detail => {
+                        let sectorArray = [];
 
-              // Populate the training sectors
-              if (Array.isArray(trainingSectorDetails)) {
-                  trainingSectorDetails.forEach(detail => {
-                      let sectorArray;
-                      switch (detail.sector) {
-                          case 'Automotive':
-                              sectorArray = this.automotiveSector;
-                              break;
-                          case 'Agricultural':
-                              sectorArray = this.agriculturalSector;
-                              break;
-                          case 'Health':
-                              sectorArray = this.healthSector;
-                              break;
-                          case 'ICT':
-                              sectorArray = this.ictSector;
-                              break;
-                          case 'Metals':
-                              sectorArray = this.metalsSector;
-                              break;
-                          case 'Tourism':
-                              sectorArray = this.tourismSector;
-                              break;
-                          case 'Construction':
-                              sectorArray = this.constructionSector;
-                              break;
-                          case 'Basic':
-                              sectorArray = this.basicTrainings;
-                              break;
-                      }
-                      const item = sectorArray.find(s => s.name === detail.name);
-                      if (item) {
-                          item.rank = detail.rank;
-                          item.remarks = detail.remarks;
-                      }
-                  });
-              } else {
-                  console.warn('No training sector details found.');
-              }
+                        switch (detail.sector) {
+                            case 'Automotive':
+                                sectorArray = this.automotiveSector;
+                                break;
+                            case 'Agricultural':
+                                sectorArray = this.agriculturalSector;
+                                break;
+                            case 'Health':
+                                sectorArray = this.healthSector;
+                                break;
+                            case 'ICT':
+                                sectorArray = this.ictSector;
+                                break;
+                            case 'Metals':
+                                sectorArray = this.metalsSector;
+                                break;
+                            case 'Tourism':
+                                sectorArray = this.tourismSector;
+                                break;
+                            case 'Construction':
+                                sectorArray = this.constructionSector;
+                                break;
+                            case 'Basic':
+                                sectorArray = this.basicTrainings;
+                                break;
+                        }
 
-              // Fetch the client's additional details (name, date of birth)
-              this.fetchClientData(clientId);
-          })
-          .catch(error => {
-              console.error('Error fetching data:', error);
-              this.fetchClientData(clientId); // Fetch client data even if the report is not found
-          });
-  } else {
-      console.warn('No client ID found in route parameters.');
-  }
+                        if (sectorArray) {
+                            const item = sectorArray.find(s => s.name === detail.name);
+                            if (item) {
+                                item.rank = detail.rank;
+                                item.remarks = detail.remarks;
+                            }
+                        }
+                    });
+                } else {
+                    console.warn('No training sector details found.');
+                }
+
+                // Fetch the client's additional details (name, date of birth)
+                this.fetchClientData(clientId);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                this.fetchClientData(clientId); // Fetch client data even if the report is not found
+            });
+    } else {
+        console.warn('No client ID found in route parameters.');
+    }
 }
-
-
 
 ,
 fetchClientData(clientId) {
@@ -739,55 +751,71 @@ fetchClientData(clientId) {
       });
 }
 ,
-  saveData() {
- // Validate that education level is provided before saving
- if (!this.form.selectedEducationLevel) {
-     this.message = 'Education level is required.';
-     this.messageType = 'error';
-     return;
- }
+saveData() {
+    // Validate that education level is provided before saving
+    if (!this.form.selectedEducationLevel) {
+        this.message = 'Education level is required.';
+        this.messageType = 'error';
+        return;
+    }
 
- // Update the education array
- this.form.education = [{
-     level: this.form.selectedEducationLevel,
-     year_or_grade: this.getYearOrGradeForLevel(this.form.selectedEducationLevel)
- }];
+    // Prepare the education details array
+    this.form.education_details = [{
+        education_level: this.form.selectedEducationLevel,
+        year_or_grade: this.getYearOrGradeForLevel(this.form.selectedEducationLevel)
+    }];
 
- // Ensure all other fields are properly filled
- if (!this.form.client_id) {
-     this.message = 'Client ID is missing. Cannot save the form.';
-     this.messageType = 'error';
-     return; // Prevent saving without a valid client_id
- }
+    // Ensure all other fields are properly filled
+    if (!this.form.client_id) {
+        this.message = 'Client ID is missing. Cannot save the form.';
+        this.messageType = 'error';
+        return; // Prevent saving without a valid client_id
+    }
 
- // Prepare the training_sectors array
- this.form.training_sectors = [
-     ...this.automotiveSector.map(s => ({ sector: 'Automotive', ...s })),
-     ...this.agriculturalSector.map(s => ({ sector: 'Agricultural', ...s })),
-     ...this.healthSector.map(s => ({ sector: 'Health', ...s })),
-     ...this.ictSector.map(s => ({ sector: 'ICT', ...s })),
-     ...this.metalsSector.map(s => ({ sector: 'Metals', ...s })),
-     ...this.tourismSector.map(s => ({ sector: 'Tourism', ...s })),
-     ...this.constructionSector.map(s => ({ sector: 'Construction', ...s })),
-     ...this.basicTrainings.map(s => ({ sector: 'Basic', ...s })),
- ];
+    // Ensure that all sectors are initialized as arrays before mapping
+    const automotiveSector = this.automotiveSector || [];
+    const agriculturalSector = this.agriculturalSector || [];
+    const healthSector = this.healthSector || [];
+    const ictSector = this.ictSector || [];
+    const metalsSector = this.metalsSector || [];
+    const tourismSector = this.tourismSector || [];
+    const constructionSector = this.constructionSector || [];
+    const basicTrainings = this.basicTrainings || [];
 
- // Send the data to the backend
- axios.put(`/api/training-needs-assessment/${this.form.client_id}`, this.form)
-     .then(response => {
-         this.message = 'Data saved successfully.';
-         this.messageType = 'success';
-         this.editMode = false; // Exit edit mode after saving
-     })
-     .catch(error => {
-         this.message = 'Failed to save data.';
-         this.messageType = 'error';
-         console.error('Failed to save data:', error.response ? error.response.data : error.message);
-     });
-}
+    // Prepare the training_sector_details array
+    this.form.training_sector_details = [
+        ...automotiveSector.map(s => ({ sector: 'Automotive', ...s })),
+        ...agriculturalSector.map(s => ({ sector: 'Agricultural', ...s })),
+        ...healthSector.map(s => ({ sector: 'Health', ...s })),
+        ...ictSector.map(s => ({ sector: 'ICT', ...s })),
+        ...metalsSector.map(s => ({ sector: 'Metals', ...s })),
+        ...tourismSector.map(s => ({ sector: 'Tourism', ...s })),
+        ...constructionSector.map(s => ({ sector: 'Construction', ...s })),
+        ...basicTrainings.map(s => ({ sector: 'Basic', ...s })),
+    ];
 
+    // Ensure that trainings is an array before mapping
+    const trainings = this.form.trainings || [];
+    this.form.training_details = trainings.map(t => ({
+        title: t.title,
+        duration: t.duration,
+        location_outside: t.location_outside,
+        location_inside: t.location_inside
+    }));
 
-,
+    // Send the data to the backend
+    axios.put(`/api/training-needs-assessment/${this.form.client_id}`, this.form)
+        .then(response => {
+            this.message = 'Data saved successfully.';
+            this.messageType = 'success';
+            this.editMode = false; // Exit edit mode after saving
+        })
+        .catch(error => {
+            this.message = 'Failed to save data.';
+            this.messageType = 'error';
+            console.error('Failed to save data:', error.response ? error.response.data : error.message);
+        });
+},
 getYearOrGradeForLevel(level) {
   switch (level) {
     case 'Elementary Level':
@@ -805,7 +833,9 @@ getYearOrGradeForLevel(level) {
   addNewTraining() {
     this.form.trainings.push({ title: '', duration: '', location_outside: '', location_inside: '' });
   },
-
+removeTraining(index) {
+    this.form.trainings.splice(index, 1);
+  },
   generatePdf() {
         console.log('Current selected education level:', this.form.selectedEducationLevel);
         // Call your PDF generation logic here

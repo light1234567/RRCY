@@ -4,26 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Session; // Import Session facade
-use Illuminate\Support\Facades\Log as Logger; // Import Log facade for logging
-use App\Models\Log; // Import Log model for saving actions
-class TrainingSectorDetail extends Model
-{
-    use HasFactory;
-
-    protected $fillable = [
-        'training_needs_assessment_id', 
-        'sector', 
-        'name', 
-        'rank', 
-        'remarks',
-    ];
-
-    public function trainingNeedsAssessment()
-    {
-        return $this->belongsTo(TrainingNeedsAssessment::class);
-    }
-}
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log as Logger;
+use App\Models\Log;
 
 class TrainingNeedsAssessment extends Model
 {
@@ -31,36 +14,30 @@ class TrainingNeedsAssessment extends Model
 
     protected $fillable = [
         'client_id', 
-        'birthplace', 
         'social_worker', 
         'houseparent',
         'father', 
         'mother', 
         'address', 
         'center_duration',
-        'for_the', 
+        'period', 
         'date_of_admission', 
-        'updated_by'
+        'training_details',
+        'training_sector_details',
+        'education_details',
+        'updated_by',
     ];
 
+    protected $casts = [
+        'training_details' => 'array',
+        'training_sector_details' => 'array',
+        'education_details' => 'array',
+    ];
+
+    // Define relationships if any
     public function client()
     {
         return $this->belongsTo(Client::class);
-    }
-
-    public function educationDetails()
-    {
-        return $this->hasMany(EducationDetail::class);
-    }
-
-    public function trainingDetails()
-    {
-        return $this->hasMany(TrainingDetail::class);
-    }
-
-    public function trainingSectorDetails()
-    {
-        return $this->hasMany(TrainingSectorDetail::class);
     }
     
     // Boot method to handle logging and updating fields

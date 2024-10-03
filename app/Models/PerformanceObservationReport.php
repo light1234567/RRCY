@@ -17,25 +17,16 @@ class PerformanceObservationReport extends Model
         'assessment_date',
         'trainings_attended',
         'general_remarks',
-        'prepared_by',
-        'noted_by',
-        'updated_by'
+        'prepared_by_one',
+        'prepared_by_two',
+        'sections',
+        'trainings'
     ];
 
-    public function indicators()
-    {
-        return $this->hasMany(PerformanceIndicator::class, 'report_id');
-    }
-
-    public function sections()
-    {
-        return $this->hasMany(PerformanceSection::class, 'report_id');
-    }
-
-    public function trainings()
-    {
-        return $this->hasMany(TrainingAttended::class, 'report_id');
-    }
+    protected $casts = [
+        'sections' => 'array',
+        'trainings' => 'array',
+    ];
 
     public function client()
     {

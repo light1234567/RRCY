@@ -4,125 +4,89 @@ namespace App\Http\Controllers;
 
 use App\Models\TrainingNeedsAssessment;
 use App\Models\Client;
-use App\Models\EducationDetail;
-use App\Models\TrainingDetail;
-use App\Models\TrainingSectorDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TrainingNeedsAssessmentController extends Controller
 {
+    /**
+     * Display the specified resource.
+     * 
+     * @param  int  $client_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($client_id)
-    {
-        $client = Client::find($client_id);
+{
+    Log::info("Fetching Training Needs Assessment for client ID {$client_id}");
 
-        if (!$client) {
-            Log::warning("Client with ID {$client_id} not found");
-            return response()->json(['message' => 'Client not found'], 404);
-        }
+    // Fetch client details
+    $client = Client::find($client_id);
 
-        $report = TrainingNeedsAssessment::with([
-            'educationDetails',
-            'trainingDetails',
-            'trainingSectorDetails'
-        ])->where('client_id', $client_id)->first();
-
-        return response()->json([
-            'report' => $report,
-            'client' => $client,
-        ]);
+    if (!$client) {
+        Log::warning("Client with ID {$client_id} not found");
+        return response()->json(['message' => 'Client not found'], 404);
     }
 
+    // Fetch the report, which includes education_details, training_details, and training_sector_details as JSON
+    $report = TrainingNeedsAssessment::where('client_id', $client_id)->first();
+
+    if (!$report) {
+        Log::warning("Training Needs Assessment for client ID {$client_id} not found");
+        return response()->json(['message' => 'Training Needs Assessment not found'], 404);
+    }
+
+    Log::info("Successfully fetched Training Needs Assessment for client ID {$client_id}");
+
+    return response()->json([
+        'report' => $report,  // Contains the JSON fields for education_details, training_details, etc.
+        'client' => $client,
+    ], 200);
+}
+
+
+    /**
+     * Store or update the resource in storage.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $client_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function storeOrUpdate(Request $request, $client_id)
 {
     // Validate input data
     $validatedData = $request->validate([
-        'education' => 'nullable|array',
-        'education.*.level' => 'required|string|max:30',
-        'education.*.year_or_grade' => 'nullable|string|max:30',
-        'trainings' => 'nullable|array',
-        'trainings.*.title' => 'nullable|string|max:50',
-        'trainings.*.duration' => 'nullable|string|max:20',
-        'trainings.*.location_outside' => 'nullable|string|max:50',
-        'trainings.*.location_inside' => 'nullable|string|max:50',
         'social_worker' => 'nullable|string|max:50',
         'houseparent' => 'nullable|string|max:50',
         'father' => 'nullable|string|max:50',
         'mother' => 'nullable|string|max:50',
-        'address' => 'nullable|string|max:50',
-        'center_duration' => 'nullable|string|max:50',
-        'for_the' => 'nullable|string|max:50',
+        'address' => 'nullable|string|max:150',
+        'center_duration' => 'nullable|string|max:20',
+        'period' => 'nullable|string|max:10',
         'date_of_admission' => 'nullable|date',
-        'training_sectors' => 'nullable|array',
-        'training_sectors.*.sector' => 'required|string|max:50',
-        'training_sectors.*.name' => 'required|string|max:50',
-        'training_sectors.*.rank' => 'nullable|integer',
-        'training_sectors.*.remarks' => 'nullable|string'
-    ]);    
+        'training_details' => 'nullable|array',
+        'training_sector_details' => 'nullable|array',
+        'education_details' => 'nullable|array',
+    ]);
 
     try {
-        // Ensure the client exists
-        $client = Client::find($client_id);
-        if (!$client) {
-            Log::warning("Client with ID {$client_id} not found");
-            return response()->json(['message' => 'Client not found'], 404);
-        }
-
-        // Create or update the Training Needs Assessment report
+        // Find or create a new report for the client
         $report = TrainingNeedsAssessment::updateOrCreate(
             ['client_id' => $client_id],
             [
-                'social_worker' => $validatedData['social_worker'],
-                'houseparent' => $validatedData['houseparent'],
-                'father' => $validatedData['father'],
-                'mother' => $validatedData['mother'],
-                'address' => $validatedData['address'],
-                'center_duration' => $validatedData['center_duration'],
-                'for_the' => $validatedData['for_the'],
-                'date_of_admission' => $validatedData['date_of_admission'],
+                'social_worker' => $validatedData['social_worker'] ?? null,
+                'houseparent' => $validatedData['houseparent'] ?? null,
+                'father' => $validatedData['father'] ?? null,
+                'mother' => $validatedData['mother'] ?? null,
+                'address' => $validatedData['address'] ?? null,
+                'center_duration' => $validatedData['center_duration'] ?? null,
+                'period' => $validatedData['period'] ?? null,
+                'date_of_admission' => $validatedData['date_of_admission'] ?? null,
+                'training_details' => $validatedData['training_details'] ?? [], // Store as JSON
+                'training_sector_details' => $validatedData['training_sector_details'] ?? [], // Store as JSON
+                'education_details' => $validatedData['education_details'] ?? [], // Store as JSON
             ]
         );
 
-        // Clear previous education, training, and sector details
-        $report->educationDetails()->delete();
-        $report->trainingDetails()->delete();
-        $report->trainingSectorDetails()->delete();
-
-        // Insert education details
-        if (isset($validatedData['education']) && is_array($validatedData['education'])) {
-            foreach ($validatedData['education'] as $education) {
-                $report->educationDetails()->create([
-                    'education_level' => $education['level'],
-                    'year_or_grade' => $education['year_or_grade'] ?? null,
-                ]);
-            }
-        }
-
-        // Insert training details
-        if (isset($validatedData['trainings']) && is_array($validatedData['trainings'])) {
-            foreach ($validatedData['trainings'] as $training) {
-                $report->trainingDetails()->create([
-                    'title' => $training['title'],
-                    'duration' => $training['duration'] ?? null,
-                    'location_outside' => $training['location_outside'] ?? null,
-                    'location_inside' => $training['location_inside'] ?? null,
-                ]);
-            }
-        }
-
-        // Insert sector details
-        if (isset($validatedData['training_sectors']) && is_array($validatedData['training_sectors'])) {
-            foreach ($validatedData['training_sectors'] as $sector) {
-                $report->trainingSectorDetails()->create([
-                    'sector' => $sector['sector'],
-                    'name' => $sector['name'],
-                    'rank' => $sector['rank'] ?? null,
-                    'remarks' => $sector['remarks'] ?? null,
-                ]);
-            }
-        }
-
-        Log::info("Successfully stored/updated Training Needs Assessment for client ID {$client_id}");
         return response()->json($report, 201);
 
     } catch (\Exception $e) {
@@ -134,4 +98,37 @@ class TrainingNeedsAssessmentController extends Controller
         return response()->json(['message' => 'Failed to store/update report', 'error' => $e->getMessage()], 500);
     }
 }
+
+    /**
+     * Delete the specified resource.
+     * 
+     * @param  int  $client_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($client_id)
+    {
+        Log::info("Deleting Training Needs Assessment for client ID {$client_id}");
+
+        try {
+            $report = TrainingNeedsAssessment::where('client_id', $client_id)->first();
+
+            if (!$report) {
+                Log::warning("Training Needs Assessment for client ID {$client_id} not found");
+                return response()->json(['message' => 'Report not found'], 404);
+            }
+
+            $report->delete();
+
+            Log::info("Successfully deleted Training Needs Assessment for client ID {$client_id}");
+            return response()->json(['message' => 'Report deleted successfully'], 200);
+
+        } catch (\Exception $e) {
+            Log::error("Error deleting Training Needs Assessment for client ID {$client_id}", [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return response()->json(['message' => 'Failed to delete report', 'error' => $e->getMessage()], 500);
+        }
+    }
 }

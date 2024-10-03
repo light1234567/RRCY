@@ -44,6 +44,10 @@ class LearnerAssessmentForm extends Model
         return $this->hasOne(GroupWorkAssessment::class);
     }
     
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
      // Boot method to handle logging and updating fields
      protected static function boot()
      {

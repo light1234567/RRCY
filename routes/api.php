@@ -213,10 +213,11 @@ Route::delete('/nursing-care-services/{id}', [NursingCareServiceController::clas
 Route::get('/nursing-care-services/client/{clientId}', [NursingCareServiceController::class, 'getByClientId']);
 });
 Route::middleware(['web', 'auth'])->group(function () {
-Route::get('/performance-observation-reports', [PerformanceObservationReportController::class, 'index']);
-Route::delete('/performance-observation-reports/{id}', [PerformanceObservationReportController::class, 'destroy']);
-Route::get('/performance-observation-reports/{client_id}', [PerformanceObservationReportController::class, 'show']);
-Route::post('/performance-observation-reports/{client_id}', [PerformanceObservationReportController::class, 'storeOrUpdate']);
+Route::get('/performance-observation-reports/{client_id}', [PerformanceObservationReportController::class, 'index']);
+Route::get('/performance-observation-reports/{client_id}/show', [PerformanceObservationReportController::class, 'show']);
+Route::delete('/performance-observation-reports/{client_id}', [PerformanceObservationReportController::class, 'destroy']);
+Route::post('/performance-observation-reports', [PerformanceObservationReportController::class, 'storeOrUpdate']);
+Route::put('/performance-observation-reports/{client_id}', [PerformanceObservationReportController::class, 'storeOrUpdate']);
 });
 
 //Training Needs Assessment Routes

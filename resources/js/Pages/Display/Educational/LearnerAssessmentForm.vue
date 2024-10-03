@@ -1,7 +1,6 @@
 <template>
-  <div class="max-w-3xl p-8 bg-white shadow-xl mx-auto my-8 border border-gray-200">
-    <!-- Buttons for Edit and Save -->
-    <div class="flex justify-end gap-4">
+  <!-- Buttons for Edit and Save -->
+  <div class="flex justify-end gap-4">
       <button type="button" @click="isEditable = !isEditable" class="bg-blue-500 text-white px-4 py-2 rounded">
         {{ isEditable ? 'Cancel' : 'Edit' }}
       </button>
@@ -19,6 +18,8 @@
       {{ message }}
     </div>
 
+  <div class="max-w-3xl p-8 bg-white shadow-xl mx-auto my-8 border border-gray-200">
+    
     <!-- Header Section with Logo and Document Details -->
     <div class="relative flex justify-between items-center mb-4">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48">

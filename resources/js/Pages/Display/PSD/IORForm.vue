@@ -103,36 +103,329 @@
 
 
     <!-- Sections for Indicators and Remarks -->
-    <div v-for="(section, index) in form.sections" :key="index" class="mb-6">
-      <h4 class="font-bold mb-2">{{ section.title }}</h4>
-      <table class="w-full border-collapse border mb-4">
-        <thead>
-          <tr class="bg-gray-200">
-            <th colspan="3" class="text-center p-2 border">Indicators</th>
-            <th class="text-center p-2 border">Self-Rating</th>
-            <th class="text-center p-2 border">MDO's Rating</th>
-            <th class="text-center p-2 border">Total Rating</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(indicator, iIndex) in section.indicators" :key="iIndex">
-            <td colspan="3" class="p-2 border">{{ indicator.description }}</td>
-            <td class="p-2 border text-center">
-              <input type="number" min="1" max="4" v-model="indicator.self_rating" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
-            </td>
-            <td class="p-2 border text-center">
-              <input type="number" min="1" max="4" v-model="indicator.mdo_rating" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
-            </td>
-            <td class="p-2 border text-center">{{ calculateTotalRating(indicator) }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="mb-1"><strong>Sub-Total:</strong> {{ calculateSubTotal(section) }}</p>
-      <label class="block font-bold mb-1">Remarks:</label>
-      <textarea v-model="section.remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
-    </div>
+<div class="mb-6">
+  <h4 class="font-bold mb-2">INDICATORS</h4>
+  <table class="w-full border-collapse border mb-4">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="text-center p-2 border">A</th>
+        <th class="text-center p-2 border">PERSONALITY/BEHAVIOR</th>
+        <th class="text-center p-2 border">Self-Rating</th>
+        <th class="text-center p-2 border">MDO's Rating</th>
+        <th class="text-center p-2 border">Total Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr >
+        <td class="p-2 border text-center">1</td>
+        <td class="p-2 border">Maayo ug batasan ug displinado. (Well mannered and disciplined)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[0].self_rating" @change="validateRating(form.sections[0].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[0].mdo_rating" @change="validateRating(form.sections[0].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[0].indicators[0]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">2</td>
+        <td class="p-2 border">Makahimo ug maayong aksyon ug desisyon sa mga dili maayong sitwasyon. (He acts appropriately in any given situation)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[1].self_rating" @change="validateRating(form.sections[0].indicators[1], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[1].mdo_rating" @change="validateRating(form.sections[0].indicators[1], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[0].indicators[1]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">3</td>
+        <td class="p-2 border">Mohatag ug inspirasyon ug mopadasig sa kaubang residente nga magmalipayon. (He can inspire and motivate co-residents to be happy)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[2].self_rating" @change="validateRating(form.sections[0].indicators[2], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[2].mdo_rating" @change="validateRating(form.sections[0].indicators[2], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[0].indicators[2]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">4</td>
+        <td class="p-2 border">Makabarug ug makatidong sa kaugalingon sa mga dili maayong sitwasyon. (Carry himself well in any given situation)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[3].self_rating" @change="validateRating(form.sections[0].indicators[3], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[3].mdo_rating" @change="validateRating(form.sections[0].indicators[3], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[0].indicators[3]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">5</td>
+        <td class="p-2 border">Naay kaisog nga mopadayag sa kaugalingon. (Has confidence in expressing himself)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[4].self_rating" @change="validateRating(form.sections[0].indicators[4], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[0].indicators[4].mdo_rating" @change="validateRating(form.sections[0].indicators[4], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[0].indicators[4]) }}</td>
+      </tr>
+    </tbody>
+  </table>
 
-    
+  <!-- Sub-total and Remarks -->
+  <div class="flex justify-between items-center">
+    <p class="font-bold">Sub-Total: {{ calculateSubTotal(form.sections[0].indicators) }}</p>
+    <div class="w-full ml-4">
+      <label class="block font-bold mb-1">Remarks:</label>
+      <textarea v-model="form.sections[0].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+    </div>
+  </div>
+</div>
+
+
+    <div class="mb-6">
+  <table class="w-full border-collapse border mb-4">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="text-center p-2 border">B</th>
+        <th class="text-center p-2 border">PERSONAL RELATIONSHIP</th>
+        <th class="text-center p-2 border">Self-Rating</th>
+        <th class="text-center p-2 border">MDO's Rating</th>
+        <th class="text-center p-2 border">Total Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="p-2 border text-center">1</td>
+        <td class="p-2 border">Makighalobilo ug makigdait sa ubang residente, staff ug mga trainer. (Can relate appropriately with co-residents, staff, and trainers)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[0].self_rating" @change="validateRating(form.sections[1].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[0].mdo_rating" @change="validateRating(form.sections[1].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[1].indicators[0]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">2</td>
+        <td class="p-2 border">Makadala ug makadasig sa ubang residente sa paghimo sa ilang mga buluhaton. (Can lead and motivate co-residents to do assigned tasks)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[1].self_rating" @change="validateRating(form.sections[1].indicators[1], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[1].mdo_rating" @change="validateRating(form.sections[1].indicators[1], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[1].indicators[1]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">3</td>
+        <td class="p-2 border">Masaligan ug masandigan sa tanang higayon. (Dependable in any given situation)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[2].self_rating" @change="validateRating(form.sections[1].indicators[2], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[2].mdo_rating" @change="validateRating(form.sections[1].indicators[2], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[1].indicators[2]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">4</td>
+        <td class="p-2 border">Andam nga makat-on pinaagi sa pagpaminaw, pagpangutana sa wala nasabtan ngadto sa mga trainor. (Has the willingness to learn by listening, asking questions/clarify concerns with trainer)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[3].self_rating" @change="validateRating(form.sections[1].indicators[3], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[3].mdo_rating" @change="validateRating(form.sections[1].indicators[3], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[1].indicators[3]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">5</td>
+        <td class="p-2 border">Dili moapil sa mga dili maayo nga buhat ug panghitabo sa sulod sa training. (Non-involvement in any untoward incident that may occur during the training)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[4].self_rating" @change="validateRating(form.sections[1].indicators[4], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[1].indicators[4].mdo_rating" @change="validateRating(form.sections[1].indicators[4], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[1].indicators[4]) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Sub-total and Remarks -->
+  <div class="flex justify-between items-center">
+    <p class="font-bold">Sub-Total: {{ calculateSubTotal(form.sections[1].indicators) }}</p>
+    <div class="w-full ml-4">
+      <label class="block font-bold mb-1">Remarks:</label>
+      <textarea v-model="form.sections[1].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="mb-6">
+  <table class="w-full border-collapse border mb-4">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="text-center p-2 border">C</th>
+        <th class="text-center p-2 border">KNOWLEDGE</th>
+        <th class="text-center p-2 border">Self-Rating</th>
+        <th class="text-center p-2 border">MDO's Rating</th>
+        <th class="text-center p-2 border">Total Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+  <tr>
+    <td class="p-2 border text-center">1</td>
+    <td class="p-2 border">Naay pamaagi nga madugangan ang talento. (Has the initiative to improve his given skills and talents)</td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[0].self_rating" @change="validateRating(form.sections[2].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[0].mdo_rating" @change="validateRating(form.sections[2].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[2].indicators[0]) }}</td>
+  </tr>
+  <tr>
+    <td class="p-2 border text-center">2</td>
+    <td class="p-2 border">Nagpakita ug katakus nga mahatag ang pinakamaayo sa gihatag nga trabaho. (Has shown his best in any given tasks)</td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[1].self_rating" @change="validateRating(form.sections[2].indicators[1], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[1].mdo_rating" @change="validateRating(form.sections[2].indicators[1], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[2].indicators[1]) }}</td>
+  </tr>
+  <tr>
+    <td class="p-2 border text-center">3</td>
+    <td class="p-2 border">Nagpambit sa talento para mahatag ang pinakamaayong resulta para sa aktibidad. (Share his talent for best results on a given activity)</td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[2].self_rating" @change="validateRating(form.sections[2].indicators[2], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[2].mdo_rating" @change="validateRating(form.sections[2].indicators[2], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[2].indicators[2]) }}</td>
+  </tr>
+  <tr>
+    <td class="p-2 border text-center">4</td>
+    <td class="p-2 border">Naay kapasidad nga modutlo sa mga kauban sa mga butang nga makapalambo ug mapagawas ang pinakamaayo. (Has the capacity to teach his co-residents on things that will improve and show their best in a given situation)</td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[3].self_rating" @change="validateRating(form.sections[2].indicators[3], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[3].mdo_rating" @change="validateRating(form.sections[2].indicators[3], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[2].indicators[3]) }}</td>
+  </tr>
+  <tr>
+    <td class="p-2 border text-center">5</td>
+    <td class="p-2 border">Padayon sa pagsulay sa mga maayong butang nga makapalambo sa mga nakat-unan. (Continue to try new things that will increase and improve his learnings)</td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[4].self_rating" @change="validateRating(form.sections[2].indicators[4], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">
+      <input type="number" min="0" max="4" v-model="form.sections[2].indicators[4].mdo_rating" @change="validateRating(form.sections[2].indicators[4], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+    </td>
+    <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[2].indicators[4]) }}</td>
+  </tr>
+</tbody>
+
+  </table>
+
+  <!-- Sub-total and Remarks -->
+  <div class="flex justify-between items-center">
+    <p class="font-bold">Sub-Total: {{ calculateSubTotal(form.sections[2].indicators) }}</p>
+    <div class="w-full ml-4">
+      <label class="block font-bold mb-1">Remarks:</label>
+      <textarea v-model="form.sections[2].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+    </div>
+  </div>
+</div>
+
+
+<div class="mb-6">
+  <table class="w-full border-collapse border mb-4">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="text-center p-2 border">D</th>
+        <th class="text-center p-2 border">SKILLS</th>
+        <th class="text-center p-2 border">Self-Rating</th>
+        <th class="text-center p-2 border">MDO's Rating</th>
+        <th class="text-center p-2 border">Total Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="p-2 border text-center">1</td>
+        <td class="p-2 border">Naay kapasidad nga mohimo sa mga butang nga magpakita sa mga talento. (Has inherent capacity to be creative)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[0].self_rating" @change="validateRating(form.sections[3].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[0].mdo_rating" @change="validateRating(form.sections[3].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[3].indicators[0]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">2</td>
+        <td class="p-2 border">Pagamit sa mga skills nga nakat-unan sa pagbuhat sa mga aktibidad nga makatabang. (Utilizes his skills appropriately on beneficial activity)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[1].self_rating" @change="validateRating(form.sections[3].indicators[1], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[1].mdo_rating" @change="validateRating(form.sections[3].indicators[1], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[3].indicators[1]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">3</td>
+        <td class="p-2 border">Naningkamot nga mapakita ang pinakamaayo nga nakat-unan pinaagi sa pag-apil sa mga kalihukan. (Tries his best to be progressive on acquired skills in the different activities)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[2].self_rating" @change="validateRating(form.sections[3].indicators[2], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[2].mdo_rating" @change="validateRating(form.sections[3].indicators[2], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[3].indicators[2]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">4</td>
+        <td class="p-2 border">Moapil sa mga kalihukan sa pagtabang sa mga trainor para magamit ang tanang oras sa mga residente. (Participates in activities that will assist the trainer in maximizing resident time at the center)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[3].self_rating" @change="validateRating(form.sections[3].indicators[3], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[3].mdo_rating" @change="validateRating(form.sections[3].indicators[3], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[3].indicators[3]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">5</td>
+        <td class="p-2 border">Dali lang makakat-on sa mga programa sa pagpalambo nga gitudlo. (Learns easily on productive endeavors taught to him)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[4].self_rating" @change="validateRating(form.sections[3].indicators[4], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[3].indicators[4].mdo_rating" @change="validateRating(form.sections[3].indicators[4], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[3].indicators[4]) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Sub-total and Remarks -->
+  <div class="flex justify-between items-center">
+    <p class="font-bold">Sub-Total: {{ calculateSubTotal(form.sections[3].indicators) }}</p>
+    <div class="w-full ml-4">
+      <label class="block font-bold mb-1">Remarks:</label>
+      <textarea v-model="form.sections[3].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+    </div>
+  </div>
+</div>
 
     <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
         <div class="flex justify-between items-center">
@@ -146,7 +439,6 @@
           </div>
         </div>
       </div>
-      
   </div>
 
 
@@ -166,35 +458,255 @@
     </div>
 
     <!-- Sections for Indicators and Remarks -->
-    <div v-for="(section, index) in form.sectionss" :key="index" class="mb-6">
-      <h4 class="font-bold mb-2">{{ section.title }}</h4>
-      <table class="w-full border-collapse border mb-4">
-        <thead>
-          <tr class="bg-gray-200">
-            <th colspan="3" class="text-center p-2 border">Indicators</th>
-            <th class="text-center p-2 border">Self-Rating</th>
-            <th class="text-center p-2 border">MDO's Rating</th>
-            <th class="text-center p-2 border">Total Rating</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(indicator, iIndex) in section.indicators" :key="iIndex">
-            <td colspan="3" class="p-2 border">{{ indicator.description }}</td>
-            <td class="p-2 border text-center">
-              <input type="number" min="1" max="4" v-model="indicator.self_rating" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
-            </td>
-            <td class="p-2 border text-center">
-              <input type="number" min="1" max="4" v-model="indicator.mdo_rating" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
-            </td>
-            <td class="p-2 border text-center">{{ calculateTotalRating(indicator) }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="mb-1"><strong>Sub-Total:</strong> {{ calculateSubTotal(section) }}</p>
+    <div class="mb-6">
+  <table class="w-full border-collapse border mb-4">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="text-center p-2 border">E</th>
+        <th class="text-center p-2 border">ATTITUDE</th>
+        <th class="text-center p-2 border">Self-Rating</th>
+        <th class="text-center p-2 border">MDO's Rating</th>
+        <th class="text-center p-2 border">Total Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="p-2 border text-center">1</td>
+        <td class="p-2 border">Wala mosupak sa mga polisiya sa training sa tanang higayon. (He abides with policies of the training at all times)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[0].self_rating" @change="validateRating(form.sections[4].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[0].mdo_rating" @change="validateRating(form.sections[4].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[4].indicators[0]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">2</td>
+        <td class="p-2 border">Mosunod ug motuman sa mga tudlo sa gihatag nga trabaho. (He follows instructions on given tasks)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[1].self_rating" @change="validateRating(form.sections[4].indicators[1], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[1].mdo_rating" @change="validateRating(form.sections[4].indicators[1], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[4].indicators[1]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">3</td>
+        <td class="p-2 border">Parehas nga pagtagad sa mga kaubang residente. (He treats his co-residents fairly)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[2].self_rating" @change="validateRating(form.sections[4].indicators[2], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[2].mdo_rating" @change="validateRating(form.sections[4].indicators[2], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[4].indicators[2]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">4</td>
+        <td class="p-2 border">Maayong timplo sa tanang higayon. (He is a peacemaker at all times)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[3].self_rating" @change="validateRating(form.sections[4].indicators[3], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[3].mdo_rating" @change="validateRating(form.sections[4].indicators[3], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[4].indicators[3]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">5</td>
+        <td class="p-2 border">Makabalanse sa tanang mga pagsulay ug kalisud. (He can cope up with challenges and difficulties)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[4].self_rating" @change="validateRating(form.sections[4].indicators[4], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[4].indicators[4].mdo_rating" @change="validateRating(form.sections[4].indicators[4], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[4].indicators[4]) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Sub-total and Remarks -->
+  <div class="flex justify-between items-center">
+    <p class="font-bold">Sub-Total: {{ calculateSubTotal(form.sections[4].indicators) }}</p>
+    <div class="w-full ml-4">
       <label class="block font-bold mb-1">Remarks:</label>
-      <textarea v-model="section.remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+      <textarea v-model="form.sections[4].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
     </div>
+  </div>
+</div>
+
+
+<div class="mb-6">
+  <table class="w-full border-collapse border mb-4">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="text-center p-2 border">F</th>
+        <th class="text-center p-2 border">RESPONSES TO SITUATIONS</th>
+        <th class="text-center p-2 border">Self-Rating</th>
+        <th class="text-center p-2 border">MDO's Rating</th>
+        <th class="text-center p-2 border">Total Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="p-2 border text-center">1</td>
+        <td class="p-2 border">Dili moreklamo sa mga wala giplano nga kabag-uhan. (Never complains on unexpected changes/result of a group tasks)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[0].self_rating" @change="validateRating(form.sections[5].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[0].mdo_rating" @change="validateRating(form.sections[5].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[5].indicators[0]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">2</td>
+        <td class="p-2 border">Inanay/plastar sa iyang plano ug mga desisyon. (Gentle in his actions/decisions)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[1].self_rating" @change="validateRating(form.sections[5].indicators[1], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[1].mdo_rating" @change="validateRating(form.sections[5].indicators[1], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[5].indicators[1]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">3</td>
+        <td class="p-2 border">Madaladala sa mga bug-at/challenging nga buhat. (Can handle challenging tasks)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[2].self_rating" @change="validateRating(form.sections[5].indicators[2], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[2].mdo_rating" @change="validateRating(form.sections[5].indicators[2], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[5].indicators[2]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">4</td>
+        <td class="p-2 border">Makaplano ug maayo sa mga moabot nga sitwasyon. (Can think appropriately in any given situation)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[3].self_rating" @change="validateRating(form.sections[5].indicators[3], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[3].mdo_rating" @change="validateRating(form.sections[5].indicators[3], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[5].indicators[3]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">5</td>
+        <td class="p-2 border">Dili makiglalis sa mga kaubang residente ug trainor para dili makahimo ug kagubot. (Never argues with co-residents and trainor to create conflict)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[4].self_rating" @change="validateRating(form.sections[5].indicators[4], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[5].indicators[4].mdo_rating" @change="validateRating(form.sections[5].indicators[4], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[5].indicators[4]) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Sub-total and Remarks -->
+  <div class="flex justify-between items-center">
+    <p class="font-bold">Sub-Total: {{ calculateSubTotal(form.sections[5].indicators) }}</p>
+    <div class="w-full ml-4">
+      <label class="block font-bold mb-1">Remarks:</label>
+      <textarea v-model="form.sections[5].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="mb-6">
+  <table class="w-full border-collapse border mb-4">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="text-center p-2 border">G</th>
+        <th class="text-center p-2 border">LIFE'S ASPIRATIONS</th>
+        <th class="text-center p-2 border">Self-Rating</th>
+        <th class="text-center p-2 border">MDO's Rating</th>
+        <th class="text-center p-2 border">Total Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="p-2 border text-center">1</td>
+        <td class="p-2 border">Andam makaton sa mga kabag-ohan. (Willingness to learn new things)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[0].self_rating" @change="validateRating(form.sections[6].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[0].mdo_rating" @change="validateRating(form.sections[6].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[6].indicators[0]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">2</td>
+        <td class="p-2 border">Naghatag ug importansya sa pag-eskwela. (Values the importance of education)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[1].self_rating" @change="validateRating(form.sections[6].indicators[1], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[1].mdo_rating" @change="validateRating(form.sections[6].indicators[1], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[6].indicators[1]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">3</td>
+        <td class="p-2 border">Nagatoo nga ang pagbantog ug disiplina sa kaugalingon makapabago-o sa kinabuhi. (Believes having discipline can change his life)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[2].self_rating" @change="validateRating(form.sections[6].indicators[2], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[2].mdo_rating" @change="validateRating(form.sections[6].indicators[2], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[6].indicators[2]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">4</td>
+        <td class="p-2 border">Nagatoo sa gahum sa pag-atiman sa Ginoo. (Believes in the power of the caring God)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[3].self_rating" @change="validateRating(form.sections[6].indicators[3], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[3].mdo_rating" @change="validateRating(form.sections[6].indicators[3], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[6].indicators[3]) }}</td>
+      </tr>
+      <tr>
+        <td class="p-2 border text-center">5</td>
+        <td class="p-2 border">Nagatoo nga ang maayong pamatasan makatabang nga mapalambo ang kaugalingon nga kakayahan. (Believes that good character qualities will help him develop his potentials)</td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[4].self_rating" @change="validateRating(form.sections[6].indicators[4], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">
+          <input type="number" min="0" max="4" v-model="form.sections[6].indicators[4].mdo_rating" @change="validateRating(form.sections[6].indicators[4], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+        </td>
+        <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[6].indicators[4]) }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Sub-total and Remarks -->
+  <div class="flex justify-between items-center">
+    <p class="font-bold">Sub-Total: {{ calculateSubTotal(form.sections[6].indicators) }}</p>
+    <div class="w-full ml-4">
+      <label class="block font-bold mb-1">Remarks:</label>
+      <textarea v-model="form.sections[6].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- OVER-ALL RATING -->
+<tr class="bg-gray-300 font-bold">
+  <td colspan="2" class="p-2 border text-center">Overall Rating</td>
+  <td class="p-2 border text-center">{{ calculateOverallRating().overall }}</td>
+</tr>
+
     <div class="w-full h-full p-4">
+      <h4>ADJECTIVAL RATING</h4>
     <table class="w-full h-full border-collapse border border-black table-fixed">
         <tr>
             <td class="border border-black p-4 align-top">4 - Points - Excellent/Full cooperation and proper physical condition</td>
@@ -260,7 +772,7 @@
         <input
           type="text"
           id="preparedBy"
-          value="JENNY C. CADOYAS"
+          v-model="form.prepared_by_one"
           class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm "
         >
       </div>
@@ -271,7 +783,7 @@
         <input
           type="text"
           id="preparedBy"
-          value="SHERWIN B. GABUTAN"
+          v-model="form.prepared_by_two"
           class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none shadow-sm "
         >
       </div>
@@ -324,114 +836,114 @@ export default {
     Pagination,
   },
   data() {
-    return {
-      form: {
-        client_id: null,
-        name: '',
-        period: '',
-        assessment_date: '',
-        trainings_attended: '',
-        sections: [
-          {
-            title: 'A. PERSONALITY/BEHAVIOR',
-            sub_total: 0,
-            remarks: '',
-            indicators: [
-              { description: 'Well mannered and disciplined.', self_rating: '', mdo_rating: '' },
-              { description: 'He acts appropriately in any given situation.', self_rating: '', mdo_rating: '' },
-              { description: 'He can inspire and motivate co-residents to be happy.', self_rating: '', mdo_rating: '' },
-              { description: 'Carry himself well in any given situation.', self_rating: '', mdo_rating: '' },
-              { description: 'Has confidence in expressing himself.', self_rating: '', mdo_rating: '' },
-            ],
-          },
-          {
-            title: 'B. PERSONAL RELATIONSHIP',
-            sub_total: 0,
-            remarks: '',
-            indicators: [
-              { description: 'Can relate appropriately with co-residents, staff and trainers.', self_rating: '', mdo_rating: '' },
-              { description: 'Can lead and motivate co-residents to do assigned tasks.', self_rating: '', mdo_rating: '' },
-              { description: 'Dependable in any given situation.', self_rating: '', mdo_rating: '' },
-              { description: 'Has the willingness to learn by listening, asking questions/clarify concerns with trainer.', self_rating: '', mdo_rating: '' },
-              { description: 'Non-involvement in any untoward incident that may occur during the training.', self_rating: '', mdo_rating: '' },
-            ],
-          },
-          {
-            title: 'C. KNOWLEDGE',
-            sub_total: 0,
-            remarks: '',
-            indicators: [
-              { description: 'Has the initiative to improve his given skills and talents.', self_rating: '', mdo_rating: '' },
-              { description: 'Punctual in attending the training.', self_rating: '', mdo_rating: '' },
-              { description: 'Demonstrates knowledge in the area of expertise.', self_rating: '', mdo_rating: '' },
-              { description: 'Shows interest in learning by actively participating in discussions.', self_rating: '', mdo_rating: '' },
-              { description: 'Observes cleanliness and orderliness of the training venue.', self_rating: '', mdo_rating: '' },
-            ],
-          },
-          {
-            title: 'D. SKILLS',
-            sub_total: 0,
-            remarks: '',
-            indicators: [
-              { description: 'Has inherent capacity to be creative.', self_rating: '', mdo_rating: '' },
-              { description: 'Utilizes his skills appropriately on beneficial activities.', self_rating: '', mdo_rating: '' },
-              { description: 'Tries his best to be progressive on acquired skills in the different activities.', self_rating: '', mdo_rating: '' },
-              { description: 'Participates in activities that will assist the trainer in maximizing resident time at the center.', self_rating: '', mdo_rating: '' },
-              { description: 'Learns easily on productive endeavors taught to him.', self_rating: '', mdo_rating: '' },
-            ],
-          },
-        ],
-        sectionss: [
-          {
-            title: 'E. ATTITUDE',
-            sub_total: 0,
-            remarks: '',
-            indicators: [
-              { description: 'He abides with policies of the training at all times..', self_rating: '', mdo_rating: '' },
-              { description: 'He follows instructions on given tasks.', self_rating: '', mdo_rating: '' },
-              { description: 'Treats his co-residents fairly.', self_rating: '', mdo_rating: '' },
-              { description: 'He is a peacemaker at all times.', self_rating: '', mdo_rating: '' },
-              { description: 'Can cope up with challenges and difficulties.', self_rating: '', mdo_rating: '' },
-            ],
-          },
-          {
-            title: 'F. RESPONSES TO SITUATIONS',
-            sub_total: 0,
-            remarks: '',
-            indicators: [
-              { description: 'Never complains on unexpected changes/result of a group tasks.', self_rating: '', mdo_rating: '' },
-              { description: 'Gentle in his actions/decisions.', self_rating: '', mdo_rating: '' },
-              { description: 'Can handle challenging tasks.', self_rating: '', mdo_rating: '' },
-              { description: 'Can think appropriately in any given situation.', self_rating: '', mdo_rating: '' },
-              { description: 'Never argues with co-residents and trainor to create conflict.', self_rating: '', mdo_rating: '' },
-            ],
-          },
-          {
-            title: 'G. LIFE ASPIRATIONS ',
-            sub_total: 0,
-            remarks: '',
-            indicators: [
-              { description: 'Willingness to learn new things.', self_rating: '', mdo_rating: '' },
-              { description: 'Values the importance of education.', self_rating: '', mdo_rating: '' },
-              { description: 'Believes having discipline can change his life.', self_rating: '', mdo_rating: '' },
-              { description: 'Believes in the power of the caring God.', self_rating: '', mdo_rating: '' },
-              { description: 'Believes that good character qualities will help him develop his potentials.', self_rating: '', mdo_rating: '' },
-            ],
-          },
-        ],
-        general_remarks: '',
-        trainings: [ { title: '', date_of_attendance: '', status: '' },],
-        prepared_by: '',
-      },
-      center_head: '',
-      editMode: false,
-      originalForm: null,
-      message: '',
-      totalPages: 2,
-      currentPage: 1,
-      messageType: '',
-    };
-  },
+  return {
+    form: {
+      client_id: null,
+      name: '',
+      period: '',
+      assessment_date: '',
+      trainings_attended: '',
+      sections: [
+        {
+          title: 'Section A',
+          sub_total: 0,
+          remarks: '',
+          indicators: [
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' }
+          ]
+        },
+        {
+          title: 'Section B',
+          sub_total: 0,
+          remarks: '',
+          indicators: [
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' }
+          ]
+        },
+        {
+          title: 'Section C',
+          sub_total: 0,
+          remarks: '',
+          indicators: [
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' }
+          ]
+        },
+        {
+          title: 'Section D',
+          sub_total: 0,
+          remarks: '',
+          indicators: [
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' }
+          ]
+        },
+        {
+          title: 'Section E',
+          sub_total: 0,
+          remarks: '',
+          indicators: [
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' }
+          ]
+        },
+        {
+          title: 'Section F',
+          sub_total: 0,
+          remarks: '',
+          indicators: [
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' }
+          ]
+        },
+        {
+          title: 'Section G',
+          sub_total: 0,
+          remarks: '',
+          indicators: [
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' },
+            { self_rating: '', mdo_rating: '' }
+          ]        
+        },
+      ],
+      general_remarks: '',
+      trainings: [{ title: '', date_of_attendance: '', status: '' }],
+      prepared_by_one: '',
+      prepared_by_two: '',
+    },
+    center_head: '',
+    editMode: false,
+    originalForm: null,
+    message: '',
+    totalPages: 2,
+    currentPage: 1,
+    messageType: '',
+  };
+}
+,
   mounted() {
     this.fetchReportData();
     this.fetchCenterHead();
@@ -448,33 +960,48 @@ export default {
     this.form.trainings.splice(index, 1);
   },
   fetchReportData() {
-        const clientId = this.$route.params.id;
-        // Fetch client data first, if clientId is undefined
-        if (!clientId) {
-            console.warn("Client ID is undefined, fetching client data.");
-            this.fetchClientData(); // Fetch the client data directly
-            return;
-        }
+    const clientId = this.$route.params.id;
 
-        axios.get(`/api/performance-observation-reports/${clientId}`)
-            .then(response => {
-                console.log('API Response:', response.data);  // Log API response
+    // Ensure clientId is defined
+    if (!clientId) {
+        console.warn("Client ID is undefined. Fetching client data.");
+        this.fetchClientData(); // Fetch the client data directly
+        return;
+    }
 
-                if (response.data) {
-                    // Ensure the response structure is correct
-                    if (response.data.sections && Array.isArray(response.data.sections)) {
-                        this.form.sections = response.data.sections.map(section => ({
+    // Fetch performance observation report data
+    axios.get(`/api/performance-observation-reports/${clientId}/show`)
+        .then(response => {
+            console.log('API Response:', response.data);  // Log API response
+
+            if (response.data) {
+                const report = response.data.report;
+                const client = response.data.client;
+
+                // Ensure the client exists in the response and set it
+                if (client && client.id) {
+                    this.form.client_id = client.id;
+                    this.form.name = `${client.first_name} ${client.last_name}`;
+                } else {
+                    console.warn('Client data is missing from the report response. Fetching client data separately.');
+                    this.fetchClientData(clientId);
+                }
+
+                // Process report data if it exists
+                if (report) {
+                    if (report.sections && Array.isArray(report.sections)) {
+                        this.form.sections = report.sections.map(section => ({
                             title: section.title,
                             sub_total: section.sub_total,
                             remarks: section.remarks,
                             indicators: section.indicators.map(indicator => ({
-                                description: indicator.description,
                                 self_rating: indicator.self_rating,
                                 mdo_rating: indicator.mdo_rating,
                             }))
                         }));
                     }
-                    
+
+                    // Handle the trainings array from the report
                     if (response.data.trainings && Array.isArray(response.data.trainings)) {
                         this.form.trainings = response.data.trainings.map(training => ({
                             title: training.title,
@@ -483,31 +1010,29 @@ export default {
                         }));
                     }
 
-                    // Assign fetched client and report data to form
-                    this.form.client_id = response.data.client_id;
-                    this.form.name = `${response.data.client.first_name} ${response.data.client.last_name}`;
-                    this.form.assessment_date = response.data.assessment_date;
-                    this.form.period = response.data.period;
-                    this.form.trainings_attended = response.data.trainings_attended;
-                    this.form.general_remarks = response.data.general_remarks;
-                    this.form.prepared_by = response.data.prepared_by;
-
-                    // Fetch center head after fetching the client_id
-                    this.fetchCenterHead(this.form.client_id);
-
-                    console.log('Form after API fetch:', this.form);  // Log the form data after fetch
-                    this.messageType = 'success';
-                } else {
-                    // No report data, fetch client data directly
-                    this.fetchClientData(clientId);
+                    this.form.assessment_date = report.assessment_date;
+                    this.form.period = report.period;
+                    this.form.trainings_attended = report.trainings_attended;
+                    this.form.general_remarks = report.general_remarks;
+                    this.form.prepared_by_one = report.prepared_by_one;
+                    this.form.prepared_by_two = report.prepared_by_two;
                 }
-            })
-            .catch(error => {
-                console.error('Error fetching report data:', error);
-                // Fallback to fetching client data
+
+                // Fetch center head based on the client data
+                this.fetchCenterHead(this.form.client_id);
+
+                console.log('Form data after API fetch:', this.form);  // Log the form data after fetch
+                this.messageType = 'success';
+            } else {
+                console.warn('No report data found. Fetching client data separately.');
                 this.fetchClientData(clientId);
-            });
-    },
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching report data:', error);
+            this.fetchClientData(clientId);
+        });
+},
     fetchCenterHead() {
     axios.get('/api/center-head')  // Replace with the correct API route
       .then(response => {
@@ -518,67 +1043,87 @@ export default {
       });
   },
   
-    fetchClientData(clientId) {
-        axios.get(`/api/clients/${clientId}`)
-            .then(response => {
-                const client = response.data;
+  fetchClientData(clientId) {
+    // Check if clientId is valid
+    if (!clientId) {
+        console.error("Client ID is undefined or invalid.");
+        return;
+    }
 
+    // Make the API request to fetch client data
+    axios.get(`/api/clients/${clientId}`)
+        .then(response => {
+            const client = response.data;
+
+            // Ensure client data exists
+            if (client && client.id) {
                 this.form.client_id = client.id; // Set the client_id
-                this.form.name = `${client.first_name} ${client.last_name}`;
-                this.fetchCenterHead(clientId);
-                
-               
-            })
-            .catch(error => {
-                console.error('Error fetching client data:', error);
-                
-                
-            });
-    },
+                this.form.name = `${client.first_name} ${client.last_name}`; // Set client name
+                this.fetchCenterHead(clientId); // Fetch related data if needed
+
+                console.log("Client data successfully fetched:", this.form.name);
+            } else {
+                console.error("No client data found.");
+            }
+        })
+        .catch(error => {
+            // Detailed error logging
+            if (error.response) {
+                console.error(`Error fetching client data: ${error.response.status} - ${error.response.data.message}`);
+            } else if (error.request) {
+                console.error("No response received from the server.");
+            } else {
+                console.error("Request error:", error.message);
+            }
+        });
+},
     submitForm() {
-        console.log("Submitting form with data:", this.form);
-        if (!this.form.client_id) {
-            this.message = 'Failed to save data: Missing client ID';
-            this.messageType = 'error';
-            return;
-        }
-        if (!this.form.assessment_date) {
-            this.message = 'Assessment date is required.';
-            this.messageType = 'error';
-            return;
-        }
+    console.log("Submitting form with data:", this.form);
 
-        axios.post(`/api/performance-observation-reports/${this.form.client_id}`, this.form)
-            .then(response => {
-                const updatedSections = response.data.sections || this.form.sections;
-                const updatedTrainings = response.data.trainings || this.form.trainings;
+    // Check for missing client_id (only check if in edit mode)
+    if (!this.form.client_id && this.editMode) {
+      this.message = 'Failed to save data: Missing client ID';
+      this.messageType = 'error';
+      return;
+    }
 
-                this.form = {
-                    ...this.form,
-                    ...response.data, 
-                    sections: this.form.sections.map((section, index) => ({
-                        ...section,
-                        ...updatedSections[index] || {} // Ensure section exists before merging
-                    })),
-                    trainings: this.form.trainings.map((training, index) => ({
-                        ...training,
-                        ...updatedTrainings[index] || {} // Ensure training exists before merging
-                    })),
-                };
+    // Prepare the payload with the required fields
+    const payload = {
+      client_id: this.form.client_id,
+      period: this.form.period,
+      assessment_date: this.form.assessment_date,
+      trainings_attended: this.form.trainings_attended,
+      general_remarks: this.form.general_remarks,
+      prepared_by_one: this.form.prepared_by_one || '',
+      prepared_by_two: this.form.prepared_by_two || '',
 
-                this.editMode = false;
-                this.message = 'Data saved or updated successfully!';
-                this.messageType = 'success';
-                this.clearMessageAfterDelay();
-            })
-            .catch(error => {
-                const errorMessage = this.constructDetailedErrorMessage(error);
-                console.error('Failed to save or update data:', errorMessage);
-                this.message = errorMessage;
-                this.messageType = 'error';
-                this.clearMessageAfterDelay();
-            });
-    },
+      // JSON fields for sections and ratings
+      sections: this.form.sections,
+      trainings: this.form.trainings
+    };
+
+    // Determine whether to create or update based on whether the form is in edit mode
+    const apiMethod = this.editMode ? 'put' : 'post';
+    const apiUrl = this.editMode 
+      ? `/api/performance-observation-reports/${this.form.client_id}`  // Update if in edit mode
+      : `/api/performance-observation-reports`;  // Create if not in edit mode
+
+    // Perform the API call to submit the form data
+    axios[apiMethod](apiUrl, payload)
+      .then(response => {
+        // Handle successful response
+        this.message = 'Form submitted successfully!';
+        this.messageType = 'success';
+        this.editMode = false; // Exit edit mode after saving
+        console.log('Success:', response.data);
+      })
+      .catch(error => {
+        // Handle validation or other errors (e.g., 422 HTTP response)
+        this.message = this.constructDetailedErrorMessage(error);
+        this.messageType = 'error';
+        console.error('Error:', error);
+      });
+  },
     clearMessageAfterDelay() {
     setTimeout(() => {
       this.message = '';
@@ -612,15 +1157,65 @@ export default {
         this.editMode = !this.editMode;
     },
     calculateTotalRating(indicator) {
-      return (parseFloat(indicator.self_rating) || 0) + (parseFloat(indicator.mdo_rating) || 0);
-    },
+  if (!indicator) return 0;
+  
+  // Parse the ratings and add them, then divide by 2
+  const selfRating = parseFloat(indicator.self_rating) || 0;
+  const mdoRating = parseFloat(indicator.mdo_rating) || 0;
+
+  return (selfRating + mdoRating) / 2;
+}
+,
+validateRating(indicator, ratingType) {
+  // If a user manually inputs a value greater than 4, automatically set it to 4
+  if (indicator[ratingType] > 4) {
+    indicator[ratingType] = 4;
+  } else if (indicator[ratingType] < 0) {
+    // If input is less than 0, set it to 0
+    indicator[ratingType] = 0;
+  }
+},
     cancelEdit() {
       this.editMode = false;
       console.log('Edit mode canceled');
     },
-    calculateSubTotal(section) {
-      return section.indicators.reduce((sum, indicator) => sum + (parseFloat(indicator.self_rating) || 0), 0);
-    },
+    calculateSubTotal(indicators) {
+  if (!Array.isArray(indicators) || indicators.length === 0) return 0;
+  
+  // Sum all the total ratings
+  const totalRatings = indicators.reduce((total, indicator) => {
+    return total + this.calculateTotalRating(indicator);
+  }, 0);
+  
+  // Automatically determine the number of indicators and divide
+  const numOfIndicators = indicators.length;
+  
+  // Return the average of the total ratings
+  return (totalRatings / numOfIndicators).toFixed(2); // Ensures the result is rounded to two decimal places
+}
+,
+calculateOverallRating() {
+  let totalSubtotals = 0;
+  let sectionCount = this.form.sections.length;
+
+  // Iterate through all sections and sum their subtotals
+  this.form.sections.forEach(section => {
+    const subTotal = this.calculateSubTotal(section.indicators);
+    totalSubtotals += isNaN(subTotal) ? 0 : parseFloat(subTotal);  // Ensure subtotals are valid numbers
+  });
+
+  // If no valid sections or total is zero, return 0
+  if (sectionCount === 0 || totalSubtotals === 0) {
+    return { overall: '0.00' };
+  }
+
+  // Calculate the overall average rating
+  const overallAverage = totalSubtotals / sectionCount;
+
+  return {
+    overall: isNaN(overallAverage) ? '0.00' : overallAverage.toFixed(2)
+  };
+},
     addTraining() {
       this.form.trainings.push({
         title: '',

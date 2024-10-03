@@ -3,145 +3,113 @@
 namespace App\Http\Controllers;
 
 use App\Models\PerformanceObservationReport;
-use App\Models\PerformanceIndicator;
-use App\Models\PerformanceSection;
-use App\Models\TrainingAttended;
 use Illuminate\Http\Request;
+use App\Models\Client;
 use Illuminate\Support\Facades\Log;
 
 class PerformanceObservationReportController extends Controller
 {
-    public function storeOrUpdate(Request $request, $client_id)
+    // Fetch report data for a client
+    public function index($clientId)
     {
-        try {
-            // Validate the incoming request data
-            $validatedData = $request->validate([
-                'assessment_date' => 'required|date',
-                'trainings_attended' => 'nullable|string|max:50',
-                'general_remarks' => 'nullable|string',
-                'prepared_by' => 'nullable|string|max:50',
-                'noted_by' => 'nullable|string|max:50',
-                'period' => 'nullable|string|max:20',
-                'sections' => 'array',
-                'sections.*.title' => 'nullable|string|max:50',
-                'sections.*.sub_total' => 'nullable|integer',
-                'sections.*.remarks' => 'nullable|string|max:150',
-                'sections.*.indicators' => 'array',
-                'sections.*.indicators.*.description' => 'nullable|string',
-                'sections.*.indicators.*.self_rating' => 'nullable|integer',
-                'sections.*.indicators.*.mdo_rating' => 'nullable|integer',
-                'trainings' => 'array',
-                'trainings.*.title' => 'nullable|string',
-                'trainings.*.date_of_attendance' => 'nullable|date',
-                'trainings.*.status' => 'nullable|string|max:100',
-            ]);            
+        Log::info("Fetching report for client ID: $clientId");
 
-            // Fetch or create the report
-            $report = PerformanceObservationReport::updateOrCreate(
-                ['client_id' => $client_id],
-                [
-                    'assessment_date' => $validatedData['assessment_date'],
-                    'period' => $validatedData['period'],
-                    'trainings_attended' => $validatedData['trainings_attended'] ?? null,
-                    'general_remarks' => $validatedData['general_remarks'] ?? null,
-                    'prepared_by' => $validatedData['prepared_by'] ?? null,
-                    'noted_by' => $validatedData['noted_by'] ?? null,
-                ]
-            );
+        $report = PerformanceObservationReport::where('client_id', $clientId)->first();
 
-            // Save or update sections and related indicators
-            if (isset($validatedData['sections'])) {
-                foreach ($validatedData['sections'] as $sectionData) {
-                    $section = $report->sections()->updateOrCreate(
-                        ['title' => $sectionData['title']],
-                        [
-                            'sub_total' => $sectionData['sub_total'] ?? null,
-                            'remarks' => $sectionData['remarks'] ?? null,
-                        ]
-                    );
-
-                    // Save or update indicators related to the section
-                    if (isset($sectionData['indicators'])) {
-                        foreach ($sectionData['indicators'] as $indicatorData) {
-                            $section->indicators()->updateOrCreate(
-                                ['description' => $indicatorData['description']],
-                                [
-                                    'self_rating' => $indicatorData['self_rating'] ?? null,
-                                    'mdo_rating' => $indicatorData['mdo_rating'] ?? null,
-                                ]
-                            );
-                        }
-                    }
-                }
-            }
-
-            // Save or update trainings attended
-            if (isset($validatedData['trainings'])) {
-                foreach ($validatedData['trainings'] as $trainingData) {
-                    $report->trainings()->updateOrCreate(
-                        ['title' => $trainingData['title']],
-                        [
-                            'date_of_attendance' => $trainingData['date_of_attendance'] ?? null,
-                            'status' => $trainingData['status'] ?? null,
-                        ]
-                    );
-                }
-            }
-
-            Log::info("Successfully saved or updated Performance Observation Report for client_id: $client_id", $report->toArray());
-            return response()->json($report, 201);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error("Validation failed:", $e->errors());
-            return response()->json(['message' => 'Validation failed', 'errors' => $e->errors()], 422);
-        } catch (\Exception $e) {
-            Log::error("Error storing or updating Performance Observation Report for client_id: $client_id", [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return response()->json(['message' => 'Failed to store or update report', 'error' => $e->getMessage()], 500);
-        }
-    }
-
-    public function show($client_id)
-    {
-        try {
-            $report = PerformanceObservationReport::with(['sections.indicators', 'trainings', 'client'])
-                ->where('client_id', $client_id)
-                ->first();
-
-            if (!$report) {
-                return response()->json(['message' => 'Report not found'], 404);
-            }
-
+        if ($report) {
+            Log::info("Report found for client ID: $clientId");
             return response()->json($report);
-        } catch (\Exception $e) {
-            Log::error("Error fetching Performance Observation Report for client_id: $client_id", [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return response()->json(['message' => 'Failed to fetch report', 'error' => $e->getMessage()], 500);
+        } else {
+            Log::warning("Report not found for client ID: $clientId");
+            return response()->json(['message' => 'Report not found'], 404);
         }
     }
 
-    public function destroy($id)
-    {
-        try {
-            $report = PerformanceObservationReport::find($id);
-            if ($report) {
-                $report->delete();
-                Log::info("Successfully deleted Performance Observation Report with id: $id");
-                return response()->json(['message' => 'Deleted successfully']);
-            }
+    // Store or Update report data
+    public function storeOrUpdate(Request $request, $clientId = null)
+{
+    Log::info("Store or update report request received for client ID: $clientId", ['request_data' => $request->all()]);
 
-            Log::warning("Report not found for id: $id");
-            return response()->json(['message' => 'Not found'], 404);
-        } catch (\Exception $e) {
-            Log::error("Error deleting Performance Observation Report with id: $id", [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            return response()->json(['message' => 'Failed to delete report', 'error' => $e->getMessage()], 500);
-        }
+    // Validation
+    $validated = $request->validate([
+        'client_id' => 'required|exists:clients,id',
+        'period' => 'nullable|string',
+        'assessment_date' => 'nullable|date',
+        'trainings_attended' => 'nullable|string',
+        'general_remarks' => 'nullable|string',
+        'prepared_by_one' => 'nullable|string',
+        'prepared_by_two' => 'nullable|string',
+        
+        // Validating JSON fields
+        'sections' => 'nullable|array',
+        'sections.*.title' => 'nullable|string',
+        'sections.*.sub_total' => 'nullable|numeric',
+        'sections.*.remarks' => 'nullable|string',
+        'sections.*.indicators' => 'nullable|array',
+        'sections.*.indicators.*.self_rating' => 'nullable|numeric|min:0|max:4',
+        'sections.*.indicators.*.mdo_rating' => 'nullable|numeric|min:0|max:4',
+        'trainings' => 'nullable|array',
+        'trainings.*.title' => 'nullable|string',
+        'trainings.*.date_of_attendance' => 'nullable|date',
+        'trainings.*.status' => 'nullable|string',
+    ]);
+
+    // Check if a report exists for the client
+    $report = PerformanceObservationReport::where('client_id', $clientId)->first();
+
+    if ($report) {
+        // If the report exists, update it
+        Log::info("Updating report for client ID: $clientId");
+        $report->update($validated);
+        return response()->json(['message' => 'Report updated successfully']);
+    } else {
+        // If no report exists, create a new one
+        Log::info("Creating a new report for client ID: $clientId", ['validated_data' => $validated]);
+        PerformanceObservationReport::create($validated);
+        return response()->json(['message' => 'Report created successfully']);
     }
 }
 
+public function show($clientId)
+{
+    Log::info("Fetching report for client ID: $clientId");
+
+    // Fetch the report and the client
+    $report = PerformanceObservationReport::where('client_id', $clientId)->first();
+    $client = Client::find($clientId);
+
+    // Check if the report exists
+    if ($report) {
+        Log::info("Report found for client ID: $clientId");
+
+        // Ensure the trainings array is returned as part of the report
+        return response()->json([
+            'report' => $report,
+            'client' => $client,
+            'trainings' => $report->trainings  // This will include the trainings array
+        ]);
+    } else {
+        Log::warning("Report not found for client ID: $clientId");
+        return response()->json(['message' => 'Report not found', 'client' => $client], 404);
+    }
+}
+
+
+
+    // Delete report
+    public function destroy($clientId)
+    {
+        Log::info("Deleting report for client ID: $clientId");
+
+        $report = PerformanceObservationReport::where('client_id', $clientId)->first();
+
+        if ($report) {
+            $report->delete();
+            Log::info("Report deleted for client ID: $clientId");
+            return response()->json(['message' => 'Report deleted successfully']);
+        } else {
+            Log::warning("Report not found for client ID: $clientId during deletion");
+            return response()->json(['message' => 'Report not found'], 404);
+        }
+    }
+}

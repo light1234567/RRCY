@@ -10,18 +10,23 @@ class CreatePerformanceObservationReportsTable extends Migration
     {
         Schema::create('performance_observation_reports', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
-            $table->unsignedMediumInteger('client_id');              
-            $table->date('assessment_date');
-            $table->string('trainings_attended', 50)->nullable();
+            $table->unsignedMediumInteger('client_id');
+            $table->string('period')->nullable();
+            $table->date('assessment_date')->nullable();
+            $table->string('trainings_attended')->nullable();
             $table->text('general_remarks')->nullable();
-            $table->string('prepared_by', 50)->nullable();
-            $table->string('noted_by', 50)->nullable();
-            $table->string('period', 20)->nullable();
+            $table->string('prepared_by_one')->nullable();
+            $table->string('prepared_by_two')->nullable();
+            
+            // Store the 'sections' and 'trainings' as JSON
+            $table->json('sections')->nullable();
+            $table->json('trainings')->nullable();
+    
             $table->timestamps();
 
+            // Foreign key relationship
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-
-        });        
+        });
     }
 
     public function down()
