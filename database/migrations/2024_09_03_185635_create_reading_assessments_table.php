@@ -11,10 +11,10 @@ class CreateReadingAssessmentsTable extends Migration
         Schema::create('reading_assessments', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('learner_assessment_form_id');            
-            $table->string('pronunciation_remarks', 100)->nullable();
-            $table->string('fluency_remarks', 100)->nullable();
-            $table->string('punctuation_remarks', 100)->nullable();
-            $table->string('advance_remarks', 100)->nullable();
+            $table->string('pronunciation_remarks', 250)->nullable();
+            $table->integer('pronunciation');
+            $table->integer('fluency');
+            $table->integer('punctuation');
             $table->timestamps();
 
             $table->foreign('learner_assessment_form_id')->references('id')->on('learner_assessment_forms')->onDelete('cascade');

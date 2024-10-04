@@ -69,59 +69,52 @@
       </div>
 
       <!-- Reading Assessment -->
-      <h2 class=" text-lg mb-4">Reading Assessment</h2>
-      <table class="w-full border-collapse mb-6">
-        <thead>
-          <tr class="bg-transparent">
-            <th class="border border-black p-2 text-left"></th>
-            <th class="border border-black p-2 text-left">1</th>
-            <th class="border border-black p-2 text-left">2</th>
-            <th class="border border-black p-2 text-left">3</th>
-            <th class="border border-black  p-2 text-left">4</th>
-            <th class="border border-black  p-2 text-left"></th>
-            <th class="border border-black p-2 text-left">Remarks</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="border border-black p-2">Pronunciation of Words</td>
-            <td class="border border-black p-2">The learner struggles to pronounce the words.</td>
-            <td class="border border-black p-2">Some words are pronounced correctly</td>
-            <td class="border border-black p-2">Most words are pronounced correctly</td>
-            <td class="border border-black p-2">All words are pronounced correctly</td>
-            <td class="border border-black w-10 p-2">
-    <input type="text" class="text" :disabled="!isEditable" style="width: 2ch;"/>
-</td>
-
-            <td class="border border-black p-2" rowspan="3">
+<h2 class="text-lg mb-4">Reading Assessment</h2>
+<table class="w-full border-collapse mb-6">
+  <thead>
+    <tr class="bg-transparent">
+      <th class="border border-black p-2 text-left"></th>
+      <th class="border border-black p-2 text-left">1</th>
+      <th class="border border-black p-2 text-left">2</th>
+      <th class="border border-black p-2 text-left">3</th>
+      <th class="border border-black p-2 text-left">4</th>
+      <th class="border border-black p-2 text-left"></th>
+      <th class="border border-black p-2 text-left">Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="border border-black p-2">Pronunciation of Words</td>
+      <td class="border border-black p-2">The learner struggles to pronounce the words.</td>
+      <td class="border border-black p-2">Some words are pronounced correctly</td>
+      <td class="border border-black p-2">Most words are pronounced correctly</td>
+      <td class="border border-black p-2">All words are pronounced correctly</td>
+      <td class="border border-black w-10 p-2">
+        <input type="number" class="text" v-model.number="form.assessments.reading.pronunciation" :disabled="!isEditable" style="width: 2ch; padding: 0.2em;" min="0" max="4"/>      </td>
+      <td class="border border-black p-2" rowspan="3">
         <textarea class="w-full p-1 border border-black" v-model="form.assessments.reading.pronunciation_remarks" :readonly="!isEditable" rows="6"></textarea>
-      </td>   </tr>
-          <tr>
-            <td class="border border-black p-2">Fluency of Reading</td>
-            <td class="border border-black p-2">Struggles to read.</td>
-            <td class="border border-black p-2">Reads word for word</td>
-            <td class="border border-black p-2">Words are grouped together logically</td>
-            <td class="border border-black p-2">Reading is easy and fluent</td>
-            <td class="border border-black w-10 p-2">
-    <input type="text" class="text" :disabled="!isEditable" style="width: 2ch;"/>
-</td>
-
-             </tr>
-          <tr>
-            <td class="border border-black p-2">Use of Punctuation</td>
-            <td class="border border-black p-2">Punctuation marks are ignored.</td>
-            <td class="border border-black p-2">Punctuation marks replaced with a breath</td>
-            <td class="border border-black p-2">Punctuation is observed, but tends to stop at the end of a line.</td>
-            <td class="border border-black p-2">Punctuation is used correctly and efficiently</td>
-            <td class="border border-black w-10 p-2">
-    <input type="text" class="text" :disabled="!isEditable" style="width: 2ch;"/>
-</td>
-
-            </tr>
-
-            
-        </tbody>
-      </table>
+      </td>
+    </tr>
+    <tr>
+      <td class="border border-black p-2">Fluency of Reading</td>
+      <td class="border border-black p-2">Struggles to read.</td>
+      <td class="border border-black p-2">Reads word for word</td>
+      <td class="border border-black p-2">Words are grouped together logically</td>
+      <td class="border border-black p-2">Reading is easy and fluent</td>
+      <td class="border border-black w-10 p-2">
+        <input type="number" class="text" v-model.number="form.assessments.reading.fluency" :disabled="!isEditable" style="width: 2ch; padding: 0.2em;" min="0" max="4"/>      </td>
+    </tr>
+    <tr>
+      <td class="border border-black p-2">Use of Punctuation</td>
+      <td class="border border-black p-2">Punctuation marks are ignored.</td>
+      <td class="border border-black p-2">Punctuation marks replaced with a breath</td>
+      <td class="border border-black p-2">Punctuation is observed, but tends to stop at the end of a line.</td>
+      <td class="border border-black p-2">Punctuation is used correctly and efficiently</td>
+      <td class="border border-black w-10 p-2">
+        <input type="number" class="text" v-model.number="form.assessments.reading.punctuation" :disabled="!isEditable" style="width: 2ch; padding: 0.2em;" min="0" max="4"/>      </td>
+    </tr>
+  </tbody>
+</table>
 
       <!-- Reading Remarks -->
       <table class="w-full border-collapse mb-6">
@@ -428,9 +421,10 @@ export default {
         noted_by: '',
         assessments: {
           reading: {
+            pronunciation: null,
             pronunciation_remarks: '',
-            fluency_remarks: '',
-            punctuation_remarks: '',
+            fluency: null,
+            punctuation: null,
             advance_remarks: '',
           },
           writing: {
@@ -573,16 +567,10 @@ fetchFormData() {
                 this.message = ''; // Clear any previous messages
                 this.messageClass = ''; // Clear any previous message classes
             } else {
-                // Set the message if formData is not found or empty
-                this.message = 'Form not found or data is empty.';
-                this.messageClass = 'bg-yellow-100 text-yellow-800';
                 console.warn('No form data found:', response.data);
             }
         })
         .catch(error => {
-            // Error handling for network or server issues
-            this.message = 'An error occurred while fetching the form data.';
-            this.messageClass = 'bg-red-100 text-red-800';
             console.error('Error fetching form data:', error.response ? error.response.data : error.message);
         });
 },
@@ -1074,5 +1062,14 @@ contentYPos += pdf.autoTable.previous.finalY ;
   line-height: 1  ;
   vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
   font-size: inherit; /* Ensure consistent font size */
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Hide the spinner in Firefox */
 }
 </style>

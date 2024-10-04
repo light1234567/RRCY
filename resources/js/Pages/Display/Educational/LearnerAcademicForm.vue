@@ -138,64 +138,84 @@
             </div>
     </div>
 
-      
-
-      <div class="mb-6">
+        <div class="mb-6">
         <table class="w-full border-collapse">
           <thead>
             <tr>
               <th class="border p-2 text-left align-top" style="width: 25%;">Learner Skill</th>
-              <th class="border p-2 text-left align-top"><div>Outstanding</div> 
-                <div class="text-xs font-light whitespace-normal">*Well performed. Tasks are fully completed, all relevant information provided accurately andadequately where necessary.*Relevant tasks well performed; no tasks left incomplete
-                                     </div></th>
-              <th class="border p-2 text-left align-top"><div>Very Satisfactory</div> 
-                                      <div class="text-xs font-light whitespace-normal">
-                                        *General
-                                      satisfactory with
-                                      only minor
-                                      omissions and
-                                      inadequacies. Part
-                                      of it is well
-                                      attempted but
-                                      overall, just
-                                      satisfactory
-                                      because of some
-                                      major omissions
-                                      and the limited
-                                      coverage of the
-                                      information.
-                                      </div></th>
-              <th class="border p-2 text-left align-top"> 
-                                    <div>Satisfactory</div> 
-                                      <div class="text-xs font-light whitespace-normal">
-                                        *Revealing
-                                      significant
-                                      omission and
-                                      inadequacies. Very
-                                      limited coverage
-                                      performed.
-                                      </div></th>
               <th class="border p-2 text-left align-top">
-                                      <div>
-                                        Fairly Satisfactory
-                                      </div> 
-                                      <div class="text-xs font-light whitespace-normal">
-                                        *Very
-                                      unsatisfactory,
-                                      important task(s)
-                                      are poorly done or
-                                      not attempted to
-                                      do so.
-                                      </div></th>
+                <div>Outstanding</div>
+                <div class="text-xs font-light whitespace-normal">
+                  *Well performed. Tasks are fully completed, all relevant information provided accurately and adequately where necessary. Relevant tasks well performed; no tasks left incomplete.
+                </div>
+              </th>
+              <th class="border p-2 text-left align-top">
+                <div>Very Satisfactory</div>
+                <div class="text-xs font-light whitespace-normal">
+                  *Generally satisfactory with only minor omissions and inadequacies. Part of it is well attempted but overall, just satisfactory because of some major omissions and the limited coverage of the information.
+                </div>
+              </th>
+              <th class="border p-2 text-left align-top">
+                <div>Satisfactory</div>
+                <div class="text-xs font-light whitespace-normal">
+                  *Revealing significant omission and inadequacies. Very limited coverage performed.
+                </div>
+              </th>
+              <th class="border p-2 text-left align-top">
+                <div>Fairly Satisfactory</div>
+                <div class="text-xs font-light whitespace-normal">
+                  *Very unsatisfactory, important task(s) are poorly done or not attempted to do so.
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, index) in form.skills" :key="index">
-              <td class="border p-2 " style="font-size: 55%;font: bold;font-weight: bold">{{ row.skill }}</td>
-              <td class="border p-2 "><input v-model="row.outstanding" type="text" class="w-full p-1 border border-gray-300 text-center" style="border-color: transparent;"></td>
-              <td class="border p-2"><input v-model="row.verySatisfactory" type="text" class="w-full p-1 border border-gray-300 text-center" style="border-color: transparent;"/></td>
-              <td class="border p-2"><input v-model="row.satisfactory" type="text" class="w-full p-1 border border-gray-300 text-center" style="border-color: transparent;"/></td>
-              <td class="border p-2"><input v-model="row.fairlySatisfactory" type="text" class="w-full p-1 border border-gray-300 text-center" style="border-color: transparent;"/></td>
+            <tr v-for="(skill, index) in form.skills" :key="index">
+              <td class="border p-2">{{ skill.skill }}</td>
+              <td class="border p-2 text-center">
+                <div class="flex justify-center items-center h-full">
+                  <input 
+                    type="checkbox" 
+                    :disabled="!editMode" 
+                    v-model="skill.outstanding" 
+                    @change="handleCheckboxChange(index, 'outstanding')"
+                    class="form-checkbox"
+                  />
+                </div>
+              </td>
+              <td class="border p-2 text-center">
+                <div class="flex justify-center items-center h-full">
+                  <input 
+                    type="checkbox" 
+                    :disabled="!editMode" 
+                    v-model="skill.verySatisfactory" 
+                    @change="handleCheckboxChange(index, 'verySatisfactory')"
+                    class="form-checkbox"
+                  />
+                </div>
+              </td>
+              <td class="border p-2 text-center">
+                <div class="flex justify-center items-center h-full">
+                  <input 
+                    type="checkbox" 
+                    :disabled="!editMode" 
+                    v-model="skill.satisfactory" 
+                    @change="handleCheckboxChange(index, 'satisfactory')"
+                    class="form-checkbox"
+                  />
+                </div>
+              </td>
+              <td class="border p-2 text-center">
+                <div class="flex justify-center items-center h-full">
+                  <input 
+                    type="checkbox" 
+                    :disabled="!editMode" 
+                    v-model="skill.fairlySatisfactory" 
+                    @change="handleCheckboxChange(index, 'fairlySatisfactory')"
+                    class="form-checkbox"
+                  />
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -316,13 +336,13 @@ export default {
         lrn: '',
         status: '',
         skills: [
-          { skill: 'HOMEWORK COMPLETION', outstanding: '', verySatisfactory: '', satisfactory: '', fairlySatisfactory: '' },
-          { skill: 'STUDY SKILLS', outstanding: '', verySatisfactory: '', satisfactory: '', fairlySatisfactory: '' },
-          { skill: 'ORGANIZATIONAL SKILLS', outstanding: '', verySatisfactory: '', satisfactory: '', fairlySatisfactory: '' },
-          { skill: 'COOPERATIVE LEARNING SKILLS', outstanding: '', verySatisfactory: '', satisfactory: '', fairlySatisfactory: '' },
-          { skill: 'INDEPENDENT SEAT WORK', outstanding: '', verySatisfactory: '', satisfactory: '', fairlySatisfactory: '' },
-          { skill: 'MOTIVATION', outstanding: '', verySatisfactory: '', satisfactory: '', fairlySatisfactory: '' },
-          { skill: 'COMPLIANCE', outstanding: '', verySatisfactory: '', satisfactory: '', fairlySatisfactory: '' },
+          { skill: 'HOMEWORK COMPLETION', outstanding: false, verySatisfactory: false, satisfactory: false, fairlySatisfactory: false },
+          { skill: 'STUDY SKILLS', outstanding: false, verySatisfactory: false, satisfactory: false, fairlySatisfactory: false },
+          { skill: 'ORGANIZATIONAL SKILLS', outstanding: false, verySatisfactory: false, satisfactory: false, fairlySatisfactory: false },
+          { skill: 'COOPERATIVE LEARNING SKILLS', outstanding: false, verySatisfactory: false, satisfactory: false, fairlySatisfactory: false },
+          { skill: 'INDEPENDENT SEAT WORK', outstanding: false, verySatisfactory: false, satisfactory: false, fairlySatisfactory: false },
+          { skill: 'MOTIVATION', outstanding: false, verySatisfactory: false, satisfactory: false, fairlySatisfactory: false },
+          { skill: 'COMPLIANCE', outstanding: false, verySatisfactory: false, satisfactory: false, fairlySatisfactory: false },
         ],
         observation_feedback: '',
         learner_signature: '',
@@ -387,8 +407,13 @@ export default {
       });
   },
   
-  
-
+  handleCheckboxChange(index, type) {
+      const skill = this.form.skills[index];
+      skill.outstanding = type === 'outstanding';
+      skill.verySatisfactory = type === 'verySatisfactory';
+      skill.satisfactory = type === 'satisfactory';
+      skill.fairlySatisfactory = type === 'fairlySatisfactory';
+    },
   submitForm() {
       if (!this.form.client_id) {
         this.message = 'Client ID is missing. Cannot submit the form.';
@@ -664,7 +689,23 @@ th, td {
   padding: 8px;
   text-align: left;
 }
+.form-checkbox {
+  appearance: none;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  display: inline-block;
+  height: 1.5rem; /* Increased size */
+  width: 1.5rem;  /* Increased size */
+  vertical-align: middle;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
 
+.form-checkbox:checked {
+  background-color: #4f46e5;
+  border-color: #4f46e5;
+}
 input[type="text"], textarea {
   border-width: 1px;
 }

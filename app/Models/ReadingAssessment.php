@@ -14,9 +14,9 @@ class ReadingAssessment extends Model
     protected $fillable = [
         'learner_assessment_form_id',
         'pronunciation_remarks',
-        'fluency_remarks',
-        'punctuation_remarks',
-        'advance_remarks',
+        'pronunciation',
+        'fluency',
+        'punctuation',
         'updated_by'
     ];
 
