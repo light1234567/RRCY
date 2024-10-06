@@ -48,9 +48,9 @@
 <div class="relative flex justify-between items-center mb-4">
   <img src="/images/headerlogo2.png" alt="Logo" class=" h-32 w-64 relative z-10">    
   <div class="text-right">
-      <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
-      <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth RFO XI</p>
-      <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+      <p class="flex justify-center item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
+      <p class="flex justify-center text-sm font-semibold">Regional Rehabilitation Center for Youth RFO XI</p>
+      <p class="flex justify-center text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
     </div>
   </div>
 
@@ -60,13 +60,17 @@
     <tr>
       <th colspan="6" class="text-center p-2">
         <h2 class="text-lg font-bold">TRAINING NEEDS ASSESSMENT</h2>
-        <div class="flex items-center justify-center mb-6">
-          <p class="text-md font-semibold mr-4">FOR THE </p>
-          <input type="text" v-model="form.period" class="underline-input bg-transparent border-b-2 border-gray-300 text-center text-xs" />
+        <div class="flex items-center justify-center mb-2">
+          <p class="text-xs text-md font-semibold mr-2">FOR THE </p>
+          <input type="text" v-model="form.period" class="text-xs block w-32 border-b-1 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" />
         </div>
-        <div class="flex items-center justify-center mb-6">
-          <p class="text-md font-semibold mr-4">Date of Admission:</p>
-          <input type="date" v-model="form.date_of_admission" class="underline-input bg-transparent border-b-2 border-gray-300 text-center text-xs" />
+        <div class="text-xs flex items-center justify-center mb-6">
+          <p class="text-md font-semibold mr-2">Date of Admission:</p>
+          <input type="date" v-model="form.date_of_admission" class="text-xs block w-31 border-b-1 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" />
+        </div>
+        <div class="text-xs flex items-center justify-end mb-6">
+          <p class="text-md font-semibold mr-2">Petsa sa Pagtubag:</p>
+          <input type="date" v-model="form.date_of_admission" class="text-xs block w-31 border-b-1 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" />
         </div>
       </th>
     </tr>
@@ -75,17 +79,17 @@
     <tr>
       <td class="p-2 border">Pangalan:</td>
       <td colspan="4" class="p-2 border">
-        <input type="text" v-model="form.name" :readonly="!editMode" class="w-full border">
+        <input type="text" v-model="form.name" :readonly="!editMode" class="w-full border-t-0 border-b-0 border-r-0 border-l-0">
       </td>
     </tr>
     <tr>
       <td class="p-2 border">Adlaw nga Natawhan:</td>
       <td colspan="2" class="p-2 border">
-        <input type="date" v-model="form.birthdate" :readonly="!editMode" class="w-full border" @change="form.age = calculateAge(form.birthdate)">
+        <input type="date" v-model="form.birthdate" :readonly="!editMode" class="w-full border-t-0 border-b-0 border-r-0 border-l-0" @change="form.age = calculateAge(form.birthdate)">
       </td>
       <td class="p-2 border">Edad:</td>
       <td colspan="2" class="p-2 border">
-        <input type="number" v-model="form.age" class="w-full border" readonly>
+        <input type="number" v-model="form.age" class="w-full border-t-0 border-b-0 border-r-0 border-l-0" readonly>
       </td>
     </tr>
     
@@ -102,13 +106,13 @@
       <span>Wala Naka eskwela</span>
     </div>
 
-    <div class="flex space-x-8">
+    <div class="flex jsutify-start space-x-8">
       <!-- First Column -->
       <div>
         <label class="flex items-center space-x-2">
           <input type="radio" value="Elementary Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
           <span>Elementary Level (Grade</span>
-          <input type="text" v-model="form.elementaryGrade" :disabled="!editMode || form.selectedEducationLevel !== 'Elementary Level'" class="w-16 border-b p-1 text-center">
+          <input type="text" v-model="form.elementaryGrade" :disabled="!editMode || form.selectedEducationLevel !== 'Elementary Level'" class="text-xs w-16 border-b p-1 text-center">
           <span>)</span>
         </label>
 
@@ -120,7 +124,7 @@
         <label class="flex items-center space-x-2 mt-2">
           <input type="radio" value="Junior High School Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
           <span>Junior High School Level (Year</span>
-          <input type="text" v-model="form.juniorHighYear" :disabled="!editMode || form.selectedEducationLevel !== 'Junior High School Level'" class="w-16 border-b p-1 text-center">
+          <input type="text" v-model="form.juniorHighYear" :disabled="!editMode || form.selectedEducationLevel !== 'Junior High School Level'" class="text-xs w-16 border-b p-1 text-center">
           <span>)</span>
         </label>
       </div>
@@ -130,7 +134,7 @@
         <label class="flex items-center space-x-2">
           <input type="radio" value="Senior High School Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
           <span>Senior High School Level (Year</span>
-          <input type="text" v-model="form.seniorHighYear" :disabled="!editMode || form.selectedEducationLevel !== 'Senior High School Level'" class="w-16 border-b p-1 text-center">
+          <input type="text" v-model="form.seniorHighYear" :disabled="!editMode || form.selectedEducationLevel !== 'Senior High School Level'" class="text-xs w-16 border-b p-1 text-center">
           <span>)</span>
         </label>
 
@@ -142,7 +146,7 @@
         <label class="flex items-center space-x-2 mt-2">
           <input type="radio" value="College Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
           <span>College Level (Year</span>
-          <input type="text" v-model="form.collegeYear" :disabled="!editMode || form.selectedEducationLevel !== 'College Level'" class="w-24 border-b p-1 text-center">
+          <input type="text" v-model="form.collegeYear" :disabled="!editMode || form.selectedEducationLevel !== 'College Level'" class="text-xs w-24 border-b p-1 text-center">
           <span>)</span>
         </label>
       </div>
@@ -156,30 +160,30 @@
     <!-- Additional education fields here -->
     <tr>
       <td colspan="2" class="p-2 border">Pangalan sa imong Social Worker:</td>
-      <td colspan="4" class="p-2 border"><input type="text" v-model="form.social_worker" :readonly="!editMode" class="w-full border"></td>
+      <td colspan="4" class="p-2 border"><input type="text" v-model="form.social_worker" :readonly="!editMode" class="w-full border-t-0 border-b-0 border-r-0 border-l-0"></td>
     </tr>
     <tr>
       <td colspan="2" class="p-2 border">Pangalan sa imong Houseparent:</td>
-      <td colspan="4" class="p-2 border"><input type="text" v-model="form.houseparent" :readonly="!editMode" class="w-full border"></td>
+      <td colspan="4" class="p-2 border"><input type="text" v-model="form.houseparent" :readonly="!editMode" class="w-full border-t-0 border-b-0 border-r-0 border-l-0"></td>
     </tr>
     <tr>
       <td colspan="6" class="p-2 border bg-gray-200 font-bold">Pangalan sa Ginikanan:</td>
     </tr>
     <tr>
       <td class="p-2 border">Amahan:</td>
-      <td colspan="5" class="p-2 border"><input type="text" v-model="form.father" :readonly="!editMode" class="w-full border"></td>
+      <td colspan="5" class="p-2 border"><input type="text" v-model="form.father" :readonly="!editMode" class="w-full border-t-0 border-b-0 border-r-0 border-l-0"></td>
     </tr>
     <tr>
       <td class="p-2 border">Inahan:</td>
-      <td colspan="5" class="p-2 border"><input type="text" v-model="form.mother" :readonly="!editMode" class="w-full border"></td>
+      <td colspan="5" class="p-2 border"><input type="text" v-model="form.mother" :readonly="!editMode" class="w-full border-t-0 border-b-0 border-r-0 border-l-0"></td>
     </tr>
     <tr>
       <td class="p-2 border">Pinuy-Anan:</td>
-      <td colspan="5" class="p-2 border"><input type="text" v-model="form.address" :readonly="!editMode" class="w-full border"></td>
+      <td colspan="5" class="p-2 border"><input type="text" v-model="form.address" :readonly="!editMode" class="w-full border-t-0 border-b-0 border-r-0 border-l-0"></td>
     </tr>
     <tr>
       <td class="p-2 border">Kadugayon sa Pagpuyo sa Center:</td>
-      <td colspan="5" class="p-2 border"><input type="text" v-model="form.center_duration" :readonly="!editMode" class="w-full border"></td>
+      <td colspan="5" class="p-2 border"><input type="text" v-model="form.center_duration" :readonly="!editMode" class="w-full border-t-0 border-b-0 border-r-0 border-l-0"></td>
     </tr>
   </tbody>
 </table>
@@ -189,14 +193,14 @@
 <table class="w-full border-collapse border mt-4">
   <thead>
     <tr>
-      <th colspan="5" class="text-center p-2 border bg-gray-300">Skills Training nga human na nga naapilan diri sa sulod CENTER ug sa gawas sa center</th>
+      <th colspan="5" class="text-sm text-left p-2 border bg-gray-300">Skills Training nga human na nga naapilan diri sa sulod CENTER ug sa gawas sa center</th>
     </tr>
     <tr class="bg-gray-200">
-      <th class="border p-2 text-center">Title sa Training nga Naapilan</th>
-      <th class="border p-2 text-center">Kadugayon sa Training</th>
-      <th class="border p-2 text-center">Lugar sa Gi-Trainingan (Sa Gawas)</th>
-      <th class="border p-2 text-center">Lugar sa Gi-Trainingan (Sa Center)</th>
-      <th class="border p-2 text-center"></th>
+      <th class="border p-2 text-center text-sm">Title sa Training nga Naapilan</th>
+      <th class="border p-2 text-center text-sm">Kadugayon sa Training</th>
+      <th class="border p-2 text-center text-sm">Lugar sa Gi-Trainingan (Sa Gawas)</th>
+      <th class="border p-2 text-center text-sm">Lugar sa Gi-Trainingan (Sa Center)</th>
+      <th class="border p-2 text-center text-sm"></th>
     </tr>
   </thead>
   <tbody>
@@ -387,16 +391,16 @@
   <br />
 
   <div class="w-1/2 ml-auto">
-<div class="flex items-center">
+<div class="flex justify-center flex items-center mt-7">
   <input
     v-model="center_head"
     type="text"
     id="centerHeadSignature"
-    class="mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none"
+    class=" mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none"
     :readonly="!editMode"
   >
 </div>
-<p class="text-sm mt-2">Pangalan ug Pirma sa Residente</p>
+<p class="flex justify-center items-center text-sm mt-2">Pangalan ug Pirma sa Residente</p>
 </div>
 
 <br />
@@ -857,19 +861,19 @@ removeTraining(index) {
   
       const addHeader = () => {
           pdf.setFontSize(10);
-          pdf.setFont('Arial', 'bold');
+          pdf.setFont('Times', 'bold');
           pdf.text('PROTECTIVE SERVICES DIVISION', 160, 20, { align: 'center' });
           pdf.text('REGIONAL REHABILITATION CENTER FOR YOUTH', 160, 25, { align: 'center' });
           pdf.text('Youth/RFO XI', 160, 30, { align: 'center' });
-          pdf.setFontSize(9);
+          pdf.setFontSize(8);
           pdf.setFont('Times', 'italic');
           pdf.text('DSWD-GF-010 | REV 02 | 22 SEP 2023', 135, 35);
           pdf.line(10,37,200,37);
       };
   
       const addFooter = () => {
-          pdf.setFontSize(9); 
-          pdf.addImage(imgData2, 'PNG', 172, 270, 25, 15);
+          pdf.setFontSize(8); 
+          pdf.addImage(imgData2, 'PNG', 164, 270, 25, 15);
           pdf.setFont('Times', 'normal');
           pdf.text('DSWD FOXI, Regional Rehabilitation Center for Youth, Bago Oshiro, Davao City, Philippines 8000', 105, pageHeight - marginBottom + 10, { align: 'center' });
           pdf.text('Email:rrcy.fo11.dswd.gov.ph; Tel No.(082) 293-0306', 105, pageHeight - marginBottom + 15, { align: 'center' });
