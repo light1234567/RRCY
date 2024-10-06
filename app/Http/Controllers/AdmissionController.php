@@ -260,4 +260,36 @@ class AdmissionController extends Controller
 
         return response()->json(['error' => 'Admission not found for this client'], 404);
     }
+
+    public function updateClientStatus(Request $request, $clientId) {
+        Log::info('Received request to update client status', [
+            'clientId' => $clientId,
+            'request' => $request->all()
+        ]);
+    
+        $admission = Admission::where('client_id', $clientId)->first();
+        $client = Client::find($clientId);  // Find the associated client directly
+    
+        if ($admission && $client) {
+            // Update the case status in the Admission model
+            $admission->case_status = $request->input('case_status');
+            $admission->save();
+    
+            // Update the child status in the Client model
+            $client->child_status = $request->input('child_status');
+            $client->save();
+    
+            Log::info('Admission and client updated successfully', [
+                'updated_by' => auth()->user()->name,
+                'client_full_name' => $client->first_name . ' ' . $client->last_name
+            ]);
+    
+            return response()->json(['message' => 'Status updated successfully'], 200);
+        }
+    
+        return response()->json(['error' => 'Client or Admission not found'], 404);
+    }
+    
+    
+    
 }

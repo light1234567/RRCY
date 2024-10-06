@@ -64,6 +64,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::post('/admission', [AdmissionController::class, 'saveForm']); 
     Route::get('/center-head/{client_id}', [AdmissionController::class, 'getCenterHeadName']);
     Route::put('/update-center-head', [AdmissionController::class, 'updateCenterHead']);
+    Route::post('/admission/updateClientStatus/{clientId}', [AdmissionController::class, 'updateClientStatus']);
     });
 
 // Checklist Routes
