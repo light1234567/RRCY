@@ -81,7 +81,7 @@
  
 <div class="flex ">
   <p class=" font-semibold mt-2">Pangalan:</p>
-  <input type="text" v-model="form.name" :readonly="!editMode" class="border-b-1 border-black border-t-0 border-l-0 border-r-0 border-b-1 w-1/2 border-b-1 border-black focus:outline-none">
+  <input type="text" v-model="form.name" readonly class="border-b-1 border-black border-t-0 border-l-0 border-r-0 border-b-1 w-1/2 border-b-1 border-black focus:outline-none">
   
 </div>
 
@@ -90,7 +90,7 @@
     <p class="font-semibold">Adlaw nga Natawhan:</p>
   </div>
   <div class="mt-3 w-full md:w-2/6 p-2 ">
-    <input type="date" v-model="form.birthdate" :readonly="!editMode" class=" border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" @change="form.age = calculateAge(form.birthdate)">
+    <input type="date" v-model="form.birthdate" readonly class=" border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" @change="form.age = calculateAge(form.birthdate)">
   </div>
   
   <div class=" flex w-1/4 ">
@@ -99,7 +99,7 @@
     </div>
     
     <div class="mt-5">
-    <input type="number" v-model="form.age" :readonly="!editMode" class="text-center w-3/4 border-t-0 border-l-0 border-r-0 border-b-1 border-black focus:outline-none" >
+    <input type="number" v-model="form.age" readonly class="text-center w-3/4 border-t-0 border-l-0 border-r-0 border-b-1 border-black focus:outline-none" >
     </div>
   </div>
   
@@ -107,7 +107,7 @@
     <p class="font-semibold">Lugar nga Natawhan:</p>
   </div>
   <div class="mt-3">
-    <input type="text" v-model="form.lugar_nga_natawhan" :readonly="!editMode" class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" >
+    <input type="text" v-model="form.place_of_birth" readonly class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" >
   </div>
 </div>
 
@@ -493,6 +493,7 @@ data() {
       client_id: null,
       name: '',
       birthdate: '',
+      place_of_birth: '',
       age: null,
       trainings: [],
       education: [],
@@ -789,6 +790,7 @@ fetchClientData(clientId) {
               // Set the client's birthdate and calculate the age
               if (client.date_of_birth) {
                   this.form.birthdate = client.date_of_birth;
+                  this.form.place_of_birth = client.place_of_birth;
                   this.form.age = this.calculateAge(client.date_of_birth);
               }
               
@@ -993,7 +995,7 @@ const pageHeight = 356;  // Long paper height in mm
     
 
     pdf.text(`Adlaw nga Natawhan: ${this.form.birthdate}`, 20, 85);
-    pdf.text(`Lugar nga Natawhan: ${this.form.lugar_nga_natawhan}`, 20, 90);
+    pdf.text(`Lugar nga Natawhan: ${this.form.place_of_birth}`, 20, 90);
     
     
 
