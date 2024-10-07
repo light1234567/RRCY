@@ -12,724 +12,753 @@
       <h1 class="text-lg p-1 text-customBlue ml-10 font-bold mb-4"></h1>
       <form @submit.prevent="saveForm">
         
-        <!-- Client Information -->
-        <fieldset class="bg-white border shadow-md p-4 mb-2 mr-8 ml-16 rounded-sm">
-          <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold">CLIENT INFORMATION</legend>
-          
-          <div class="grid grid-cols-1">
-            <!-- Name, Suffix, and Sex using a Grid Layout -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
-              <div class="mb-2">
-                <label for="clientFirstName" class="block mb-1 text-sm">
-                  First Name: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="clientFirstName"
-                  v-model="form.client.first_name"
-                  @input="removeNumbers('first_name')"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                />
-              </div>
-              <div class="mb-2">
-                <label for="clientMiddleName" class="block mb-1 text-sm">Middle Name:</label>
-                <input
-                  type="text"
-                  id="clientMiddleName"
-                  v-model="form.client.middle_name"
-                  @input="removeNumbers('middle_name')"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                />
-              </div>
-              <div class="mb-2">
-                <label for="clientLastName" class="block mb-1 text-sm">
-                  Last Name: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="clientLastName"
-                  v-model="form.client.last_name"
-                  @input="removeNumbers('last_name')"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                />
-              </div>
-              <div class="mb-2">
-                <label for="clientSuffix" class="block mb-1 text-sm">
-                  Suffix:
-                </label>
-                <select
-                  id="clientSuffix"
-                  v-model="form.client.suffix"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                >
-                  <option value="">Select Suffix</option>
-                  <option value="Jr.">Jr.</option>
-                  <option value="I">I</option>
-                  <option value="II">II</option>
-                  <option value="III">III</option>
-                  <option value="IV">IV</option>
-                  <option value="V">V</option>
-                  
-                </select>
-              </div>
-            </div>
+<!-- Client Information -->
+<fieldset class="bg-white border shadow-lg p-6 mb-4 mr-8 ml-16 rounded-md">
+  <legend class="text-base bg-gradient-to-r from-blue-900 to-blue-600 text-white pl-2 pr-2 pt-1 pb-1 rounded-md font-bold shadow-md">
+    CLIENT INFORMATION
+  </legend>
 
-            <!-- Date of Birth, Place of Birth, Sex, and Child Status -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-2">
-              <div class="mb-2">
-                <label for="clientDob" class="block mb-1 text-sm">
-                  Date of Birth: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  id="clientDob"
-                  v-model="form.client.date_of_birth"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  :max="form.client.maxDateOfBirth"
-                  :min="form.client.minDateOfBirth"
-                  required
-                />
-              </div>
-              <div class="mb-2">
-                <label for="clientPlaceOfBirth" class="block mb-1 text-sm">
-                  Place of Birth: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="clientPlaceOfBirth"
-                  v-model="form.client.place_of_birth"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  placeholder="City/Province"
-                  required
-                />
-              </div>
-
-              <div class="mb-2">
-                <label for="child_status" class="block mb-1 text-sm">
-                  Child Status <span class="text-red-500">*</span>
-                </label>
-                <select
-                  id="child_status"
-                  v-model="form.client.child_status"
-                  :class="statusColorClass"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                >
-                  <option value="">Select Child Status</option>
-                  <option value="Still at the Center (SATC)">Still at the Center (SATC)</option>
-                  <option value="Discharge">Discharge</option>
-                  <option value="Leave without Permission (LWOP)">Leave without Permission (LWOP)</option>
-                </select>
-              </div>
-              <div class="mb-2">
-  <label for="clientSex" class="block mb-1 text-sm">
-    Sex: <span class="text-red-500">*</span>
-  </label>
-  <select
-    id="clientSex"
-    v-model="form.client.sex"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-    required
-  >
-    <option value="">Select Sex</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-    <option value="Rather not to say">Rather not to say</option>
-  </select>
-</div>
-
-            </div>
-
-            <!-- Address Breakdown with Cascading Dropdowns -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
-              <div class="mb-2">
-                <label for="clientProvince" class="block mb-1 text-sm">
-                  Province: <span class="text-red-500">*</span>
-                </label>
-                <select
-                  id="clientProvince"
-                  v-model="form.client.province"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  @change="onProvinceChange"
-                  required
-                >
-                  <option value="">Select Province</option>
-                  <option v-for="province in provinces" :key="province.psgc" :value="province.col_province">
-                    {{ province.col_province }}
-                  </option>
-                </select>
-              </div>
-              <div class="mb-2">
-                <label for="clientCity" class="block mb-1 text-sm">
-                  City/Municipality: <span class="text-red-500">*</span>
-                </label>
-                <select
-                  id="clientCity"
-                  v-model="form.client.city"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  @change="onCityChange"
-                  :disabled="!form.client.province"
-                  required
-                >
-                  <option value="">Select City/Municipality</option>
-                  <option v-for="citymuni in cityMunis" :key="citymuni.psgc" :value="citymuni.col_citymuni">
-                    {{ citymuni.col_citymuni }}
-                  </option>
-                </select>
-              </div>
-              <div class="mb-2">
-                <label for="clientBarangay" class="block mb-1 text-sm">
-                  Barangay: <span class="text-red-500">*</span>
-                </label>
-                <select
-                  id="clientBarangay"
-                  v-model="form.client.barangay"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  :disabled="!form.client.city"
-                  required
-                >
-                  <option value="">Select Barangay</option>
-                  <option v-for="brgy in barangays" :key="brgy.psgc" :value="brgy.col_brgy">
-                    {{ brgy.col_brgy }}
-                  </option>
-                </select>
-              </div>
-              <div class="mb-2">
-                <label for="clientStreet" class="block mb-1 text-sm">House/Building Number and Street Name:</label>
-                <input
-                  type="text"
-                  id="clientStreet"
-                  v-model="form.client.street"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                />
-              </div>
-            </div>
-
-            <!-- Religion -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-  <div class="mb-2">
-    <label for="clientReligion" class="block mb-1 text-sm">
-      Religion: <span class="text-red-500">*</span>
-    </label>
-    <select
-      id="clientReligion"
-      v-model="form.client.religion"
-      class="w-full px-2 py-1 border rounded-md text-sm"
-      required
-    >
-      <option value="">Select Religion</option>
-      <option value="Christianity">Christianity</option>
-      <option value="Islam">Islam</option>
-      <option value="Buddhism">Buddhism</option>
-      <option value="Hinduism">Hinduism</option>
-      <option value="Judaism">Judaism</option>
-      <option value="Other">Other</option>
-    </select>
-  </div>
-
-<!-- Conditional text input when 'Other' is selected -->
-<div class="mb-2" v-if="form.client.religion === 'Other'">
-  <label for="customReligion" class="block mb-1 text-sm">
-    Please specify: <span class="text-red-500">*</span>
-  </label>
-  <input
-    type="text"
-    id="customReligion"
-    v-model="form.client.customReligion"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-    placeholder="Enter your religion"
-    required
-  />
-</div>
-
-</div>
-
-          </div>
-        </fieldset>
-
-        <!-- Distinguishing Marks -->
-        <fieldset class="border shadow-md bg-white p-4 mb-2 mr-8 ml-16 mt-8 rounded-sm">
-          <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">
-            DISTINGUISHING MARKS
-          </legend>
-          <div class="grid grid-cols-1 md:grid-cols-5 gap-2 mb-2">
-            <div class="mb-2">
-              <label for="tattooScars" class="block mb-1 text-sm">Tattoo/Scars:</label>
-              <input
-                type="text"
-                id="tattooScars"
-                v-model="form.distinguishing_marks.tattoo_scars"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-              />
-            </div>
-            <div class="mb-2">
-                <label for="height" class="block mb-1 text-sm">Height (cm):</label>
-                <input
-                  type="number"
-                  id="height"
-                  v-model="form.distinguishing_marks.height"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  max="999"  
-                  min="0"    
-                />
-              </div>
-              <div class="mb-2">
-                <label for="weight" class="block mb-1 text-sm">Weight (kg):</label>
-                <input
-                  type="number"
-                  id="weight"
-                  v-model="form.distinguishing_marks.weight"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  max="999" 
-                />
-              </div>
-
-           <!-- Color of Eye -->
-<div class="mb-2">
-  <label for="colourOfEye" class="block mb-1 text-sm">Colour of Eye:</label>
-  <select
-    id="colourOfEye"
-    v-model="form.distinguishing_marks.colour_of_eye"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-  >
-    <option value="">Select Colour</option>
-    <option value="Brown">Brown</option>
-    <option value="Blue">Blue</option>
-    <option value="Green">Green</option>
-    <option value="Hazel">Hazel</option>
-    <option value="Gray">Gray</option>
-    <option value="Amber">Amber</option>
-    <option value="Other">Other</option>
-  </select>
-</div>
-
-<!-- Custom Eye Color Input (Only when "Other" is selected) -->
-<div v-if="form.distinguishing_marks.colour_of_eye === 'Other'" class="mb-2">
-  <label for="customEyeColor" class="block mb-1 text-sm">Custom Eye Color:</label>
-  <input
-    type="text"
-    id="customEyeColor"
-    v-model="form.distinguishing_marks.custom_eye_color"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-    placeholder="Enter custom eye color"
-  />
-</div>
-
-            <!-- Skin Colour -->
-<div class="mb-2">
-  <label for="skinColour" class="block mb-1 text-sm">Skin Colour:</label>
-  <select
-    id="skinColour"
-    v-model="form.distinguishing_marks.skin_colour"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-  >
-    <option value="">Select Skin Colour</option>
-    <option value="Light">Light</option>
-    <option value="Fair">Fair</option>
-    <option value="Medium">Medium</option>
-    <option value="Olive">Olive</option>
-    <option value="Brown">Brown</option>
-    <option value="Dark">Dark</option>
-    <option value="Other">Other</option>
-  </select>
-</div>
-
-<!-- Custom Skin Colour Input (Only when "Other" is selected) -->
-<div v-if="form.distinguishing_marks.skin_colour === 'Other'" class="mb-2">
-  <label for="customSkinColour" class="block mb-1 text-sm">Custom Skin Colour:</label>
-  <input
-    type="text"
-    id="customSkinColour"
-    v-model="form.distinguishing_marks.custom_skin_colour"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-    placeholder="Enter custom skin colour"
-  />
-</div>
-
-          </div>
-        </fieldset>
-
-         <!-- Admission Details -->
-         <fieldset class="border shadow-md bg-white p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
-          <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">ADMISSION DETAILS</legend>
-         
-          <div class="grid grid-cols-1 gap-2">
-          <!-- Committing Court -->
-          <div class="mb-2">
-  <label for="rtcProvince" class="block mb-1 text-sm">
-    RTC Province: <span class="text-red-500">*</span>
-  </label>
-  <select
-    id="rtcProvince"
-    v-model="selectedProvince"
-    class="w-1/3 px-2 py-1 border rounded-md text-sm"
-    required
-  >
-    <option value="" disabled>Select a province</option>
-    <option v-for="province in rtcProvinces" :key="province.id" :value="province.id">
-      {{ province.province_name }}
-    </option>
-  </select>
-</div>
-
-<!-- RTC Branch Dropdown (visible only after selecting a province) -->
-<div class="mb-2" v-if="selectedProvince">
-  <label for="committingCourt" class="block mb-1 text-sm">
-    Committing Court: <span class="text-red-500">*</span>
-  </label>
-  <select
-    id="committingCourt"
-    v-model="form.admission.committing_court"
-    class="w-1/3 px-2 py-1 border rounded-md text-sm"
-    required
-  >
-    <option value="" disabled>Select a branch</option>
-    <option v-for="branch in filteredBranches" :key="branch.id" :value="branch.branch_name">
-      {{ branch.branch_name }}
-    </option>
-    <option value="Other">Other</option> <!-- "Other" option -->
-  </select>
-</div>
-
-<!-- Input field for custom committing court, visible only if "Other" is selected -->
-<div class="mb-2" v-if="form.admission.committing_court === 'Other'">
-  <label for="customCourt" class="block mb-1 text-sm">
-    Custom Committing Court: <span class="text-red-500">*</span>
-  </label>
-  <input
-    type="text"
-    id="customCourt"
-    v-model="customCommittingCourt"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-    placeholder="Enter custom committing court"
-    required
-  />
-</div>
-
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-              <div class="mb-2">
-                <label for="crimCaseNumber" class="block mb-1 text-sm">
-                  Criminal Case Number: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="crimCaseNumber"
-                  v-model="form.admission.crim_case_number"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                />
-              </div>
-<!-- Crime Category Dropdown -->
-<!-- Crime Category Dropdown -->
-<div class="mb-2">
-  <label for="crimeCategory" class="block mb-1 text-sm">
-    Crime Category: <span class="text-red-500">*</span>
-  </label>
-  <select
-    id="crimeCategory"
-    v-model="selectedCategory"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-    required
-  >
-    <option value="" disabled>Select a category</option>
-    <option v-for="category in crimeCategories" :key="category.id" :value="category.id">
-      {{ category.category_name }}
-    </option>
-  </select>
-</div>
-
-<!-- Offense Committed Dropdown (visible only after selecting a category) -->
-<div class="mb-2" v-if="selectedCategory">
-  <label for="offenseCommitted" class="block mb-1 text-sm">
-    Offense Committed: <span class="text-red-500">*</span>
-  </label>
-  <select
-    id="offenseCommitted"
-    v-model="form.admission.offense_committed"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-    required
-  >
-    <option value="" disabled>Select an offense</option>
-    <option v-for="crime in filteredCrimes" :key="crime.id" :value="crime.crime_name">
-      {{ crime.crime_name }}
-    </option>
-    <option value="Other">Other</option> <!-- "Other" option -->
-  </select>
-</div>
-
-<!-- Input field for custom offense, visible only if "Other" is selected -->
-<div class="mb-2" v-if="form.admission.offense_committed === 'Other'">
-  <label for="customOffense" class="block mb-1 text-sm">
-    Custom Offense Committed: <span class="text-red-500">*</span>
-  </label>
-  <input
-    type="text"
-    id="customOffense"
-    v-model="customOffenseCommitted"
-    class="w-full px-2 py-1 border rounded-md text-sm"
-    placeholder="Enter custom offense committed"
-    required
-  />
-</div>
-
-              <div class="mb-2">
-                <label for="dateAdmitted" class="block mb-1 text-sm">
-                  Date Admitted: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  id="dateAdmitted"
-                  v-model="form.admission.date_admitted"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                />
-              </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-              <div class="mb-2">
-                <label for="daysInJail" class="block mb-1 text-sm">
-                  Days in Jail: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  id="daysInJail"
-                  v-model="form.admission.days_in_jail"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                />
-              </div>
-              <div class="mb-2">
-                <label for="daysInDetentionCenter" class="block mb-1 text-sm">
-                  Days in Detention Center: <span class="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  id="daysInDetentionCenter"
-                  v-model="form.admission.days_in_detention_center"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                />
-              </div>
-              <div class="mb-2">
-                <label for="case_status" class="block mb-1 text-sm">
-                  Case Status <span class="text-red-500">*</span>
-                </label>
-                <select
-                  id="case_status"
-                  v-model="form.admission.case_status"
-                  class="w-full px-2 py-1 border rounded-md text-sm"
-                  required
-                >
-                  <option value="">Select Case Status</option>
-                  <option value="On trial">On trial</option>
-                  <option value="Acquitted/Dismissed">Acquitted/Dismissed</option>
-                  <option value="Provisionally Dismissed">Provisionally Dismissed</option>
-                  <option value="Rehabilitation">Rehabilitated</option>
-                  <option value="Diversion">Diversion</option>
-                  <option value="Disposition Measure">Disposition Measure</option>
-                  <option value="Child-at-risk (CAR)">Child-at-risk (CAR)</option>
-                </select>
-              </div>
-
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- Documents Submitted -->
-        <fieldset class="border bg-white shadow-md p-4 mb-2 mt-8 mr-8 ml-16 rounded-sm">
-          <legend class="text-base bg-blue-900 text-gray-300 pl-2 pr-2 pt-1 pb-1 rounded-sm font-bold mb-2">DOCUMENTS SUBMITTED</legend>
-          <div class="grid grid-cols-1 gap-2">
-            <div class="mb-2">
-              <label class="block mb-1 text-sm font-semibold">Documents Submitted:</label>
-              <div class="flex flex-col space-y-1">
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
-                    value="SCSR"
-                    v-model="form.documents_submitted.documents"
-                    class="mr-1"
-                  />
-                  <span class="text-sm">SCSR</span>
-                </div>
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
-                    value="Court Order"
-                    v-model="form.documents_submitted.documents"
-                    class="mr-1"
-                  />
-                  <span class="text-sm">Court Order</span>
-                </div>
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
-                    value="Medical Certificates"
-                    v-model="form.documents_submitted.documents"
-                    class="mr-1"
-                  />
-                  <span class="text-sm">Medical Certificates</span>
-                </div>
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
-                    value="Consent from Parents"
-                    v-model="form.documents_submitted.documents"
-                    class="mr-1"
-                  />
-                  <span class="text-sm">Consent from Parents</span>
-                </div>
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
-                    value="School Records"
-                    v-model="form.documents_submitted.documents"
-                    class="mr-1"
-                  />
-                  <span class="text-sm">School Records</span>
-                </div>
-                <div class="flex items-center">
-                  <input
-                    type="checkbox"
-                    value="Others"
-                    v-model="form.documents_submitted.documents"
-                    class="mr-1"
-                    @change="toggleOtherDocuments"
-                  />
-                  <span class="text-sm">Others</span>
-                </div>
-              </div>
-            </div>
-            <div
-              v-if="form.documents_submitted.documents.includes('Others')"
-              class="mb-2"
-            >
-              <label for="otherDocuments" class="block mb-1 text-sm font-semibold">Other Documents:</label>
-              <input
-                type="text"
-                id="otherDocuments"
-                v-model="form.documents_submitted.others"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-              />
-            </div>
-            <div class="mb-2 col-span-1">
-              <label for="generalImpression" class="block mb-1 text-sm">
-                General Impression: <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="generalImpression"
-                v-model="form.admission.general_impression"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-                required
-              />
-            </div>
-            <div class="mb-2 col-span-1">
-              <label for="actionTaken" class="block mb-1 text-sm">
-                Action Taken: <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="actionTaken"
-                v-model="form.admission.action_taken"
-                class="w-full px-2 py-1 border rounded-md text-sm"
-                required
-              />
-            </div>
-          </div>
-
-           <!-- New Fields for Referring Party and Admitting Officer -->
-           <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+  <div class="grid grid-cols-1">
+    <!-- Name, Suffix, and Sex using a Grid Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
       <div class="mb-2">
-        <label for="referringParty" class="block mb-1 text-sm">Name & Signature of Referring Party:</label>
+        <label for="clientFirstName" class="block mb-1 text-sm font-medium">
+          First Name: <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="clientFirstName"
+          v-model="form.client.first_name"
+          @input="removeNumbers('first_name')"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label for="clientMiddleName" class="block mb-1 text-sm font-medium">Middle Name:</label>
+        <input
+          type="text"
+          id="clientMiddleName"
+          v-model="form.client.middle_name"
+          @input="removeNumbers('middle_name')"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        />
+      </div>
+      <div class="mb-2">
+        <label for="clientLastName" class="block mb-1 text-sm font-medium">
+          Last Name: <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="clientLastName"
+          v-model="form.client.last_name"
+          @input="removeNumbers('last_name')"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label for="clientSuffix" class="block mb-1 text-sm font-medium">Suffix:</label>
+        <select
+          id="clientSuffix"
+          v-model="form.client.suffix"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        >
+          <option value="">Select Suffix</option>
+          <option value="Jr.">Jr.</option>
+          <option value="I">I</option>
+          <option value="II">II</option>
+          <option value="III">III</option>
+          <option value="IV">IV</option>
+          <option value="V">V</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Date of Birth, Place of Birth, Sex, and Child Status -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+      <div class="mb-2">
+        <label for="clientDob" class="block mb-1 text-sm font-medium">Date of Birth: <span class="text-red-500">*</span></label>
+        <input
+          type="date"
+          id="clientDob"
+          v-model="form.client.date_of_birth"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          :max="form.client.maxDateOfBirth"
+          :min="form.client.minDateOfBirth"
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label for="clientPlaceOfBirth" class="block mb-1 text-sm font-medium">Place of Birth: <span class="text-red-500">*</span></label>
+        <input
+          type="text"
+          id="clientPlaceOfBirth"
+          v-model="form.client.place_of_birth"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          placeholder="City/Province"
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label for="child_status" class="block mb-1 text-sm font-medium">Child Status: <span class="text-red-500">*</span></label>
+        <select
+          id="child_status"
+          v-model="form.client.child_status"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          required
+        >
+          <option value="">Select Child Status</option>
+          <option value="Still at the Center (SATC)">Still at the Center (SATC)</option>
+          <option value="Discharge">Discharge</option>
+          <option value="Leave without Permission (LWOP)">Leave without Permission (LWOP)</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label for="clientSex" class="block mb-1 text-sm font-medium">Sex: <span class="text-red-500">*</span></label>
+        <select
+          id="clientSex"
+          v-model="form.client.sex"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          required
+        >
+          <option value="">Select Sex</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Rather not to say">Rather not to say</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Address Breakdown with Cascading Dropdowns -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div class="mb-2">
+        <label for="clientProvince" class="block mb-1 text-sm font-medium">Province: <span class="text-red-500">*</span></label>
+        <select
+          id="clientProvince"
+          v-model="form.client.province"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          @change="onProvinceChange"
+          required
+        >
+          <option value="">Select Province</option>
+          <option v-for="province in provinces" :key="province.psgc" :value="province.col_province">
+            {{ province.col_province }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label for="clientCity" class="block mb-1 text-sm font-medium">City/Municipality: <span class="text-red-500">*</span></label>
+        <select
+          id="clientCity"
+          v-model="form.client.city"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          @change="onCityChange"
+          :disabled="!form.client.province"
+          required
+        >
+          <option value="">Select City/Municipality</option>
+          <option v-for="citymuni in cityMunis" :key="citymuni.psgc" :value="citymuni.col_citymuni">
+            {{ citymuni.col_citymuni }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label for="clientBarangay" class="block mb-1 text-sm font-medium">Barangay: <span class="text-red-500">*</span></label>
+        <select
+          id="clientBarangay"
+          v-model="form.client.barangay"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          :disabled="!form.client.city"
+          required
+        >
+          <option value="">Select Barangay</option>
+          <option v-for="brgy in barangays" :key="brgy.psgc" :value="brgy.col_brgy">
+            {{ brgy.col_brgy }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label for="clientStreet" class="block mb-1 text-sm font-medium">House/Building Number and Street Name:</label>
+        <input
+          type="text"
+          id="clientStreet"
+          v-model="form.client.street"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        />
+      </div>
+    </div>
+
+    <!-- Religion -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="mb-2">
+        <label for="clientReligion" class="block mb-1 text-sm font-medium">Religion: <span class="text-red-500">*</span></label>
+        <select
+          id="clientReligion"
+          v-model="form.client.religion"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          required
+        >
+          <option value="">Select Religion</option>
+          <option value="Christianity">Christianity</option>
+          <option value="Islam">Islam</option>
+          <option value="Buddhism">Buddhism</option>
+          <option value="Hinduism">Hinduism</option>
+          <option value="Judaism">Judaism</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+    <!-- Conditional text input when 'Other' is selected -->
+      <transition name="fade-in">
+        <div class="mb-2 twinkle" v-if="form.client.religion === 'Other'">
+          <label for="customReligion" class="block mb-1 text-sm font-medium">
+            Please specify: <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="customReligion"
+            v-model="form.client.customReligion"
+            class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
+            placeholder="Enter your religion"
+            required
+          />
+        </div>
+      </transition>
+    </div>
+  </div>
+</fieldset>
+
+
+<!-- Distinguishing Marks -->
+<fieldset class="bg-white border shadow-lg p-6 mb-4 mr-8 ml-16 rounded-md">
+  <legend class="text-base bg-gradient-to-r from-blue-900 to-blue-600 text-white pl-2 pr-2 pt-1 pb-1 rounded-md font-bold shadow-md">
+    DISTINGUISHING MARKS
+  </legend>
+
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+    <div class="mb-2">
+      <label for="tattooScars" class="block mb-1 text-sm font-medium">
+        Tattoo/Scars:
+      </label>
+      <input
+        type="text"
+        id="tattooScars"
+        v-model="form.distinguishing_marks.tattoo_scars"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+      />
+    </div>
+
+    <div class="mb-2">
+      <label for="height" class="block mb-1 text-sm font-medium">
+        Height (cm):
+      </label>
+      <input
+        type="number"
+        id="height"
+        v-model="form.distinguishing_marks.height"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        max="999"
+        min="0"
+      />
+    </div>
+
+    <div class="mb-2">
+      <label for="weight" class="block mb-1 text-sm font-medium">
+        Weight (kg):
+      </label>
+      <input
+        type="number"
+        id="weight"
+        v-model="form.distinguishing_marks.weight"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        max="999"
+      />
+    </div>
+
+    <!-- Colour of Eye -->
+    <div class="mb-2">
+      <label for="colourOfEye" class="block mb-1 text-sm font-medium">
+        Colour of Eye:
+      </label>
+      <select
+        id="colourOfEye"
+        v-model="form.distinguishing_marks.colour_of_eye"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+      >
+        <option value="">Select Colour</option>
+        <option value="Brown">Brown</option>
+        <option value="Blue">Blue</option>
+        <option value="Green">Green</option>
+        <option value="Hazel">Hazel</option>
+        <option value="Gray">Gray</option>
+        <option value="Amber">Amber</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <!-- Custom Eye Color Input (Only when "Other" is selected) -->
+    <div v-if="form.distinguishing_marks.colour_of_eye === 'Other'" class="mb-2">
+      <label for="customEyeColor" class="block mb-1 text-sm font-medium">
+        Custom Eye Color:
+      </label>
+      <input
+        type="text"
+        id="customEyeColor"
+        v-model="form.distinguishing_marks.custom_eye_color"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        placeholder="Enter custom eye color"
+      />
+    </div>
+
+    <!-- Skin Colour -->
+    <div class="mb-2">
+      <label for="skinColour" class="block mb-1 text-sm font-medium">
+        Skin Colour:
+      </label>
+      <select
+        id="skinColour"
+        v-model="form.distinguishing_marks.skin_colour"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+      >
+        <option value="">Select Skin Colour</option>
+        <option value="Light">Light</option>
+        <option value="Fair">Fair</option>
+        <option value="Medium">Medium</option>
+        <option value="Olive">Olive</option>
+        <option value="Brown">Brown</option>
+        <option value="Dark">Dark</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+
+    <!-- Custom Skin Colour Input (Only when "Other" is selected) -->
+    <div v-if="form.distinguishing_marks.skin_colour === 'Other'" class="mb-2">
+      <label for="customSkinColour" class="block mb-1 text-sm font-medium">
+        Custom Skin Colour:
+      </label>
+      <input
+        type="text"
+        id="customSkinColour"
+        v-model="form.distinguishing_marks.custom_skin_colour"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        placeholder="Enter custom skin colour"
+      />
+    </div>
+  </div>
+</fieldset>
+
+
+<!-- Admission Details -->
+<fieldset class="bg-white border shadow-lg p-6 mb-4 mr-8 ml-16 rounded-md">
+  <legend class="text-base bg-gradient-to-r from-blue-900 to-blue-600 text-white pl-2 pr-2 pt-1 pb-1 rounded-md font-bold shadow-md">
+    ADMISSION DETAILS
+  </legend>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <!-- Criminal Case Number -->
+    <div class="mb-2 w-full">
+      <label for="crimCaseNumber" class="block mb-1 text-sm font-medium">
+        Criminal Case Number: <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        id="crimCaseNumber"
+        v-model="form.admission.crim_case_number"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      />
+    </div>
+
+    <!-- Date Admitted -->
+    <div class="mb-2 w-full">
+      <label for="dateAdmitted" class="block mb-1 text-sm font-medium">
+        Date Admitted: <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="date"
+        id="dateAdmitted"
+        v-model="form.admission.date_admitted"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      />
+    </div>
+
+    <!-- Days in Jail -->
+    <div class="mb-2 w-full">
+      <label for="daysInJail" class="block mb-1 text-sm font-medium">
+        Days in Jail: <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="number"
+        id="daysInJail"
+        v-model="form.admission.days_in_jail"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      />
+    </div>
+
+    <!-- Days in Detention Center -->
+    <div class="mb-2 w-full">
+      <label for="daysInDetentionCenter" class="block mb-1 text-sm font-medium">
+        Days in Detention Center: <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="number"
+        id="daysInDetentionCenter"
+        v-model="form.admission.days_in_detention_center"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      />
+    </div>
+
+    <!-- Case Status -->
+    <div class="mb-2 w-full">
+      <label for="case_status" class="block mb-1 text-sm font-medium">
+        Case Status: <span class="text-red-500">*</span>
+      </label>
+      <select
+        id="case_status"
+        v-model="form.admission.case_status"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      >
+        <option value="">Select Case Status</option>
+        <option value="On trial">On trial</option>
+        <option value="Acquitted/Dismissed">Acquitted/Dismissed</option>
+        <option value="Provisionally Dismissed">Provisionally Dismissed</option>
+        <option value="Rehabilitation">Rehabilitated</option>
+        <option value="Diversion">Diversion</option>
+        <option value="Disposition Measure">Disposition Measure</option>
+        <option value="Child-at-risk (CAR)">Child-at-risk (CAR)</option>
+      </select>
+    </div>
+
+    <!-- RTC Province -->
+    <div class="mb-2">
+      <label for="rtcProvince" class="block mb-1 text-sm font-medium">
+        RTC Province: <span class="text-red-500">*</span>
+      </label>
+      <select
+        id="rtcProvince"
+        v-model="selectedProvince"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      >
+        <option value="" disabled>Select a province</option>
+        <option v-for="province in rtcProvinces" :key="province.id" :value="province.id">
+          {{ province.province_name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Committing Court Dropdown -->
+    <transition name="fade-in">
+      <div class="mb-2" v-if="selectedProvince">
+        <label for="committingCourt" class="block mb-1 text-sm font-medium">
+          Committing Court: <span class="text-red-500">*</span>
+        </label>
+        <select
+          id="committingCourt"
+          v-model="form.admission.committing_court"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
+          required
+        >
+          <option value="" disabled>Select a branch</option>
+          <option v-for="branch in filteredBranches" :key="branch.id" :value="branch.branch_name">
+            {{ branch.branch_name }}
+          </option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </transition>
+
+    <!-- Custom Committing Court Input -->
+    <transition name="fade-in">
+      <div class="mb-2" v-if="form.admission.committing_court === 'Other'">
+        <label for="customCourt" class="block mb-1 text-sm font-medium">
+          Custom Committing Court: <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="customCourt"
+          v-model="customCommittingCourt"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
+          placeholder="Enter custom committing court"
+          required
+        />
+      </div>
+    </transition>
+
+    <!-- Crime Category Dropdown -->
+    <div class="mb-2">
+      <label for="crimeCategory" class="block mb-1 text-sm font-medium">
+        Crime Category: <span class="text-red-500">*</span>
+      </label>
+      <select
+        id="crimeCategory"
+        v-model="selectedCategory"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      >
+        <option value="" disabled>Select a category</option>
+        <option v-for="category in crimeCategories" :key="category.id" :value="category.id">
+          {{ category.category_name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Offense Committed Dropdown -->
+    <transition name="fade-in">
+      <div class="mb-2" v-if="selectedCategory">
+        <label for="offenseCommitted" class="block mb-1 text-sm font-medium">
+          Offense Committed: <span class="text-red-500">*</span>
+        </label>
+        <select
+          id="offenseCommitted"
+          v-model="form.admission.offense_committed"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
+          required
+        >
+          <option value="" disabled>Select an offense</option>
+          <option v-for="crime in filteredCrimes" :key="crime.id" :value="crime.crime_name">
+            {{ crime.crime_name }}
+          </option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </transition>
+
+    <!-- Custom Offense Input -->
+    <transition name="fade-in">
+      <div class="mb-2" v-if="form.admission.offense_committed === 'Other'">
+        <label for="customOffense" class="block mb-1 text-sm font-medium">
+          Custom Offense Committed: <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="customOffense"
+          v-model="customOffenseCommitted"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
+          placeholder="Enter custom offense committed"
+          required
+        />
+      </div>
+    </transition>
+  </div>
+</fieldset>
+
+
+
+<!-- Documents Submitted -->
+<fieldset class="bg-white border shadow-lg p-6 mb-4 mr-8 ml-16 rounded-md">
+  <legend class="text-base bg-gradient-to-r from-blue-900 to-blue-600 text-white pl-2 pr-2 pt-1 pb-1 rounded-md font-bold shadow-md">
+    DOCUMENTS SUBMITTED
+  </legend>
+
+  <div class="grid grid-cols-1 gap-4">
+    <div class="mb-2">
+      <label class="block mb-1 text-sm font-semibold">Documents Submitted:</label>
+      <div class="flex flex-col space-y-1">
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            value="SCSR"
+            v-model="form.documents_submitted.documents"
+            class="mr-1"
+          />
+          <span class="text-sm">SCSR</span>
+        </div>
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            value="Court Order"
+            v-model="form.documents_submitted.documents"
+            class="mr-1"
+          />
+          <span class="text-sm">Court Order</span>
+        </div>
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            value="Medical Certificates"
+            v-model="form.documents_submitted.documents"
+            class="mr-1"
+          />
+          <span class="text-sm">Medical Certificates</span>
+        </div>
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            value="Consent from Parents"
+            v-model="form.documents_submitted.documents"
+            class="mr-1"
+          />
+          <span class="text-sm">Consent from Parents</span>
+        </div>
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            value="School Records"
+            v-model="form.documents_submitted.documents"
+            class="mr-1"
+          />
+          <span class="text-sm">School Records</span>
+        </div>
+        <div class="flex items-center">
+          <input
+            type="checkbox"
+            value="Others"
+            v-model="form.documents_submitted.documents"
+            class="mr-1"
+            @change="toggleOtherDocuments"
+          />
+          <span class="text-sm">Others</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other Documents Input -->
+    <div v-if="form.documents_submitted.documents.includes('Others')" class="mb-2">
+      <label for="otherDocuments" class="block mb-1 text-sm font-semibold">Other Documents:</label>
+      <input
+        type="text"
+        id="otherDocuments"
+        v-model="form.documents_submitted.others"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+      />
+    </div>
+
+    <div class="mb-2">
+      <label for="generalImpression" class="block mb-1 text-sm font-medium">
+        General Impression: <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        id="generalImpression"
+        v-model="form.admission.general_impression"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      />
+    </div>
+
+    <div class="mb-2">
+      <label for="actionTaken" class="block mb-1 text-sm font-medium">
+        Action Taken: <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        id="actionTaken"
+        v-model="form.admission.action_taken"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      />
+    </div>
+
+    <!-- New Fields for Referring Party and Admitting Officer -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="mb-2">
+        <label for="referringParty" class="block mb-1 text-sm font-medium">
+          Name & Signature of Referring Party:
+        </label>
         <input
           type="text"
           id="referringParty"
           v-model="form.admission.referring_party_name"
-          class="w-full px-2 py-1 border rounded-md text-sm"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
 
       <div class="mb-2">
-        <label for="admittingOfficer" class="block mb-1 text-sm">Admitting Officer:</label>
+        <label for="admittingOfficer" class="block mb-1 text-sm font-medium">
+          Admitting Officer:
+        </label>
         <input
           type="text"
           id="admittingOfficer"
           v-model="form.admission.admitting_officer"
-          class="w-full px-2 py-1 border rounded-md text-sm"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="mb-2">
-        <label for="designationContact" class="block mb-1 text-sm">Designation / ID No. / Contact #:</label>
+        <label for="designationContact" class="block mb-1 text-sm font-medium">
+          Designation / ID No. / Contact #:
+        </label>
         <input
           type="text"
           id="designationContact"
           v-model="form.admission.designation_id_contact"
-          class="w-full px-2 py-1 border rounded-md text-sm"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
 
       <div class="mb-2">
-        <label for="designation" class="block mb-1 text-sm">Designation:</label>
+        <label for="designation" class="block mb-1 text-sm font-medium">
+          Designation:
+        </label>
         <input
           type="text"
           id="designation"
           v-model="form.admission.designation"
-          class="w-full px-2 py-1 border rounded-md text-sm"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="mb-2">
-        <label for="officeAddress" class="block mb-1 text-sm">Complete Address/Office Address:</label>
+        <label for="officeAddress" class="block mb-1 text-sm font-medium">
+          Complete Address/Office Address:
+        </label>
         <input
           type="text"
           id="officeAddress"
           v-model="form.admission.office_address"
-          class="w-full px-2 py-1 border rounded-md text-sm"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
 
       <div class="mb-2">
-        <label for="dateTime" class="block mb-1 text-sm">Date/Time:</label>
+        <label for="dateTime" class="block mb-1 text-sm font-medium">
+          Date/Time:
+        </label>
         <input
           type="datetime-local"
           id="dateTime"
           v-model="form.admission.date_time"
-          class="w-full px-2 py-1 border rounded-md text-sm"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
     </div>
 
     <div class="mb-2">
-        <label for="notedBy" class="block mb-1 text-sm">Noted by:</label>
-        <input
-          type="text"
-          id="notedBy"
-          v-model="form.admission.center_head"
-          class="w-full px-2 py-1 border rounded-md text-sm"
-        />
-      </div>
-    
+      <label for="notedBy" class="block mb-1 text-sm font-medium">
+        Noted by:
+      </label>
+      <input
+        type="text"
+        id="notedBy"
+        v-model="form.admission.center_head"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+      />
+    </div>
+  </div>
+</fieldset>
 
-        </fieldset>
 
        
 
 
         <!-- Submit Button -->
         <button
-          type="submit"
-          class="bg-blue-900 text-gray-300 mb-2 mt-4 px-8 py-1 mr-8 ml-16 rounded-md text-sm"
-        >
-          Save
-        </button>
+      type="submit"
+      class="bg-gradient-to-r from-blue-900 to-blue-600 text-white mb-2 mt-4 px-8 py-1 mr-8 ml-16 rounded-md text-sm"
+    >
+      Save
+    </button>
       </form>
       <!-- Notification Modal -->
       <NotificationModal
@@ -1038,19 +1067,7 @@ watch(
   }
 );
 
-// Computed property to return the appropriate color class based on the child status
-const statusColorClass = computed(() => {
-  switch (form.value.client.child_status) {
-    case 'Still at the Center (SATC)':
-      return 'bg-green-100 text-green-800'; // Green background for SATC
-    case 'Discharge':
-      return 'bg-blue-100 text-blue-800'; // Blue background for Discharge
-    case 'Leave without Permission (LWOP)':
-      return 'bg-red-100 text-red-800'; // Red background for LWOP
-    default:
-      return 'bg-white text-black'; // Default color for no selection
-  }
-});
+
 
 // Reset the form to initial state while keeping date of birth constraints
 const resetForm = () => {
@@ -1117,3 +1134,29 @@ const toggleOtherDocuments = () => {
 // Load provinces when the component is mounted
 onMounted(fetchProvinces);
 </script>
+<style scoped>
+/* Transition for element fade-in */
+.fade-in-enter-active, .fade-in-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-in-enter, .fade-in-leave-to /* .fade-in-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+
+/* Keyframes for twinkling border */
+@keyframes twinkle {
+  0%, 100% {
+    border-color: #60a5fa; /* blue-400 */
+  }
+  50% {
+    border-color: transparent;
+  }
+}
+
+/* Twinkling border animation */
+.twinkle-border {
+  animation: twinkle 1s ease-in-out 2;
+}
+
+
+</style>
