@@ -5,9 +5,9 @@
       <div class="relative">
         <button 
           @click="toggleDropdown" 
-          :class="[
-            'fixed bottom-6 right-6 flex items-center justify-center w-14 h-14 text-md border border-gray-500 rounded-full bg-gray-800 shadow-xl focus:outline-none focus:ring-1 focus:ring-blue-500',
-            { 'glow': isDropdownOpen } // Add glow effect when dropdown is open
+          :class="[ 
+            'fixed bottom-6 right-6 flex items-center justify-center w-14 h-14 text-md border border-gray-500 rounded-full bg-gray-800 shadow-xl focus:outline-none focus:ring-1 focus:ring-blue-500', 
+            { 'glow': isDropdownOpen } // Add glow effect when dropdown is open 
           ]"
         >
           <!-- SVG for form icon -->
@@ -24,8 +24,8 @@
                 href="#"
                 @click.prevent="selectTab(tab)"
                 :class="{
-                  'bg-blue-100 text-blue-700': currentTab === tab, // Highlighted tab
-                  'text-gray-700': currentTab !== tab // Non-highlighted tabs
+                  'bg-blue-100 text-blue-700': crnTab === tab, // Highlighted tab
+                  'text-gray-700': crnTab !== tab // Non-highlighted tabs
                 }"
                 class="block px-4 py-2 text-md hover:bg-gray-100 rounded"
               >
@@ -39,13 +39,10 @@
 
     <!-- Display content based on selected tab -->
     <div class="p-4 w-full">
-    
-    
-        <div v-if="currentTab === 'IOR Form'"><IORForm/></div>
-        <div v-if="currentTab === 'TNA Questionnaire'"><TNAQuestionnaire/></div>
-      </div>
+      <div v-if="crnTab === 'IOR Form'"><IORForm/></div>
+      <div v-if="crnTab === 'TNA Questionnaire'"><TNAQuestionnaire/></div>
     </div>
- 
+  </div>
 </template>
 
 <script setup>
@@ -53,12 +50,12 @@ import { ref, onMounted } from 'vue';
 import IORForm from '../Display/PSD/IORForm.vue';
 import TNAQuestionnaire from '../Display/PSD/TNAQuestionnaire.vue';
 
-const tabs = ref([
-  'IOR Form',
-  'TNA Questionnaire'
+const tabs = ref([ 
+  'IOR Form', 
+  'TNA Questionnaire' 
 ]);
 
-const currentTab = ref('IOR Form'); // Default tab value
+const crnTab = ref('IOR Form'); // Default tab value
 const isDropdownOpen = ref(false);
 
 const toggleDropdown = () => {
@@ -66,16 +63,16 @@ const toggleDropdown = () => {
 };
 
 const selectTab = (tab) => {
-  currentTab.value = tab;
-  localStorage.setItem('currentTab', tab); // Save the selected tab to localStorage
+  crnTab.value = tab;
+  localStorage.setItem('crnTab', tab); // Save the selected tab to localStorage
   isDropdownOpen.value = false;
 };
 
 // Ensure the correct tab is loaded on page refresh
 onMounted(() => {
-  const savedTab = localStorage.getItem('currentTab');
+  const savedTab = localStorage.getItem('crnTab');
   if (savedTab && tabs.value.includes(savedTab)) {
-    currentTab.value = savedTab;
+    crnTab.value = savedTab;
   }
 });
 </script>
