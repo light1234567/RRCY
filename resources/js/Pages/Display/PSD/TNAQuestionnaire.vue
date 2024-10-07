@@ -327,12 +327,12 @@
   <tr v-for="(item, index) in automotiveSector" :key="'automotive-' + index">
     <td class="border p-2 text-center">{{ index + 1 }}</td>
     <td class="border p-2">{{ item.name }}</td>
-    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="1" v-model="item.rank" @change="logRank(item)"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="2" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="3" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="4" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="5" v-model="item.rank"></td>
-    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="1" v-model="item.rank" @change="logRank(item)" :disabled="!editMode" ></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="2" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="3" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="4" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'automotive-' + index" value="5" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1" :readonly="!editMode"></td>
   </tr>
 
   <!-- Agricultural Sector -->
@@ -342,12 +342,12 @@
   <tr v-for="(item, index) in agriculturalSector" :key="'agricultural-' + index">
     <td class="border p-2 text-center">{{ index + 1 }}</td>
     <td class="border p-2">{{ item.name }}</td>
-    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="1" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="2" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="3" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="4" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="5" v-model="item.rank"></td>
-    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="1" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="2" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="3" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="4" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'agricultural-' + index" value="5" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1" :readonly="!editMode"></td>
   </tr>
 
   <!-- Health Sector -->
@@ -357,12 +357,12 @@
   <tr v-for="(item, index) in healthSector" :key="'health-' + index">
     <td class="border p-2 text-center">{{ index + 1 }}</td>
     <td class="border p-2">{{ item.name }}</td>
-    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="1" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="2" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="3" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="4" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="5" v-model="item.rank"></td>
-    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="1" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="2" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="3" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="4" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'health-' + index" value="5" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1" :readonly="!editMode"></td>
   </tr>
 
   <!-- ICT Sector -->
@@ -372,12 +372,12 @@
   <tr v-for="(item, index) in ictSector" :key="'ict-' + index">
     <td class="border p-2 text-center">{{ index + 1 }}</td>
     <td class="border p-2">{{ item.name }}</td>
-    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="1" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="2" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="3" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="4" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="5" v-model="item.rank"></td>
-    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="1" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="2" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="3" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="4" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'ict-' + index" value="5" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1" :readonly="!editMode"></td>
   </tr>
 
   <!-- Metals Sector -->
@@ -387,12 +387,12 @@
   <tr v-for="(item, index) in metalsSector" :key="'metals-' + index">
     <td class="border p-2 text-center">{{ index + 1 }}</td>
     <td class="border p-2">{{ item.name }}</td>
-    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="1" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="2" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="3" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="4" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="5" v-model="item.rank"></td>
-    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="1" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="2" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="3" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="4" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'metals-' + index" value="5" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1" :readonly="!editMode"></td>
   </tr>
 
   <!-- Tourism Sector -->
@@ -402,12 +402,12 @@
   <tr v-for="(item, index) in tourismSector" :key="'tourism-' + index">
     <td class="border p-2 text-center">{{ index + 1 }}</td>
     <td class="border p-2">{{ item.name }}</td>
-    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="1" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="2" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="3" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="4" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="5" v-model="item.rank"></td>
-    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="1" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="2" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="3" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="4" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'tourism-' + index" value="5" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1" :readonly="!editMode"></td>
   </tr>
 
   <!-- Construction Sector -->
@@ -417,12 +417,12 @@
   <tr v-for="(item, index) in constructionSector" :key="'construction-' + index">
     <td class="border p-2 text-center">{{ index + 1 }}</td>
     <td class="border p-2">{{ item.name }}</td>
-    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="1" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="2" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="3" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="4" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="5" v-model="item.rank"></td>
-    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="1" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="2" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="3" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="4" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'construction-' + index" value="5" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1" :readonly="!editMode"></td>
   </tr>
 
   <!-- Basic Trainings -->
@@ -432,12 +432,12 @@
   <tr v-for="(item, index) in basicTrainings" :key="'basic-' + index">
     <td class="border p-2 text-center">{{ index + 1 }}</td>
     <td class="border p-2">{{ item.name }}</td>
-    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="1" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="2" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="3" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="4" v-model="item.rank"></td>
-    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="5" v-model="item.rank"></td>
-    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="1" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="2" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="3" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="4" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2 text-center"><input type="radio" :name="'basic-' + index" value="5" v-model="item.rank" :disabled="!editMode"></td>
+    <td class="border p-2"><input type="text" v-model="item.remarks" class="w-full border p-1" :readonly="!editMode"></td>
   </tr>
   <br />
 
