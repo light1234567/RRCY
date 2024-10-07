@@ -117,9 +117,9 @@ Route::delete('/data-privacy-consent/{id}', [DataPrivacyConsentController::class
 // Talambuhay Routes
 Route::middleware(['web', 'auth'])->group(function () {
 Route::get('/talambuhay', [TalambuhayController::class, 'index']);
-Route::get('/talambuhay/{id}', [TalambuhayController::class, 'show']);
+Route::get('/talambuhay/client/{clientId}', [TalambuhayController::class, 'showByClientId']);
 Route::post('/talambuhay', [TalambuhayController::class, 'store']);
-Route::put('/talambuhay/{id}', [TalambuhayController::class, 'update']);
+Route::put('/talambuhay/client/{clientId}', [TalambuhayController::class, 'updateByClientId']);
 Route::delete('/talambuhay/{id}', [TalambuhayController::class, 'destroy']);
 });
 // Admission Contract Routes

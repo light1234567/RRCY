@@ -245,25 +245,44 @@ export default {
    }
  },
  methods: {
-   async fetchClientData(clientId) {
-     try {
-       const clientResponse = await axios.get(`/api/clients/${clientId}`);
-       const client = clientResponse.data;
-       this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
-       this.form.client_id = client.id;
+  async fetchClientData(clientId) {
+    try {
+      console.log(`Fetching client data for client ID: ${clientId}`);
+      
+      // Fetch client data
+      const clientResponse = await axios.get(`/api/clients/${clientId}`);
+      console.log('Client response:', clientResponse);
+      const client = clientResponse.data;
+      this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
+      this.form.client_id = client.id;
 
-       const talambuhayResponse = await axios.get(`/api/talambuhay/${clientId}`);
-       const talambuhay = talambuhayResponse.data;
-       this.form.about_my_family = talambuhay.about_my_family || '';
-       this.form.about_my_self = talambuhay.about_my_self || '';
-       this.form.about_my_case = talambuhay.about_my_case || '';
-       this.form.talambuhay_case_manager = talambuhay.talambuhay_case_manager || '';
-       this.form.date = talambuhay.date || '';
-     } catch (error) {
-       this.errorMessage = 'Error fetching client data.';
-       console.error('Error fetching client data:', error);
-     }
-   },
+      // Fetch Talambuhay data by client ID
+      console.log(`Fetching Talambuhay data for client ID: ${clientId}`);
+      const talambuhayResponse = await axios.get(`/api/talambuhay/client/${clientId}`); // Updated the URL
+      console.log('Talambuhay response:', talambuhayResponse);
+      const talambuhay = talambuhayResponse.data;
+
+      // Populate the form fields
+      this.form.about_my_family = talambuhay.about_my_family || '';
+      this.form.about_my_self = talambuhay.about_my_self || '';
+      this.form.about_my_case = talambuhay.about_my_case || '';
+      this.form.talambuhay_case_manager = talambuhay.talambuhay_case_manager || '';
+      this.form.date = talambuhay.date || '';
+
+    } catch (error) {
+      if (error.response) {
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+        console.error('Error response headers:', error.response.headers);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
+      console.error('Error config:', error.config);
+      this.errorMessage = 'Error fetching client data.';
+    }
+  },
    toggleEdit() {
      if (this.editMode) {
        this.openModal();
@@ -287,33 +306,43 @@ export default {
      this.editMode = false;
    },
    async saveData() {
-     if (!this.form.client_id) {
-       this.message = 'Client ID is missing.';
-       this.messageType = 'error';
-       return;
-     }
+  if (!this.form.client_id) {
+    this.message = 'Client ID is missing.';
+    this.messageType = 'error';
+    return;
+  }
 
-     try {
-       const response = await axios[this.form.id ? 'put' : 'post'](`/api/talambuhay${this.form.id ? '/' + this.form.id : ''}`, this.form);
-       this.saveResultTitle = 'Success';
-       this.saveResultMessage = 'Data saved successfully!';
-       this.errorMessage = '';
-
-       if (!this.form.id) {
-         this.form.id = response.data.id;
-       }
-
-       setTimeout(() => {
-         this.message = '';
-       }, 3000);
-     } catch (error) {
-       this.saveResultTitle = 'Error';
-       this.saveResultMessage = 'Error saving data.';
-       console.error('Error saving data:', error);
-     } finally {
-       this.isSaveResultModalOpen = true;
-     }
-   },
+  try {
+    // Try fetching Talambuhay by client_id
+    const response = await axios.get(`/api/talambuhay/client/${this.form.client_id}`);
+    
+    if (response.status === 200) {
+      // If the record exists, update it
+      await axios.put(`/api/talambuhay/client/${this.form.client_id}`, this.form);
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data updated successfully!';
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      // If no record exists, create a new one
+      try {
+        await axios.post('/api/talambuhay', this.form);
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data created successfully!';
+      } catch (postError) {
+        console.error('Error creating record:', postError);
+        this.saveResultTitle = 'Error';
+        this.saveResultMessage = 'Error creating record.';
+      }
+    } else {
+      console.error('Error fetching data:', error);
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = 'Error saving data.';
+    }
+  } finally {
+    this.isSaveResultModalOpen = true;
+  }
+},
    closeSaveResultModal() {
      this.isSaveResultModalOpen = false;
      this.saveResultTitle = '';

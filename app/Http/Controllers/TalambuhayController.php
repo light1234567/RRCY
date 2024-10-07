@@ -28,33 +28,43 @@ class TalambuhayController extends Controller
         return response()->json($talambuhay, 201);
     }
 
-    public function show($id)
+    public function showByClientId($clientId)
     {
-        $talambuhay = Talambuhay::find($id);
+        $talambuhay = Talambuhay::where('client_id', $clientId)->first();
         if ($talambuhay) {
             return response()->json($talambuhay);
         }
         return response()->json(['message' => 'Not found'], 404);
     }
+    
 
-    public function update(Request $request, $id)
-    {
-        $talambuhay = Talambuhay::find($id);
-        if ($talambuhay) {
-            $validatedData = $request->validate([
-                'client_id' => 'nullable|exists:clients,id',
-                'about_my_family' => 'nullable|string',
-                'about_my_self' => 'nullable|string',
-                'about_my_case' => 'nullable|string',
-                'talambuhay_case_manager' => 'nullable|string|max:50',
-                'date' => 'nullable|date',
-            ]);
+    public function updateByClientId(Request $request, $clientId)
+{
+    // Find Talambuhay record by client_id
+    $talambuhay = Talambuhay::where('client_id', $clientId)->first();
 
-            $talambuhay->update($validatedData);
-            return response()->json($talambuhay);
-        }
-        return response()->json(['message' => 'Not found'], 404);
+    // Check if the record exists
+    if ($talambuhay) {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'about_my_family' => 'nullable|string',
+            'about_my_self' => 'nullable|string',
+            'about_my_case' => 'nullable|string',
+            'talambuhay_case_manager' => 'nullable|string|max:50',
+            'date' => 'nullable|date',
+        ]);
+
+        // Update the existing Talambuhay record
+        $talambuhay->update($validatedData);
+
+        // Return the updated record
+        return response()->json($talambuhay);
     }
+
+    // If the record does not exist, return a 404 error
+    return response()->json(['message' => 'Not found'], 404);
+}
+
 
     public function destroy($id)
     {
