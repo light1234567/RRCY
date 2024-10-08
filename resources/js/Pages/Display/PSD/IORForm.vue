@@ -123,21 +123,24 @@
           </tr>
       </thead>
       <tbody>
-          <tr class="bg-gray-100">
-              <th class="text-left p-1 border bg-sky-400" colspan="5">A. PERSONALITY/BEHAVIOR</th>
-          </tr>
-          <tr >
-              <td class="p-1 border">1 |<span class="font-bold"> Maayo ug batasan ug displinado. </span> (Well mannered and disciplined)</td>
-              <td class="p-1 border text-center"> <input type="number" min="0" max="4" v-model="form.sections[0].indicators[0].self_rating" @change="validateRating(form.sections[0].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
-              </td>
-              <td class="p-1 border text-center"><input type="number" min="0" max="4" v-model="form.sections[0].indicators[0].mdo_rating" @change="validateRating(form.sections[0].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
-              </td>
-              <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[0].indicators[0]) }}</td>
-              <td class="p-1 border text-center" rowspan="5">
-                      <textarea v-model="form.sections[0].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
-  
-              </td>
-          </tr>
+        <tr class="bg-gray-100">
+  <th class="text-left p-1 border bg-sky-400" colspan="5">A. PERSONALITY/BEHAVIOR</th>
+</tr>
+<tr>
+  <td class="p-1 border">1 |<span class="font-bold"> Maayo ug batasan ug displinado. </span> (Well mannered and disciplined)</td>
+  <td class="p-1 border text-center">
+    <input type="number" min="0" max="4" v-model="form.sections[0].indicators[0].self_rating" @change="validateRating(form.sections[0].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+  </td>
+  <td class="p-1 border text-center">
+    <input type="number" min="0" max="4" v-model="form.sections[0].indicators[0].mdo_rating" @change="validateRating(form.sections[0].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
+  </td>
+  <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[0].indicators[0]) }}</td>
+  <td class="p-1 border text-center" rowspan="5" style="width: 180px; ">
+    <textarea v-model="form.sections[0].remarks" rows="5" class="w-full p-2 border border-gray-300 rounded text-sm" style=" height: 300px; ":readonly="!editMode"></textarea>
+</td>
+
+</tr>
+
           <tr>
               <td class="p-1 border">2 |<span class="font-bold"> Makahimo ug maayong aksyon ug desisyon sa mga dili maayong sitwasyon. </span>(He acts appropriately in any given situation)</td>
               <td class="p-1 border text-center"><input type="number" min="0" max="4" v-model="form.sections[0].indicators[1].self_rating" @change="validateRating(form.sections[0].indicators[1], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
@@ -183,8 +186,8 @@
                  <input type="number" min="0" max="4" v-model="form.sections[1].indicators[0].mdo_rating" @change="validateRating(form.sections[1].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[1].indicators[0]) }}</td>
-              <td class="p-1 border text-center" rowspan="5">
-                <textarea v-model="form.sections[1].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+              <td class="p-1 border text-center" rowspan="5" style="width:180px;">
+                <textarea v-model="form.sections[1].remarks" class="w-full p-2 border border-gray-300 rounded text-sm"  style=" height: 300px; " :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -241,8 +244,8 @@
                 <input type="number" min="0" max="4" v-model="form.sections[2].indicators[0].mdo_rating" @change="validateRating(form.sections[2].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[2].indicators[0]) }}</td>
-              <td class="p-1 border text-center" rowspan="5">
-                <textarea v-model="form.sections[2].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+              <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
+                <textarea v-model="form.sections[2].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" style="height: 300px;"   :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -299,8 +302,8 @@
                 <input type="number" min="0" max="4" v-model="form.sections[3].indicators[0].mdo_rating" @change="validateRating(form.sections[3].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
               </td>
               <td class="p-1 border text-center">{{ calculateTotalRating(form.sections[3].indicators[0]) }}</td>
-              <td class="p-1 border text-center" rowspan="5">
-                <textarea v-model="form.sections[3].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+              <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
+                <textarea v-model="form.sections[3].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" style="height: 300px;"   :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -406,8 +409,8 @@
                 <input type="number" min="0" max="4" v-model="form.sections[4].indicators[0].mdo_rating" @change="validateRating(form.sections[4].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[4].indicators[0]) }}</td>
-              <td class="p-1 border text-center" rowspan="5">
-                      <textarea v-model="form.sections[4].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+              <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
+                      <textarea v-model="form.sections[4].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" style="height: 300px;"  :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -464,8 +467,8 @@
                 <input type="number" min="0" max="4" v-model="form.sections[5].indicators[0].mdo_rating" @change="validateRating(form.sections[5].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[5].indicators[0]) }}</td>
-              <td class="p-1 border text-center" rowspan="5">
-                      <textarea v-model="form.sections[5].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+              <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
+                      <textarea v-model="form.sections[5].remarks" class="w-full p-2 border border-gray-300 rounded text-sm"  style="height: 300px;" :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -522,8 +525,8 @@
                 <input type="number" min="0" max="4" v-model="form.sections[6].indicators[0].mdo_rating" @change="validateRating(form.sections[6].indicators[0], 'mdo_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[6].indicators[0]) }}</td>
-              <td class="p-1 border text-center" rowspan="5">
-                      <textarea v-model="form.sections[6].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea>
+              <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
+                      <textarea v-model="form.sections[6].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" style="height: 300px;" :readonly="!editMode"></textarea>
   
               </td>
           </tr>
