@@ -15,7 +15,6 @@ class AnecdotalReport extends Model
     protected $fillable = [
         'client_id',
         'date',
-        'drn',
         'month',
         'color',
         'physical',
@@ -26,10 +25,6 @@ class AnecdotalReport extends Model
         'anecdotal_shp',
         'approved_by',
         'prepared_by',
-        'house_parents',
-        'house_parents_signature',
-        'residents',
-        'residents_signature',
         'updated_by'
     ];
 

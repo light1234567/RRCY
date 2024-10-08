@@ -900,7 +900,7 @@ export default {
         highest_educ_att: '',
         school_name: '',
         class_adviser: '',
-        date: '',  // New date field
+        date: '', 
         problem_presented: '',
         brief_physical_description: '',
         first_intake_case_manager:'',
@@ -1108,10 +1108,34 @@ export default {
         this.sheet.school_name = generalIntake.school_name;
         this.sheet.class_adviser = generalIntake.class_adviser;
 
+        // Populate additional fields
+        this.sheet.date = generalIntake.date || '';  // Date field
+        this.sheet.problem_presented = generalIntake.problem_presented || '';  // Problem Presented
+        this.sheet.brief_physical_description = generalIntake.brief_physical_description || '';  // Brief Physical Description
+        this.sheet.earnings_income = generalIntake.earnings_income || '';  // Earnings Income
+        this.sheet.hrs_stay_in_street = generalIntake.hrs_stay_in_street || '';  // Hours Stay in Street
+        this.sheet.length_stay_in_street = generalIntake.length_stay_in_street || '';  // Length of Stay in Street
+        this.sheet.common_substance_used = generalIntake.common_substance_used || '';  // Common Substance Used
+        this.sheet.initial_assessment = generalIntake.initial_assessment || '';  // Initial Assessment
+        this.sheet.recommendations = generalIntake.recommendations || '';  // Recommendations
+        this.sheet.first_intake_case_manager = generalIntake.first_intake_case_manager;
+
+        // Assign array data or fallback to default empty arrays
+        this.sheet.major_life_event = generalIntake.major_life_event || {};
+        this.sheet.enduring_life_strain = generalIntake.enduring_life_strain || {};
+        this.sheet.life_transition = generalIntake.life_transition || {};
+        this.sheet.development_changes = generalIntake.development_changes || {};
+        this.sheet.normalization = generalIntake.normalization || {};
+        this.sheet.behaviour_towards_incident = generalIntake.behaviour_towards_incident || {};
+        this.sheet.attachments = generalIntake.attachments || {};
+        this.sheet.skills = generalIntake.skills || {};
+        this.sheet.resources = generalIntake.resources || {};
+        this.sheet.source_of_income_in_street = generalIntake.source_of_income_in_street || {};
+
         // Store general intake ID for further use
         this.sheet.general_intake_id = generalIntake.id;
 
-        console.log('General Intake data mapped to sheet:', this.sheet);
+        console.log('General Intake data mapped to sheet, including additional fields and arrays:', this.sheet);
       } else {
         console.warn('No general intake sheet found for this client.');
       }

@@ -12,15 +12,15 @@ class CreateWritingAssessmentsTable extends Migration
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('learner_assessment_form_id');             
             $table->json('punctuation')->nullable();
-            $table->string('punctuation_remarks', 100)->nullable();
+            $table->string('punctuation_remarks', 150)->nullable();
             $table->json('capitalization')->nullable();
-            $table->string('capitalization_remarks', 100)->nullable();
+            $table->string('capitalization_remarks', 150)->nullable();
             $table->json('grammar')->nullable();
-            $table->string('grammar_remarks', 100)->nullable();
+            $table->string('grammar_remarks', 150)->nullable();
             $table->json('content_ideas')->nullable();
-            $table->string('content_ideas_remarks', 100)->nullable();
+            $table->string('content_ideas_remarks', 150)->nullable();
             $table->json('spelling')->nullable();
-            $table->string('spelling_remarks', 100)->nullable();
+            $table->string('spelling_remarks', 150)->nullable();
             $table->timestamps();
 
             $table->foreign('learner_assessment_form_id')->references('id')->on('learner_assessment_forms')->onDelete('cascade');

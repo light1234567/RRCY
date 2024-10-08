@@ -17,7 +17,6 @@ class PsychologicalInterventionPlan extends Model
         'as_of_date',
         'progress_notes',
         'prepared_by',
-        'noted_by',
         'items',
     ];
 

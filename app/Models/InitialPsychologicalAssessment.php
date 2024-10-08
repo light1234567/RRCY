@@ -24,14 +24,10 @@ class InitialPsychologicalAssessment extends Model
         'school_history',
         'social_history',
         'personal_characteristics',
-        'review_systems',
-        'mental_status',
         'assessment_interview',
         'test_result',
         'clinical_impression',
         'plan_of_action',
-        'prepared_by',
-        'noted_by',
         'updated_by'
     ];
 

@@ -31,14 +31,10 @@ class InitialPsychologicalAssessmentController extends Controller
         'school_history' => 'nullable|string',
         'social_history' => 'nullable|string',
         'personal_characteristics' => 'nullable|string',
-        'review_systems' => 'nullable|string',
-        'mental_status' => 'nullable|string',
         'assessment_interview' => 'nullable|string',
         'test_result' => 'nullable|string',
         'clinical_impression' => 'nullable|string',
         'plan_of_action' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:50',
-        'noted_by' => 'nullable|string|max:50',
     ]);    
 
     try {

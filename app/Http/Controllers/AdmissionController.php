@@ -32,7 +32,7 @@ class AdmissionController extends Controller
                 'client.barangay' => 'required|string|max:30',
                 'client.street' => 'nullable|string|max:60',
                 'client.religion' => 'nullable|string|max:20',
-                'distinguishing_marks.tattoo_scars' => 'nullable|string|max:100',
+                'distinguishing_marks.tattoo_scars' => 'nullable|string|max:150',
                 'distinguishing_marks.height' => 'nullable|numeric',
                 'distinguishing_marks.weight' => 'nullable|numeric',
                 'distinguishing_marks.colour_of_eye' => 'nullable|string|max:10',

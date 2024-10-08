@@ -17,7 +17,6 @@ class CreateCiclProgressNotesTable extends Migration
             $table->text('interventions_conducted')->nullable();
             $table->text('progress_notes')->nullable();
             $table->string('prepared_by', 50)->nullable();
-            $table->string('noted_by', 50)->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

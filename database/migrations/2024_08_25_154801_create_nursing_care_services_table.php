@@ -29,7 +29,6 @@ class CreateNursingCareServicesTable extends Migration
             $table->text('services_given')->nullable();
             $table->text('remarks')->nullable();
             $table->string('prepared_by', 50)->nullable();
-            $table->string('noted_by', 50)->nullable();
             $table->string('profile_image', 150)->nullable();
             $table->timestamps();
         

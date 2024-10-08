@@ -11,7 +11,7 @@ class CreateReadingAssessmentsTable extends Migration
         Schema::create('reading_assessments', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('learner_assessment_form_id');            
-            $table->string('pronunciation_remarks', 250)->nullable();
+            $table->string('pronunciation_remarks', 150)->nullable();
             $table->integer('pronunciation');
             $table->integer('fluency');
             $table->integer('punctuation');

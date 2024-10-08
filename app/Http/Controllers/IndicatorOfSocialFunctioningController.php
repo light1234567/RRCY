@@ -4,30 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\IndicatorsOfSocialFunctioning;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class IndicatorOfSocialFunctioningController extends Controller
 {
-    public function store(Request $request)
-    {
-        $validatedData = $this->validateRequest($request);
-
-        // Automatically calculate the score per area fields based on raw scores
-        $validatedData = $this->calculateScorePerArea($validatedData);
-
-        // Automatically calculate the general score as the average of all score per area fields
-        $validatedData['general_score'] = $this->calculateGeneralScore($validatedData);
-
-        $indicator = IndicatorsOfSocialFunctioning::create($validatedData);
-        return response()->json($indicator, 201);
-    }
-
-    public function update(Request $request, $client_id, $admission_id)
+    public function storeOrUpdate(Request $request, $client_id, $admission_id)
 {
+    Log::info('StoreOrUpdate called', [
+        'client_id' => $client_id,
+        'admission_id' => $admission_id,
+        'request_data' => $request->all()
+    ]);
+
     // Find the existing record based on client_id and admission_id
     $indicator = IndicatorsOfSocialFunctioning::where('client_id', $client_id)
         ->where('admission_id', $admission_id)
         ->first();
 
+    // Validate the request data
     $validatedData = $this->validateRequest($request);
 
     // Automatically calculate the score per area fields based on raw scores
@@ -37,16 +31,20 @@ class IndicatorOfSocialFunctioningController extends Controller
     $validatedData['general_score'] = $this->calculateGeneralScore($validatedData);
 
     if ($indicator) {
+        // If the record exists, update it
         $indicator->update($validatedData);
+        Log::info('Record updated successfully', ['indicator' => $indicator]);
         return response()->json($indicator);
     } else {
         // If no record exists, create a new one
         $validatedData['client_id'] = $client_id;
         $validatedData['admission_id'] = $admission_id;
         $indicator = IndicatorsOfSocialFunctioning::create($validatedData);
-        return response()->json($indicator, 201);
+        Log::info('New record created successfully', ['indicator' => $indicator]);
+        return response()->json($indicator, 201);  // Return 201 Created status
     }
 }
+
 
     // Add this method to check for existing records
     public function checkExisting($client_id, $admission_id)

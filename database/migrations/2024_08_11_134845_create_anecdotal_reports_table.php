@@ -12,7 +12,6 @@ class CreateAnecdotalReportsTable extends Migration
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');              
             $table->date('date');
-            $table->string('drn', 25)->nullable();
             $table->string('month', 20)->nullable();
             $table->string('color', 10)->nullable();
             $table->text('physical')->nullable();
@@ -23,10 +22,6 @@ class CreateAnecdotalReportsTable extends Migration
             $table->string('anecdotal_shp', 50)->nullable();
             $table->string('approved_by', 50)->nullable();
             $table->string('prepared_by', 50)->nullable();
-            $table->string('house_parents', 50)->nullable();
-            $table->string('house_parents_signature', 150)->nullable();
-            $table->string('residents', 50)->nullable();
-            $table->string('residents_signature', 150)->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

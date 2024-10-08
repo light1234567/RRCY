@@ -36,9 +36,7 @@ class LearnerAcademicBehavioralFormController extends Controller
             'status' => 'nullable|string|max:20',
             'skills' => 'nullable|array',
             'observation_feedback' => 'nullable|string',
-            'learner_signature' => 'nullable|string|max:150',
             'category_adviser_signature' => 'nullable|string|max:150',
-            'center_head_signature' => 'nullable|string|max:150',
             'educational_section_head_signature' => 'nullable|string|max:150',
         ]);        
 

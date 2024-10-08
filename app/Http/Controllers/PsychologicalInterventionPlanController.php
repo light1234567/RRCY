@@ -16,7 +16,6 @@ class PsychologicalInterventionPlanController extends Controller
             'as_of_date' => 'nullable|date',
             'progress_notes' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
-            'noted_by' => 'nullable|string|max:50',
             'items' => 'required|array', // Ensure the items are an array
             'items.*.objectives' => 'nullable|string',
             'items.*.activities' => 'nullable|string',
@@ -72,7 +71,6 @@ class PsychologicalInterventionPlanController extends Controller
             'as_of_date' => 'nullable|date',
             'progress_notes' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
-            'noted_by' => 'nullable|string|max:50',
             'items' => 'required|array', // Ensure the items are an array
             'items.*.objectives' => 'nullable|string',
             'items.*.activities' => 'nullable|string',

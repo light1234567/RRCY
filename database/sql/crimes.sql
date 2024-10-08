@@ -1,7 +1,7 @@
 -- Create the crimes table
 CREATE TABLE crimes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    crime_name VARCHAR(255) NOT NULL,
+    crime_name VARCHAR(100) NOT NULL,
     category_id INT,
     FOREIGN KEY (category_id) REFERENCES crime_categories(id) ON DELETE CASCADE
 );

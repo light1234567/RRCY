@@ -135,7 +135,7 @@ Route::middleware(['web', 'auth'])->group(function () {
 Route::get('/indicators-of-social-functioning', [IndicatorOfSocialFunctioningController::class, 'index']);
 Route::get('/indicators-of-social-functioning/{id}', [IndicatorOfSocialFunctioningController::class, 'show']);
 Route::post('/indicators-of-social-functioning', [IndicatorOfSocialFunctioningController::class, 'store']);
-Route::put('/indicators-of-social-functioning/{client_id}/{admission_id}', [IndicatorOfSocialFunctioningController::class, 'update']);
+Route::put('/indicators-of-social-functioning/{client_id}/{admission_id}', [IndicatorOfSocialFunctioningController::class, 'storeOrUpdate']);
 Route::delete('/indicators-of-social-functioning/{id}', [IndicatorOfSocialFunctioningController::class, 'destroy']);
 Route::get('/indicators-of-social-functioning/check/{client_id}/{admission_id}', [IndicatorOfSocialFunctioningController::class, 'checkExisting']);
 Route::apiResource('indicators-of-social-functioning', IndicatorOfSocialFunctioningController::class);

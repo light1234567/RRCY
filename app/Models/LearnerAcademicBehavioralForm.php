@@ -22,10 +22,8 @@ class LearnerAcademicBehavioralForm extends Model
         'status',
         'skills',
         'observation_feedback',
-        'learner_signature',
         'category_adviser_signature',
         'educational_section_head_signature',
-        'center_head_signature',
         'updated_by'
     ];
 

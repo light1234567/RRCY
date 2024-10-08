@@ -22,10 +22,8 @@ return new class extends Migration
             $table->string('status', 20)->nullable();
             $table->json('skills')->nullable();
             $table->text('observation_feedback')->nullable();
-            $table->string('learner_signature', 150)->nullable();
             $table->string('category_adviser_signature', 150)->nullable();
             $table->string('educational_section_head_signature', 150)->nullable();
-            $table->string('center_head_signature', 150)->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

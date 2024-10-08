@@ -11,12 +11,12 @@ class CreatePerformanceObservationReportsTable extends Migration
         Schema::create('performance_observation_reports', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');
-            $table->string('period')->nullable();
+            $table->string('period', 15)->nullable();
             $table->date('assessment_date')->nullable();
-            $table->string('trainings_attended')->nullable();
+            $table->string('trainings_attended', 50)->nullable();
             $table->text('general_remarks')->nullable();
-            $table->string('prepared_by_one')->nullable();
-            $table->string('prepared_by_two')->nullable();
+            $table->string('prepared_by_one', 50)->nullable();
+            $table->string('prepared_by_two', 50)->nullable();
             
             // Store the 'sections' and 'trainings' as JSON
             $table->json('sections')->nullable();

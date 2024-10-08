@@ -15,7 +15,6 @@ class CreateInterventionPlansTable extends Migration
             $table->date('date_prepared')->nullable();
             $table->string('prepared_by', 50)->nullable(); 
             $table->string('conformed_by', 50)->nullable(); 
-            $table->string('noted_by', 50)->nullable();
             $table->json('items')->nullable(); // Store items as JSON
             $table->timestamps();
         

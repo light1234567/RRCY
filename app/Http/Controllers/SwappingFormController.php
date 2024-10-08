@@ -19,7 +19,6 @@ class SwappingFormController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'drn' => 'nullable|string|max:25',
             'date_of_filing' => 'nullable|date',
             'requesting_party_name' => 'nullable|string|max:50',
             'requesting_party_position' => 'nullable|string|max:50',
@@ -75,7 +74,6 @@ class SwappingFormController extends Controller
     public function update(Request $request, $client_id)
     {
         $validatedData = $request->validate([
-            'drn' => 'nullable|string|max:25',
             'date_of_filing' => 'nullable|date',
             'requesting_party_name' => 'nullable|string|max:50',
             'requesting_party_position' => 'nullable|string|max:50',

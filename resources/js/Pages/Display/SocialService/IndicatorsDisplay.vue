@@ -697,7 +697,7 @@
           <input
               type="text"
               min="0"
-              max="100"
+              max="3"
               class="w-full mt-1 p-2 border border-black rounded-md"
               v-model="form.educational_raw_score"
               :readonly="!editMode"
@@ -737,7 +737,7 @@
           <input
               type="text"
               min="0"
-              max="100"
+              max="3"
               class="w-full mt-1 p-2 border border-black  rounded-md"
               v-model="form.economic_raw_score"
               :readonly="!editMode"
@@ -1012,8 +1012,8 @@
       validateRawScore(field) {
         if (this.form[field] < 0) {
           this.form[field] = 0;
-        } else if (this.form[field] > 100) {
-          this.form[field] = 100;
+        } else if (this.form[field] > 3) {
+          this.form[field] = 3;
         }
         this.form[field] = parseInt(this.form[field], 10) || 0;
         this.calculateScores();
@@ -1074,39 +1074,36 @@
       },
   
       async saveData() {
-        if (!this.form.client_id || !this.form.admission_id) {
-          this.message = 'Client or Admission ID is missing.';
-          this.messageType = 'error';
-          return;
-        }
-  
-        try {
-          const response = await axios({
-            method: this.form.id ? 'put' : 'post',
-            url: `/api/indicators-of-social-functioning${this.form.id ? '/' + this.form.id : ''}`,
-            data: this.form
-          });
-  
-          this.saveResultTitle = 'Success';
-          this.saveResultMessage = 'Data saved successfully!';
-  
-          if (!this.form.id) {
-            this.form.id = response.data.id;
-          }
-  
-          // Refetch data to ensure it's updated
-          this.fetchData(this.form.client_id);
-  
-          this.editMode = false;
-        } catch (error) {
-          this.saveResultTitle = 'Error';
-          this.saveResultMessage = 'Error saving data.';
-          console.error('Error saving data:', error);
-        } finally {
-          this.closeModal();
-          this.isSaveResultModalOpen = true;
-        }
-      },
+  if (!this.form.client_id || !this.form.admission_id) {
+    this.message = 'Client or Admission ID is missing.';
+    this.messageType = 'error';
+    return;
+  }
+
+  try {
+    // Perform the update using client_id and admission_id
+    const response = await axios({
+      method: 'put',  // Ensure it only updates the existing record
+      url: `/api/indicators-of-social-functioning/${this.form.client_id}/${this.form.admission_id}`,
+      data: this.form
+    });
+
+    this.saveResultTitle = 'Success';
+    this.saveResultMessage = 'Data saved successfully!';
+
+    // After saving, refetch the data to update the UI
+    this.fetchData(this.form.client_id);
+
+    this.editMode = false;
+  } catch (error) {
+    this.saveResultTitle = 'Error';
+    this.saveResultMessage = 'Error saving data.';
+    console.error('Error saving data:', error);
+  } finally {
+    this.closeModal();
+    this.isSaveResultModalOpen = true;
+  }
+},
   
       openModal() {
         this.isModalOpen = true;

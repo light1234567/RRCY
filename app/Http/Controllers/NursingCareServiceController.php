@@ -35,7 +35,6 @@ class NursingCareServiceController extends Controller
             'services_given' => 'nullable|string',
             'remarks' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
-            'noted_by' => 'nullable|string|max:50',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
         ]);
     

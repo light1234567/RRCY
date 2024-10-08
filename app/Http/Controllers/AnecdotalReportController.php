@@ -21,7 +21,6 @@ class AnecdotalReportController extends Controller
             'client_id' => 'required|exists:clients,id',
             'date' => 'nullable|date',
             'month' => 'nullable|string|max:20',
-            'drn' => 'nullable|string|max:25',
             'color' => 'nullable|string|max:10',
             'physical' => 'nullable|string',
             'emotional' => 'nullable|string',
@@ -31,10 +30,6 @@ class AnecdotalReportController extends Controller
             'anecdotal_shp' => 'nullable|string|max:50',
             'approved_by' => 'nullable|string|max:50',
             'prepared_by' => 'nullable|string|max:50',
-            'house_parents' => 'nullable|string|max:50',
-            'house_parents_signature' => 'nullable|image|max:150', 
-            'residents' => 'nullable|string|max:50',
-            'residents_signature' => 'nullable|image|max:150',
         ]);        
 
         try {

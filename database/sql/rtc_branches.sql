@@ -1,7 +1,7 @@
 -- Create the rtc_branches table
 CREATE TABLE rtc_branches (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    branch_name VARCHAR(255) NOT NULL,
+    branch_name VARCHAR(100) NOT NULL,
     province_id INT,
     FOREIGN KEY (province_id) REFERENCES rtc_provinces(id) ON DELETE CASCADE
 );

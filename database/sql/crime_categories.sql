@@ -1,7 +1,7 @@
 -- Create the crime_categories table
 CREATE TABLE crime_categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    category_name VARCHAR(255) NOT NULL
+    category_name VARCHAR(50) NOT NULL
 );
 
 -- Insert data into crime_categories table

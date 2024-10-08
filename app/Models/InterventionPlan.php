@@ -18,7 +18,6 @@ class InterventionPlan extends Model
         'date_prepared',
         'prepared_by',    // Added field
         'conformed_by',   // Added field
-        'noted_by',
         'updated_by',      // Added field
         'items',
     ];

@@ -32,7 +32,6 @@ class NursingCareService extends Model
         'services_given',
         'remarks',
         'prepared_by',
-        'noted_by',
         'profile_image',
         'updated_by' 
     ];

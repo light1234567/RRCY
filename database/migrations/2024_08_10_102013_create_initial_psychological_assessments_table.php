@@ -21,14 +21,10 @@ class CreateInitialPsychologicalAssessmentsTable extends Migration
             $table->text('school_history')->nullable();
             $table->text('social_history')->nullable();
             $table->text('personal_characteristics')->nullable();
-            $table->text('review_systems')->nullable();
-            $table->text('mental_status')->nullable();
             $table->text('assessment_interview')->nullable();
             $table->text('test_result')->nullable();
             $table->text('clinical_impression')->nullable();
             $table->text('plan_of_action')->nullable();
-            $table->string('prepared_by', 50)->nullable();
-            $table->string('noted_by', 50)->nullable();
             $table->timestamps();
 
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
