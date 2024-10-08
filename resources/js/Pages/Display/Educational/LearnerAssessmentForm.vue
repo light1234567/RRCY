@@ -467,6 +467,12 @@ export default {
       this.fetchData();  // Fetch client data if client ID is available
     }
   },
+  watch: {
+    '$route.params.id': function (newId) {
+      this.form.client_id = newId;
+      this.fetchData();
+    }
+  },
   methods: {
     toggleEdit() {
       this.isEditable = !this.isEditable;
