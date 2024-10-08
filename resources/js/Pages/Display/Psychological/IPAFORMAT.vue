@@ -276,7 +276,7 @@
   
   
         <!-- Text under the line -->
-        <p style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | ADMINISTRATIVE DIVISION</p>
+        <p class="text-[11px] " style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH</p>
       </div>
   
     </div>
@@ -349,7 +349,7 @@
   
   
         <!-- Text under the line -->
-        <p style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | ADMINISTRATIVE DIVISION</p>
+        <p class="text-[10.5px] " style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH</p>
       </div>
   
   
@@ -629,6 +629,7 @@
     const addNewPageIfNeeded = () => {
       if (contentYPos >= maxContentHeight) {
         addFooter(); // Add the footer for the current page
+        pdf.setTextColor(0, 0, 0);
         pdf.addPage(); // Add new page
         addHeader(); // Add the header on the new page
         currentPage++; // Increment page number
@@ -673,7 +674,7 @@
         pdf.setTextColor(0, 0, 0);
         pdf.setFontSize(8.5);
         pdf.setFont('TimesNewRoman', 'bold');
-  
+        pdf.setDrawColor(0, 0, 0);
         pdf.setLineWidth(0.5);
         pdf.line(17, 335, 193, 335); // Footer line extending further
   
@@ -683,7 +684,7 @@
     };
 
     addHeader();
-  
+    pdf.setTextColor(0, 0, 0);
     // DSWD logo
     const imgData = '/images/headerlogo2.png';
     pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
