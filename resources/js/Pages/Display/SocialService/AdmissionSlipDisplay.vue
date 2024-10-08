@@ -103,7 +103,8 @@
     <div ref="pdfContent" class="max-w-3xl border-gray-400 p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border ">
       <div class=" relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class=" h-32 w-64 relative z-10">
-        <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+        </p>
 
       </div>
 
@@ -508,18 +509,20 @@
         <p>Loading data...</p>
       </div>
 
-      <div class="border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-        <div class="flex justify-between items-center">
-          <div class="flex flex-col">
-            <p class="ml-24 -mb-2 font-bold">PAGE 1 of 1</p>
-            <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-          </div>
-          <div class="ml-4">
-            <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
-          </div>
+      <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+      <div class="flex justify-between items-center">
+        <div class="flex flex-col">
+          <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
+          <p class="border-t -ml-7 mt-4 whitespace-nowrap" style="border-top: 2px solid black;">
+            DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City
+          </p>
+          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+        </div>
+        <div class="ml-4">
+          <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
         </div>
       </div>
+    </div>
     </div>
   </div>
 </div>
@@ -992,7 +995,7 @@ pdf.addImage(imgData, 'PNG', 15, 10, 75, 35);
 // Add the header below the image
 pdf.setFontSize(8); 
 pdf.setFont('italic'); 
-pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 152, 24);
+pdf.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 152, 24);
 
 // Load and set Arial font
 pdf.addFont('arialbd-bold.ttf', 'Arial', 'bold');
@@ -1009,24 +1012,42 @@ pdf.setFontSize(11);
 
 // Function to draw a custom checkmark inside the checkbox
 function drawCheckmark(pdf, x, y) {
-  pdf.setLineWidth(0.1);
-  pdf.line(x, y + 1, x + 1, y + 2.5);
-  pdf.line(x + 1, y + 2.5, x + 3, y - 0.5); 
+  // Save the current draw color to restore later
+  const currentDrawColor = pdf.getDrawColor();
+
+  // Set the checkmark color to white
+  pdf.setDrawColor(255, 255, 255); // White color for checkmark
+  pdf.setLineWidth(0.2); // Set line width for checkmark
+
+  // Draw the checkmark
+  pdf.line(x + 0.5, y , x + 1.5, y + 1.5); // First part of the checkmark (lower left to center)
+  pdf.line(x + 1.5, y + 1.5, x + 3.5, y - 1.5); // Second part of the checkmark (center to upper right)
+
+  // Restore the original draw color for proceeding elements
+  pdf.setDrawColor(currentDrawColor);
 }
 
 // Function to add footer for the first page
 function addFirstPageFooter(pdf, pageNumber, totalPages) {
   const footerYPosition = 326; // Adjust position as needed
 
-
-pdf.setFont('TimesNewRoman', 'bold');
+  // Set font to a built-in font like Times or Helvetica
+  pdf.setFont('Times', 'bold');
   pdf.setFontSize(9);
+  
+  // Centered page number text
   pdf.text(`PAGE ${pageNumber} of ${totalPages}`, 108, footerYPosition + 2, null, null, 'center');
+  
+  // Add horizontal line for separation
   pdf.setLineWidth(0.5);
-  pdf.line(18, footerYPosition + 5, 174, footerYPosition + 5); // Horizontal line
+  pdf.line(18, footerYPosition + 5, 174, footerYPosition + 5); // Horizontal line across the page
 
   // Footer content for the first page
-  pdf.setFont('TimesNewRoman', 'normal');
+  pdf.setFont('Times', 'normal');
+  pdf.setFontSize(9);
+
+ // Footer content for the first page
+ pdf.setFont('TimesNewRoman', 'normal');
   pdf.setFontSize(9);
   pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 96,footerYPosition + 10, null, null, 'center');
   pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, footerYPosition + 15, null, null, 'center');
@@ -1054,51 +1075,53 @@ function addOtherPagesFooter(pdf, pageNumber, totalPages) {
   pdf.text('DSWD | FIELD OFFICE XI | ADMINISTRATIVE DIVISION', 108, footerYPosition + 10, null, null, 'center');
 }
 // Function to apply footers dynamically based on page number
+// Function to apply footers dynamically based on page number
 function addFooters(pdf) {
-  const totalPages = pdf.internal.getNumberOfPages(); // Get the total number of pages after content is added
+  const totalPages = pdf.internal.getNumberOfPages(); // Get the total number of pages after all content is added
 
   for (let i = 1; i <= totalPages; i++) {
     pdf.setPage(i); // Set the correct page for adding footer
 
     if (i === 1) {
-      // First page footer
-      addFirstPageFooter(pdf, i, totalPages);
+      addFirstPageFooter(pdf, i, totalPages); // First page footer
     } else {
-      // Footer for other pages
-      addOtherPagesFooter(pdf, i, totalPages);
+      addOtherPagesFooter(pdf, i, totalPages); // Footer for other pages
     }
   }
 }
 
-
 function checkAndAddPageIfNeeded(pdf, currentOffset) {
   const safeAreaHeight = 320; // Content area height excluding footer
   if (currentOffset >= safeAreaHeight) {
-    // Add the footer for the current page
-    addFooters(pdf);
+    addFooters(pdf); // Add footer to the current page before moving to the next
     pdf.addPage();
-      
-    // Reset for new page and apply header for the new page
+    
+    // Re-add the page-specific headers after a new page is added
     pdf.setFontSize(8); 
     pdf.addFont('times-normal.ttf', 'TimesNewRoman', 'italic'); 
     pdf.setFont('TimesNewRoman', 'italic'); 
     pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
     
-    // Switch back to Arial normal for further content
     pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
     pdf.setFont('Arial', 'normal'); 
     pdf.setFontSize(11);
-
+    
     return 35; // Reset the Y position for the new page
   }
   return currentOffset;
 }
-  // Function to fill the checkbox and draw the checkmark
-  function fillCheckboxWithCheck(pdf, x, y) {
-    pdf.setFillColor(169, 169, 169);
-    pdf.rect(x, y, 4, 4, 'F'); 
-    drawCheckmark(pdf, x, y + 2); 
-  }
+
+// Function to fill the checkbox with blue and draw the checkmark
+function fillCheckboxWithCheck(pdf, x, y) {
+  // Set the fill color to blue
+  pdf.setFillColor(0, 102, 255); // Blue background color
+  
+  // Draw the filled rectangle (checkbox)
+  pdf.rect(x, y, 4, 4, 'F'); // 'F' mode for fill only
+  
+  // Draw the white checkmark inside the checkbox
+  drawCheckmark(pdf, x, y + 2); // Adjust y position for the checkmark
+}
 
   // Loop through clients and add their data
   this.clients.forEach((client, index) => {
@@ -1415,9 +1438,9 @@ function checkAndAddPageIfNeeded(pdf, currentOffset) {
     pdf.text('Center Head/SWO IV', 108, offset + 12, null, null, 'center');
 
     // Add the footer at the bottom of the page
-    addFooters(pdf, 326); // 326 is approximately where the footer should be on a legal-sized page
+   
   });
-
+  addFooters(pdf, 326); // 326 is approximately where the footer should be on a legal-sized page
   // Save the PDF
   pdf.save(`admission-slip-${this.id}.pdf`);
 },

@@ -97,8 +97,9 @@
          <div class="text-center mb-8">
            <div class="relative flex justify-between items-center mb-2">
          <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-         <p class="text-[10px] italic -mt-10">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
-       </div>
+         <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+</p>
+        </div>
        <h1 class="text-2xl font-bold">GENERAL INTAKE SHEET</h1>
        <div class="flex justify-end">
          <p>Date: <input type="date" v-model="sheet.date" class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm  w-1/8 px-2 py-1" :readonly="!editMode" /></p>
@@ -206,23 +207,26 @@
 
    </div>
    <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-       <div class="flex justify-between items-center">
-         <div class="flex flex-col">
-           <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
-           <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-           <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-         </div> 
-         <div class="ml-4">
-           <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
-         </div>
-       </div>
-     </div>
+      <div class="flex justify-between items-center">
+        <div class="flex flex-col">
+          <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
+          <p class="border-t -ml-7 mt-4 whitespace-nowrap" style="border-top: 2px solid black;">
+            DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City
+          </p>
+          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+        </div>
+        <div class="ml-4">
+          <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+        </div>
+      </div>
+    </div>
  </div>
 
      
      <div ref="pdfContent" v-if="currentPage === 2" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
-      <div class="relative flex justify-between items-center mb-2">
-        <p class="text-[10px] text-right mb-4 w-full italic">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+      <div >
+        <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+</p>
       </div>
       <div class="mb-8">
   <h2 class="text-lg font-semibold">A. Major life Events:</h2>
@@ -329,24 +333,32 @@
        </div>
      </div>
      <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-       <div class="flex justify-between items-center">
-         <div class="flex flex-col">
-           <p class="ml-24 -mb-4 font-bold">PAGE 2 of {{ totalPages }}</p>
-           <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-           <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-         </div>
-         <div class="ml-4">
-           <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
-         </div>
-       </div>
-     </div>
+  <div class="flex justify-between items-center">
+    
+    <!-- Left Section: Page number -->
+    <div class="flex flex-col flex-grow">
+      <!-- Page number centered -->
+      <p class="text-center -mb-1 font-bold">PAGE 2 of {{ totalPages }}</p>
+
+    <!-- Continuous horizontal line, moved to the left with space on the right -->
+    <div style="border-top: 2px solid black; width: 110%; margin-top: 4px; margin-left: -44px;"></div>
+
+
+      <!-- Text under the line -->
+      <p class="-ml-8 whitespace-nowrap"style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION |REGIONAL REHABILITATION CENTER FOR YOUTH
+      </p>
+    </div>
+
+  </div>
+</div>
    </div>
 
 
 
    <div v-if="currentPage === 3" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
-    <div class="relative flex justify-between items-center mb-2">
-        <p class="text-[10px] text-right mb-4 w-full italic">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+    <div>
+      <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+</p>
       </div>
     <div class="mb-8">
   <h2 class="text-lg font-semibold">E. Normalization:</h2>
@@ -601,25 +613,33 @@
          </div>
        </div>
      </div>
-     <div  class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-       <div class="flex justify-between items-center">
-         <div class="flex flex-col">
-           <p class="ml-24 -mb-4 font-bold">PAGE 3 of {{ totalPages }}</p>
-           <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-           <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-         </div>
-         <div class="ml-4">
-           <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
-         </div>
-       </div>
-     </div>
+     <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+  <div class="flex justify-between items-center">
+    
+    <!-- Left Section: Page number -->
+    <div class="flex flex-col flex-grow">
+      <!-- Page number centered -->
+      <p class="text-center -ml-12 -mb-1 font-bold">PAGE 3 of {{ totalPages }}</p>
+
+    <!-- Continuous horizontal line, moved to the left with space on the right -->
+    <div style="border-top: 2px solid black; width: 110%; margin-top: 4px; margin-left: -44px;"></div>
+
+
+      <!-- Text under the line -->
+      <p class="-ml-8 whitespace-nowrap"style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION |REGIONAL REHABILITATION CENTER FOR YOUTH
+      </p>
+    </div>
+
+  </div>
+</div>
    </div>
 
    
 <div v-if="currentPage === 4" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
-  <div class="relative flex justify-between items-center mb-2">
-        <p class="text-[10px] text-right mb-4 w-full italic">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
-      </div>
+  <div >
+    <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+</p>
+  </div>
   <div class="mb-8">
   <h2 class="text-lg font-semibold">Resources:</h2>
   <div class="space-y-8">
@@ -810,23 +830,30 @@
       <div class="flex flex-col items-end">
         <label class="block text-base font-semibold text-gray-700 mb-8">Reviewed by:</label>
         <div class="text-right">
-          <input type="text" v-model="center_head" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
+          <input type="text" v-model="center_head" class="-ml-12 mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" readonly />
           <p>Center Head/SWO IV</p>
         </div>
       </div>
     </div>
  
 
-<div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+    <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
   <div class="flex justify-between items-center">
-    <div class="flex flex-col">
-      <p class="ml-24 -mb-4 font-bold">PAGE 4 of {{ totalPages }}</p>
-      <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-      <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+    
+    <!-- Left Section: Page number -->
+    <div class="flex flex-col flex-grow">
+      <!-- Page number centered -->
+      <p class="text-center -ml-12 -mb-1 font-bold">PAGE 4 of {{ totalPages }}</p>
+
+    <!-- Continuous horizontal line, moved to the left with space on the right -->
+    <div style="border-top: 2px solid black; width: 110%; margin-top: 4px; margin-left: -44px;"></div>
+
+
+      <!-- Text under the line -->
+      <p class="-ml-8 whitespace-nowrap"style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION |REGIONAL REHABILITATION CENTER FOR YOUTH
+      </p>
     </div>
-    <div class="ml-4">
-      <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
-    </div>
+
   </div>
 </div>
 </div>
@@ -1256,7 +1283,7 @@ calculateAge(birthDate) {
   // Add the header below the image
   pdf.setFontSize(8);
   pdf.setFont('TimesNewRoman', 'italic');
-  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 153, 24);
+  pdf.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 153, 24);
 
   // Add the title
   pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
@@ -1451,7 +1478,7 @@ function addTextWithWrappingAndLines(pdf, text, x, y, maxWidth, pageHeight, foot
       pdf.addPage(); // Add new page
       pdf.setFontSize(8); 
       pdf.setFont('TimesNewRoman', 'italic'); 
-      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
+      pdf.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 149, 20); 
       pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
       pdf.setFont('Arial', 'normal'); 
       pdf.setFontSize(11);
@@ -1510,7 +1537,7 @@ function addTextWithCheckboxAndWrapping(pdf, text, x, y, isChecked, maxWidth, pa
     pdf.addPage(); // Add a new page
     pdf.setFontSize(8); 
     pdf.setFont('TimesNewRoman', 'italic'); 
-    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
+    pdf.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 149, 20); 
     pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
     pdf.setFont('Arial', 'normal'); 
     pdf.setFontSize(11);
@@ -1534,7 +1561,7 @@ function addTextWithCheckboxAndWrapping(pdf, text, x, y, isChecked, maxWidth, pa
       pdf.addPage();
       pdf.setFontSize(8); 
     pdf.setFont('TimesNewRoman', 'italic'); 
-    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 149, 20); 
+    pdf.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 149, 20); 
 
     pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
     pdf.setFont('Arial', 'normal'); 

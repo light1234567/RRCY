@@ -51,7 +51,8 @@
     <div class="max-w-7xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
       <div class="relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-        <p class="text-[10px] -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+</p>
       </div>
       <div class="p-4">
         <h1 class="text-2xl font-bold mb-4 text-center">Helping/Intervention Plan</h1>
@@ -165,18 +166,31 @@
             <div class="text-xs mt-1">Center Head/ SWO IV</div>
           </div>
         </div>
-        <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-          <div class="flex justify-between items-center">
-            <div class="flex flex-col">
-              <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
-              <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-              <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-            </div>
-            <div class="ml-4">
-              <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-            </div>
-          </div>
-        </div>
+        <div class="border-gray-300 mt-24 text-center text-xs w-full" style="font-family: 'Times New Roman', Times, serif;">
+  <div class="flex justify-between items-center w-full">
+    <div class="flex flex-col w-full">
+      <!-- PAGE Number -->
+      <p class="text-center font-bold">PAGE 1 of {{ totalPages }}</p>
+
+      <!-- Border Line and Address -->
+      <p class="border-t mt-2 mb-1" style="border-top: 3px solid black;"></p>
+      <p class="text-center">DSWD Field Office XI, Ramon Magsaysay Avenue corner Damaso Suazo Street, Davao City</p>
+
+      <!-- Email, Phone, and Website -->
+      <p class="text-center">
+        Email: 
+        <a href="mailto:fo11@dswd.gov.ph" class="text-blue-600 underline">fo11@dswd.gov.ph</a> 
+        Tel. No.: (082) 227-1964 Website: 
+        <a href="http://www.dswd.gov.ph" class="text-blue-600 underline">www.dswd.gov.ph</a>
+      </p>
+    </div>
+
+    <!-- Footer Image (aligned to the right) -->
+    <div class="ml-4">
+      <img src="/images/footerimg.png" alt="Footer Logo" class="h-12 w-24 object-cover">
+    </div>
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -437,7 +451,7 @@ export default {
 
     pdf.setFont('Times', 'italic'); // Use built-in 'Times' font in italic
     pdf.setFontSize(9);
-    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 285, 24);
+    pdf.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 285, 24);
 
     pdf.addFont('arialbd-bold.ttf', 'Arial', 'bold');
     pdf.setFont('Arial', 'bold');    
@@ -451,7 +465,7 @@ export default {
   const addHeaderOtherPages = () => {
     pdf.setFont('Times', 'italic'); // Use built-in 'Times' font in italic
     pdf.setFontSize(9);
-    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 285, 10);
+    pdf.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 285, 10);
   };
 
   /**

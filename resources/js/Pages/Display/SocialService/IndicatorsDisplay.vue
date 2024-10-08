@@ -89,10 +89,11 @@
       <div class="graph-background pt-0.5  -mr-9 -mb-16">
     <div class="mt-8">
       <!-- Page 1 -->
-      <div v-if="currentPage === 1" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+      <div v-if="currentPage === 1" class="max-w-4xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
         <div class="relative flex justify-between items-center mb-2">
           <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-          <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+          <p class="text-[12px] text-right mb-8" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+</p>
         </div>
   
         <h1 class="text-2xl font-bold text-center mb-4">INDICATORS OF SOCIAL FUNCTIONING</h1>
@@ -109,119 +110,109 @@
         
         <div class="flex items-center mb-4">
            <div class="flex-grow flex items-center mr-4">
-            <label class="block mr-16 text-base font-semibold text-gray-700 flex items-center h-full">Client Name:</label>
-            <input type="text" class="mt-1 w-1/2 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" v-model="clientName" readonly />
+            <label class="block mr-16 text-base font-semibold text-gray-700 flex items-center h-full">CLIENT:</label>
+            <input type="text" class="ml-24 p-0 mt-1 w-1/2 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-md" v-model="clientName" readonly />
           </div>
         </div>
   
         <div class="flex items-center mb-4">
           <div class="flex-grow flex items-center mr-4">
-            <label class="block text-base font-semibold text-gray-700 mr-10 flex items-center h-full">Date Admission:</label>
-            <input type="date" class="mt-1 w-1/2 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" v-model="form.dateAdmission" readonly />
+            <label class="block text-base font-semibold text-gray-700 mr-10 flex items-center h-full">DATE ADMISSION:</label>
+            <input type="date" class="ml-10 p-0 mt-1 w-1/2 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-md" v-model="form.dateAdmission" readonly />
           </div>
         </div>
   
         <div class="flex items-center mb-4">
           <div class="flex-grow flex items-center mr-4">
-            <label class="block text-base font-semibold text-gray-700 mr-4 flex items-center h-full">Date Administered:</label>
-            <input type="date" class="mt-1 w-1/2 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" v-model="form.date_administered" :readonly="!editMode" />
+            <label class="block text-base font-semibold text-gray-700 mr-4 flex items-center h-full">DATE ADMINISTERED:</label>
+            <input type="date" class="ml-8 p-0 mt-1 w-1/2 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-md" v-model="form.date_administered" :readonly="!editMode" />
           </div>
         </div>
               <!-- The rest of your table goes here -->
               <table class="min-w-full  bg-white">
-                  <thead>
-                      <tr >
-                          <th class="py-2 px-4 border border-black">
-                              AREAS
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Severely-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Moderately-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Normal Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Raw Score
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Score per Area
-                          </th>
-                      </tr>
-                  </thead>
-                  <tbody class="border border-black">
+                <thead>
+  <tr>
+    <!-- AREAS column with rowspan to merge -->
+    <th class="py-2 px-1 border border-black" style="width: 50px;" rowspan="2">
+      AREAS
+    </th>
+    <th class="py-2 px-4 border-t border-black border-l border-b border-r-0">
+      Severely-Impaired Functioning
+    </th>
+    <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 10px;"></th>
+    <th class="py-2 px-4 border-t border-black border-l border-b border-r-0">
+      Moderately-Impaired Functioning
+    </th>
+    <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 30px;"></th>
+    <th class="py-2 px-4 border-t border-black border-l border-b border-r-0">
+      Normal Functioning
+    </th>
+    <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 30px;"></th>
+
+    <!-- Raw Score column with rowspan to merge -->
+    <th class="py-2 px-4 border border-black" rowspan="2">
+      Raw Score
+    </th>
+    
+    <!-- Score per Area column with rowspan to merge -->
+    <th class="py-2 px-4 border border-black" rowspan="2">
+      Score per Area
+    </th>
+  </tr>
+  <tr>
+    <!-- Instruction row under Functioning columns -->
+    <td class="py-1 italic px-4 border-t border-black border-l border-b border-r-0">
+      If check please input "1" in Column C.
+    </td>
+    <td class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0"></td>
+    <td class="py-2 italic px-4 border-t border-black border-l border-b border-r-0">
+      If check please input "2" in Column E.
+    </td>
+    <td class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0"></td>
+    <td class="py-2 italic px-4 border-t border-black border-l border-b border-r-0">
+      If check please input "3" in Column G.
+    </td>
+    <td class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0"></td>
+  </tr>
+</thead>
+
+                  <tbody class="text-[11px] border border-black">
                       <!-- Physical rows here -->
   
                       <tr>
-                <td class="py-2 px-4 border border-black" rowspan="2">Physical</td>
+                <td class="py-2 text-[16px] font-bold px-4 border border-black" rowspan="2">Physical</td>
                 <td class="py-2 px-4 border border-black">Has very poor hygiene and grooming</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Practices adequate self-care habits but still needs monitoring and supervision to maintain such</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Practices adequate self-care habits even without monitoring and supervision</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score1" :readonly="!editMode" @input="validateRawScore('physical_raw_score1')">
+                  <input type="text" class="justify-center items-center w-full mt-1 px-2 border border-black rounded-md" v-model="form.physical_raw_score1" :readonly="!editMode" @input="validateRawScore('physical_raw_score1')">
                 </td>
                 <td class="py-2 px-4 border border-black" rowspan="2">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_score_per_area1" readonly>
                 </td>
               </tr> 
               <td class="py-2 px-4 border border-black">Is completely dependent to others due to absence of appropriate skills to manage physical disability</td>
+              <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">With very limited skills to manage physical disability which causes him or her to unnecessarily require assistance from others at times</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Has appropriate skills to function within capacity</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score2" :readonly="!editMode" @input="validateRawScore('physical_raw_score2')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score2" :readonly="!editMode" @input="validateRawScore('physical_raw_score2')">
                 </td>
-  
-                </tbody>
-                </table>
-                <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-           <div class="flex justify-between items-center">
-             <div class="flex flex-col">
-               <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
-               <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-               <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-             </div>
-             <div class="ml-4">
-               <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-             </div>
-           </div>
-         </div>
-        </div> 
-  
-                      <!-- Emotional rows here / Page 2-->
-                      <div v-if="currentPage === 2" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
-                        <table>
-                        <thead>
-                      <tr>
-                          <th class="py-2 px-4 border border-black">
-                              AREAS
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Severely-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Moderately-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Normal Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Raw Score
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Score per Area
-                          </th>
-                      </tr>
-                  </thead>
-                        <tbody>
-                      <tr>
-                <td class="py-2 px-4 border border-black" rowspan="6">Emotional</td>
+                <tr>
+                <td class="py-2 px-4 text-[16px] font-bold border border-black" rowspan="6">Emotional</td>
                 <td class="py-2 px-4 border border-black">Is often times sad / lonely which results to his or her lack of interest in anything despite encourage from others.</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Experiences sadness / loneliness which he or she allows to interfere in the performance of daily tasks and dealings with others.</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Copes well with sadness or loneliness as he or she does not let such emotion interfere both in daily tasks and social relationship.</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score1" :readonly="!editMode" @input="validateRawScore('emotional_raw_score1')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score1" :readonly="!editMode" @input="validateRawScore('emotional_raw_score1')">
                 </td>
                 <td class="py-2 px-4 border border-black" rowspan="6">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_score_per_area1" readonly>
@@ -233,70 +224,106 @@
           <li>self-isolation</li>
           <li>lack of desire to improve self / does not believe that his or her situation will improve at all.</li>
   </td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Feels hopeless at times and allows such emotion to negatively affect performance of tasks and social relationship. However, he or she shows no suicidal tendency</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Is generally optimistic despite difficult situations which enable him or her to perform tasks or roles</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score2" :readonly="!editMode" @input="validateRawScore('emotional_raw_score2')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score2" :readonly="!editMode" @input="validateRawScore('emotional_raw_score2')">
                 </td>
                 <tr>
                 
                 <td class="py-2 px-4 border border-black">Oftentimes experiences extreme / severe fear because of traumatic event/s in life which results to social and functional impairment like withdrawal, fighting back, and unnecessary cautiousness</td>
+                <td class="py-2 px-4 border border-black"></td>                
                 <td class="py-2 px-4 border border-black">Sometimes experiences fear as a result of traumatic event. With constant encouragement; however, he or she tries not to allow such to affect dealings with others and performance of tasks</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Copes well with traumatic events as evident by his or her social and functional adjustment even with very minimal requirement for support from others</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score3" :readonly="!editMode" @input="validateRawScore('emotional_raw_score3')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score3" :readonly="!editMode" @input="validateRawScore('emotional_raw_score3')">
                 </td>
               </tr> 
               
-                  </tbody>
-                  
-              </table>
-              <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-           <div class="flex justify-between items-center">
-             <div class="flex flex-col">
-               <p class="ml-24 -mb-4 font-bold">PAGE 2 of {{ totalPages }}</p>
-               <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-               <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-             </div>
-             <div class="ml-4">
-               <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-             </div>
-           </div>
-         </div>
-              
-          </div>
-          
-        </div>
+                </tbody>
+                </table>
+                <div class="border-gray-300 mt-24 text-center text-xs w-full" style="font-family: 'Times New Roman', Times, serif;">
+  <div class="flex justify-between items-center w-full">
+    <div class="flex flex-col w-full">
+      <p class="-mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
+      <p class="border-t mt-4 w-full" style="border-top: 2px solid black;">
+        DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City
+      </p>
+      <p>Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+    </div>
+    <div class="ml-4">
+      <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
+    </div>
+  </div>
+</div>
+
+        </div> 
   
-  
-          <!--page 3-->
-          <div v-if="currentPage === 3" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
-            <table>
-                  <thead>
-                      <tr>
-                          <th class="py-2 px-4 border border-black">
-                              AREAS
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Severely-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Moderately-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Normal Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Raw Score
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Score per Area
-                          </th>
-                      </tr>
+                      <!-- Emotional rows here / Page 2-->
+                      <div v-if="currentPage === 2" class="max-w-4xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+                        <p class="text-[12px] text-right mb-8" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+</p>
+
+                        <table>
+                        <thead>
+                          <tr>
+  <th class="py-2 px-1 border border-black" style="width: 50px;">
+    AREAS
+  </th>
+  <th class="ml-20 py-2 px-4 border-t border-black border-l border-b border-r-0">
+    Severely-Impaired Functioning
+  </th>
+  <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 10px;">
+    <!-- Blank space with only top border -->
+  </th>
+  <th class="py-2 px-4 border-t border-black border-l border-b border-r-0">
+    Moderately-Impaired Functioning
+  </th>
+  <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 30px;">
+    <!-- Blank space with only top border -->
+  </th>
+  <th class="py-2 px-4 border-t border-black border-l border-b border-r-0">
+    Normal Functioning
+  </th>
+  <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 30px;">
+    <!-- Blank space with only top border -->
+  </th>
+  <th class="py-2 px-4 border border-black">
+    Raw Score
+  </th>
+  <th class="py-2 px-4 border border-black">
+    Score per Area
+  </th>
+</tr>
+
+<!-- New Row for Instructions -->
+<tr>
+  <td class="py-2 px-1 border border-black"></td> <!-- Blank area under AREAS -->
+  <td class="py-2 px-4 border border-black">
+    If check please input "1" in Column C.
+  </td>
+  <td class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0"></td> <!-- Blank space -->
+  <td class="py-2 px-4 border border-black">
+    If check please input "2" in Column E.
+  </td>
+  <td class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0"></td> <!-- Blank space -->
+  <td class="py-2 px-4 border border-black">
+    If check please input "3" in Column G.
+  </td>
+  <td class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0"></td> <!-- Blank space -->
+  <td class="py-2 px-4 border border-black"></td> <!-- Blank area under Raw Score -->
+  <td class="py-2 px-4 border border-black"></td> <!-- Blank area under Score per Area -->
+</tr>
+
                   </thead>
-                <tbody>
-                <tr>
-                  <td class="py-2 px-4 border border-black" rowspan="6">Emotional</td>
+                  <tbody class="text-[11px]">
+                    <tr>
+                  <td class="py-2 px-4 text-[16px] font-bold border border-black" rowspan="6"></td>
                 <td class="py-2 px-4 border border-black">Harbors ill feelings which renders him or her unable to build good relationship with others and to focus on tasks at hand as indicated by any or all of the following:
                   <li>dwells most of the time on planning revenge</li>
                   <li>not open to reconciliation or forgiveness</li>
@@ -304,18 +331,21 @@
                   <li>relationship with others is superficial</li>
                   <li>displaces anger to others</li>
                 </td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Is trying to overcome ill feelings (e.g. hatred, resentment and anger) as may be evident by any or all of the following expressions: 
                   <li>that revenge may only worsen the situation</li>
                   <li>that reconciliation may be possible in the future</li>
                   <li>that he or she may consider forgiving the individual(s) who has/have done wrong to him or her</li>
                 </td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Has decided to let go of ill-feelings as may be evident in any or all of the following:
                   <li>has forgiven others</li>
                   <li>is ready to ask forgiveness for those whom he may have done wrong</li>
                   <li>believes that there are people who are genuinely interested in his or her welfare</li>
                 </td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score4" :readonly="!editMode" @input="validateRawScore('emotional_raw_score4')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score4" :readonly="!editMode" @input="validateRawScore('emotional_raw_score4')">
                 </td>
                 <td class="py-2 px-4 border border-black" rowspan="6">
                   
@@ -325,160 +355,153 @@
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Is severely guilty for grave offense committed which make him or her feel unworthy and incapable of doing good</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Feels guilty for grave offense committed which make him or her at times doubt capacity to be a good person</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Because of feelings of guilt for an offense committed, he or she strives to change negative attitudes that cause damage to others</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score5" :readonly="!editMode" @input="validateRawScore('emotional_raw_score5')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score5" :readonly="!editMode" @input="validateRawScore('emotional_raw_score5')">
                 </td>
-                
               </tr> 
   
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Is severely guilty because of the incarceration of her abuser which, she is made to believe, resulted to the difficulties being faced by the family. Such emotion cripples her daily interaction with others</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Sometimes think that she is to blame because of family disintegration due to the case she filed against her perpetrator</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Believes that revealing the truth about the abuse she experienced and taking legal action are appropriate. Feels good about self for taking the right action against her perpetrator.</td>
+                <td class="py-2 px-4 border border-black"></td>
+
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score6" :readonly="!editMode" @input="validateRawScore('emotional_raw_score6')">
+
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score6" :readonly="!editMode" @input="validateRawScore('emotional_raw_score6')">
                 </td>
               </tr> 
-              
-            </tbody>
-            </table>
-            <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-           <div class="flex justify-between items-center">
-             <div class="flex flex-col">
-               <p class="ml-24 -mb-4 font-bold">PAGE 3 of {{ totalPages }}</p>
-               <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-               <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-             </div>
-             <div class="ml-4">
-               <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-             </div>
-           </div>
-         </div>
-              
-          </div>
-          
-    
-          <!-- Page 4 -->
-          <div v-if="currentPage === 4" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
-            <table >
-                  <thead>
-                      <tr>
-                          <th class="py-2 px-4 border border-black">
-                              AREAS
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Severely-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Moderately-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Normal Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Raw Score
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Score per Area
-                          </th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <!-- Social / Behavioral rows here -->
-                      <tr>
-                <td class="py-2 px-4 border border-black" rowspan="8">Social / Behavioral</td>
+                  </tbody>
+                   <!-- Social / Behavioral rows here -->
+                   <tr class="text-[11px]">
+                <td class="py-2 text-[16px] font-bold px-4 border border-black" rowspan="8">Social / Behavioral</td>
                 <td class="py-2 px-4 border border-black">Has no self-control as maybe evident in any or all of the following:
                   <li>frequent involvement in fights (physical and verbal)</li>
                   <li>inappropriate sexual behavior (e.g. frequent masturbation even in the presence of others)</li>
                   <li>saying offensive words without caution</li>
                   <li>vices</li>
                 </td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Exercises self-control when he or she believes that it will bring him or her some reward or will make him or her appear good to others</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Exercises self-control in all cases as evident in the following:
                   <li>cautious in giving comments so that he or she may not hurt or offend others</li>
                   <li>avoids involvement in fights</li>
                   <li>avoids stealing</li>
                   <li>avoids display of inappropriate sexual behavior</li>
                 </td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score1" :readonly="!editMode" @input="validateRawScore('social_raw_score1')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score1" :readonly="!editMode" @input="validateRawScore('social_raw_score1')">
                 </td>
                 <td class="py-2 px-4 border border-black" rowspan="6">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_score_per_area1" readonly>
                 </td>
               </tr> 
-              <td class="py-2 px-4 border border-black">Lacks sense of responsibility as evident in refusing to perform tasks / roles and constantly complaining even if tasks given are:
+              <td class="text-[11px] py-2 px-4 border border-black">Lacks sense of responsibility as evident in refusing to perform tasks / roles and constantly complaining even if tasks given are:
                 <li>appropriate to age, intellectual ability, physical strength</li>
                 <li>not against his or her principles and religious belief</li>
                 </td>
-                <td class="py-2 px-4 border border-black">Carries out responsibilities but requires supervision and close monitoring</td>
-                <td class="py-2 px-4 border border-black">Performs responsibilities to the best of his or her ability even without prodding. He or she may at times express complaints but does so only when task given is not within his or her own capacity and not against religious beliefs and principles</td>
+                <td class="py-2 px-4 border border-black"></td>
+                <td class="text-[11px]  py-2 px-4 border border-black">Carries out responsibilities but requires supervision and close monitoring</td>
+                <td class="py-2 px-4 border border-black"></td>
+                <td class="text-[11px]  py-2 px-4 border border-black">Performs responsibilities to the best of his or her ability even without prodding. He or she may at times express complaints but does so only when task given is not within his or her own capacity and not against religious beliefs and principles</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score2" :readonly="!editMode" @input="validateRawScore('social_raw_score2')">
-                </td>    
-            </tbody>
-          </table>
+                  <input type="text" class="w-full  p-2 border border-black rounded-md" v-model="form.social_raw_score2" :readonly="!editMode" @input="validateRawScore('social_raw_score2')">
+                </td>   
+              </table>
+              <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+  <div class="flex justify-between items-center">
     
-          <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-           <div class="flex justify-between items-center">
-             <div class="flex flex-col">
-               <p class="ml-24 -mb-4 font-bold">PAGE 4 of {{ totalPages }}</p>
-               <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-               <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-             </div>
-             <div class="ml-4">
-               <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-             </div>
-           </div>
-         </div>
+    <!-- Left Section: Page number -->
+    <div class="flex flex-col flex-grow">
+      <!-- Page number centered -->
+      <p class="text-center -mb-1 font-bold">PAGE 2 of {{ totalPages }}</p>
+
+    <!-- Continuous horizontal line, moved to the left with space on the right -->
+    <div style="border-top: 2px solid black; width: 103%; margin-top: 4px; margin-left: -24px;"></div>
+
+
+      <!-- Text under the line -->
+      <p style="text-align: center; font-weight: bold; margin-top: -1px;"> DSWD | PROTECTIVE SERVICES DIVISION / FIELD OFFICE XI | REGIONAL REHABILITATION CENTER FOR YOUTH
+      </p>
+    </div>
+
+  </div>
+</div>
+              
+          </div>
+          
         </div>
   
   
-        <!--Page 5 -->
-        <div v-if="currentPage === 5" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
-          <table>
-          <thead>
-                      <tr>
-                          <th class="py-2 px-4 border border-black">
-                              AREAS
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Severely-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Moderately-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Normal Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Raw Score
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Score per Area
-                          </th>
-                      </tr>
+          <!--page 3-->
+          <div v-if="currentPage === 3" class="max-w-4xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+            <p class="text-[12px] text-right mb-8" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+</p>
+
+            <table>
+                  <thead>
+                    <tr>
+                      <th class="py-2 px-1 border border-black" style="width: 50px;">
+                        AREAS
+                      </th>
+                      <th class="ml-20 py-2 px-4 border-t border-black border-l border-b border-r-0">
+                        Severely-Impaired Functioning
+                      </th>
+                      <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 10px;">
+                        <!-- Blank space with only top border -->
+                      </th>
+                      <th class="py-2 px-4 border-t border-black border-l border-b border-r-0">
+                        Moderately-Impaired Functioning
+                      </th>
+                      <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 30px;">
+                        <!-- Blank space with only top border -->
+                      </th>
+                      <th class="py-2 px-4 border-t border-black border-l border-b border-r-0">
+                        Normal Functioning
+                      </th>
+                      <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 30px;">
+                        <!-- Blank space with only top border -->
+                      </th>
+                      <th class="py-2 px-4 border border-black">
+                        Raw Score
+                      </th>
+                      <th class="py-2 px-4 border border-black">
+                        Score per Area
+                      </th>
+                    </tr>
                   </thead>
-          <tbody>
+          
+                  <tbody class="text-[11px]">
             <tr>
-              <td class="py-2 px-4 border border-black" rowspan="8">Social / Behavioral</td>
+              <td class="py-2 px-4 border border-black" rowspan="8"></td>
                 <td class="py-2 px-4 border border-black">Has no self-confidence which cause him or her to do most or all of the following:
                   <li>always refuses to participate in sports, socio-cultural, and skills training even if constantly encouraged</li>
                   <li>constantly makes negative self-talk (e.g. I cannot do it, I am good for nothing, etc.)</li>
                   <li>always dwells on what she or he cannot do rather than on what she or he can perform</li>
-                  <li>isolates self, most of the time</li>
+                  <li>isolates self, most of the time</li>  
                 </td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Tries to participate in center's activities although with some degree of hesitation because of doubt that she or he will be able to perform as expected. Needs constant encouragement.</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Aware of limitations but still maintain healthy self-confidence as shown in his or her ability to do the following:
                   <li>assert</li>
                   <li>avoid saying self-demeaning words</li>
                   <li>active participation in center's activities</li>
                 </td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score3" :readonly="!editMode" @input="validateRawScore('social_raw_score3')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score3" :readonly="!editMode" @input="validateRawScore('social_raw_score3')">
                 </td>
                 <td class="py-2 px-4 border border-black" rowspan="6">
                 </td>
@@ -491,12 +514,13 @@
                   <li>does not want to perform tasks</li>
                   <li>always answers back</li>
                 </td>
-  
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Is selective in showing respect</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Respects others at all times</td>
-                
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score4" :readonly="!editMode" @input="validateRawScore('social_raw_score4')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score4" :readonly="!editMode" @input="validateRawScore('social_raw_score4')">
                 </td>
                 
               </tr> 
@@ -504,82 +528,46 @@
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Can't decide for himself or herself either because of absence of appropriate decision-making skills</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Makes decisions but always needs the confirmation of others</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Decides for himself or herself but refers to others for assistance when appropriate</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score5" :readonly="!editMode" @input="validateRawScore('social_raw_score5')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score5" :readonly="!editMode" @input="validateRawScore('social_raw_score5')">
                 </td>
               </tr> 
-          </tbody>
-        </table>
-        <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-           <div class="flex justify-between items-center">
-             <div class="flex flex-col">
-               <p class="ml-24 -mb-4 font-bold">PAGE 5 of {{ totalPages }}</p>
-               <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-               <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-             </div>
-             <div class="ml-4">
-               <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-             </div>
-           </div>
-         </div>
-      </div>
-      
-          <!-- Page 6 -->
-          <div v-if="currentPage === 6" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
-            <table>
-                  <thead>
-                      <tr>
-                          <th class="py-2 px-4 border border-black">
-                              AREAS
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Severely-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Moderately-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Normal Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Raw Score
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Score per Area
-                          </th>
-                      </tr>
-                  </thead>
-                  <tr>
-                    <td class="py-2 px-4 border border-black" rowspan="6">Social/Behavioral</td>
+              <tr>
                 <td class="py-2 px-4 border border-black">Domineering and manipulative as can be gleaned from any or all of the following:
                   <li>attempts to lead others to violate center's rules and regulations</li>
                   <li>imposes harsh decisions, distorted values, false beliefs, inappropriate practices, etc.</li>
                   <li>intimates or threatens others to get things done</li>
                 </td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Sometimes tends to dominate and manipulate others, but tries to control such tendency especially when attention is called</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Refrains from domineering or manipulating others as evident in the following:
                   <li>adheres to group decision</li>
                   <li>refrains from imposing beliefs, values or practices to others</li>
                   <li>refrains from threatening others to achieve or get what he or she wants</li>
                 </td>
-  
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score6" :readonly="!editMode" @input="validateRawScore('social_raw_score6')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score6" :readonly="!editMode" @input="validateRawScore('social_raw_score6')">
                 </td>
-                <td class="py-2 px-4 border border-black" rowspan="8">
-                  
-                </td>
+             
               </tr> 
   
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Is always involved in stealing and shows no remorse</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Has the tendency to steal but shows remorse by returning stolen items and expressing the need to be restrained from committing such act</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Does not steal</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score7" :readonly="!editMode" @input="validateRawScore('social_raw_score7')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score7" :readonly="!editMode" @input="validateRawScore('social_raw_score7')">
                 </td>
                
               </tr> 
@@ -587,23 +575,98 @@
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Always tells lies to damage or hurt others and to make self-appear superior over other people</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Has the tendency to lie in some occasions but avoids that may harm or damage others</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Strives to be honest at all times</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score8" :readonly="!editMode" @input="validateRawScore('social_raw_score8')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score8" :readonly="!editMode" @input="validateRawScore('social_raw_score8')">
                 </td>
                
               </tr> 
-                  <tbody>
+           
                     
+                 
+                      <!-- Add additional rows as necessary -->
+          
+          </tbody>
+              
+         
+            </table>
+            <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+  <div class="flex justify-between items-center">
+    
+    <!-- Left Section: Page number -->
+    <div class="flex flex-col flex-grow">
+      <!-- Page number centered -->
+      <p class="text-center -mb-1 font-bold">PAGE 3 of {{ totalPages }}</p>
+
+    <!-- Continuous horizontal line, moved to the left with space on the right -->
+    <div style="border-top: 2px solid black; width: 103%; margin-top: 4px; margin-left: -24px;"></div>
+
+
+      <!-- Text under the line -->
+      <p style="text-align: center; font-weight: bold; margin-top: -1px;"> DSWD | PROTECTIVE SERVICES DIVISION / FIELD OFFICE XI | REGIONAL REHABILITATION CENTER FOR YOUTH
+      </p>
+    </div>
+
+  </div>
+</div>
+              
+          </div>
+          
+ 
+  
+          <!-- Page 4 -->
+          <div v-if="currentPage === 4" class="max-w-4xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
+            <p class="text-[12px] text-right mb-8" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+</p>
+
+            <table class="min-w-full bg-white">
+                  <thead>
+                    <tr>
+                      <th class="py-2 px-1 border border-black" style="width: 50px;">
+                        AREAS
+                      </th>
+                      <th class="ml-20 py-2 px-4 border-t border-black border-l border-b border-r-0">
+                        Severely-Impaired Functioning
+                      </th>
+                      <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 10px;">
+                        <!-- Blank space with only top border -->
+                      </th>
+                      <th class="py-2 px-4 border-t border-black border-l border-b border-r-0">
+                        Moderately-Impaired Functioning
+                      </th>
+                      <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 30px;">
+                        <!-- Blank space with only top border -->
+                      </th>
+                      <th class="py-2 px-4 border-t border-black border-l border-b border-r-0">
+                        Normal Functioning
+                      </th>
+                      <th class="py-2 px-1 border-t border-black border-l-0 border-r-0 border-b-0" style="width: 30px;">
+                        <!-- Blank space with only top border -->
+                      </th>
+                      <th class="py-2 px-4 border border-black">
+                        Raw Score
+                      </th>
+                      <th class="py-2 px-4 border border-black">
+                        Score per Area
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="text-[11px]">
                     <tr>
                       
-                      <td class="py-2 px-4 border border-black" rowspan="6">Spiritual</td>
+                      <td class="py-2 px-4 text-[16px] font-bold border border-black" >Spiritual</td>
                 <td class="py-2 px-4 border border-black">Blames God for his or her crises or failures in life which results to lingering hopelessness and other negative emotions</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Does not blame God for his or her crises and failures in life but doubts whether God cares for him or her at all</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">Recognizes that God cares for him or her and is ready to provide needed strength to cope with the crisis and failures in life</td>
+                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="number" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_raw_score1" :readonly="!editMode" @input="validateRawScore('spiritual_raw_score1')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_raw_score1" :readonly="!editMode" @input="validateRawScore('spiritual_raw_score1')">
                 </td>
                 <td class="py-2 px-4 border border-black">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_score_per_area1" readonly>
@@ -611,68 +674,28 @@
                 
               </tr>
   
-                      <!-- Add additional rows as necessary -->
-                  </tbody>
-              </table>
-  
-              <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-           <div class="flex justify-between items-center">
-             <div class="flex flex-col">
-               <p class="ml-24 -mb-4 font-bold">PAGE 6 of {{ totalPages }}</p>
-               <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-               <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-             </div>
-             <div class="ml-4">
-               <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-             </div>
-           </div>
-         </div>
-          </div>
-  
-          <!-- Page 7 -->
-          <div v-if="currentPage === 7" class="max-w-3xl mx-auto border border-gray-400 bg-white p-12 rounded-lg shadow-lg mb-10">
-            <table class="min-w-full bg-white">
-                  <thead>
-                      <tr>
-                          <th class="py-2 px-4 border border-black">
-                              AREAS
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Severely-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Moderately-Impaired Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Normal Functioning
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Raw Score
-                          </th>
-                          <th class="py-2 px-4 border border-black">
-                              Score per Area
-                          </th>
-                      </tr>
-                  </thead>
-                  <tbody>
                     <tr>
-      <td class="py-2 px-4 border border-black">
+                      
+      <td class="py-2 px-4 text-[16px] font-bold border border-black">
           Educational / Literacy
       </td>
       <td class="py-2 px-4 border border-black">
           Not able to read, write and count
       </td>
+      <td class="py-2 px-4 border border-black"></td>
       <td class="py-2 px-4 border border-black">
           Undertakes non-formal education or willingly
           receives tutorial services to learn basic skills
       </td>
+      <td class="py-2 px-4 border border-black"></td>
       <td class="py-2 px-4 border border-black">
           Able to read, write and count with skills
           appropriate to age and educational attainment
       </td>
+      <td class="py-2 px-4 border border-black"></td>
       <td class="py-2 px-4 border border-black">
           <input
-              type="number"
+              type="text"
               min="0"
               max="100"
               class="w-full mt-1 p-2 border border-black rounded-md"
@@ -690,8 +713,9 @@
           />
       </td>
   </tr>
+  
   <tr>
-      <td class="py-2 px-4 border border-black">
+      <td class="py-2 text-[16px] font-bold px-4 border border-black">
           Economic Productivity
       </td>
       <td class="py-2 px-4 border border-black">
@@ -699,16 +723,19 @@
           any skills that would help him/her support his/her
           needs
       </td>
+      <td class="py-2 px-4 border border-black"></td>
       <td class="py-2 px-4 border border-black">
           Needs to brush up skills to make them usable for
           employment
       </td>
+      <td class="py-2 px-4 border border-black"></td>
       <td class="py-2 px-4 border border-black">
           Has employable skills
       </td>
+      <td class="py-2 px-4 border border-black"></td>
       <td class="py-2 px-4 border border-black">
           <input
-              type="number"
+              type="text"
               min="0"
               max="100"
               class="w-full mt-1 p-2 border border-black  rounded-md"
@@ -775,18 +802,25 @@
                 </div>
               </div>
     
-          <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-           <div class="flex justify-between items-center">
-             <div class="flex flex-col">
-               <p class="ml-24 -mb-4 font-bold">PAGE 7 of {{ totalPages }}</p>
-               <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-               <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-             </div>
-             <div class="ml-4">
-               <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-             </div>
-           </div>
-         </div>
+              <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+  <div class="flex justify-between items-center">
+    
+    <!-- Left Section: Page number -->
+    <div class="flex flex-col flex-grow">
+      <!-- Page number centered -->
+      <p class="text-center -mb-1 font-bold">PAGE 4 of {{ totalPages }}</p>
+
+    <!-- Continuous horizontal line, moved to the left with space on the right -->
+    <div style="border-top: 2px solid black; width: 103%; margin-top: 4px; margin-left: -24px;"></div>
+
+
+      <!-- Text under the line -->
+      <p style="text-align: center; font-weight: bold; margin-top: -1px;"> DSWD | PROTECTIVE SERVICES DIVISION / FIELD OFFICE XI | REGIONAL REHABILITATION CENTER FOR YOUTH
+      </p>
+    </div>
+
+  </div>
+</div>
         </div>
   
         </div>
@@ -854,7 +888,7 @@
         isSaveResultModalOpen: false,
         saveResultTitle: '',
         saveResultMessage: '',
-        totalPages: 7,
+        totalPages: 4,
         currentPage: 1
       };
     },
@@ -1116,7 +1150,7 @@
       doc.addImage(imgData, 'PNG', 13, 10, 75, 35);
       doc.setFont('Times', 'italic');
       doc.setFontSize(9);
-      doc.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 142, 24);
+      doc.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 142, 24);
   
       doc.addFont('arialbd-bold.ttf', 'Arial', 'bold');
       doc.setFont('Arial', 'bold');    
@@ -1128,7 +1162,7 @@
     const addHeaderOtherPages = () => {
       doc.setFont('Times', 'italic');
       doc.setFontSize(9);
-      doc.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 142, 15);
+      doc.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 142, 15);
     };
   
     // Add Footer for First Page
