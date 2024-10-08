@@ -112,7 +112,7 @@
 </div>
 
 <!-- Education Section -->
-<div class="p-2 border bg-blue-100 font-bold">
+<div class="p-1 mt-2 border bg-blue-300 font-bold">
   <p>Natapos nga Grado:</p>
 </div>
 
@@ -191,7 +191,7 @@
   </div>
   
 <!-- Additional Information Section -->
-<div class="p-2 border bg-blue-100 font-bold">
+<div class="p-1 mt-2 w-full border bg-blue-300 font-bold">
   <p>Pangalan sa Ginikanan:</p>
 </div>
 
@@ -231,7 +231,7 @@
 <table class="w-full border-collapse border mt-4">
   <thead>
     <tr>
-      <th colspan="5" class="text-sm text-left p-2 border bg-blue-100">Skills Training nga human na nga naapilan diri sa sulod CENTER ug sa gawas sa center</th>
+      <th colspan="5" class="text-sm text-left p-2 border bg-blue-300">Skills Training nga human na nga naapilan diri sa sulod CENTER ug sa gawas sa center</th>
     </tr>
     <tr class="">
       <th class="border p-2 text-center text-sm">Title sa Training nga Naapilan</th>
@@ -460,8 +460,8 @@
       <div class="flex justify-between items-center">
         <div class="flex flex-col">
           <p class="ml-24 -mb-4 font-bold">PAGE 2 of {{ totalPages }}</p>
-          <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          <p class="border-t mt-4 text-[10px]" style="border-top: 2px solid black;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH</p>
+
         </div>
         <div class="ml-4">
           <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">

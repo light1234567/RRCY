@@ -55,6 +55,7 @@
           <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
           <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
           <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
+          <p class=" text-xs font-italic text-center flex justify-center">DSWD-GF-010 | REV 02 | 17 AUG 2022</p>
           <div class="text-xs font-semibold pt-12">
     <p class="text-sm">
     DRN
@@ -176,8 +177,8 @@
         <div class="flex justify-center w-full items-center">
           <div class="flex flex-col">
             <p class="mr-6 font-bold text-center ">PAGE 1 of 1</p>
-            <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p>Email: <span class="text-blue-600 underline">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+            <p class="border-t border-black pt-2 text-[10px]">DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000</p>
+            <p><span class="text-blue-600 underline">Website: http://www.rrcy.fo11@dswd.gov.ph Tel Nos.: (082) 293-03-06</span></p>
           </div>
           <div>
             <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
@@ -455,8 +456,8 @@
     },
   
     exportToPdf() {
-      const pdf = new jsPDF('p', 'mm', 'a4'); // Create a new PDF document
-      const pageHeight = 297; // A4 page height in mm
+      const pdf = new jsPDF('p', 'mm', [216, 356]); // Create a new PDF document
+      const pageHeight = 356; // A4 page height in mm
       const marginBottom = 30; // Space for footer
       const footerHeight = 20; // Space for footer
       let currentY = 40; // Start Y position for content
@@ -470,7 +471,7 @@
           pdf.text('Youth/RFO XI', 160, 30, { align: 'center' });
           pdf.setFontSize(9);
           pdf.setFont('Times', 'italic');
-          pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 35);
+          pdf.text('DSWD-GF-010 | REV 02 | 17 AUG 2022', 135, 35);
           pdf.line(10,37,200,37);
       };
   
@@ -505,9 +506,9 @@
   
       // Add month and DRN
       pdf.setFontSize(12);
-      pdf.text(`For the Month of: ${this.form.month}`, 105, 60, "center");
-      pdf.line(110, 61, 145, 61);
-      pdf.text(`DRN: ${this.drn}`, 135, 45);
+      pdf.text(`For the Month of: ${this.form.month||''}`, 105, 60, "center");
+      pdf.line(120, 61, 145, 61);
+      pdf.text(`DRN: ${this.drn||''}`, 135, 45);
       pdf.line(145, 46, 200, 46);
   
       // Table Headers
@@ -546,17 +547,18 @@
   
       pdf.setFontSize(11);
       pdf.setFont('Arial', 'normal');
+
   
-      pdf.text(`${this.form.resident_name}`, 45, currentY, "center");
+      pdf.text(`${this.form.resident_name||''}`, 45, currentY, "center");
       pdf.line(20, currentY + 1, 75, currentY + 1);
       pdf.text('Name & Signature of Resident', 20, currentY + 5);
   
-      pdf.text(`${this.form.houseparent_name}`, 160, currentY, "center");
+      pdf.text(`${this.form.houseparent_name|| ''}`, 160, currentY, "center");
       pdf.line(128, currentY + 1, 190, currentY + 1);
       pdf.text('Name & Signature of Houseparent', 160, currentY + 5, "center");
   
       pdf.text('Noted by:', 105, currentY + 20, "center");
-      pdf.text(`${this.form.inventory_shp}`, 105, currentY + 30, "center");
+      pdf.text(`${this.form.inventory_shp||''}`, 105, currentY + 30, "center");
   
       
       addFooter();
