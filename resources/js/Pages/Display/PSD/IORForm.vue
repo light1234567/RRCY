@@ -126,7 +126,7 @@
           <tr class="bg-gray-100">
               <th class="text-left p-1 border bg-sky-400" colspan="5">A. PERSONALITY/BEHAVIOR</th>
           </tr>
-          <tr>
+          <tr >
               <td class="p-1 border">1 |<span class="font-bold"> Maayo ug batasan ug displinado. </span> (Well mannered and disciplined)</td>
               <td class="p-1 border text-center"> <input type="number" min="0" max="4" v-model="form.sections[0].indicators[0].self_rating" @change="validateRating(form.sections[0].indicators[0], 'self_rating')" class="w-full p-1 border border-gray-300 text-center text-sm" :readonly="!editMode" />
               </td>

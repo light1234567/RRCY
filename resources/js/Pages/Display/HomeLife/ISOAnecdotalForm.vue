@@ -45,21 +45,21 @@
      <div class="flex justify-between items-center mb-4">
        <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-32 w-64 -mt-16 relative z-10" />
        <div class="text-right">
-         <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
-         <p class=" text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
+         <p class="item-center  text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
+         <p class=" text-sm font-semibold">Regional Rehabilitation Center for</p>
          <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
+         <p class="text-center text-xs">DSWD-GF-010A | REV 02 | 17 AUG 2022</p>
          <div class="text-xs font-semibold pt-12">
-  <p class="text-sm">
-  DRN
+  <p class="text-sm font-semibold">
+  DRN :
   <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
 </p>
 </div>
        </div>
      </div>
-     <h1 class="font-bold text-md">ANECDOTAL REPORT</h1>
-     <p class="text-sm">
+     <p class="text-sm font-semibold">
   FOR THE MONTH OF
-  <input type="text" v-model="form.month" class="underline-input text-sm p-1" :readonly="!editMode" />
+  <input type="text" v-model="form.month" class="underline-input text-sm -p-1" :readonly="!editMode" />
 </p>
    </div>
 
@@ -233,20 +233,19 @@
        <p class="text-sm">SWO IV / Center Head</p>
      </div>
    </div>
-
-     <!-- Footer Section -->
-     <div class=" pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-       <div class="flex justify-between items-center">
-         <div class="flex flex-col">
-           <p class="font-bold">PAGE 1 of 1</p>
-           <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-           <p>Email: <span class="text-blue-600 underline">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-         </div>
-         <div>
-           <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
-         </div>
-       </div>
-     </div>
+   <div class=" border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;"> 
+      <div class="flex justify-between items-start w-full">
+          <div class="flex flex-col w-full"> <!-- Expanded width for the text section -->
+              <p class="font-bold">PAGE 1 of 1</p>
+              <p class="border-t-2 border-black"></p>
+              <p class="pt-2">DSWD FOXI, Regional Rehabilitation Center for Youth, Bago Oshiro, Davao City, Philippines 8000</p>
+              <p > Email: <span class="text-blue-600 underline">rrcy.fo11.dswd.gov.ph</span> Tel No.(082) 293-0306</p>
+          </div>
+          <div class="w-1/6 flex justify-end"> <!-- Restricting the image section to the right side -->
+              <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-32 object-cover"> <!-- Expanded width for image -->
+          </div>
+      </div>
+  </div>
 
  
    <!-- Modal for Save Confirmation -->
@@ -500,15 +499,15 @@ saveDrn() {
      // Add logic to fetch data or change content based on the page
    },
    exportToPdf() {
-  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
-  const pageHeight = 297; // Total page height in mm
+  const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
+  const pageHeight = 356; // Total page height in mm
   const marginBottom = 30; // Bottom margin in mm
   const rowHeight = 8; // Height of each row
   const lineHeight = 7; // Space between lines
-  const footerHeight = 5; // Adjust to fit the height of your footer
+  const footerHeight = 0; // Adjust to fit the height of your footer
   const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
   const maxWidth = 170; // Maximum width for text
-  let contentYPos = 65; // Start Y position for content
+  let contentYPos = 75; // Start Y position for content
   let initialX = 20; // X position for content
   let currentPage = 1; // Start at page 1
 
@@ -517,7 +516,7 @@ saveDrn() {
     // Header text
     pdf.setFontSize(9);
     pdf.setFont('TimesNewRoman', 'italic');
-    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+    pdf.text('DSWD-GF-010A | REV 02 | 17 AUG 2022', 135, 20);
   };
   
   // Helper function to add a new page if content exceeds the page height
@@ -534,52 +533,67 @@ saveDrn() {
   };
 
   const addFooter = () => {
-    if (currentPage === 1) {
-      // Footer for Page 1
-      pdf.setFontSize(9);
-      pdf.setFont('TimesNewRoman', 'bold');
-      pdf.setLineWidth(0.5);
-      pdf.line(17, 282, 173, 282); // Footer line
+      if (currentPage === 1) {
+        pdf.setFontSize(9);
+        pdf.setFont('TimesNewRoman', 'bold');
+        pdf.setLineWidth(0.5);
+        pdf.line(17, 335, 173, 335); // Footer line
+  
+        pdf.setFont('times', 'normal');
+        const footerText = pdf.splitTextToSize('DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000', 160);
+        pdf.text(footerText, 95, 340, { align: 'center' });
+        pdf.text('Website: http://www.rrcy.fo11@dswd.gov.ph Tel Nos.: (082) 293-03-06', 105, 345, { align: 'center' });
+  
+        const footerImgData = '/images/footerimg.png';
+        pdf.addImage(footerImgData, 'PNG', 175, 330, 25, 12); // Footer image
+  
+      } else {
+        // Footer for Page 2 and beyond
+        pdf.setFontSize(8.5);
+        pdf.setFont('TimesNewRoman', 'bold');
+  
+        pdf.setLineWidth(0.5);
+        pdf.line(17, 335, 193, 335); // Footer line extending further
+  
+        pdf.setFont('times', 'bold');
+        pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 340, { align: 'center' });
+      }
+    };
 
-      pdf.setFont('times', 'normal');
-      const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
-      pdf.text(footerText, 95, 287, { align: 'center' });
-      pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, { align: 'center' });
-
-      const footerImgData = '/images/footerimg.png';
-      pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Footer image
-    } else {
-      // Footer for Page 2 and beyond
-      pdf.setFontSize(8.5);
-      pdf.setFont('TimesNewRoman', 'bold');
-
-      pdf.setLineWidth(0.5);
-      pdf.line(17, 282, 193, 282); // Footer line extending further
-
-      pdf.setFont('times', 'bold');
-      pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, { align: 'center' });
-    }
-  };
-
-  addHeader();
 
   // DSWD logo
   const imgData = '/images/headerlogo2.png';
-  pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
+  pdf.addImage(imgData, 'PNG', 15, 5, 70, 35);
 
+      // Add title and header text
+      pdf.setFontSize(10);
+    pdf.setFont('arialbd', 'bold'); 
+    pdf.text('PROTECTIVE SERVICES DIVISION', 150, 19, { align: 'center' });
+    pdf.text('Regional Rehabilitation Center for', 150, 24, { align: 'center' });
+    pdf.text('Youth FOR XI', 150, 28, { align: 'center' });
+  
+    pdf.setFontSize(8);
+    pdf.setFont('arial', 'italic'); 
+    pdf.text('DSWD-GF-010A | REV 02 | 17 AUG 2022', 150, 32, { align: 'center' });
+  
 
-  contentYPos += -25;
-  pdf.setFont('arial', 'normal');
+  contentYPos += -20;
+  pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(11);
-  pdf.text(`DRN :  ______________________`, initialX+110, contentYPos);
+  pdf.text(`DRN :`, initialX+110, contentYPos+-5);
+  pdf.text(`${this.drn || ''}`, initialX+122, contentYPos+-5);
+  pdf.line(142, contentYPos+-4, 190, contentYPos+-4); 
+
 
   pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(14);
-  pdf.text('Anecdotal Report', 105, 48, { align: 'center' });
+  pdf.text('Anecdotal Report', 105, 60, { align: 'center' });
   contentYPos += 15;
-  pdf.setFont('arial', 'normal');
+  pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(11);
-  pdf.text(`FOR THE MONTH OF _________________ `, initialX+40, contentYPos);
+  pdf.text(`FOR THE MONTH OF `, initialX+40, contentYPos);
+  pdf.text(`${this.form.month || ''}`, initialX+80, contentYPos);
+  pdf.line(98, contentYPos+1, 145, contentYPos+1); 
 
   // Content starts below title
   pdf.setFont('arial', 'normal');
@@ -605,6 +619,7 @@ pdf.line(initialX + 112, contentYPos + 1, initialX + 112 + dateWidth, contentYPo
 
 
   contentYPos += rowHeight;
+  contentYPos += 5;
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.text('I. PHYSICAL :', initialX, contentYPos+5);
@@ -624,6 +639,7 @@ pdf.line(initialX + 112, contentYPos + 1, initialX + 112 + dateWidth, contentYPo
   });
 
   contentYPos += rowHeight;
+  contentYPos += 5;
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.text('II. EMOTIONAL :', initialX, contentYPos+5);
@@ -644,6 +660,7 @@ pdf.line(initialX + 112, contentYPos + 1, initialX + 112 + dateWidth, contentYPo
   });
 
   contentYPos += rowHeight;
+  contentYPos += 5;
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.text('III. SOCIAL/BEHAVIORAL :', initialX, contentYPos+5);
@@ -664,6 +681,7 @@ pdf.line(initialX + 112, contentYPos + 1, initialX + 112 + dateWidth, contentYPo
   });
 
   contentYPos += rowHeight;
+  contentYPos += 5;
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.text('IV. SPIRITUAL :', initialX, contentYPos+5);
@@ -683,6 +701,7 @@ pdf.line(initialX + 112, contentYPos + 1, initialX + 112 + dateWidth, contentYPo
   });
 
   contentYPos += rowHeight;
+  contentYPos += 5;
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.text('V. RECOMMENDATION:', initialX, contentYPos+5);
@@ -700,7 +719,8 @@ pdf.line(initialX + 112, contentYPos + 1, initialX + 112 + dateWidth, contentYPo
   });
 
 
-  contentYPos +=rowHeight;
+  contentYPos += rowHeight;
+  contentYPos += 30;
   addNewPageIfNeeded();
 
   pdf.text(`Color:`, initialX, contentYPos);
@@ -714,7 +734,7 @@ pdf.text(colorValue, initialX + 12, contentYPos);  // Adjust the X position to a
 pdf.setLineWidth(0);
 pdf.line(initialX + 12, contentYPos + 1, initialX + 12 + colorWidth, contentYPos + 1); // Underline for session value
 
-contentYPos +=10;
+contentYPos +=5;
   // Prepared by Section
   contentYPos += rowHeight; 
   addNewPageIfNeeded();
@@ -783,12 +803,12 @@ contentYPos +=10;
   addFooter();
 
   const totalPages = pdf.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    pdf.setPage(i);
-    pdf.setFontSize(9);
-    pdf.setFont('TimesNewRoman', 'bold');
-    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 280, { align: 'center' }); // Update the footer with the correct total pages
-  }
+    for (let i = 1; i <= totalPages; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(9);
+      pdf.setFont('TimesNewRoman', 'bold');
+      pdf.text(`PAGE ${i} of ${totalPages}`, 105, 333, { align: 'center' }); // Update the footer with the correct total pages
+    }
 
   // Save the PDF with dynamic file name
   pdf.save(`Anecdotal_Report_${this.form.name || ''}.pdf`);
@@ -798,13 +818,12 @@ contentYPos +=10;
 </script>
 
 <style scoped>
-.underline-input {
- border: none;
- border-bottom:  1px solid black;
- padding: 0;
- margin: 0;
- vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
-}
+  .underline-input {
+  border: none;
+  border-bottom:  1px solid black;
+  padding: 0;
+  margin: 0;
+  }
 .graph-background {
     background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
                       linear-gradient(to bottom, #cccccc 1px, transparent 1px);

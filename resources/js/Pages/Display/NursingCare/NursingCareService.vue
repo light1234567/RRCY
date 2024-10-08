@@ -647,7 +647,7 @@ import Pagination from '@/Components/Pagination.vue';
   const lineHeight = 5; // Space between lines
   const footerHeight = 5; // Adjust to fit the height of your footer
   const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
-  const maxWidth = 100; // Maximum width for text
+  const maxWidth = 90; // Maximum width for text
   let contentYPos = 0; // Start Y position for content (initialize contentYPos)
   let initialX = 20; // X position for content
 
@@ -813,6 +813,22 @@ pdf.setFontSize(14);
   pdf.setFont('arial', 'normal'); 
   pdf.text(`${this.form.hair_status || ''}`, initialX+103, contentYPos);
 
+
+
+
+contentYPos +=60;
+  const profileImage = this.form.profile_image 
+  ? `/profile_images/${this.form.profile_image}` 
+  : this.previewImage || '/images/default-profile.jpg'; // Fallback to default image if none
+
+  const img = new Image();
+  img.src = profileImage; // Set the image source
+  img.onload = () => {
+      // Add the profile image to the PDF
+      pdf.addImage(img, 'PNG', initialX + 90, contentYPos+-54, 90, 81); // Adjust size as necessary
+
+
+
   contentYPos += 10;
   pdf.setFontSize(10);
   pdf.setFont('arialbd', 'bold'); 
@@ -844,17 +860,6 @@ pdf.setFontSize(14);
     pdf.text(line, initialX+-9, contentYPos);
     contentYPos += lineHeight;
   });
-
-  const profileImage = this.form.profile_image 
-  ? `/profile_images/${this.form.profile_image}` 
-  : this.previewImage || '/images/default-profile.jpg'; // Fallback to default image if none
-
-  const img = new Image();
-  img.src = profileImage; // Set the image source
-  img.onload = () => {
-      // Add the profile image to the PDF
-      pdf.addImage(img, 'PNG', initialX + 90, contentYPos+-84, 90, 81); // Adjust size as necessary
-
 
 
 

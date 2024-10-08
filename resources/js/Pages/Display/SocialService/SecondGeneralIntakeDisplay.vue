@@ -611,8 +611,6 @@ export default {
   pdf.setDrawColor(0, 0, 0);
 
   pdf.setLineWidth(0.2); 
-
-  
   pdf.rect(x, y, 5, 5, isChecked ? 'FD' : 'S'); 
 
   if (isChecked) {
@@ -812,8 +810,17 @@ contentYPos += 8;
   contentYPos += rowHeight;
 
   pdf.setFont('arial', 'normal');
-  pdf.text('Drugs', initialX+8, contentYPos);
-  drawCheckbox(this.sheet.vices.drugs, initialX, contentYPos - 4); // Adjust Y position to align checkbox
+
+// Draw the label "Drugs"
+pdf.text('Drugs', initialX + 8, contentYPos);
+drawCheckbox(this.sheet.vices.othersEnabled1, initialX, contentYPos - 4); // Adjust Y position to align checkbox
+
+// Add the dynamic text after "Drugs", if the field others1 is enabled and contains text
+if (this.sheet.vices.othersEnabled1) {
+    const othersText = this.sheet.vices.others1 || '________'; // Use the others1 text or fallback to a blank line
+    pdf.text(`(${othersText})`, initialX + 20, contentYPos); // Adjust X position for alignment after "Drugs"
+}
+
   contentYPos += rowHeight;
 
   pdf.setFont('arial', 'normal');
@@ -828,7 +835,12 @@ contentYPos += 8;
 
   pdf.setFont('arial', 'normal');
   pdf.text('Computer Games', initialX+8, contentYPos);
-  drawCheckbox(this.sheet.vices.computer_games, initialX, contentYPos - 4);
+  drawCheckbox(this.sheet.vices.othersEnabled2, initialX, contentYPos - 4);
+
+  if (this.sheet.vices.othersEnabled2) {
+    const others2Text = this.sheet.vices.others2 || '________'; // Use the others1 text or fallback to a blank line
+    pdf.text(`(${others2Text})`, initialX + 43, contentYPos); // Adjust X position for alignment after "Drugs"
+}
 
 
   contentYPos += rowHeight;

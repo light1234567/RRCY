@@ -40,7 +40,7 @@
   <div class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
     <div class="relative flex justify-between items-center mb-2">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-      <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+      <p class="text-xs italic">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
     </div>
     <form @submit.prevent="submitForm" class="space-y-8 w-full">
       <!-- Header -->
@@ -107,7 +107,7 @@
             <label for="preparedBy" class="block mb-12 mt-12 font-sm">Prepared by:</label>
             <div class="flex flex-col">
               <strong><input type="text" id="preparedBy" v-model="form.prepared_by" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode"></strong>
-              <span>Psychologist I</span>
+              <span>Psychologist</span>
             </div>
           </div>
           <div class="space-y-2 mt-4">
@@ -120,18 +120,19 @@
         </div>
       </div>
 
-      <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-        <div class="flex justify-between items-center">
-          <div class="flex flex-col">
-            <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
-            <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+      <div class=" border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;"> 
+      <div class="flex justify-between items-start w-full">
+          <div class="flex flex-col w-full"> <!-- Expanded width for the text section -->
+              <p class="font-bold">PAGE 1 of 1</p>
+              <p class="border-t-2 border-black"></p>
+              <p class="pt-2">DSWD Field Office XI , Ramon Magsaysay Avenue corner Damaso Suazo Street, Davao City, Philippines 8000</p>
+              <p > Website: <span class="text-blue-600 underline">http://www.dswd.gov.ph </span>Tel Nos.: (082) 227-1964 Email: <span class="text-blue-600 underline">fo11@dswd.gov.ph </span> </p>
           </div>
-          <div class="ml-4">
-            <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
+          <div class="w-1/6 flex justify-end"> <!-- Restricting the image section to the right side -->
+              <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-32 object-cover"> <!-- Expanded width for image -->
           </div>
-        </div>
       </div>
+  </div>
     </form>
   </div>
 
@@ -214,8 +215,8 @@ export default {
         problem_behavior_log: '',
         interventions_conducted: '',
         progress_notes: '',
-        prepared_by: 'BRYAN V. GALANG, MPsy, RPsy',
-        noted_by: 'ANGELIC B. PAÑA, RSW, MSSW',
+        prepared_by: '',
+        noted_by: '',
       },
       editMode: false,
       message: '',
@@ -313,14 +314,15 @@ export default {
       this.saveResultMessage = '';
     },
     exportToPdf() {
-  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
-  const pageHeight = 297; // Total page height in mm
+  const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
+  const pageHeight = 356; // Total page height in mm
   const marginBottom = 30; // Bottom margin in mm
-  const rowHeight = 10; // Height of each row
+  const rowHeight = 8; // Height of each row
   const lineHeight = 7; // Space between lines
-  const maxContentHeight = pageHeight - marginBottom; // Max height for content before adding a new page
+  const footerHeight = 0; // Adjust to fit the height of your footer
+  const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
   const maxWidth = 170; // Maximum width for text
-  let contentYPos = 65; // Start Y position for content
+  let contentYPos = 75; // Start Y position for content
   let initialX = 20; // X position for content
   let currentPage = 1; // Start at page 1
 
@@ -329,7 +331,7 @@ export default {
     // Header text
     pdf.setFontSize(9);
     pdf.setFont('TimesNewRoman', 'italic');
-    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+    pdf.text('DSWD-GF-010 | REV 02 | 22 SEP 2023', 135, 20);
   };
   
   // Helper function to add a new page if content exceeds the page height
@@ -345,36 +347,10 @@ export default {
     }
   };
 
-  const addFooter = () => {
-    if (currentPage === 1) {
-      // Footer for Page 1
-      pdf.setFontSize(9);
-      pdf.setFont('TimesNewRoman', 'bold');
-      pdf.setLineWidth(0.5);
-      pdf.line(17, 282, 173, 282); // Footer line
 
-      pdf.setFont('times', 'normal');
-      const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
-      pdf.text(footerText, 95, 287, { align: 'center' });
-      pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 292, { align: 'center' });
-
-      const footerImgData = '/images/footerimg.png';
-      pdf.addImage(footerImgData, 'PNG', 175, 275, 25, 12); // Footer image
-    } else {
-      // Footer for Page 2 and beyond
-      pdf.setFontSize(8.5);
-      pdf.setFont('TimesNewRoman', 'bold');
-
-      pdf.setLineWidth(0.5);
-      pdf.line(17, 282, 193, 282); // Footer line extending further
-
-      pdf.setFont('times', 'bold');
-      pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 285, { align: 'center' });
-    }
-  };
 
   addHeader();
-
+  pdf.setTextColor(0, 0, 0);
   // DSWD logo
   const imgData = '/images/headerlogo2.png';
   pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
@@ -404,6 +380,7 @@ export default {
 
   // Section: Problem Behavior Log
   contentYPos += rowHeight;
+  contentYPos += 10;
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.text('PROBLEM BEHAVIOR LOG:', initialX, contentYPos);
@@ -422,6 +399,7 @@ export default {
 
   // Section: Interventions Conducted
   contentYPos += rowHeight;
+  contentYPos += 15;
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(11);
@@ -441,6 +419,7 @@ export default {
 
   // Section: Progress Notes
   contentYPos += rowHeight;
+  contentYPos += 15;
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(11);
@@ -459,29 +438,36 @@ export default {
   });
 
 
-  contentYPos +=20;
+  contentYPos +=50;
   // Prepared by Section
   contentYPos += rowHeight; 
   addNewPageIfNeeded();
+  
+  pdf.setFontSize(11);
   pdf.text('Prepared by:', initialX, contentYPos);
   
   contentYPos += rowHeight; 
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(11);
-  pdf.text('BRYAN V. GALANG, MPsy, RPsy', initialX, contentYPos);
+
+  contentYPos += 5; 
+  pdf.text(`${this.form.prepared_by || ''}`, initialX, contentYPos);
   contentYPos += 4; 
   addNewPageIfNeeded();
   pdf.setFont('arial', 'normal');
   pdf.setFontSize(10);
-  pdf.text('Psychologist I', initialX, contentYPos);
+  pdf.text('Psychologist', initialX, contentYPos);
 
   // Noted by Section
   contentYPos += rowHeight; 
   addNewPageIfNeeded();
+  
+  pdf.setFontSize(11);
   pdf.text('Noted by:', initialX, contentYPos);
   
   contentYPos += rowHeight; 
+  contentYPos += 5; 
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(11);
@@ -496,12 +482,13 @@ export default {
   addFooter();
 
   const totalPages = pdf.internal.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    pdf.setPage(i);
-    pdf.setFontSize(9);
-    pdf.setFont('TimesNewRoman', 'bold');
-    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 280, { align: 'center' }); // Update the footer with the correct total pages
-  }
+    for (let i = 1; i <= totalPages; i++) {
+      pdf.setPage(i);
+      pdf.setFontSize(9);
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFont('TimesNewRoman', 'bold');
+      pdf.text(`PAGE ${i} of ${totalPages}`, 105, 333, { align: 'center' }); // Update the footer with the correct total pages
+    }
 
   // Save the PDF with dynamic file name
   pdf.save(`Progress_Report_${this.form.name || 'NoName'}.pdf`);

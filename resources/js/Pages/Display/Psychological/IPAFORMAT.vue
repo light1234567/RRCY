@@ -43,7 +43,7 @@
       <div v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
         <div class="relative flex justify-between items-center mb-2">
           <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-          <p class="text-xs text-right">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+          <p class="text-xs text-right italic">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
         </div>
      
   
@@ -208,19 +208,20 @@
           </div>
         </div>
   
-        <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-          <div class="flex justify-between items-center">
-            <div class="flex flex-col">
-              <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
-              <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-              <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-            </div>
-            <div class="ml-4">
-              <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
-            </div>
+        <div class=" border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;"> 
+      <div class="flex justify-between items-start w-full">
+          <div class="flex flex-col w-full"> <!-- Expanded width for the text section -->
+              <p class="font-bold">PAGE 1 of 1</p>
+              <p class="border-t-2 border-black"></p>
+              <p class="pt-2">DSWD Field Office XI , Ramon Magsaysay Avenue corner Damaso Suazo Street, Davao City, Philippines 8000</p>
+              <p > Website: <span class="text-blue-600 underline">http://www.dswd.gov.ph </span>Tel Nos.: (082) 227-1964 Email: <span class="text-blue-600 underline">fo11@dswd.gov.ph </span> </p>
           </div>
-        </div>
+          <div class="w-1/6 flex justify-end"> <!-- Restricting the image section to the right side -->
+              <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-32 object-cover"> <!-- Expanded width for image -->
+          </div>
       </div>
+  </div>
+</div>
     </form>
   
   
@@ -228,7 +229,7 @@
     
    <div v-if="currentPage === 2" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
     <div class="relative flex justify-end items-center mb-2">
-              <p class="text-xs text-right">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+              <p class="text-xs text-right">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
             </div>
    
             <div class="space-y-2">
@@ -288,7 +289,7 @@
    <!-- Page 3 -->
    <div v-if="currentPage === 3" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto border border-gray-200">
     <div class="relative flex justify-end items-center mb-2">
-              <p class="text-xs text-right">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+              <p class="text-xs text-right">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
             </div>
   
             <div class="space-y-4 mt-6">
@@ -621,7 +622,7 @@
       // Header text
       pdf.setFontSize(9);
       pdf.setFont('TimesNewRoman', 'italic');
-      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+      pdf.text('DSWD-GF-010 | REV.00 | 12 SEP 2023', 135, 20);
     };
     
     // Helper function to add a new page if content exceeds the page height
@@ -637,34 +638,50 @@
       }
     };
   
-    const addFooter = () => {
+    
+  const addFooter = () => {
       if (currentPage === 1) {
-        // Footer for Page 1
         pdf.setFontSize(9);
         pdf.setFont('TimesNewRoman', 'bold');
         pdf.setLineWidth(0.5);
-        pdf.line(17, 340, 173, 340); // Footer line
+        pdf.line(17, 335, 173, 335); // Footer line
   
         pdf.setFont('times', 'normal');
-        const footerText = pdf.splitTextToSize('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 160);
-        pdf.text(footerText, 95, 345, { align: 'center' });
-        pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 105, 349, { align: 'center' });
+        const footerText = pdf.splitTextToSize('DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000', 160);
+        pdf.text(footerText, 95, 340, { align: 'center' });
+        pdf.text('Website: ', 45, 345, { align: 'center' });
+        pdf.text('Tel Nos.: (082) 227-1964 Email:', 105, 345, { align: 'center' });
+
+        pdf.setFontSize(9);
+        pdf.setTextColor(0, 0, 255);
+        pdf.text('http://www.dswd.gov.ph', 67, 345, { align: 'center' });
+        pdf.text('fo11@dswd.gov.ph ', 140, 345, { align: 'center' });
+        pdf.setLineWidth(0);
+        pdf.setDrawColor(0, 0, 255);
+        pdf.line(51, 346, 83, 346);
+        pdf.line(127, 346, 153, 346);
+        
+
+
+        //pdf.text('Website: http://www.dswd.gov.ph Tel Nos.: (082) 227-1964 Email: fo11@dswd.gov.ph ', 105, 345, { align: 'center' });
   
         const footerImgData = '/images/footerimg.png';
-        pdf.addImage(footerImgData, 'PNG', 175, 334, 25, 12); // Footer image
+        pdf.addImage(footerImgData, 'PNG', 175, 330, 25, 12); // Footer image
+  
       } else {
         // Footer for Page 2 and beyond
+        pdf.setTextColor(0, 0, 0);
         pdf.setFontSize(8.5);
         pdf.setFont('TimesNewRoman', 'bold');
   
         pdf.setLineWidth(0.5);
-        pdf.line(17, 340, 193, 340); // Footer line extending further
+        pdf.line(17, 335, 193, 335); // Footer line extending further
   
         pdf.setFont('times', 'bold');
-        pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 345, { align: 'center' });
+        pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 340, { align: 'center' });
       }
     };
-  
+
     addHeader();
   
     // DSWD logo
@@ -980,12 +997,13 @@
     // Add the footer for the last page
     addFooter();
   
-    const totalPages = pdf.internal.getNumberOfPages();
+   
+  const totalPages = pdf.internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       pdf.setPage(i);
-      pdf.setFontSize(8);
+      pdf.setFontSize(9);
       pdf.setFont('TimesNewRoman', 'bold');
-      pdf.text(`PAGE ${i} of ${totalPages}`, 105, 338, { align: 'center' }); // Update the footer with the correct total pages
+      pdf.text(`PAGE ${i} of ${totalPages}`, 105, 333, { align: 'center' }); // Update the footer with the correct total pages
     }
   
     // Save the PDF with dynamic file name
