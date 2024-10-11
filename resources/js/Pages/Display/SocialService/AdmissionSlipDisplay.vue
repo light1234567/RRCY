@@ -37,7 +37,6 @@
     </button>
 </div>
 
-
     <!-- Modal for Save Confirmation -->
     <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
       <div class="fixed inset-0 bg-black opacity-50"></div>
@@ -183,16 +182,10 @@
         </div>
 
         <div class="flex items-center">
-        <!-- Offense Committed Section -->
-        <div class="text-[15px] flex items-center w-1/2">
-          <label class="mb-3    text-black mr-2 whitespace-nowrap">Offense Committed:</label>
-          <input type="text" v-model="client.admissions[0].offense_committed" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs":readonly="!editMode"
-/>
-        </div>
-
+       
         <!-- Date Admitted Section -->
         <div class="text-[15px] flex items-center w-1/2">
-  <label class="mb-3 text-black mr-2 whitespace-nowrap ml-4">Date admitted to Center:</label>
+  <label class="mb-3 text-black mr-2 whitespace-nowrap ">Date admitted to Center:</label>
   
   <!-- Show the date admitted in a readonly input when not in edit mode -->
   <template v-if="!editMode">
@@ -204,6 +197,13 @@
     <input type="date" class="underline w-full text-xs" v-model="client.admissions[0].date_admitted" placeholder="Date Admitted">
   </template>
 </div>
+
+ <!-- Offense Committed Section -->
+ <div class="text-[15px] flex items-center w-1/2">
+          <label class="mb-3    text-black mr-2 whitespace-nowrap ml-4">Offense Committed:</label>
+          <input type="text" v-model="client.admissions[0].offense_committed" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs":readonly="!editMode"
+/>
+        </div>
 
       </div>
 
@@ -265,13 +265,14 @@
         </div>
 
 
- <!-- Checklist for Documents Submitted -->
+<!-- Checklist for Documents Submitted -->
 <div class="mb-4">
   <label class="text-[15px] block mb-2 font-semibold text-black">Put on Documents Submitted:</label>
   <div class="pl-4">
     <!-- Checklist with 3 columns -->
     <div class="text-[15px] grid grid-cols-3 gap-x-10 gap-y-2">
       
+      <!-- First Row: 3 items -->
       <!-- SCSR Checkbox -->
       <label class="block font-semibold text-gray-700">
         <input 
@@ -305,6 +306,7 @@
         > Medical Certificates
       </label>
 
+      <!-- Second Row: 3 items -->
       <!-- Consent from Parents Checkbox -->
       <label class="block font-semibold text-gray-700">
         <input 
@@ -327,33 +329,39 @@
         > School Records
       </label>
 
-     <!-- Others Checkbox with input -->
-<label class="block font-semibold text-gray-700 flex items-center">
-  <input 
-    type="checkbox" 
-    class="mr-2" 
-    :checked="isDocumentSubmitted(client, 'Others')" 
-    @change="toggleDocument(client, 'Others')" 
-    :disabled="!editMode"
-  > Others
-  
-  <!-- Show input for "Others" if it's checked -->
-  <input 
-    v-if="isDocumentSubmitted(client, 'Others') && editMode" 
-    type="text" 
-    v-model="othersDocumentName" 
-    placeholder="Specify Others" 
-    class="ml-2 underline-input bg-transparent flex-grow text-xs"
-    @input="handleOtherDocument(client, othersDocumentName)" 
-  >
-  
-  <!-- Display the "Others" document name if it exists and not in edit mode -->
-  <span v-if="getOthersDocument(client) && !editMode" class="ml-2">
-    ({{ getOthersDocument(client) }})
-  </span>
-</label>
+      <!-- Others Checkbox -->
+      <label class="block font-semibold text-gray-700 flex items-center">
+        <input 
+          type="checkbox" 
+          class="mr-2" 
+          :checked="isDocumentSubmitted(client, 'Others')" 
+          @change="toggleDocument(client, 'Others')" 
+          :disabled="!editMode"
+        > Others
+      </label>
 
+      <!-- Conditional Header for Other Documents Submitted -->
+      <div class="col-span-3" v-if="getOthersDocument(client) || (othersDocumentName && editMode)">
+        <label class="-ml-4 text-[15px] font-semibold text-black">Other Documents Submitted:</label>
+      </div>
 
+      <!-- Third Row: Only input field for "Others" -->
+      <div class="col-span-3">
+        <!-- Show input for "Others" if it's checked -->
+        <input 
+          v-if="isDocumentSubmitted(client, 'Others') && editMode" 
+          type="text" 
+          v-model="othersDocumentName" 
+          placeholder="Specify Others" 
+          class="ml-2 underline-input bg-transparent flex-grow text-xs w-full"
+          @input="handleOtherDocument(client, othersDocumentName)" 
+        >
+  
+        <!-- Display the "Others" document name if it exists and not in edit mode -->
+        <span v-if="getOthersDocument(client) && !editMode" class="underline ml-2">
+          1. {{ getOthersDocument(client) }}
+        </span>
+      </div>
 
     </div>
   </div>
@@ -546,6 +554,7 @@ export default {
   data() {
     return {
       clients: [],
+      isSticky: false,
       admission_id: null, // Admission ID used for update logic
       center_head: '',
       editMode: false,
@@ -611,15 +620,11 @@ export default {
     this.id = this.$route.params.id;
     this.fetchClientsData();
     this.fetchCenterHead();
+    window.addEventListener('scroll', this.handleScroll);
   },
-  goBack() {
-    if (window.history.length > 1) {
-      // If there is browser history, go back
-      window.history.back();
-    } else {
-      // If no history, navigate to the case page
-      this.$router.push({ name: 'case', params: { id: this.id } });
-    }
+  beforeDestroy() {
+    // Clean up listener
+    window.removeEventListener('scroll', this.handleScroll);
   },
   watch: {
     '$route.params.id': function(newId) {
@@ -654,7 +659,17 @@ export default {
     openModal() {
       this.isModalOpen = true;
     },
+    handleScroll() {
+      const offset = window.pageYOffset;
+      const triggerHeight = 400; // Adjust this height to the point you want the tab to stick
 
+      // Check if scroll offset is greater than the trigger height
+      if (offset > triggerHeight) {
+        this.isSticky = true;
+      } else {
+        this.isSticky = false;
+      }
+    },
     closeModal() {
       this.isModalOpen = false;
     },
@@ -1204,15 +1219,48 @@ function fillCheckboxWithCheck(pdf, x, y) {
     pdf.text(`${client.admissions[0]?.crim_case_number}`, 143, offset);
     pdf.line(143, offset + 1, 200, offset + 1);
 
-    // Offense Committed and Date Admitted
-    offset += 10;
-    pdf.text('Offense Committed:', 20, offset);
-    pdf.text(`${client.admissions[0]?.offense_committed}`, 58, offset);
-    pdf.line(58, offset + 1, 110, offset + 1);
+// Date Admitted Section (switched to the left)
+offset += 10;
+pdf.text('Date admitted to Center:', 20, offset);
+pdf.text(`${client.admissions[0]?.date_admitted}`, 64, offset);
+pdf.line(64, offset + 1, 110, offset + 1);
 
-    pdf.text('Date admitted to Center:', 115, offset);
-    pdf.text(`${client.admissions[0]?.date_admitted}`, 160, offset);
-    pdf.line(160, offset + 1, 200, offset + 1);
+// Dynamic Offense Committed Section (switched to the right)
+pdf.text('Offense Committed:', 115, offset);
+const offenseCommitted = `${client.admissions[0]?.offense_committed || ''}`;
+
+// Define the available widths for each row
+const firstLineMaxWidth = 48; // Available width for the first line (from x = 152 to x = 200)
+const fullLineMaxWidth = 180; // Available width for the subsequent lines (from x = 20 to x = 200)
+
+// Split the text for the "Offense Committed" field, limiting the first line to 48mm width
+const firstLineOffense = pdf.splitTextToSize(offenseCommitted, firstLineMaxWidth);
+
+// Check if the text fits on one line or requires wrapping
+if (firstLineOffense.length === 1) {
+    // If only one line is required, draw it on the same row
+    pdf.text(firstLineOffense[0], 152, offset);
+    pdf.line(152, offset + 1, 200, offset + 1); // Underline for the first line
+    // Keep the offset as is (single line case), no extra spacing added
+} else {
+    // If the text wraps to a second line, draw the first part at x = 152 and wrap the rest on the next line
+    const remainingOffenseText = offenseCommitted.substring(firstLineOffense[0].length).trim();
+    pdf.text(firstLineOffense[0], 152, offset);
+    pdf.line(152, offset + 1, 200, offset + 1); // Underline for the first line
+
+    // Wrap the rest of the text on the next line
+    const wrappedRemainingOffense = pdf.splitTextToSize(remainingOffenseText, fullLineMaxWidth);
+
+    wrappedRemainingOffense.forEach((line, index) => {
+        const lineY = offset + (index + 1) * 7; // Adjust line height dynamically for subsequent lines
+        pdf.text(line, 20, lineY); // Start each line at x = 20
+        pdf.line(20, lineY + 1, 200, lineY + 1); // Underline from x = 20 to x = 200 to match full width
+    });
+
+    // Adjust the offset based on the number of wrapped lines
+    offset += (wrappedRemainingOffense.length * 7);
+}
+
 
     // Days in Jail and Detention Center
     offset += 10;
@@ -1269,51 +1317,74 @@ function fillCheckboxWithCheck(pdf, x, y) {
       }
     }
 
-    // Document checkboxes
-    pdf.rect(20, offset + 4, 4, 4);
-    pdf.text(`SCSR`, 28, offset + 7.5);
-    if (documentNames.includes('SCSR')) {
-      fillCheckboxWithCheck(pdf, 20, offset + 4);
-    }
+   // Existing code for rendering documents checkboxes
+pdf.rect(20, offset + 4, 4, 4);
+pdf.text(`SCSR`, 28, offset + 7.5);
+if (documentNames.includes('SCSR')) {
+  fillCheckboxWithCheck(pdf, 20, offset + 4);
+}
 
-    pdf.rect(90, offset + 4, 4, 4);
-    pdf.text(`Court Order`, 98, offset + 7.5);
-    if (documentNames.includes('Court Order')) {
-      fillCheckboxWithCheck(pdf, 90, offset + 4);
-    }
+pdf.rect(90, offset + 4, 4, 4);
+pdf.text(`Court Order`, 98, offset + 7.5);
+if (documentNames.includes('Court Order')) {
+  fillCheckboxWithCheck(pdf, 90, offset + 4);
+}
 
-    pdf.rect(157, offset + 4, 4, 4);
-    pdf.text(`Medical Certificates`, 165, offset + 7.5);
-    if (documentNames.includes('Medical Certificates')) {
-      fillCheckboxWithCheck(pdf, 157, offset + 4);
-    }
+pdf.rect(157, offset + 4, 4, 4);
+pdf.text(`Medical Certificates`, 165, offset + 7.5);
+if (documentNames.includes('Medical Certificates')) {
+  fillCheckboxWithCheck(pdf, 157, offset + 4);
+}
 
-    pdf.rect(20, offset + 12, 4, 4);
-    pdf.text(`Consent from Parents`, 28, offset + 15.5);
-    if (documentNames.includes('Consent from Parents')) {
-      fillCheckboxWithCheck(pdf, 20, offset + 12);
-    }
+pdf.rect(20, offset + 12, 4, 4);
+pdf.text(`Consent from Parents`, 28, offset + 15.5);
+if (documentNames.includes('Consent from Parents')) {
+  fillCheckboxWithCheck(pdf, 20, offset + 12);
+}
 
-    pdf.rect(90, offset + 12, 4, 4);
-    pdf.text(`School Records`, 98, offset + 15.5);
-    if (documentNames.includes('School Records')) {
-      fillCheckboxWithCheck(pdf, 90, offset + 12);
-    }
-    pdf.rect(157, offset + 12, 4, 4);
-    pdf.text(`Others`, 165, offset + 15.5);
+pdf.rect(90, offset + 12, 4, 4);
+pdf.text(`School Records`, 98, offset + 15.5);
+if (documentNames.includes('School Records')) {
+  fillCheckboxWithCheck(pdf, 90, offset + 12);
+}
 
-    // Check if "Others" is in the list and display its value
-    const othersDocument = documentNames.find(doc => !this.knownDocuments().includes(doc));
+// Checkbox for "Others"
+pdf.rect(157, offset + 12, 4, 4);
+pdf.text(`Others`, 165, offset + 15.5);
 
-    if (othersDocument) {
-      // Fill the checkbox if "Others" is selected
-      fillCheckboxWithCheck(pdf, 157, offset + 12);
-      
-      // Display the value of the "Others" document next to the checkbox
-      pdf.text(`(${othersDocument})`, 180, offset + 15.5); // Adjust position if needed
-    }
+// Check if "Others" is selected and adjust layout accordingly
+const othersDocument = documentNames.find(doc => !this.knownDocuments().includes(doc));
 
-    offset += index * 160 + 10; // Initial offset setup for the current client's section
+if (othersDocument) {
+  // Fill the checkbox for "Others"
+  fillCheckboxWithCheck(pdf, 157, offset + 12);
+  
+  // Move to the next line to display "Other Documents Submitted" section
+  offset += 16; // Add space below checkboxes
+  pdf.setFont('helvetica', 'bold');
+  pdf.text('Other Documents Submitted:', 20, offset + 8); // Header for other documents
+  
+// Display the actual name of the other document(s)
+offset += 8;
+pdf.setFont('helvetica', 'normal');
+
+// Split text into multiple lines if it's too long
+const wrappedText = pdf.splitTextToSize(`1. ${othersDocument}`, 180); // Adjust the width (170) as needed
+
+// Render each line of the wrapped text
+wrappedText.forEach((line, i) => {
+    pdf.text(line, 20, offset + 8 + (i * 6)); // Each line moves down by 6 units
+    
+    // Add underline for each line
+    const textWidth = pdf.getStringUnitWidth(line) * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+    pdf.line(20, offset + 9 + (i * 6), 20 + textWidth, offset + 9 + (i * 6)); // Underline for each line
+});
+
+// Adjust the offset to move down after rendering all lines
+offset += wrappedText.length * 4;
+
+}
+
 
     // General Impression Section with Justified Text
     pdf.setFont('helvetica', 'bold');
@@ -1477,8 +1548,6 @@ function fillCheckboxWithCheck(pdf, x, y) {
   vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
   font-size: inherit; /* Ensure consistent font size */
 }
-
-
 
 /* Ensure the form fits within Legal size dimensions for printing */
 @media print {
