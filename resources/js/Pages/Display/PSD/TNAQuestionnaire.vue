@@ -906,7 +906,7 @@ removeTraining(index) {
 
   exportToPdf() {
     const pdf = new jsPDF('p', 'mm', [216, 356]);  // Custom size: 216 mm x 356 mm (Long paper size)
-const pageHeight = 356;  // Long paper height in mm
+const pageHeight = pdf.internal.pageSize.getHeight();  // Long paper height in mm
     const marginBottom = 30; // Space for footer
     const footerHeight = 20; // Space for footer
     let currentY = 140; // Start Y position for content
@@ -971,7 +971,7 @@ const pageHeight = 356;  // Long paper height in mm
    
     
 
-    
+    addFooter();
    
 
     // Form title
@@ -981,25 +981,25 @@ const pageHeight = 356;  // Long paper height in mm
 
     // Add fields like "FOR THE" and "Date of Admission"
     pdf.setFontSize(12);
-    pdf.text(`FOR THE: ${this.form.period}` , 105, 50, "center");
+    pdf.text(`FOR THE: ${this.form.period||''}` , 105, 50, "center");
     
-    pdf.text(`Date of Admission: ${this.form.period}`, 105, 55, "center");
+    pdf.text(`Date of Admission: ${this.form.period||''}`, 105, 55, "center");
     
 
     pdf.setFontSize(11);
-    pdf.text(`Petsa sa Pagtubag ${this.form.period}`, 160, 65, "center"); // Example name
+    pdf.text(`Petsa sa Pagtubag: ${this.form.period||''}`, 160, 65, "center"); // Example name
     
     // Add personal information fields
-    pdf.text(`Pangalan: ${this.form.name}`, 20, 75);
+    pdf.text(`Pangalan: ${this.form.name|| ''}`, 20, 75);
     
     
 
-    pdf.text(`Adlaw nga Natawhan: ${this.form.birthdate}`, 20, 85);
-    pdf.text(`Lugar nga Natawhan: ${this.form.place_of_birth}`, 20, 90);
+    pdf.text(`Adlaw nga Natawhan: ${this.form.birthdate||''}`, 20, 85);
+    pdf.text(`Lugar nga Natawhan: ${this.form.place_of_birth||''}`, 20, 90);
     
     
 
-    pdf.text(`Edad: ${this.form.age}`, 130, 85);
+    pdf.text(`Edad: ${this.form.age||''}`, 130, 85);
     
 
     // Education Section
@@ -1011,23 +1011,23 @@ const pageHeight = 356;  // Long paper height in mm
     pdf.setFont('Arial', 'normal');
 
     // Using ASCII representation for checkmarks
-    pdf.text(`[ ${this.form.selectedEducationLevel === 'Wala Naka eskwela' ? 'X' : ' '} ] Wala Naka eskwela`, 30, 105);
-    pdf.text(`[ ${this.form.selectedEducationLevel === 'Elementary Level' ? 'X' : ' '} ] Elementary Level (Grade `, 30, 115);
-    pdf.text(`${this.form.elementaryGrade} )`, 80, 115); // Display the grade if applicable
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Wala Naka eskwela' ? '/' : ' '} ] Wala Naka eskwela`, 30, 105);
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Elementary Level' ? '/' : ' '} ] Elementary Level (Grade `, 30, 115);
+    pdf.text(`${this.form.elementaryGrade||''} )`, 80, 115); // Display the grade if applicable
    
 
-    pdf.text(`[ ${this.form.selectedEducationLevel === 'Elementary Graduate' ? 'X' : ' '} ] Elementary Graduate`, 30, 125);
-    pdf.text(`[ ${this.form.selectedEducationLevel === 'Junior High School Level' ? 'X' : ' '} ] Junior High School Level (Year `, 100, 105);
-    pdf.text(`${this.form.juniorHighYear} )`, 165, 105); // Display the year if applicable
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Elementary Graduate' ? '/' : ' '} ] Elementary Graduate`, 30, 125);
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Junior High School Level' ? '/' : ' '} ] Junior High School Level (Year `, 100, 105);
+    pdf.text(`${this.form.juniorHighYear||''} )`, 165, 105); // Display the year if applicable
    
 
-    pdf.text(`[ ${this.form.selectedEducationLevel === 'Senior High School Level' ? 'X' : ' '} ] Senior High School Level (Year `, 100, 115);
-    pdf.text(`${this.form.seniorHighYear} )`, 165, 115); // Display the year if applicable
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Senior High School Level' ? '/' : ' '} ] Senior High School Level (Year `, 100, 115);
+    pdf.text(`${this.form.seniorHighYear||''} )`, 165, 115); // Display the year if applicable
     
 
-    pdf.text(`[ ${this.form.selectedEducationLevel === 'Senior High School Graduate' ? 'X' : ' '} ] Senior High School Graduate`, 100, 125);
-    pdf.text(`[ ${this.form.selectedEducationLevel === 'College Level' ? 'X' : ' '} ] College Level (Year `, 100, 130);
-    pdf.text(`${this.form.collegeYear} )`, 150, 130); // Display the year if applicable
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'Senior High School Graduate' ? '/' : ' '} ] Senior High School Graduate`, 100, 125);
+    pdf.text(`[ ${this.form.selectedEducationLevel === 'College Level' ? '/' : ' '} ] College Level (Year `, 100, 130);
+    pdf.text(`${this.form.collegeYear||''} )`, 150, 130); // Display the year if applicable
     
 
 
@@ -1035,26 +1035,26 @@ const pageHeight = 356;  // Long paper height in mm
     // Add fields for social worker, houseparent, and parents' names
     
     pdf.setFont('Arial', 'normal');
-    pdf.text(`Pangalan sa imong Social Worker: ${this.form.social_worker}`, 20, currentY);
+    pdf.text(`Pangalan sa imong Social Worker: ${this.form.social_worker||''}`, 20, currentY);
   
 
-    pdf.text(`Pangalan sa imong Houseparent: ${this.form.houseparent}`, 20, currentY+5);
+    pdf.text(`Pangalan sa imong Houseparent: ${this.form.houseparent||''}`, 20, currentY+5);
     
     pdf.setFont('Arial', 'bold');
     pdf.text(`Pangalan sa Ginikanan:`, 20, currentY+15);
     
     pdf.setFont('Arial', 'normal');
-    pdf.text(`Amahan: ${this.form.father}`, 20, currentY+20);
+    pdf.text(`Amahan: ${this.form.father||''}`, 20, currentY+20);
     
 
-    pdf.text(`Inahan: ${this.form.mother}`, 20,  currentY+ 25);
+    pdf.text(`Inahan: ${this.form.mother||''}`, 20,  currentY+ 25);
     
 
     // Address and other details
-    pdf.text(`Pinuy-Anan: ${this.form.address}`, 20, currentY + 35);
+    pdf.text(`Pinuy-Anan: ${this.form.address||''}`, 20, currentY + 35);
     
 
-    pdf.text(`Kadugayon sa Pagpuyo sa Center: ${this.form.center_duration}`, 20, currentY + 40);
+    pdf.text(`Kadugayon sa Pagpuyo sa Center: ${this.form.center_duration||''}`, 20, currentY + 40);
     
 
     // Training Section
@@ -1102,24 +1102,7 @@ pdf.autoTable({
     theme: 'grid',  // Optional: adds a grid to the table
     showHead: 'firstPage',  // Show the full header on the first page only
     pageBreak: 'auto',  // Automatically handle page breaks
-    didDrawPage: function (data) {
-        // This is for Table 1's presence on the page
-        if (firstTableOnPage && !secondTableOnPage) {  // Only add Footer 1 if Table 2 isn't present
-            addFooter();  // Add Footer 1
-        }
-        
-    },
-    didDrawCell: function (data) {
-        // Detect if Table 1 is still present on the current page
-        if (data.section === 'body' && data.row.index === 0) {
-            firstTableOnPage = true;  // Table 1 is present on the current page
-        }
-        
-        // Detect when the last row of Table 1 has been drawn
-        if (data.section === 'body' && data.row.index === data.table.body.length - 1) {
-            firstTableOnPage = false;  // Table 1 has finished on the page
-        }
-    }
+    
 
 });
 
@@ -1157,11 +1140,11 @@ this.automotiveSector.forEach((item, index) => {
     data.push({
         number: index + 1,
         training: item.name,
-        rank1: item.rank === "1" ? 'X' : '',
-        rank2: item.rank === "2" ? 'X' : '',
-        rank3: item.rank === "3" ? 'X' : '',
-        rank4: item.rank === "4" ? 'X' : '',
-        rank5: item.rank === "5" ? 'X' : '',
+        rank1: item.rank === "1" ? '/' : '',
+        rank2: item.rank === "2" ? '/' : '',
+        rank3: item.rank === "3" ? '/' : '',
+        rank4: item.rank === "4" ? '/' : '',
+        rank5: item.rank === "5" ? '/' : '',
         remarks: item.remarks
     });
 });
@@ -1172,11 +1155,11 @@ this.agriculturalSector.forEach((item, index) => {
     data.push({
         number: index + 1,
         training: item.name,
-        rank1: item.rank === "1" ? 'X' : '',
-        rank2: item.rank === "2" ? 'X' : '',
-        rank3: item.rank === "3" ? 'X' : '',
-        rank4: item.rank === "4" ? 'X' : '',
-        rank5: item.rank === "5" ? 'X' : '',
+        rank1: item.rank === "1" ? '/' : '',
+        rank2: item.rank === "2" ? '/' : '',
+        rank3: item.rank === "3" ? '/' : '',
+        rank4: item.rank === "4" ? '/' : '',
+        rank5: item.rank === "5" ? '/' : '',
         remarks: item.remarks
     });
 });
@@ -1187,11 +1170,11 @@ this.healthSector.forEach((item, index) => {
     data.push({
         number: index + 1,
         training: item.name,
-        rank1: item.rank === "1" ? 'X' : '',
-        rank2: item.rank === "2" ? 'X' : '',
-        rank3: item.rank === "3" ? 'X' : '',
-        rank4: item.rank === "4" ? 'X' : '',
-        rank5: item.rank === "5" ? 'X' : '',
+        rank1: item.rank === "1" ? '/' : '',
+        rank2: item.rank === "2" ? '/' : '',
+        rank3: item.rank === "3" ? '/' : '',
+        rank4: item.rank === "4" ? '/' : '',
+        rank5: item.rank === "5" ? '/' : '',
         remarks: item.remarks
     });
 });
@@ -1202,11 +1185,11 @@ this.ictSector.forEach((item, index) => {
     data.push({
         number: index + 1,
         training: item.name,
-        rank1: item.rank === "1" ? 'X' : '',
-        rank2: item.rank === "2" ? 'X' : '',
-        rank3: item.rank === "3" ? 'X' : '',
-        rank4: item.rank === "4" ? 'X' : '',
-        rank5: item.rank === "5" ? 'X' : '',
+        rank1: item.rank === "1" ? '/' : '',
+        rank2: item.rank === "2" ? '/' : '',
+        rank3: item.rank === "3" ? '/' : '',
+        rank4: item.rank === "4" ? '/' : '',
+        rank5: item.rank === "5" ? '/' : '',
         remarks: item.remarks
     });
 });
@@ -1217,11 +1200,11 @@ this.metalsSector.forEach((item, index) => {
     data.push({
         number: index + 1,
         training: item.name,
-        rank1: item.rank === "1" ? 'X' : '',
-        rank2: item.rank === "2" ? 'X' : '',
-        rank3: item.rank === "3" ? 'X' : '',
-        rank4: item.rank === "4" ? 'X' : '',
-        rank5: item.rank === "5" ? 'X' : '',
+        rank1: item.rank === "1" ? '/' : '',
+        rank2: item.rank === "2" ? '/' : '',
+        rank3: item.rank === "3" ? '/' : '',
+        rank4: item.rank === "4" ? '/' : '',
+        rank5: item.rank === "5" ? '/' : '',
         remarks: item.remarks
     });
 });
@@ -1232,11 +1215,11 @@ this.tourismSector.forEach((item, index) => {
     data.push({
         number: index + 1,
         training: item.name,
-        rank1: item.rank === "1" ? 'X' : '',
-        rank2: item.rank === "2" ? 'X' : '',
-        rank3: item.rank === "3" ? 'X' : '',
-        rank4: item.rank === "4" ? 'X' : '',
-        rank5: item.rank === "5" ? 'X' : '',
+        rank1: item.rank === "1" ? '/' : '',
+        rank2: item.rank === "2" ? '/' : '',
+        rank3: item.rank === "3" ? '/' : '',
+        rank4: item.rank === "4" ? '/' : '',
+        rank5: item.rank === "5" ? '/' : '',
         remarks: item.remarks
     });
 });
@@ -1247,11 +1230,11 @@ this.constructionSector.forEach((item, index) => {
     data.push({
         number: index + 1,
         training: item.name,
-        rank1: item.rank === "1" ? 'X' : '',
-        rank2: item.rank === "2" ? 'X' : '',
-        rank3: item.rank === "3" ? 'X' : '',
-        rank4: item.rank === "4" ? 'X' : '',
-        rank5: item.rank === "5" ? 'X' : '',
+        rank1: item.rank === "1" ? '/' : '',
+        rank2: item.rank === "2" ? '/' : '',
+        rank3: item.rank === "3" ? '/' : '',
+        rank4: item.rank === "4" ? '/' : '',
+        rank5: item.rank === "5" ? '/' : '',
         remarks: item.remarks
     });
 });
@@ -1262,11 +1245,11 @@ this.basicTrainings.forEach((item, index) => {
     data.push({
         number: index + 1,
         training: item.name,
-        rank1: item.rank === "1" ? 'X' : '',
-        rank2: item.rank === "2" ? 'X' : '',
-        rank3: item.rank === "3" ? 'X' : '',
-        rank4: item.rank === "4" ? 'X' : '',
-        rank5: item.rank === "5" ? 'X' : '',
+        rank1: item.rank === "1" ? '/' : '',
+        rank2: item.rank === "2" ? '/' : '',
+        rank3: item.rank === "3" ? '/' : '',
+        rank4: item.rank === "4" ? '/' : '',
+        rank5: item.rank === "5" ? '/' : '',
         remarks: item.remarks
     });
 });
@@ -1330,7 +1313,7 @@ pdf.autoTable({
 
     
 
-    pdf.text(`${this.center_head}`, 160, 300, "center");
+    pdf.text(`${this.center_head||''}`, 160, 300, "center");
     pdf.line(130, 301, 190, 301);
     pdf.text("Pangalan ug Pirma sa Residente", 160, 306, "center");
 

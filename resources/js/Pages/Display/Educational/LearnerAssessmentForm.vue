@@ -24,10 +24,10 @@
     <div class="relative flex justify-between items-center mb-4">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-24 w-48">
       <div class="text-right flex flex-col justify-center">
-        <p class="text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
-        <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
-        <p class="text-sm font-semibold">Youth/RFO XI</p>
-        <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="text-sm font-semibold text-center">PROTECTIVE SERVICES DIVISION</p>
+        <p class="text-sm font-semibold text-center">Regional Rehabilitation Center for Youth</p>
+        <p class="text-sm font-semibold text-center">Youth/RFO XI</p>
+        <p class="text-xs text-center">DSWD-GF-007 | REV 03 / 22 SEP 2023</p>
       </div>
     </div>
 
@@ -377,7 +377,7 @@
           <div class="flex flex-col">
             <p class="font-bold">PAGE 1 of 1</p>
             <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p>Email: <span class="text-blue-600 underline">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+            <p>Email: <span class="text-blue-600 underline">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
           <div>
             <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
@@ -582,7 +582,7 @@ fetchFormData() {
 },
 exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
-  const pageHeight = 297; // A4 page height in mm
+  const pageHeight = 356; // A4 page height in mm
   const marginBottom = 10; // Space for footer
   const marginTop = 20;
   const footerHeight = 10; // Space for footer
@@ -602,7 +602,7 @@ exportToPdf() {
     pdf.text('Youth/RFO XI', 160, 30, { align: 'center' });
     pdf.setFontSize(8);
     pdf.setFont('Times', 'italic');
-    pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 35);
+    pdf.text('DSWD-GF-007 | REV 03 / 22 SEP 2023', 135, 35);
   };
 
  // Helper function to add a new page if content exceeds the page height

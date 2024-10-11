@@ -178,7 +178,7 @@
           <div class="flex flex-col">
             <p class="mr-6 font-bold text-center ">PAGE 1 of 1</p>
             <p class="border-t border-black pt-2 text-[10px]">DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000</p>
-            <p><span class="text-blue-600 underline">Website: http://www.rrcy.fo11@dswd.gov.ph Tel Nos.: (082) 293-03-06</span></p>
+            <p>Website:<span class="text-blue-600 underline"> http://www.rrcy.fo11@dswd.gov.ph Tel Nos.: (082) 293-03-06</span></p>
           </div>
           <div>
             <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
@@ -457,7 +457,7 @@
   
     exportToPdf() {
       const pdf = new jsPDF('p', 'mm', [216, 356]); // Create a new PDF document
-      const pageHeight = 356; // A4 page height in mm
+      const pageHeight = pdf.internal.pageSize.getHeight(); 
       const marginBottom = 30; // Space for footer
       const footerHeight = 20; // Space for footer
       let currentY = 40; // Start Y position for content

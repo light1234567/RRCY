@@ -1,21 +1,7 @@
 <template>
-<!-- Tabs for Actions -->
-<div v-if="editMode" class="flex absolute p-4 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
-      <!-- FontAwesome for Back -->
-      <i class="fas fa-arrow-left w-4 h-4"></i>
-      <span>Back</span>
-    </button>
-</div>
-
-<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-[52px]">
-    <!-- Pagination Component -->
-    <Pagination 
-      :totalPages="totalPages" 
-      :currentPage="currentPage" 
-      @update:currentPage="currentPage = $event" 
-    />
-    <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+  <!-- Edit and Save Buttons -->
+  <div class="flex justify-end space-x-4 mb-4">
+        <button @click="toggleEdit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
           <span v-if="!editMode">Edit</span>
           <span v-else>Cancel</span>
         </button>
@@ -23,34 +9,29 @@
           Save
         </button>
 
-    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-    
-      <i class="fas fa-file-pdf w-4 h-4"></i>
-      <span>Export PDF</span>
-    </button> 
-</div>
-  
+
+        
+        <button @click="exportToPdf" type="button" class="bg-red-500 text-white px-4 py-2 rounded">
+        Export to PDF
+      </button>
+
+      </div>
   
       <!-- Success/Error Message -->
   <div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
     {{ message }}
   </div>
-  <div class="graph-background pt-0.5  -mr-9 -mb-16">
-
-    <div class="p-12 mt-8 bg-white max-w-screen-md mx-auto border border-gray-400 rounded-lg shadow-lg">
-      <div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
-    {{ message }}
-  </div>
+  
+    <div class="p-8 bg-white max-w-screen-md mx-auto border border-gray-300 rounded-lg shadow-lg">
       <!-- Header Section -->
       <div class="text-center border-b pb-2 mb-4">
         <div class="flex justify-between items-center">
     <!-- Stretch the image -->
     <img src="/images/headerlogo3.png" alt="DSWD Logo" class="h-20 w-auto"> 
-    <div class="text-right">
-      <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
-      <p class="text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
-      <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-      <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+    <div class="text-center">
+      <p class="item-center mr-6 text-xs font-semibold">REGIONAL REHABILITATION CENTER FOR YOUTH</p>
+      <p class="text-xs text-center font-semibold">RRCY/FIELD OFFICE XI</p>
+      <p class="text-xs font-semibold italic">DSWD-GF-010 | REV 01 | 17 AUG 2022</p>
     </div>
         </div>
         <h1 class="text-xl font-bold mt-2">NURSING CARE SERVICE</h1>
@@ -319,7 +300,7 @@
           type="text"
           v-model="center_head"
           class="text-sm font-semibold w-44 mt-1 underline-input shadow-none"
-          readonly
+          :readonly="!editMode"
         >
       </div>
       <p class="text-sm mt-2">SWO IV/Center Head</p>
@@ -339,7 +320,7 @@
             </div>
           </div>
         </div>
-        </div>
+  
     </div>
   </template>
   <script>
@@ -348,16 +329,11 @@
 import '../../../fonts/arial-normal.js'; 
 import '../../../fonts/times-normal.js'; 
 import '../../../fonts/arialbd-bold.js'; 
-import Pagination from '@/Components/Pagination.vue';
+
 
   export default {
-    components:{
-      Pagination,
-    },
     data() {
       return {
-        totalPages: 1,
-        currentPage: 1,
         center_head: '',
         showCamera: false,
     videoStream: null,
@@ -401,7 +377,7 @@ import Pagination from '@/Components/Pagination.vue';
       const clientId = this.$route.params.id;
       console.log('client ID:', clientId); // Log client ID on component mount
       this.fetchData(clientId);
-      this.fetchCenterHead();
+      this.fetchCenterHead(clientId);
     },
     watch: {
       '$route.params.id': function (newClientId) {
@@ -453,15 +429,38 @@ import Pagination from '@/Components/Pagination.vue';
             this.clearMessageAfterDelay();
           });
       },
-      fetchCenterHead() {
-    axios.get('/api/center-head')  // Replace with the correct API route
-      .then(response => {
-        this.center_head = response.data.name;  // Bind the fetched name to v-model
-      })
-      .catch(error => {
-        console.error('Error fetching center head:', error);
-      });
-  },
+      fetchCenterHead(clientId) {
+        if (!clientId) {
+          console.error("Client ID is missing.");
+          return;
+        }
+        axios.get(`/api/center-head/${clientId}`)
+          .then(response => {
+            this.center_head = response.data.center_head;
+            console.log("Fetched center head:", this.center_head); // Log the center head
+          })
+          .catch(error => {
+            console.error("Error fetching center head:", error);
+          });
+      },
+      saveCenterHead() {
+        const clientId = this.$route.params.id;
+        if (!this.center_head || !clientId) {
+          return;
+        }
+        axios
+          .put(`/api/update-center-head`, {
+            center_head: this.center_head,
+            client_id: clientId, // Use the correct client ID
+          })
+          .then(response => {
+            this.editMode = false;
+            this.fetchData(clientId); // Refetch the data to update the UI
+          })
+          .catch(error => {
+            console.error("Error updating center head:", error);
+          });
+      },
   
       calculateAge(birthDate) {
         const today = new Date();
@@ -617,19 +616,69 @@ import Pagination from '@/Components/Pagination.vue';
     }, 3000); // Clear the message after 3 seconds
   },
   exportToPdf() { 
-  const pdf = new jsPDF('p', 'mm', 'a4'); // Standard A4 size document
-  const pageHeight = 297; // Total page height in mm
-  const marginBottom = 30; // Bottom margin in mm
-  const rowHeight = 8; // Height of each row
-  const lineHeight = 5; // Space between lines
-  const footerHeight = 5; // Adjust to fit the height of your footer
-  const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
-  const maxWidth = 90; // Maximum width for text
-  let contentYPos = 0; // Start Y position for content (initialize contentYPos)
-  let initialX = 20; // X position for content
-
-
+    const pdf = new jsPDF('p', 'mm', [216, 356]);
+    const pageHeight = 356; // Total page height in mm
+    const marginBottom = 10; // Bottom margin in mm
+    const rowHeight = 10; // Height of each row
+    const lineHeight = 7; // Space between lines
+    const footerHeight = 0; // Adjust to fit the height of your footer
+    const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
+    const maxWidth = 170; // Maximum width for text
+    let contentYPos = 0; // Start Y position for content
+    let initialX = 20; // X position for content
+    let currentPage = 1; // Start at page 1
   
+    
+    const addHeader = () => {
+      // Header text
+      pdf.setFontSize(9);
+      pdf.setFont('TimesNewRoman', 'italic');
+      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+    };
+    
+    // Helper function to add a new page if content exceeds the page height
+    const addNewPageIfNeeded = () => {
+      if (contentYPos >= maxContentHeight) {
+        pdf.addPage(); // Add new page
+        addHeader(); // Add the header on the new page
+        pdf.setLineWidth(0.5);
+        pdf.rect(10, 10, 190, 335); 
+        currentPage++; // Increment page number
+        contentYPos = 40; // Reset Y position for the new page
+        pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
+        pdf.setFontSize(11); // Set font size back to what it was
+      }
+    };
+
+    pdf.setLineWidth(0.5);
+  pdf.rect(10, 10, 190, 335); 
+
+  pdf.line(10, 40, 200, 40); 
+  pdf.line(10, 52, 200, 52); 
+  pdf.line(10, 58, 200, 58); 
+  pdf.line(10, 64, 200, 64); 
+  pdf.line(10, 69, 200, 69); 
+  pdf.line(10, 80, 200, 80); 
+  pdf.line(10, 85, 200, 85); 
+  pdf.line(10, 90, 200, 90); 
+  pdf.line(10, 95, 200, 95); 
+  pdf.line(10, 100, 200, 100); 
+  pdf.line(10, 105, 200,105); 
+  pdf.line(10, 110, 200, 110); 
+  pdf.line(10, 115, 200, 115); 
+  pdf.line(10, 120, 200, 120); 
+  pdf.line(10, 125, 200, 125); 
+  pdf.line(10, 135, 200, 135); 
+  pdf.line(10, 155, 200, 155); 
+
+
+  pdf.line(110, 135, 110, 155); 
+  pdf.line(90, 80 , 90, 125); 
+
+  pdf.setLineWidth(0);
+
+  pdf.line(139, 52 , 139, 64); 
+  pdf.line(49, 58 , 49, 64); 
 
   // Add header logo
   const logoImg = "/images/headerlogo3.png"; 
@@ -647,7 +696,7 @@ import Pagination from '@/Components/Pagination.vue';
 
   pdf.setFontSize(8);
   pdf.setFont('times', 'italic','bold');
-  pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 150, 32, { align: 'center' });
+  pdf.text('DSWD-GF-010 | REV 01 | 17 AUG 2022', 150, 32, { align: 'center' });
   contentYPos += 10;
 
 
@@ -790,10 +839,7 @@ pdf.setFontSize(14);
   pdf.setFont('arial', 'normal'); 
   pdf.text(`${this.form.hair_status || ''}`, initialX+103, contentYPos);
 
-
-
-
-contentYPos +=60;
+  contentYPos +=6;
   const profileImage = this.form.profile_image 
   ? `/profile_images/${this.form.profile_image}` 
   : this.previewImage || '/images/default-profile.jpg'; // Fallback to default image if none
@@ -802,45 +848,61 @@ contentYPos +=60;
   img.src = profileImage; // Set the image source
   img.onload = () => {
       // Add the profile image to the PDF
-      pdf.addImage(img, 'PNG', initialX + 90, contentYPos+-54, 90, 81); // Adjust size as necessary
+      pdf.addImage(img, 'PNG', initialX + 90, contentYPos, 90, 81); // Adjust size as necessary
 
 
 
-  contentYPos += 10;
-  pdf.setFontSize(10);
-  pdf.setFont('arialbd', 'bold'); 
+
+
+
+
+
+      contentYPos +=5;
+      pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold');
   pdf.text(`SERVICES GIVEN:`, initialX+-9, contentYPos);
 
-  contentYPos = 164;
+  contentYPos += rowHeight;
+  contentYPos +=2;
   pdf.setFont('arial', 'normal');
   pdf.setFontSize(10);
-  const services_givenLog = `${this.form.services_given || ''}`;
-  const services_givenLines = pdf.splitTextToSize(services_givenLog, maxWidth);
+  const services_giveLog = `${this.form.services_given || ''}`;
+  const services_giveLogLines = pdf.splitTextToSize(services_giveLog, maxWidth+-75);
 
-  services_givenLines.forEach(line => {
-    pdf.text(line, initialX+-9, contentYPos);
+  services_giveLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX+-9, contentYPos-3);
     contentYPos += lineHeight;
   });
 
-  contentYPos = 199;
-  pdf.setFontSize(10);
-  pdf.setFont('arialbd', 'bold'); 
+
+  contentYPos +=5;
+  addNewPageIfNeeded();
+      pdf.setFontSize(10);
+  pdf.setFont('arialbd', 'bold');
   pdf.text(`REMARKS:`, initialX+-9, contentYPos);
 
-  contentYPos = 204;
+  contentYPos += rowHeight;
+  contentYPos +=2;
   pdf.setFont('arial', 'normal');
   pdf.setFontSize(10);
   const remarksLog = `${this.form.remarks || ''}`;
-  const remarksLines = pdf.splitTextToSize(remarksLog, maxWidth);
+  const remarksLogLines = pdf.splitTextToSize(remarksLog, maxWidth+-75);
 
-  remarksLines.forEach(line => {
-    pdf.text(line, initialX+-9, contentYPos);
+  remarksLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX+-9, contentYPos-3);
     contentYPos += lineHeight;
   });
 
 
 
-  contentYPos = 240;
+
+
+
+  
+ contentYPos +=50
+ addNewPageIfNeeded();
   pdf.setFontSize(10);
   pdf.setFont('arialbd', 'bold'); 
   pdf.text(`PREPARED BY:`, initialX+-9, contentYPos);
@@ -855,6 +917,7 @@ contentYPos +=60;
 
 
 contentYPos += 10;
+
 
 
 pdf.setFont('arialbd', 'bold');
@@ -878,39 +941,6 @@ pdf.setFont('arialbd', 'bold');
   pdf.line(125, contentYPos+1, 170, contentYPos+1);
   pdf.text('SWO IV / Center Head', initialX+110, contentYPos+5);
 
-
-
-  pdf.setLineWidth(0.5);
-  pdf.rect(10, 10, 190, 277); 
-
-  pdf.line(10, 40, 200, 40); 
-  pdf.line(10, 52, 200, 52); 
-  pdf.line(10, 58, 200, 58); 
-  pdf.line(10, 64, 200, 64); 
-  pdf.line(10, 69, 200, 69); 
-  pdf.line(10, 80, 200, 80); 
-  pdf.line(10, 85, 200, 85); 
-  pdf.line(10, 90, 200, 90); 
-  pdf.line(10, 95, 200, 95); 
-  pdf.line(10, 100, 200, 100); 
-  pdf.line(10, 105, 200,105); 
-  pdf.line(10, 110, 200, 110); 
-  pdf.line(10, 115, 200, 115); 
-  pdf.line(10, 120, 200, 120); 
-  pdf.line(10, 125, 200, 125); 
-  pdf.line(10, 135, 200, 135); 
-  pdf.line(10, 155, 200, 155); 
-  pdf.line(10, 195, 110, 195); 
-  pdf.line(10, 236, 200, 236); 
-
-  pdf.line(100, 236, 100, 287); 
-  pdf.line(110, 135, 110, 155); 
-  pdf.line(90, 80 , 90, 125); 
-
-  pdf.setLineWidth(0);
-
-  pdf.line(139, 52 , 139, 64); 
-  pdf.line(49, 58 , 49, 64); 
 
 
 
@@ -941,10 +971,5 @@ img.onerror = (err) => {
     margin: 0;
     vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
   }
-  .graph-background {
-      background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
-                        linear-gradient(to bottom, #cccccc 1px, transparent 1px);
-      background-size: 15px 15px; /* Adjust size as per your need */
-    } 
   </style>
   
