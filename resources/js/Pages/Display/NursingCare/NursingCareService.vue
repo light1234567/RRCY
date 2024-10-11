@@ -319,7 +319,7 @@
           type="text"
           v-model="center_head"
           class="text-sm font-semibold w-44 mt-1 underline-input shadow-none"
-          :readonly="!editMode"
+          readonly
         >
       </div>
       <p class="text-sm mt-2">SWO IV/Center Head</p>
@@ -401,7 +401,7 @@ import Pagination from '@/Components/Pagination.vue';
       const clientId = this.$route.params.id;
       console.log('client ID:', clientId); // Log client ID on component mount
       this.fetchData(clientId);
-      this.fetchCenterHead(clientId);
+      this.fetchCenterHead();
     },
     watch: {
       '$route.params.id': function (newClientId) {
@@ -453,38 +453,15 @@ import Pagination from '@/Components/Pagination.vue';
             this.clearMessageAfterDelay();
           });
       },
-      fetchCenterHead(clientId) {
-        if (!clientId) {
-          console.error("Client ID is missing.");
-          return;
-        }
-        axios.get(`/api/center-head/${clientId}`)
-          .then(response => {
-            this.center_head = response.data.center_head;
-            console.log("Fetched center head:", this.center_head); // Log the center head
-          })
-          .catch(error => {
-            console.error("Error fetching center head:", error);
-          });
-      },
-      saveCenterHead() {
-        const clientId = this.$route.params.id;
-        if (!this.center_head || !clientId) {
-          return;
-        }
-        axios
-          .put(`/api/update-center-head`, {
-            center_head: this.center_head,
-            client_id: clientId, // Use the correct client ID
-          })
-          .then(response => {
-            this.editMode = false;
-            this.fetchData(clientId); // Refetch the data to update the UI
-          })
-          .catch(error => {
-            console.error("Error updating center head:", error);
-          });
-      },
+      fetchCenterHead() {
+    axios.get('/api/center-head')  // Replace with the correct API route
+      .then(response => {
+        this.center_head = response.data.name;  // Bind the fetched name to v-model
+      })
+      .catch(error => {
+        console.error('Error fetching center head:', error);
+      });
+  },
   
       calculateAge(birthDate) {
         const today = new Date();

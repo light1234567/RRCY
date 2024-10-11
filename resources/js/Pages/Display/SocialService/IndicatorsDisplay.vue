@@ -180,41 +180,47 @@
                       <!-- Physical rows here -->
   
                       <tr>
-                <td class="py-2 text-[16px] font-bold px-4 border border-black" rowspan="2">Physical</td>
+                        <td class="py-2 text-[16px] font-bold px-4 border border-black" rowspan="2">Physical</td>
                 <td class="py-2 px-4 border border-black">Has very poor hygiene and grooming</td>
-                <td class="py-2 px-4 border border-black"></td>
-                <td class="py-2 px-4 border border-black">Practices adequate self-care habits but still needs monitoring and supervision to maintain such</td>
-                <td class="py-2 px-4 border border-black"></td>
-                <td class="py-2 px-4 border border-black">Practices adequate self-care habits even without monitoring and supervision</td>
-                <td class="py-2 px-4 border border-black"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="justify-center items-center w-full mt-1 px-2 border border-black rounded-md" v-model="form.physical_raw_score1" :readonly="!editMode" @input="validateRawScore('physical_raw_score1')">
+                  <input type="checkbox" v-model="form.indicators_level.physical_one" :disabled="!editMode" @change="selectOnlyOne('physical_first', 'physical_one', 1)">
                 </td>
-                <td class="py-2 px-4 border border-black" rowspan="2">
+                <td class="py-2 px-4 border border-black">Practices adequate self-care habits but still needs monitoring and supervision to maintain such</td>
+                <td class="py-2 px-4 border border-black">
+                  <input type="checkbox" v-model="form.indicators_level.physical_two" :disabled="!editMode" @change="selectOnlyOne('physical_first', 'physical_two', 2)">
+                </td>
+                <td class="py-2 px-4 border border-black">Practices adequate self-care habits even without monitoring and supervision</td>
+                <td class="py-2 px-4 border border-black">
+                  <input type="checkbox" v-model="form.indicators_level.physical_three" :disabled="!editMode" @change="selectOnlyOne('physical_first', 'physical_three', 3)">
+                </td>
+                <td class="py-2 px-4 border border-black">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score1" :readonly="!editMode" @input="handleRawScoreInput('physical_raw_score1', 'physical_first')">
+                </td>
+                <td class="py-2 px-3 border border-black" rowspan="2">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_score_per_area1" readonly>
                 </td>
-              </tr> 
+              </tr>
               <td class="py-2 px-4 border border-black">Is completely dependent to others due to absence of appropriate skills to manage physical disability</td>
-              <td class="py-2 px-4 border border-black"></td>
+              <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.physical_four" :disabled="!editMode" @change="selectOnlyOne('physical_second','physical_four', 1)"></td>
                 <td class="py-2 px-4 border border-black">With very limited skills to manage physical disability which causes him or her to unnecessarily require assistance from others at times</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.physical_five" :disabled="!editMode" @change="selectOnlyOne('physical_second','physical_five', 2)"></td>
                 <td class="py-2 px-4 border border-black">Has appropriate skills to function within capacity</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.physical_six" :disabled="!editMode" @change="selectOnlyOne('physical_second','physical_six', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score2" :readonly="!editMode" @input="validateRawScore('physical_raw_score2')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score2" :readonly="!editMode" @input="handleRawScoreInput('physical_raw_score2','physical_second')">
                 </td>
                 <tr>
                 <td class="py-2 px-4 text-[16px] font-bold border border-black" rowspan="6">Emotional</td>
                 <td class="py-2 px-4 border border-black">Is often times sad / lonely which results to his or her lack of interest in anything despite encourage from others.</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_one" :disabled="!editMode" @change="selectOnlyOne('emotional_first','emotional_one', 1)"></td>
                 <td class="py-2 px-4 border border-black">Experiences sadness / loneliness which he or she allows to interfere in the performance of daily tasks and dealings with others.</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_two" :disabled="!editMode" @change="selectOnlyOne('emotional_first','emotional_two', 2)"></td>
                 <td class="py-2 px-4 border border-black">Copes well with sadness or loneliness as he or she does not let such emotion interfere both in daily tasks and social relationship.</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_three" :disabled="!editMode" @change="selectOnlyOne('emotional_first','emotional_three', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score1" :readonly="!editMode" @input="validateRawScore('emotional_raw_score1')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score1" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score1','emotional_first')">
                 </td>
-                <td class="py-2 px-4 border border-black" rowspan="6">
+                <td class="py-2 px-3 border border-black" rowspan="6">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_score_per_area1" readonly>
                 </td>
               </tr> 
@@ -224,24 +230,24 @@
           <li>self-isolation</li>
           <li>lack of desire to improve self / does not believe that his or her situation will improve at all.</li>
   </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_four" :disabled="!editMode" @change="selectOnlyOne('emotional_second','emotional_four', 1)"></td>
                 <td class="py-2 px-4 border border-black">Feels hopeless at times and allows such emotion to negatively affect performance of tasks and social relationship. However, he or she shows no suicidal tendency</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_five" :disabled="!editMode" @change="selectOnlyOne('emotional_second','emotional_five', 2)"></td>
                 <td class="py-2 px-4 border border-black">Is generally optimistic despite difficult situations which enable him or her to perform tasks or roles</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_six" :disabled="!editMode" @change="selectOnlyOne('emotional_second','emotional_six', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score2" :readonly="!editMode" @input="validateRawScore('emotional_raw_score2')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score2" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score2','emotional_second')">
                 </td>
                 <tr>
                 
                 <td class="py-2 px-4 border border-black">Oftentimes experiences extreme / severe fear because of traumatic event/s in life which results to social and functional impairment like withdrawal, fighting back, and unnecessary cautiousness</td>
-                <td class="py-2 px-4 border border-black"></td>                
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_seven" :disabled="!editMode" @change="selectOnlyOne('emotional_third','emotional_seven', 1)"></td>                
                 <td class="py-2 px-4 border border-black">Sometimes experiences fear as a result of traumatic event. With constant encouragement; however, he or she tries not to allow such to affect dealings with others and performance of tasks</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_eight" :disabled="!editMode" @change="selectOnlyOne('emotional_third','emotional_eight', 2)"></td>
                 <td class="py-2 px-4 border border-black">Copes well with traumatic events as evident by his or her social and functional adjustment even with very minimal requirement for support from others</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_nine" :disabled="!editMode" @change="selectOnlyOne('emotional_third','emotional_nine', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score3" :readonly="!editMode" @input="validateRawScore('emotional_raw_score3')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score3" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score3','emotional_third')">
                 </td>
               </tr> 
               
@@ -331,21 +337,21 @@
                   <li>relationship with others is superficial</li>
                   <li>displaces anger to others</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_ten" :disabled="!editMode" @change="selectOnlyOne('emotional_fourth','emotional_ten', 1)"></td>
                 <td class="py-2 px-4 border border-black">Is trying to overcome ill feelings (e.g. hatred, resentment and anger) as may be evident by any or all of the following expressions: 
                   <li>that revenge may only worsen the situation</li>
                   <li>that reconciliation may be possible in the future</li>
                   <li>that he or she may consider forgiving the individual(s) who has/have done wrong to him or her</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_eleven" :disabled="!editMode" @change="selectOnlyOne('emotional_fourth','emotional_eleven', 2)"></td>
                 <td class="py-2 px-4 border border-black">Has decided to let go of ill-feelings as may be evident in any or all of the following:
                   <li>has forgiven others</li>
                   <li>is ready to ask forgiveness for those whom he may have done wrong</li>
                   <li>believes that there are people who are genuinely interested in his or her welfare</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_twelve" :disabled="!editMode" @change="selectOnlyOne('emotional_fourth','emotional_twelve', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score4" :readonly="!editMode" @input="validateRawScore('emotional_raw_score4')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score4" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score4','emotional_fourth')">
                 </td>
                 <td class="py-2 px-4 border border-black" rowspan="6">
                   
@@ -355,28 +361,28 @@
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Is severely guilty for grave offense committed which make him or her feel unworthy and incapable of doing good</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_thirteen" :disabled="!editMode" @change="selectOnlyOne('emotional_fifth','emotional_thirteen', 1)"></td>
                 <td class="py-2 px-4 border border-black">Feels guilty for grave offense committed which make him or her at times doubt capacity to be a good person</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_fourteen" :disabled="!editMode" @change="selectOnlyOne('emotional_fifth','emotional_fourteen', 2)"></td>
                 <td class="py-2 px-4 border border-black">Because of feelings of guilt for an offense committed, he or she strives to change negative attitudes that cause damage to others</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_fifteen" :disabled="!editMode" @change="selectOnlyOne('emotional_fifth','emotional_fifteen', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score5" :readonly="!editMode" @input="validateRawScore('emotional_raw_score5')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score5" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score5','emotional_fifth')">
                 </td>
               </tr> 
   
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Is severely guilty because of the incarceration of her abuser which, she is made to believe, resulted to the difficulties being faced by the family. Such emotion cripples her daily interaction with others</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_sixteen" :disabled="!editMode" @change="selectOnlyOne('emotional_sixth','emotional_sixteen', 1)"></td>
                 <td class="py-2 px-4 border border-black">Sometimes think that she is to blame because of family disintegration due to the case she filed against her perpetrator</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_seventeen" :disabled="!editMode" @change="selectOnlyOne('emotional_sixth','emotional_seventeen', 2)"></td>
                 <td class="py-2 px-4 border border-black">Believes that revealing the truth about the abuse she experienced and taking legal action are appropriate. Feels good about self for taking the right action against her perpetrator.</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_eighteen" :disabled="!editMode" @change="selectOnlyOne('emotional_sixth','emotional_eighteen', 3)"></td>
 
                 <td class="py-2 px-4 border border-black">
 
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score6" :readonly="!editMode" @input="validateRawScore('emotional_raw_score6')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score6" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score6','emotional_sixth')">
                 </td>
               </tr> 
                   </tbody>
@@ -389,35 +395,37 @@
                   <li>saying offensive words without caution</li>
                   <li>vices</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_one" :disabled="!editMode" @change="selectOnlyOne('social_first','social_one', 1)"></td>
                 <td class="py-2 px-4 border border-black">Exercises self-control when he or she believes that it will bring him or her some reward or will make him or her appear good to others</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_two" :disabled="!editMode" @change="selectOnlyOne('social_first','social_two', 2)"></td>
                 <td class="py-2 px-4 border border-black">Exercises self-control in all cases as evident in the following:
                   <li>cautious in giving comments so that he or she may not hurt or offend others</li>
                   <li>avoids involvement in fights</li>
                   <li>avoids stealing</li>
                   <li>avoids display of inappropriate sexual behavior</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_three" :disabled="!editMode" @change="selectOnlyOne('social_first','social_three', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score1" :readonly="!editMode" @input="validateRawScore('social_raw_score1')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score1" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score1','social_first')">
                 </td>
-                <td class="py-2 px-4 border border-black" rowspan="6">
+                <td class="py-2 px-3 border border-black" rowspan="6">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_score_per_area1" readonly>
                 </td>
               </tr> 
+              <tr class="text-[11px]">
               <td class="text-[11px] py-2 px-4 border border-black">Lacks sense of responsibility as evident in refusing to perform tasks / roles and constantly complaining even if tasks given are:
                 <li>appropriate to age, intellectual ability, physical strength</li>
                 <li>not against his or her principles and religious belief</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_four" :disabled="!editMode" @change="selectOnlyOne('social_second','social_four', 1)"></td>
                 <td class="text-[11px]  py-2 px-4 border border-black">Carries out responsibilities but requires supervision and close monitoring</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_five" :disabled="!editMode" @change="selectOnlyOne('social_second','social_five', 2)"></td>
                 <td class="text-[11px]  py-2 px-4 border border-black">Performs responsibilities to the best of his or her ability even without prodding. He or she may at times express complaints but does so only when task given is not within his or her own capacity and not against religious beliefs and principles</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_six" :disabled="!editMode" @change="selectOnlyOne('social_second','social_six', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full  p-2 border border-black rounded-md" v-model="form.social_raw_score2" :readonly="!editMode" @input="validateRawScore('social_raw_score2')">
-                </td>   
+                  <input type="text" class="w-full  p-2 border border-black rounded-md" v-model="form.social_raw_score2" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score2','social_second')">
+                </td> 
+              </tr>   
               </table>
               <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
   <div class="flex justify-between items-center">
@@ -491,17 +499,17 @@
                   <li>always dwells on what she or he cannot do rather than on what she or he can perform</li>
                   <li>isolates self, most of the time</li>  
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_seven" :disabled="!editMode" @change="selectOnlyOne('social_third','social_seven', 1)"></td>
                 <td class="py-2 px-4 border border-black">Tries to participate in center's activities although with some degree of hesitation because of doubt that she or he will be able to perform as expected. Needs constant encouragement.</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_eight" :disabled="!editMode" @change="selectOnlyOne('social_third','social_eight', 2)"></td>
                 <td class="py-2 px-4 border border-black">Aware of limitations but still maintain healthy self-confidence as shown in his or her ability to do the following:
                   <li>assert</li>
                   <li>avoid saying self-demeaning words</li>
                   <li>active participation in center's activities</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_nine" :disabled="!editMode" @change="selectOnlyOne('social_third','social_nine', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score3" :readonly="!editMode" @input="validateRawScore('social_raw_score3')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score3" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score3','social_third')">
                 </td>
                 <td class="py-2 px-4 border border-black" rowspan="6">
                 </td>
@@ -514,13 +522,13 @@
                   <li>does not want to perform tasks</li>
                   <li>always answers back</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_ten" :disabled="!editMode" @change="selectOnlyOne('social_fourth','social_ten', 1)"></td>
                 <td class="py-2 px-4 border border-black">Is selective in showing respect</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_eleven" :disabled="!editMode" @change="selectOnlyOne('social_fourth','social_eleven', 2)"></td>
                 <td class="py-2 px-4 border border-black">Respects others at all times</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_twelve" :disabled="!editMode" @change="selectOnlyOne('social_fourth','social_twelve', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score4" :readonly="!editMode" @input="validateRawScore('social_raw_score4')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score4" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score4','social_fourth')">
                 </td>
                 
               </tr> 
@@ -528,13 +536,13 @@
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Can't decide for himself or herself either because of absence of appropriate decision-making skills</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_thirteen" :disabled="!editMode" @change="selectOnlyOne('social_fifth','social_thirteen', 1)"></td>
                 <td class="py-2 px-4 border border-black">Makes decisions but always needs the confirmation of others</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_fouteen" :disabled="!editMode" @change="selectOnlyOne('social_fifth','social_fouteen', 2)"></td>
                 <td class="py-2 px-4 border border-black">Decides for himself or herself but refers to others for assistance when appropriate</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_fifteen" :disabled="!editMode" @change="selectOnlyOne('social_fifth','social_fifteen', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score5" :readonly="!editMode" @input="validateRawScore('social_raw_score5')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score5" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score5','social_fifth')">
                 </td>
               </tr> 
               <tr>
@@ -543,17 +551,17 @@
                   <li>imposes harsh decisions, distorted values, false beliefs, inappropriate practices, etc.</li>
                   <li>intimates or threatens others to get things done</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_sixteen" :disabled="!editMode" @change="selectOnlyOne('social_sixth','social_sixteen', 1)"></td>
                 <td class="py-2 px-4 border border-black">Sometimes tends to dominate and manipulate others, but tries to control such tendency especially when attention is called</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_seventeen" :disabled="!editMode" @change="selectOnlyOne('social_sixth','social_seventeen', 2)"></td>
                 <td class="py-2 px-4 border border-black">Refrains from domineering or manipulating others as evident in the following:
                   <li>adheres to group decision</li>
                   <li>refrains from imposing beliefs, values or practices to others</li>
                   <li>refrains from threatening others to achieve or get what he or she wants</li>
                 </td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_eighteen" :disabled="!editMode" @change="selectOnlyOne('social_sixth','social_eighteen', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score6" :readonly="!editMode" @input="validateRawScore('social_raw_score6')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score6" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score6','social_sixth')">
                 </td>
              
               </tr> 
@@ -561,13 +569,13 @@
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Is always involved in stealing and shows no remorse</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_nineteen" :disabled="!editMode" @change="selectOnlyOne('social_seventh','social_nineteen', 1)"></td>
                 <td class="py-2 px-4 border border-black">Has the tendency to steal but shows remorse by returning stolen items and expressing the need to be restrained from committing such act</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_twenty" :disabled="!editMode" @change="selectOnlyOne('social_seventh','social_twenty', 2)"></td>
                 <td class="py-2 px-4 border border-black">Does not steal</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_twenty_one" :disabled="!editMode" @change="selectOnlyOne('social_seventh','social_twenty_one', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score7" :readonly="!editMode" @input="validateRawScore('social_raw_score7')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score7" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score7','social_seventh')">
                 </td>
                
               </tr> 
@@ -575,13 +583,13 @@
               <tr>
                 
                 <td class="py-2 px-4 border border-black">Always tells lies to damage or hurt others and to make self-appear superior over other people</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_twenty_two" :disabled="!editMode" @change="selectOnlyOne('social_eighth','social_twenty_two', 1)"></td>
                 <td class="py-2 px-4 border border-black">Has the tendency to lie in some occasions but avoids that may harm or damage others</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_twenty_three" :disabled="!editMode" @change="selectOnlyOne('social_eighth','social_twenty_three', 2)"></td>
                 <td class="py-2 px-4 border border-black">Strives to be honest at all times</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_twenty_four" :disabled="!editMode" @change="selectOnlyOne('social_eighth','social_twenty_four', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score8" :readonly="!editMode" @input="validateRawScore('social_raw_score8')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score8" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score8','social_eighth')">
                 </td>
                
               </tr> 
@@ -660,15 +668,15 @@
                       
                       <td class="py-2 px-4 text-[16px] font-bold border border-black" >Spiritual</td>
                 <td class="py-2 px-4 border border-black">Blames God for his or her crises or failures in life which results to lingering hopelessness and other negative emotions</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.spiritual_one" :disabled="!editMode" @change="selectOnlyOne('spiritual','spiritual_one', 1)"></td>
                 <td class="py-2 px-4 border border-black">Does not blame God for his or her crises and failures in life but doubts whether God cares for him or her at all</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.spiritual_two" :disabled="!editMode"  @change="selectOnlyOne('spiritual','spiritual_two', 2)"></td>
                 <td class="py-2 px-4 border border-black">Recognizes that God cares for him or her and is ready to provide needed strength to cope with the crisis and failures in life</td>
-                <td class="py-2 px-4 border border-black"></td>
+                <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.spiritual_three" :disabled="!editMode"  @change="selectOnlyOne('spiritual','spiritual_three', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_raw_score1" :readonly="!editMode" @input="validateRawScore('spiritual_raw_score1')">
+                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_raw_score1" :readonly="!editMode" @input="handleRawScoreInput('spiritual_raw_score1','spiritual')">
                 </td>
-                <td class="py-2 px-4 border border-black">
+                <td class="py-2 px-3 border border-black">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_score_per_area1" readonly>
                 </td>
                 
@@ -682,17 +690,17 @@
       <td class="py-2 px-4 border border-black">
           Not able to read, write and count
       </td>
-      <td class="py-2 px-4 border border-black"></td>
+      <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.educational_one" :disabled="!editMode"  @change="selectOnlyOne('educational','educational_one', 1)"></td>
       <td class="py-2 px-4 border border-black">
           Undertakes non-formal education or willingly
           receives tutorial services to learn basic skills
       </td>
-      <td class="py-2 px-4 border border-black"></td>
+      <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.educational_two" :disabled="!editMode" @change="selectOnlyOne('educational','educational_two', 2)"></td>
       <td class="py-2 px-4 border border-black">
           Able to read, write and count with skills
           appropriate to age and educational attainment
       </td>
-      <td class="py-2 px-4 border border-black"></td>
+      <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.educational_three" :disabled="!editMode" @change="selectOnlyOne('educational','educational_three', 3)"></td>
       <td class="py-2 px-4 border border-black">
           <input
               type="text"
@@ -701,10 +709,10 @@
               class="w-full mt-1 p-2 border border-black rounded-md"
               v-model="form.educational_raw_score"
               :readonly="!editMode"
-              @input="validateRawScore('educational_raw_score')"
+              @input="handleRawScoreInput('educational_raw_score','educational')"
           />
       </td>
-      <td class="py-2 px-4 border border-black">
+      <td class="py-2 px-3 border border-black">
           <input
               type="text"
               class="w-full mt-1 p-2 border border-black  rounded-md"
@@ -723,16 +731,16 @@
           any skills that would help him/her support his/her
           needs
       </td>
-      <td class="py-2 px-4 border border-black"></td>
+      <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.economic_one" :disabled="!editMode" @change="selectOnlyOne('economic','economic_one', 1)"></td>
       <td class="py-2 px-4 border border-black">
           Needs to brush up skills to make them usable for
           employment
       </td>
-      <td class="py-2 px-4 border border-black"></td>
+      <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.economic_two" :disabled="!editMode" @change="selectOnlyOne('economic','economic_two', 2)"></td>
       <td class="py-2 px-4 border border-black">
           Has employable skills
       </td>
-      <td class="py-2 px-4 border border-black"></td>
+      <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.economic_three" :disabled="!editMode" @change="selectOnlyOne('economic','economic_three', 3)"></td>
       <td class="py-2 px-4 border border-black">
           <input
               type="text"
@@ -741,10 +749,10 @@
               class="w-full mt-1 p-2 border border-black  rounded-md"
               v-model="form.economic_raw_score"
               :readonly="!editMode"
-              @input="validateRawScore('economic_raw_score')"
+              @input="handleRawScoreInput('economic_raw_score','economic')"
           />
       </td>
-      <td class="py-2 px-4 border border-black">
+      <td class="py-2 px-3 border border-black">
           <input
               type="text"
               class="w-full mt-1 p-2 border border-black rounded-md"
@@ -848,6 +856,27 @@
         message: '',
         messageType: '',
         case_manager: '',
+        groups: {
+        physical_first: ['physical_one', 'physical_two', 'physical_three'],
+        physical_second: ['physical_four', 'physical_five', 'physical_six'],
+        emotional_first: ['emotional_one', 'emotional_two', 'emotional_three'],
+        emotional_second: ['emotional_four', 'emotional_five', 'emotional_six'],
+        emotional_third: ['emotional_seven', 'emotional_eight', 'emotional_nine'],
+        emotional_fourth: ['emotional_ten', 'emotional_eleven', 'emotional_twelve'],
+        emotional_fifth: ['emotional_thirteen', 'emotional_fourteen', 'emotional_fifteen'],
+        emotional_sixth: ['emotional_sixteen', 'emotional_seventeen', 'emotional_eighteen'],
+        social_first: ['social_one', 'social_two', 'social_three'],
+        social_second: ['social_four', 'social_five', 'social_six'],
+        social_third: ['social_seven', 'social_eight', 'social_nine'],
+        social_fourth: ['social_ten', 'social_eleven', 'social_twelve'],
+        social_fifth: ['social_thirteen', 'social_fouteen', 'social_fifteen'],
+        social_sixth: ['social_sixteen', 'social_seventeen', 'social_eighteen'],
+        social_seventh: ['social_nineteen', 'social_twenty', 'social_twenty_one'],
+        social_eighth: ['social_twenty_two', 'social_twenty_three', 'social_twenty_four'],
+        spiritual: ['spiritual_one', 'spiritual_two', 'spiritual_three'],
+        educational: ['educational_one', 'educational_two', 'educational_three'],
+        economic: ['economic_one', 'economic_two', 'economic_three'],
+      },
         form: {
           client_id: null,
           admission_id: null,
@@ -879,6 +908,65 @@
           economic_score_per_area: '',
           general_score: '',
           interpretation: '',
+          indicators_level: {
+            physical_one: false,
+            physical_two: false,
+            physical_three: false,
+            physical_four: false,
+            physical_five: false,
+            physical_six: false,
+            emotional_one: false,
+            emotional_two: false,
+            emotional_three: false,
+            emotional_four: false,
+            emotional_five: false,
+            emotional_six: false,
+            emotional_seven: false,
+            emotional_eight: false,
+            emotional_nine: false,
+            emotional_ten: false,
+            emotional_eleven: false,
+            emotional_twelve: false,
+            emotional_thirteen: false,
+            emotional_fourteen: false,
+            emotional_fifteen: false,
+            emotional_sixteen: false,
+            emotional_seventeen: false,
+            emotional_eighteen: false,
+            social_one: false,
+            social_two: false,
+            social_three: false,
+            social_four: false,
+            social_five: false,
+            social_six: false,
+            social_seven: false,
+            social_eight: false,
+            social_nine: false,
+            social_ten: false,
+            social_eleven: false,
+            social_twelve: false,
+            social_thirteen: false,
+            social_fouteen: false,
+            social_fifteen: false,
+            social_sixteen: false,
+            social_seventeen: false,
+            social_eighteen: false,
+            social_nineteen: false,
+            social_twenty: false,
+            social_twenty_one: false,
+            social_twenty_two: false,
+            social_twenty_three: false,
+            social_twenty_four: false,
+            spiritual_one: false,
+            spiritual_two: false,
+            spiritual_three: false,
+            educational_one: false,
+            educational_two: false,
+            educational_three: false,
+            economic_one: false,
+            economic_two: false,
+            economic_three: false,
+        },
           prepared_by: '',
           discussed_with: ''
         },
@@ -906,25 +994,6 @@
           this.fetchCaseManager(newId);
         }
       },
-      'form.physical_raw_score1': 'validateRawScore',
-      'form.physical_raw_score2': 'validateRawScore',
-      'form.emotional_raw_score1': 'validateRawScore',
-      'form.emotional_raw_score2': 'validateRawScore',
-      'form.emotional_raw_score3': 'validateRawScore',
-      'form.emotional_raw_score4': 'validateRawScore',
-      'form.emotional_raw_score5': 'validateRawScore',
-      'form.emotional_raw_score6': 'validateRawScore',
-      'form.social_raw_score1': 'validateRawScore',
-      'form.social_raw_score2': 'validateRawScore',
-      'form.social_raw_score3': 'validateRawScore',
-      'form.social_raw_score4': 'validateRawScore',
-      'form.social_raw_score5': 'validateRawScore',
-      'form.social_raw_score6': 'validateRawScore',
-      'form.social_raw_score7': 'validateRawScore',
-      'form.social_raw_score8': 'validateRawScore',
-      'form.spiritual_raw_score1': 'validateRawScore',
-      'form.educational_raw_score': 'validateRawScore',
-      'form.economic_raw_score': 'validateRawScore'
     },
     methods: {
     async fetchData(client_id) {
@@ -964,7 +1033,180 @@
         this.handleAxiosError(error);
       }
     },
-  
+    selectOnlyOne(group, checkboxField, scoreValue) {
+    // Reset all checkboxes in the group
+    this.groups[group].forEach(field => {
+        this.form.indicators_level[field] = false;
+    });
+
+    // Set the selected checkbox
+    this.form.indicators_level[checkboxField] = true;
+
+    // Automatically update the raw score based on the selected checkbox
+    switch (group) {
+        case 'physical_first':
+            this.form.physical_raw_score1 = scoreValue;
+            break;
+        case 'physical_second':
+            this.form.physical_raw_score2 = scoreValue;
+            break;
+        case 'emotional_first':
+            this.form.emotional_raw_score1 = scoreValue;
+            break;
+        case 'emotional_second':
+            this.form.emotional_raw_score2 = scoreValue;
+            break;
+        case 'emotional_third':
+            this.form.emotional_raw_score3 = scoreValue;
+            break;
+        case 'emotional_fourth':
+            this.form.emotional_raw_score4 = scoreValue;
+            break;
+        case 'emotional_fifth':
+            this.form.emotional_raw_score5 = scoreValue;
+            break;
+        case 'emotional_sixth':
+            this.form.emotional_raw_score6 = scoreValue;
+            break;
+        case 'social_first':
+            this.form.social_raw_score1 = scoreValue;
+            break;
+        case 'social_second':
+            this.form.social_raw_score2 = scoreValue;
+            break;
+        case 'social_third':
+            this.form.social_raw_score3 = scoreValue;
+            break;
+        case 'social_fourth':
+            this.form.social_raw_score4 = scoreValue;
+            break;
+        case 'social_fifth':
+            this.form.social_raw_score5 = scoreValue;
+            break;
+        case 'social_sixth':
+            this.form.social_raw_score6 = scoreValue;
+            break;
+        case 'social_seventh':
+            this.form.social_raw_score7 = scoreValue;
+            break;
+        case 'social_eighth':
+            this.form.social_raw_score8 = scoreValue;
+            break;
+        case 'spiritual':
+            this.form.spiritual_raw_score1 = scoreValue;
+            break;
+        case 'educational':
+            this.form.educational_raw_score = scoreValue;
+            break;
+        case 'economic':
+            this.form.economic_raw_score = scoreValue;
+            break;
+        default:
+            break;
+    }
+
+    // Recalculate the scores after updating the raw score
+    this.calculateScores();
+},
+
+    handleRawScoreInput(rawScoreField, group) {
+        // Validate the raw score input
+        if (this.form[rawScoreField] < 0) {
+            this.form[rawScoreField] = 0;
+        } else if (this.form[rawScoreField] > 3) {
+            this.form[rawScoreField] = 3;
+        }
+        this.form[rawScoreField] = parseInt(this.form[rawScoreField], 10) || 0;
+
+        const score = this.form[rawScoreField];
+
+        // Reset checkboxes in the group
+        this.groups[group].forEach(field => {
+            this.form.indicators_level[field] = false;
+        });
+
+        // Update checkbox states based on the validated raw score input
+        if (score === 1) {
+            this.form.indicators_level[this.groups[group][0]] = true;
+        } else if (score === 2) {
+            this.form.indicators_level[this.groups[group][1]] = true;
+        } else if (score === 3) {
+            this.form.indicators_level[this.groups[group][2]] = true;
+        }
+
+        // Recalculate the score after input change
+        this.calculateScores();
+    },
+    calculateScores() {
+    // Calculate physical score per area and round to 2 decimal places
+    this.form.physical_score_per_area1 =
+        this.form.physical_raw_score1 && this.form.physical_raw_score2
+            ? ((parseFloat(this.form.physical_raw_score1) + parseFloat(this.form.physical_raw_score2)) / 2).toFixed(2)
+            : '';
+
+    // Calculate emotional score per area and round to 2 decimal places
+    this.form.emotional_score_per_area1 =
+        [
+            this.form.emotional_raw_score1,
+            this.form.emotional_raw_score2,
+            this.form.emotional_raw_score3,
+            this.form.emotional_raw_score4,
+            this.form.emotional_raw_score5,
+            this.form.emotional_raw_score6
+        ].reduce((sum, score) => sum + (parseFloat(score) || 0), 0) / 6 || '';
+
+    if (this.form.emotional_score_per_area1 !== '') {
+        this.form.emotional_score_per_area1 = parseFloat(this.form.emotional_score_per_area1).toFixed(2);
+    }
+
+    // Calculate social score per area and round to 2 decimal places
+    this.form.social_score_per_area1 =
+        [
+            this.form.social_raw_score1,
+            this.form.social_raw_score2,
+            this.form.social_raw_score3,
+            this.form.social_raw_score4,
+            this.form.social_raw_score5,
+            this.form.social_raw_score6,
+            this.form.social_raw_score7,
+            this.form.social_raw_score8
+        ].reduce((sum, score) => sum + (parseFloat(score) || 0), 0) / 8 || '';
+
+    if (this.form.social_score_per_area1 !== '') {
+        this.form.social_score_per_area1 = parseFloat(this.form.social_score_per_area1).toFixed(2);
+    }
+
+    // Calculate spiritual score per area and round to 2 decimal places
+    this.form.spiritual_score_per_area1 = this.form.spiritual_raw_score1
+        ? parseFloat(this.form.spiritual_raw_score1).toFixed(2)
+        : '';
+
+    // Calculate educational score per area and round to 2 decimal places
+    this.form.educational_score_per_area = this.form.educational_raw_score
+        ? parseFloat(this.form.educational_raw_score).toFixed(2)
+        : '';
+
+    // Calculate economic score per area and round to 2 decimal places
+    this.form.economic_score_per_area = this.form.economic_raw_score
+        ? parseFloat(this.form.economic_raw_score).toFixed(2)
+        : '';
+
+    // Calculate general score based on all available area scores, rounded to 2 decimal places
+    const scores = [
+        this.form.physical_score_per_area1,
+        this.form.emotional_score_per_area1,
+        this.form.social_score_per_area1,
+        this.form.spiritual_score_per_area1,
+        this.form.educational_score_per_area,
+        this.form.economic_score_per_area
+    ].filter(score => score !== '');
+
+    this.form.general_score = scores.length > 0
+        ? (scores.reduce((sum, score) => sum + parseFloat(score), 0) / scores.length).toFixed(2)
+        : '';
+}
+,
+
     fetchCaseManager(clientId) {
       // Fetch the case manager based on the client ID
       if (!clientId) {
@@ -1007,70 +1249,6 @@
           this.saveData();
         }
         this.editMode = !this.editMode;
-      },
-  
-      validateRawScore(field) {
-        if (this.form[field] < 0) {
-          this.form[field] = 0;
-        } else if (this.form[field] > 3) {
-          this.form[field] = 3;
-        }
-        this.form[field] = parseInt(this.form[field], 10) || 0;
-        this.calculateScores();
-      },
-  
-      calculateScores() {
-        this.form.physical_score_per_area1 =
-          this.form.physical_raw_score1 && this.form.physical_raw_score2
-            ? (parseFloat(this.form.physical_raw_score1) + parseFloat(this.form.physical_raw_score2)) / 2
-            : '';
-  
-        this.form.emotional_score_per_area1 =
-          [
-            this.form.emotional_raw_score1,
-            this.form.emotional_raw_score2,
-            this.form.emotional_raw_score3,
-            this.form.emotional_raw_score4,
-            this.form.emotional_raw_score5,
-            this.form.emotional_raw_score6
-          ].reduce((sum, score) => sum + (parseFloat(score) || 0), 0) / 6 || '';
-  
-        this.form.social_score_per_area1 =
-          [
-            this.form.social_raw_score1,
-            this.form.social_raw_score2,
-            this.form.social_raw_score3,
-            this.form.social_raw_score4,
-            this.form.social_raw_score5,
-            this.form.social_raw_score6,
-            this.form.social_raw_score7,
-            this.form.social_raw_score8
-          ].reduce((sum, score) => sum + (parseFloat(score) || 0), 0) / 8 || '';
-  
-        this.form.spiritual_score_per_area1 = this.form.spiritual_raw_score1
-          ? parseFloat(this.form.spiritual_raw_score1)
-          : '';
-  
-        this.form.educational_score_per_area = this.form.educational_raw_score
-          ? parseFloat(this.form.educational_raw_score)
-          : '';
-  
-        this.form.economic_score_per_area = this.form.economic_raw_score
-          ? parseFloat(this.form.economic_raw_score)
-          : '';
-  
-        const scores = [
-          this.form.physical_score_per_area1,
-          this.form.emotional_score_per_area1,
-          this.form.social_score_per_area1,
-          this.form.spiritual_score_per_area1,
-          this.form.educational_score_per_area,
-          this.form.economic_score_per_area
-        ].filter(score => score !== '');
-  
-        this.form.general_score = scores.length > 0
-          ? (scores.reduce((sum, score) => sum + parseFloat(score), 0) / scores.length).toFixed(2)
-          : '';
       },
   
       async saveData() {

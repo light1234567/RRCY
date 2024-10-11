@@ -42,6 +42,7 @@ class CreateIndicatorsOfSocialFunctioningTable extends Migration
             $table->decimal('economic_score_per_area')->nullable();
             $table->decimal('general_score')->nullable();
             $table->text('interpretation')->nullable();
+            $table->json('indicators_level')->nullable();
             $table->string('prepared_by', 50)->nullable();
             $table->string('indicators_case_manager', 50)->nullable();
             $table->string('discussed_with', 50)->nullable();

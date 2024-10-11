@@ -25,13 +25,11 @@ class Admission extends Model
         'general_impression',
         'client_id',
         'referring_party_name',
-        'referring_party_signature',
         'admitting_officer',
         'designation_id_contact',
         'designation',
         'office_address',
         'date_time',
-        'center_head',
         'updated_by',
         'user_role',  // Add user_role field in fillable
     ];

@@ -40,7 +40,7 @@ class AdmissionController extends Controller
                 'admission.case_status' => 'required|string|max:25',
                 'admission.committing_court' => 'required|string|max:50',
                 'admission.crim_case_number' => 'required|string|max:25',
-                'admission.offense_committed' => 'required|string|max:50',
+                'admission.offense_committed' => 'required|string|max:100',
                 'admission.date_admitted' => 'required|date',
                 'admission.days_in_jail' => 'required|integer',
                 'admission.days_in_detention_center' => 'required|integer',
@@ -50,13 +50,11 @@ class AdmissionController extends Controller
                 'documents_submitted.documents.*' => 'string|max:50',
                 'documents_submitted.others' => 'nullable|string|max:20',
                 'admission.referring_party_name' => 'nullable|string|max:50',
-                'referring_party_signature' => 'nullable|file|mimes:jpeg,png,jpg|max:150',
                 'admission.admitting_officer' => 'nullable|string|max:50',
                 'admission.designation_id_contact' => 'nullable|string|max:50',
                 'admission.designation' => 'nullable|string|max:50',
                 'admission.office_address' => 'nullable|string|max:50',
                 'admission.date_time' => 'nullable|date',
-                'admission.center_head' => 'nullable|string|max:50',
             ]);
 
             Log::info('Validation passed. Validated data: ', $validated);

@@ -43,10 +43,15 @@ class IndicatorsOfSocialFunctioning extends Model
         'economic_score_per_area',
         'general_score',
         'interpretation',
+        'indicators_level',
         'prepared_by',
         'indicators_case_manager',
         'discussed_with',
         'updated_by'
+    ];
+    
+    protected $casts = [
+        'indicators_level' => 'array',
     ];
 
     public function client()

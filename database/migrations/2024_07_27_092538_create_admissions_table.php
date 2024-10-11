@@ -13,7 +13,7 @@ class CreateAdmissionsTable extends Migration
             $table->unsignedMediumInteger('client_id');
             $table->string('committing_court', 50);
             $table->string('crim_case_number', 25);
-            $table->string('offense_committed', 50);
+            $table->string('offense_committed', 100);
             $table->date('date_admitted');
             $table->integer('days_in_jail');
             $table->integer('days_in_detention_center');
@@ -21,13 +21,11 @@ class CreateAdmissionsTable extends Migration
             $table->text('general_impression');
             $table->string('case_status', 25);
             $table->string('referring_party_name', 50)->nullable();
-            //$table->string('referring_party_signature')->nullable();
             $table->string('admitting_officer', 50)->nullable();
             $table->string('designation_id_contact', 50)->nullable();
             $table->string('designation', 50)->nullable();
             $table->string('office_address', 50)->nullable();
             $table->dateTime('date_time')->nullable();
-            $table->string('center_head', 50)->nullable();
             $table->timestamps();
             
             // Foreign key definition

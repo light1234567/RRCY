@@ -741,8 +741,9 @@
       <input
         type="text"
         id="notedBy"
-        v-model="form.admission.center_head"
+        v-model="form.center_head"
         class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        readonly
       />
     </div>
   </div>
@@ -779,6 +780,7 @@ import NotificationModal from '@/Components/NotificationModal.vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
 const form = ref({
+  center_head: '',
   client: {
     first_name: '',
     middle_name: '',
@@ -819,7 +821,6 @@ const form = ref({
     designation: '',
     office_address: '',
     date_time: '',
-    center_head: '',
   },
   documents_submitted: {
     documents: [],
@@ -1072,6 +1073,7 @@ watch(
 // Reset the form to initial state while keeping date of birth constraints
 const resetForm = () => {
   form.value = {
+    center_head: '',
     client: {
       first_name: '',
       middle_name: '',
@@ -1111,9 +1113,7 @@ const resetForm = () => {
       designation_id_contact: '',
       designation: '',
       office_address: '',
-      date_time: '',
-      center_head: '',
-  
+      date_time: '',  
     },
     documents_submitted: {
       documents: [],
@@ -1131,8 +1131,20 @@ const toggleOtherDocuments = () => {
   }
 };
 
+const fetchCenterHead = async () => {
+  try {
+    const response = await axios.get('/api/center-head');  // Adjust the API route if necessary
+    console.log('Center Head Response:', response.data);  // Log the response to the console
+    form.value.center_head = response.data.name;  // Set the correct value for center_head from response
+  } catch (error) {
+    console.error('Error fetching center head:', error);
+  }
+};
 // Load provinces when the component is mounted
-onMounted(fetchProvinces);
+onMounted(() => {
+  fetchCenterHead();  // Fetch the center head on component mount
+  fetchProvinces();
+});
 </script>
 <style scoped>
 /* Transition for element fade-in */

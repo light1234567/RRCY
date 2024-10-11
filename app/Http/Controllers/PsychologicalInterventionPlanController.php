@@ -31,7 +31,6 @@ class PsychologicalInterventionPlanController extends Controller
                 'as_of_date' => $validatedData['as_of_date'],
                 'progress_notes' => $validatedData['progress_notes'],
                 'prepared_by' => $validatedData['prepared_by'],
-                'noted_by' => $validatedData['noted_by'],
                 'items' => json_encode($validatedData['items']), // Store items as JSON
             ]);
 
@@ -87,7 +86,6 @@ class PsychologicalInterventionPlanController extends Controller
                 'as_of_date' => $validatedData['as_of_date'],
                 'progress_notes' => $validatedData['progress_notes'],
                 'prepared_by' => $validatedData['prepared_by'],
-                'noted_by' => $validatedData['noted_by'],
                 'items' => json_encode($validatedData['items']), // Update items as JSON
             ]);
 

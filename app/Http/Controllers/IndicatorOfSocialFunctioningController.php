@@ -93,6 +93,7 @@ class IndicatorOfSocialFunctioningController extends Controller
         'economic_score_per_area' => 'nullable|numeric|min:0|max:5',  // Decimal score per area
         'general_score' => 'nullable|numeric|min:0|max:5',  // Decimal general score
         'interpretation' => 'nullable|string',
+        'indicators_level' => 'nullable|array',
         'prepared_by' => 'nullable|string|max:50',
         'indicators_case_manager' => 'nullable|string|max:50',
         'discussed_with' => 'nullable|string|max:50',
