@@ -136,7 +136,7 @@
   </td>
   <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[0].indicators[0]) }}</td>
   <td class="p-1 border text-center" rowspan="5" style="width: 180px; ">
-    <textarea v-model="form.sections[0].remarks" rows="5" class="w-full p-2 border border-gray-300 rounded text-sm" style=" height: 300px; ":readonly="!editMode"></textarea>
+    <textarea v-model="form.sections[0].remarks" rows="5" class="w-full p-2 border border-gray-300 rounded text-center text-sm" style=" height: 300px; padding-top: 80%; line-height: 1; resize: none;" :readonly="!editMode"></textarea>
 </td>
 
 </tr>
@@ -187,7 +187,7 @@
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[1].indicators[0]) }}</td>
               <td class="p-1 border text-center" rowspan="5" style="width:180px;">
-                <textarea v-model="form.sections[1].remarks" class="w-full p-2 border border-gray-300 rounded text-sm"  style=" height: 300px; " :readonly="!editMode"></textarea>
+                <textarea v-model="form.sections[1].remarks" class="w-full p-2 border border-gray-300 rounded text-center text-sm"  style=" height: 300px;  padding-top: 80%; line-height: 1; resize: none; " :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -245,7 +245,7 @@
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[2].indicators[0]) }}</td>
               <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
-                <textarea v-model="form.sections[2].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" style="height: 300px;"   :readonly="!editMode"></textarea>
+                <textarea v-model="form.sections[2].remarks" class="w-full p-2 border border-gray-300 text-center rounded text-sm" style="height: 300px;  padding-top: 80%; line-height: 1; resize: none;"   :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -303,7 +303,7 @@
               </td>
               <td class="p-1 border text-center">{{ calculateTotalRating(form.sections[3].indicators[0]) }}</td>
               <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
-                <textarea v-model="form.sections[3].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" style="height: 300px;"   :readonly="!editMode"></textarea>
+                <textarea v-model="form.sections[3].remarks" class="w-full p-2 border border-gray-300 text-center rounded text-sm" style="height: 300px;  padding-top: 80%; line-height: 1; resize: none;"   :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -410,7 +410,7 @@
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[4].indicators[0]) }}</td>
               <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
-                      <textarea v-model="form.sections[4].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" style="height: 300px;"  :readonly="!editMode"></textarea>
+                      <textarea v-model="form.sections[4].remarks" class="w-full p-2 border border-gray-300 text-center rounded text-sm" style="height: 300px;  padding-top: 80%; line-height: 1; resize: none;"  :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -468,7 +468,7 @@
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[5].indicators[0]) }}</td>
               <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
-                      <textarea v-model="form.sections[5].remarks" class="w-full p-2 border border-gray-300 rounded text-sm"  style="height: 300px;" :readonly="!editMode"></textarea>
+                      <textarea v-model="form.sections[5].remarks" class="w-full p-2 border border-gray-300 text-center rounded text-sm"  style="height: 300px;  padding-top: 80%; line-height: 1; resize: none;" :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -526,7 +526,7 @@
               </td>
               <td class="p-2 border text-center">{{ calculateTotalRating(form.sections[6].indicators[0]) }}</td>
               <td class="p-1 border text-center" rowspan="5" style="width: 180px;">
-                      <textarea v-model="form.sections[6].remarks" class="w-full p-2 border border-gray-300 rounded text-sm" style="height: 300px;" :readonly="!editMode"></textarea>
+                      <textarea v-model="form.sections[6].remarks" class="w-full p-2 border border-gray-300 text-center rounded text-sm" style="height: 300px;  padding-top: 80%; line-height: 1; resize: none;" :readonly="!editMode"></textarea>
   
               </td>
           </tr>
@@ -1285,9 +1285,9 @@
   pdf.text(`${this.calculateTotalRating(this.form.sections[0].indicators[0]) || ''}`, initialX+140, contentYPos-1);
   
   const remarks = this.form.sections[0].remarks || '';
-  const remarksLines = pdf.splitTextToSize(remarks, 40); // Wrap the text to fit within 40 units of width
-  const limitedRemarksLines = remarksLines.slice(0, maxLines);
-  pdf.text(limitedRemarksLines, initialX + 149, contentYPos - 1);
+  const remarksLines = pdf.splitTextToSize(remarks, 35); // Wrap the text to fit within 40 units of width
+  const limitedRemarksLines = remarksLines.slice(0, maxLines-4);
+  pdf.text(limitedRemarksLines, initialX + 168, contentYPos+13, { align: 'center' });
   
   
   
@@ -1399,9 +1399,9 @@
   pdf.text(`${this.calculateTotalRating(this.form.sections[1].indicators[0]) || ''}`, initialX+140, contentYPos-1);
   
   const remarks1 = this.form.sections[1].remarks || '';
-  const remarks1Lines = pdf.splitTextToSize(remarks1, 40); // Wrap the text to fit within 40 units of width
-  const limitedRemarks1Lines = remarks1Lines.slice(0, maxLines+5);
-  pdf.text(limitedRemarks1Lines, initialX + 149, contentYPos - 1);
+  const remarks1Lines = pdf.splitTextToSize(remarks1, 35); // Wrap the text to fit within 40 units of width
+  const limitedRemarks1Lines = remarks1Lines.slice(0, maxLines-4);
+  pdf.text(limitedRemarks1Lines, initialX + 168, contentYPos+16, { align: 'center' });
   
   
   
@@ -1529,8 +1529,8 @@
   
   const remarks2 = this.form.sections[2].remarks || '';
   const remarks2Lines = pdf.splitTextToSize(remarks2, 40); // Wrap the text to fit within 40 units of width
-  const limitedRemarks2Lines = remarks2Lines.slice(0, maxLines+5);
-  pdf.text(limitedRemarks2Lines, initialX + 149, contentYPos - 1);
+  const limitedRemarks2Lines = remarks2Lines.slice(0, maxLines-4);
+  pdf.text(limitedRemarks2Lines, initialX + 168, contentYPos+16, { align: 'center' });
   
     contentYPos +=9;
     pdf.setFontSize(11);
@@ -1652,8 +1652,8 @@
   
   const remarks3 = this.form.sections[3].remarks || '';
   const remarks3Lines = pdf.splitTextToSize(remarks3, 40); // Wrap the text to fit within 40 units of width
-  const limitedRemarks3Lines = remarks3Lines.slice(0, maxLines+4);
-  pdf.text(limitedRemarks3Lines, initialX + 149, contentYPos - 1);
+  const limitedRemarks3Lines = remarks3Lines.slice(0, maxLines-4);
+  pdf.text(limitedRemarks3Lines, initialX + 168, contentYPos+16, { align: 'center' });
   
   
     contentYPos +=9;
@@ -1817,9 +1817,9 @@
   
   
   const remarks4 = this.form.sections[4].remarks || '';
-  const remarks4Lines = pdf.splitTextToSize(remarks4, 40); // Wrap the text to fit within 40 units of width
-  const limitedRemarks4Lines = remarks4Lines.slice(0, maxLines+2);
-  pdf.text(limitedRemarks4Lines, initialX + 149, contentYPos - 1);
+  const remarks4Lines = pdf.splitTextToSize(remarks4, 35); // Wrap the text to fit within 40 units of width
+  const limitedRemarks4Lines = remarks4Lines.slice(0, maxLines-4);
+  pdf.text(limitedRemarks4Lines, initialX + 168, contentYPos+16, { align: 'center' });
   
     contentYPos +=9;
     pdf.setFontSize(11);
@@ -1931,9 +1931,9 @@
   pdf.text(`${this.calculateTotalRating(this.form.sections[5].indicators[0]) || ''}`, initialX+140, contentYPos);
   
   const remarks5 = this.form.sections[5].remarks || '';
-  const remarks5Lines = pdf.splitTextToSize(remarks5, 40); // Wrap the text to fit within 40 units of width
-  const limitedRemarks5Lines = remarks5Lines.slice(0, maxLines+3);
-  pdf.text(limitedRemarks5Lines, initialX + 149, contentYPos - 1);
+  const remarks5Lines = pdf.splitTextToSize(remarks5, 35); // Wrap the text to fit within 40 units of width
+  const limitedRemarks5Lines = remarks5Lines.slice(0, maxLines-4);
+  pdf.text(limitedRemarks5Lines, initialX + 168, contentYPos+16, { align: 'center' });
   
     contentYPos +=9;
     pdf.setFontSize(11);
@@ -2044,9 +2044,9 @@
   
   
   const remarks6 = this.form.sections[6].remarks || '';
-  const remarks6Lines = pdf.splitTextToSize(remarks6, 40); // Wrap the text to fit within 40 units of width
-  const limitedRemarks6Lines = remarks6Lines.slice(0, maxLines+1);
-  pdf.text(limitedRemarks6Lines, initialX + 149, contentYPos - 1);
+  const remarks6Lines = pdf.splitTextToSize(remarks6, 35); // Wrap the text to fit within 40 units of width
+  const limitedRemarks6Lines = remarks6Lines.slice(0, maxLines-4);
+  pdf.text(limitedRemarks6Lines, initialX + 168, contentYPos+14, { align: 'center' });
   
   
     contentYPos +=6;
