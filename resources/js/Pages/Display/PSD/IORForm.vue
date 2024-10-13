@@ -87,9 +87,17 @@
   
       </div>
       <div class="flex -mt-8 items-start mb-6">
-      <label class="block text-xs font-bold mb-1">Trainings Attended for the Month:</label>
-      <input type="text" v-model="form.trainings_attended" class="underline-input2 text-xs w-full border border-gray-300" :readonly="!editMode" />
-  </div>
+  <label class="block text-xs font-bold mb-1">Trainings Attended for the Month:</label>
+  <input 
+    type="text" 
+    v-model="form.trainings_attended" 
+    class="underline-input2 text-xs w-full border border-gray-300" 
+    :readonly="!editMode" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z,\-\s]/g, '')"
+  />
+</div>
+
+
   
   <!-- Scale of Measurement Section -->
    
@@ -633,14 +641,28 @@
           <tr v-for="(training, index) in form.trainings" :key="index" class="border">
               <td class="p-2 border text-center w-12">{{ index + 1 }}</td> <!-- Adjusted width to match header -->
               <td class="p-2 border">
-                  <input type="text" v-model="training.title" class="w-full p-1 border-none border-gray-300 rounded text-sm" :readonly="!editMode" />
-              </td>
+  <input 
+    type="text" 
+    v-model="training.title" 
+    class="w-full p-1 border-none border-gray-300 rounded text-sm" 
+    :readonly="!editMode" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
+  />
+</td>
+
               <td class="p-2 border">
                   <input type="date" v-model="training.date_of_attendance" class="w-full p-1 border-none border-gray-300 rounded text-sm" :readonly="!editMode" />
               </td>
               <td class="p-2 border">
-                  <input type="text" v-model="training.status" class="w-full p-1 border-none border-gray-300 rounded text-sm" :readonly="!editMode" />
-              </td>
+  <input 
+    type="text" 
+    v-model="training.status" 
+    class="w-full p-1 border-none border-gray-300 rounded text-sm" 
+    :readonly="!editMode" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
+  />
+</td>
+
           </tr>
         <tr>
       <button @click="addTraining" type="button" class="px-4 py-2 bg-blue-500 text-white rounded" :disabled="!editMode">Add Training</button>

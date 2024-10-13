@@ -61,9 +61,16 @@
     </div>
   
     <div class="flex -ml-28 col-span-2">
-      <label class="border-none flex items-center block font-bold text-xs">CURRENT MEDICAL STATUS:</label>
-      <input type="text" v-model="form.current_medical_status" class="w-60 border-none p-1 text-xs" :readonly="!editMode">
-    </div>
+  <label class="border-none flex items-center block font-bold text-xs">CURRENT MEDICAL STATUS:</label>
+  <input 
+    type="text" 
+    v-model="form.current_medical_status" 
+    class="w-60 border-none p-1 text-xs" 
+    :readonly="!editMode" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+  >
+</div>
+
   
     <div class="flex col-span-1">
       <label class="border-none -ml-12 flex items-center block font-bold text-xs">RELIGION:</label>
@@ -105,7 +112,16 @@
           </tr>
           <tr>
             <td class="border text-sm p-2">BLOOD PRESSURE</td>
-            <td class="border text-sm p-2"><input type="text" v-model="form.blood_pressure" class="w-full border-none p-1" :readonly="!editMode"></td>
+            <td class="border text-sm p-2">
+  <input 
+    type="text" 
+    v-model="form.blood_pressure" 
+    class="w-full border-none p-1" 
+    :readonly="!editMode" 
+    oninput="this.value = this.value.replace(/[^0-9\/]/g, '')" 
+  >
+</td>
+
           </tr>
           <tr>
             <td class="border text-sm p-2">HEIGHT (cm)</td>
@@ -141,19 +157,40 @@
       <!-- Eyes Section -->
       <div class="flex items-center mb-2">
         <label class="font-bold text-xs mr-2">EYES:</label>
-        <input type="text" v-model="form.eyes_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+        <input 
+  type="text" 
+  v-model="form.eyes_status" 
+  class="w-full border-none p-1 text-xs" 
+  :readonly="!editMode" 
+  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+/>
+
       </div>
   
       <!-- Ears Section -->
       <div class="flex items-center mb-2">
         <label class="font-bold text-xs mr-2">EARS:</label>
-        <input type="text" v-model="form.ears_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+        <input 
+  type="text" 
+  v-model="form.ears_status" 
+  class="w-full border-none p-1 text-xs" 
+  :readonly="!editMode" 
+  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+/>
+
       </div>
   
       <!-- Mouth & Teeth Section -->
       <div class="flex items-center w-full mb-2">
         <label class="flex w-44 font-bold text-xs mr-2">MOUTH & TEETH:     </label>
-        <input type="text" v-model="form.mouth_teeth_status" class="-ml-4 w-full border-none p-1 text-xs" :readonly="!editMode">
+        <input 
+  type="text" 
+  v-model="form.mouth_teeth_status" 
+  class="-ml-4 w-full border-none p-1 text-xs" 
+  :readonly="!editMode" 
+  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+/>
+
       </div>
     </div>
   
@@ -162,19 +199,40 @@
       <!-- Nails Section -->
       <div class="flex items-center mb-2">
         <label class="font-bold text-xs mr-2">NAILS:</label>
-        <input type="text" v-model="form.nails_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+        <input 
+  type="text" 
+  v-model="form.nails_status" 
+  class="w-full border-none p-1 text-xs" 
+  :readonly="!editMode" 
+  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+/>
+
       </div>
   
       <!-- Skin Section -->
       <div class="flex items-center mb-2">
         <label class="font-bold text-xs mr-2">SKIN:</label>
-        <input type="text" v-model="form.skin_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+        <input 
+  type="text" 
+  v-model="form.skin_status" 
+  class="w-full border-none p-1 text-xs" 
+  :readonly="!editMode" 
+  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+/>
+
       </div>
   
       <!-- Hair Section -->
       <div class="flex items-center mb-2">
         <label class="font-bold text-xs mr-2">HAIR:</label>
-        <input type="text" v-model="form.hair_status" class="w-full border-none p-1 text-xs" :readonly="!editMode">
+        <input 
+  type="text" 
+  v-model="form.hair_status" 
+  class="w-full border-none p-1 text-xs" 
+  :readonly="!editMode" 
+  oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+/>
+
       </div>
     </div>
   </div>

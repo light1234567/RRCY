@@ -35,16 +35,33 @@
       <!-- Learner's Information -->
       <h1 class="font-bold text-lg mb-4 ml-56">LEARNER’S ASSESSMENT FORM</h1>
       <div class="ml-56 -mt-4">
-      <label for="schoolYear" class="w-full block font-medium">School Year:
-      <input type="text" id="schoolYear" class="underline-input w-48 p-1 border bg-transparent border-gray-300 mx-auto text-sm" v-model="form.school_year" :readonly="!isEditable" />
-    </label>
-  </div>
-      <div class="ml-72 mt-1">
-    <label for="gradingPeriod" class="block font-medium">
-          <input type="text" id="gradingPeriod" class="underline-input mt-4 w-24 p-1 border-none bg-transparent mx-auto text-sm" v-model="form.grading_period" :readonly="!isEditable" />
-          Grading Period
-        </label>
-        </div>
+  <label for="schoolYear" class="w-full block font-medium">School Year:
+    <input 
+      type="text" 
+      id="schoolYear" 
+      class="underline-input w-20 p-1 border bg-transparent border-gray-300 mx-auto text-sm" 
+      v-model="form.school_year" 
+      :readonly="!isEditable" 
+      oninput="this.value = this.value.replace(/[a-zA-Z]/g, '')" 
+    />
+  </label>
+</div>
+
+<div class="ml-72 mt-1">
+  <label for="gradingPeriod" class="block font-medium">
+    <input
+      type="text"
+      id="gradingPeriod"
+      class="underline-input mt-4 w-8 p-1 border-none bg-transparent mx-auto text-sm text-center"
+      v-model="form.grading_period"
+      :readonly="!isEditable"
+      oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '')"
+    />
+    Grading Period
+  </label>
+</div>
+
+
         <br />
         <div class="grid grid-cols-3 gap-4 mb-4 text-sm">
   <!-- Name Input -->
@@ -55,9 +72,20 @@
 
   <!-- Grade Input -->
   <div class="flex items-center ml-20">
-    <label for="grade" class="block font-medium mr-2">Grade:</label>
-    <input type="text" id="grade" class="underline-input border-none focus:outline-none w-14 p-0" v-model="form.grade" :readonly="!isEditable" />
-  </div>
+  <label for="grade" class="block font-medium mr-2">Grade:</label>
+  <input 
+    type="text" 
+    id="grade" 
+    class="underline-input border-none focus:outline-none w-7 p-0" 
+    v-model="form.grade" 
+    :readonly="!isEditable" 
+    oninput="this.value = Math.min(100, Math.max(0, this.value.replace(/[^0-9]/g, '')))" 
+
+  />
+</div>
+
+
+
 
   <!-- Date Input -->
   <div class="flex items-center">
@@ -379,7 +407,7 @@
           <div class="flex flex-col">
             <p class="font-bold">PAGE 1 of 1</p>
             <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p>Email: <span class="text-blue-600 underline">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+            <p>Email: <span class="text-blue-600 underline">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
           <div>
             <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">

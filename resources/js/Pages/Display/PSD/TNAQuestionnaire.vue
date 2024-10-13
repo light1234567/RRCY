@@ -127,11 +127,28 @@
     <!-- Column 1 -->
     <div class="flex flex-col">
       <label class="flex items-center space-x-2">
-        <input type="radio" value="Elementary Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
-        <span>Elementary Level (Grade</span>
-        <input type="text" v-model="form.elementaryGrade" :disabled="!editMode || form.selectedEducationLevel !== 'Elementary Level'" class="text-xs w-16 border-b p-1 text-center">
-        <span>)</span>
-      </label>
+  <input type="radio" value="Elementary Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
+  <span>Elementary Level (Grade</span>
+  
+  <select 
+    v-model="form.elementaryGrade" 
+    :disabled="!editMode || form.selectedEducationLevel !== 'Elementary Level'" 
+    class="text-xs w-16 border-b p-1 text-center"
+    style=" background: transparent;"
+  >
+    <option value="" disabled></option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+  </select>
+  
+  <span>)</span>
+</label>
+
+
 
       <label class="flex items-center space-x-2 mt-2">
         <input type="radio" value="Elementary Graduate" v-model="form.selectedEducationLevel" :disabled="!editMode">
@@ -139,33 +156,70 @@
       </label>
 
       <label class="flex items-center space-x-2 mt-2">
-        <input type="radio" value="Junior High School Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
-        <span>Junior High School Level (Year</span>
-        <input type="text" v-model="form.juniorHighYear" :disabled="!editMode || form.selectedEducationLevel !== 'Junior High School Level'" class="text-xs w-16 border-b p-1 text-center">
-        <span>)</span>
-      </label>
+  <input type="radio" value="Junior High School Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
+  <span>Junior High School Level (Year</span>
+  
+  <select 
+    v-model="form.juniorHighYear" 
+    :disabled="!editMode || form.selectedEducationLevel !== 'Junior High School Level'" 
+    class="text-xs w-16 border-b p-1 text-center"
+     style=" background: transparent;"
+  >
+    <option value="" disabled></option>
+    <option value="1st">1st</option>
+    <option value="2nd">2nd</option>
+    <option value="3rd">3rd</option>
+    <option value="4th">4th</option>
+  </select>
+  
+  <span>)</span>
+</label>
+
     </div>
 
     <!-- Column 2 -->
     <div class="flex flex-col">
       <label class="flex items-center space-x-2">
-        <input type="radio" value="Senior High School Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
-        <span>Senior High School Level (Year</span>
-        <input type="text" v-model="form.seniorHighYear" :disabled="!editMode || form.selectedEducationLevel !== 'Senior High School Level'" class="text-xs w-16 border-b p-1 text-center">
-        <span>)</span>
-      </label>
+  <input type="radio" value="Senior High School Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
+  <span>Senior High School Level (Year</span>
+  <select 
+    v-model="form.seniorHighYear" 
+    :disabled="!editMode || form.selectedEducationLevel !== 'Senior High School Level'" 
+    class="text-xs w-16 border-b p-1 text-center" 
+    style=" background: transparent;"
+  >
+    <option value="" disabled></option>
+    <option value="11">11</option>
+    <option value="12">12</option>
+  </select>
+  <span>)</span>
+</label>
+
 
       <label class="flex items-center space-x-2 mt-2">
         <input type="radio" value="Senior High School Graduate" v-model="form.selectedEducationLevel" :disabled="!editMode">
         <span>Senior High School Graduate</span>
       </label>
-
       <label class="flex items-center space-x-2 mt-2">
-        <input type="radio" value="College Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
-        <span>College Level (Year</span>
-        <input type="text" v-model="form.collegeYear" :disabled="!editMode || form.selectedEducationLevel !== 'College Level'" class="text-xs w-24 border-b p-1 text-center">
-        <span>)</span>
-      </label>
+  <input type="radio" value="College Level" v-model="form.selectedEducationLevel" :disabled="!editMode">
+  <span>College Level (Year</span>
+  
+  <select 
+    v-model="form.collegeYear" 
+    :disabled="!editMode || form.selectedEducationLevel !== 'College Level'" 
+    class="text-xs w-24 border-b p-1 text-center"
+        style=" background: transparent;"
+  >
+    <option value="" disabled></option>
+    <option value="1st">1st</option>
+    <option value="2nd">2nd</option>
+    <option value="3rd">3rd</option>
+    <option value="4th">4th</option>
+  </select>
+  
+  <span>)</span>
+</label>
+
 
       
     </div>
@@ -177,17 +231,31 @@
 
 <div class="flex mr-7 mt-7 ">
     <p class="mt-5 font-semibold">Pangalan sa imong Social Worker:</p>
-     <div class="">
-    <input type="text" v-model="form.social_worker" :readonly="!editMode" class="mt-3 border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" >
-  </div>
+    <div class="">
+  <input 
+    type="text" 
+    v-model="form.social_worker" 
+    :readonly="!editMode" 
+    class="mt-3 border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s.,]/g, '')" 
+  >
+</div>
+
   </div>
  
 
   <div class="flex mr-7 mt-7 ">
     <p class="mt-5 font-semibold">Pangalan sa imong Houseparent:</p>
     <div class="">
-    <input type="text" v-model="form.houseparent" :readonly="!editMode" class="mt-3  border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" >
-  </div>
+  <input 
+    type="text" 
+    v-model="form.houseparent" 
+    :readonly="!editMode" 
+    class="mt-3 border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s.,]/g, '')" 
+  >
+</div>
+
   </div>
   
 <!-- Additional Information Section -->
@@ -197,16 +265,30 @@
 
 <div class="flex flex-wrap p-2">
   <div class=" mt-4 flex flex-wrap p-2 ">Amahan:</div>
-  <div class="w-3/4 mt-2 p-2 ">
-    <input type="text" v-model="form.father" :readonly="!editMode" class="w-full border-t-0 border-l-0 border-r-0 border-b-1 border-black focus:outline-none">
-  </div>
+  <div class="w-3/4 mt-2 p-2">
+  <input 
+    type="text" 
+    v-model="form.father" 
+    :readonly="!editMode" 
+    class="w-full border-t-0 border-l-0 border-r-0 border-b-1 border-black focus:outline-none" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s.,]/g, '')" 
+  >
+</div>
+
 </div>
 
 <div class="flex flex-wrap p-2">
   <div class="mt-4 flex flex-wrap p-2">Inahan:</div>
-  <div class="w-3/4 mt-2 p-2 ">
-    <input type="text" v-model="form.mother" :readonly="!editMode" class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none">
-  </div>
+  <div class="w-3/4 mt-2 p-2">
+  <input 
+    type="text" 
+    v-model="form.mother" 
+    :readonly="!editMode" 
+    class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s.,]/g, '')" 
+  >
+</div>
+
 </div>
 
 <div class="flex flex-wrap p-2">
@@ -219,8 +301,16 @@
 <div class="flex flex-wrap p-2">
   <div class="mt-4 flex flex-wrap p-2">Kadugayon sa Pagpuyo sa Center:</div>
   <div class="w-1/2 mt-2 p-2">
-    <input type="text" v-model="form.center_duration" :readonly="!editMode" class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none">
-  </div>
+  <input 
+    type="text" 
+    v-model="form.center_duration" 
+    :readonly="!editMode" 
+    class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '')" 
+
+  >
+</div>
+
 
 
 </div>
@@ -251,11 +341,25 @@
   <tbody>
     <tr v-for="(training, index) in form.trainings" :key="index">
       <td class="p-2 border">
-        <input type="text" v-model="training.title" class="w-full border" :readonly="!editMode">
-      </td>
-      <td class="p-2 border">
-        <input type="text" v-model="training.duration" class="w-full border" :readonly="!editMode">
-      </td>
+  <input 
+    type="text" 
+    v-model="training.title" 
+    class="w-full border" 
+    :readonly="!editMode" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+  >
+</td>
+
+<td class="p-2 border">
+  <input 
+    type="text" 
+    v-model="training.duration" 
+    class="w-full border" 
+    :readonly="!editMode" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '')" 
+  >
+</td>
+
       <td class="p-2 border">
         <input type="text" v-model="training.location_outside" class="w-full border" :readonly="!editMode">
       </td>

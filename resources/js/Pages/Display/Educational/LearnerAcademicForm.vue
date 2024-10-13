@@ -52,7 +52,7 @@
           <p class="item-center mr-6 text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
           <p class="flex justify-center text-sm font-semibold">Regional Rehabilitation Center for Youth</p>
           <p class="flex justify-center text-sm font-semibold">Youth/RFO XI</p>
-          <p class="text-xs flex justify-center">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+          <p class="text-xs flex justify-center">DSWD-GF-007 | REV 03 / 22 SEP 2023</p>
         </div>
       </div>
   
@@ -62,31 +62,35 @@
         <div class="text-center mb-6">
           <h1 class="font-bold text-xl">LEARNER’S ACADEMIC BEHAVIORAL FORM</h1>
           <div class="flex justify-center gap-2 mt-4">
-    <div class="flex items-center">
-      <label for="month" class="block font-medium">For the month of</label>
-      <input 
-        v-model="form.month" 
-        type="text" 
-        id="month" 
-        class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
-        style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
-      />
-    </div>
+            <div class="flex items-center">
+  <label for="month" class="block font-medium">For the month of</label>
+  <input 
+    v-model="form.month" 
+    type="text" 
+    id="month" 
+    class="block w-20 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+    style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
+  />
+</div>
+
   </div>
   
           <div class="flex justify-center gap-4 mt-4">
   
             <div class="flex justify-center">
-              <label for="schoolYear" class="block font-medium">School Year:</label>
-              <input 
-              v-model="form.school_year" 
-              type="text" 
-              id="schoolYear" 
-              class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
-              style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
-              />
-              
-            </div>
+  <label for="schoolYear" class="block font-medium">School Year:</label>
+  <input 
+    v-model="form.school_year" 
+    type="text" 
+    id="schoolYear" 
+    class="block w-7 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+    style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
+    oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '')"
+  />
+</div>
+
+
             </div>
           </div>
           
@@ -103,39 +107,44 @@
                   readonly 
                 />
               </div>
-              
               <div class="flex">
-                <label for="grade" class="block font-medium text-sm">Grade:</label>
-                <input 
-                  v-model="form.grade" 
-                  type="text" 
-                  id="grade" 
-                  class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
-                  style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
-                />
-              </div>
+  <label for="grade" class="block font-medium text-sm">Grade:</label>
+  <input 
+    v-model="form.grade" 
+    type="text" 
+    id="grade" 
+    class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+    style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
+    oninput="this.value = Math.min(100, this.value.replace(/[^0-9]/g, '').slice(0, 3))" 
+  />
+</div>
+
               
-              <div class="flex">
-                <label for="lrn" class="block font-medium text-sm">LRN:</label>
-                <input 
-                  v-model="form.lrn" 
-                  type="text" 
-                  id="lrn" 
-                  class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
-                  style="margin-right:310px; margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
-                />
-              </div>
+<div class="flex">
+  <label for="lrn" class="block font-medium text-sm">LRN:</label>
+  <input 
+    v-model="form.lrn" 
+    type="text" 
+    id="lrn" 
+    class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+    style="margin-right:310px; margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
+    oninput="this.value = this.value.replace(/[^0-9-]/g, '')"
+  />
+</div>
+
     
               <div class="flex">
-                <label for="status" class="block font-medium text-sm">Status:</label>
-                <input 
-                  v-model="form.status" 
-                  type="text" 
-                  id="status" 
-                  class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
-                  style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
-                />
-              </div>
+  <label for="status" class="block font-medium text-sm">Status:</label>
+  <input 
+    v-model="form.status" 
+    type="text" 
+    id="status" 
+    class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+    style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
+    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+  />
+</div>
+
       </div>
   
           <div class="mb-6">
@@ -303,7 +312,7 @@
   
               <!-- Text under the line -->
               <p style="text-align: center; font-weight: bold; margin-top: -1px;">LEARNER’S ACADEMIC BEHAVIORAL FORM</p>
-              <p class="-ml-6 text-[9px]"style="text-align: center; margin-top: -1px;">DSWD  | FIELD OFFICE XI I PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH, DAVAO CITY PHILIPPINES 8000
+              <p class="-ml-6 text-[9px]"style="text-align: center; margin-top: -1px;">DSWD  | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH, DAVAO CITY PHILIPPINES 8000
               </p>
             </div>
         </div>
@@ -490,7 +499,7 @@
       // Add subtitle
       pdf.setFontSize(8);
       pdf.setFont('TimesNewRoman', 'italic');
-      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 165, 45, null, null, "center");
+      pdf.text('DSWD-GF-007 | REV 03 / 22 SEP 2023', 165, 45, null, null, "center");
       currentY += 3;
   
       // Add form title

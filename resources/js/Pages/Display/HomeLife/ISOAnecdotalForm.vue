@@ -59,7 +59,27 @@
        </div>
        <p class="text-sm font-semibold">
     FOR THE MONTH OF
-    <input type="text" v-model="form.month" class="underline-input text-sm -p-1" :readonly="!editMode" />
+    <select 
+  v-model="form.month" 
+  class="underline-input text-sm -p-1" 
+   style="background: transparent;"
+  :readonly="!editMode"
+>
+  <option value="" disabled></option>
+  <option value="January">January</option>
+  <option value="February">February</option>
+  <option value="March">March</option>
+  <option value="April">April</option>
+  <option value="May">May</option>
+  <option value="June">June</option>
+  <option value="July">July</option>
+  <option value="August">August</option>
+  <option value="September">September</option>
+  <option value="October">October</option>
+  <option value="November">November</option>
+  <option value="December">December</option>
+</select>
+
   </p>
      </div>
   
