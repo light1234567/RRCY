@@ -17,7 +17,7 @@ class CreateAdmissionsTable extends Migration
             $table->date('date_admitted');
             $table->integer('days_in_jail');
             $table->integer('days_in_detention_center');
-            $table->string('action_taken', 150);
+            $table->text('action_taken');
             $table->text('general_impression');
             $table->string('case_status', 25);
             $table->string('referring_party_name', 50)->nullable();

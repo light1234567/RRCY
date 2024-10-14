@@ -120,19 +120,22 @@
               <div>
                 <input type="text" v-model="form.client_resident" 
                   class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none mt-2 shadow-sm w-1/3 px-2 text-xs" 
-                  :readonly="!editMode"/>
+                  :readonly="!editMode"
+                  @input="form.client_resident = removeNumbers(form.client_resident)"/>
                 <label class="block text-base font-semibold text-gray-700 -mt-1">Client/Resident</label>
               </div>
               <div>
                 <input type="text" v-model="form.parent_guardian" 
                   class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 text-xs" 
-                  :readonly="!editMode"/>
+                  :readonly="!editMode"
+                  @input="form.parent_guardian = removeNumbers(form.parent_guardian)"/>
                 <label class="block text-base font-semibold text-gray-700 -mt-1">Pangalan/Pirma sa Ginikanan/Guardian</label>
               </div>
               <div>
                 <input type="text" v-model="form.second_kasabutan_case_manager" 
                   class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 py-1 text-xs" 
-                  :readonly="!editMode"/>
+                  :readonly="!editMode"
+                  @input="form.second_kasabutan_case_manager = removeNumbers(form.second_kasabutan_case_manager)"/>
                 <label class="block text-base font-semibold text-gray-700 -mt-1">Case Manager</label>
               </div>
             </div>
@@ -219,8 +222,9 @@
           const client = clientResponse.data;
           this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
           this.form.client_id = client.id;
-  
-          const kasabutanResponse = await axios.get(`/api/kasabutan/${clientId}`);
+
+          // Fetch kasabutan by client_id using the new route
+          const kasabutanResponse = await axios.get(`/api/kasabutan/client/${clientId}`);
           const kasabutan = kasabutanResponse.data;
           this.form.client_resident = kasabutan.client_resident || '';
           this.form.parent_guardian = kasabutan.parent_guardian || '';
@@ -228,8 +232,10 @@
           this.form.id = kasabutan.id;
         } catch (error) {
           this.errorMessage = 'Error fetching client data.';
+          console.error('Error fetching client data:', error);
         }
-      },
+      }
+      ,
       fetchCenterHead() {
       axios.get('/api/center-head')  // Replace with the correct API route
         .then(response => {
@@ -239,6 +245,9 @@
           console.error('Error fetching center head:', error);
         });
     },
+    removeNumbers(input) {
+    return input.replace(/[0-9]/g, '');
+  },
       toggleEdit() {
         this.editMode = !this.editMode;
       },

@@ -2,13 +2,12 @@
 <!-- Tabs for Actions -->
 <div v-if="editMode" class="flex absolute p-4 space-x-4">
     <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
-      <!-- FontAwesome for Back -->
       <i class="fas fa-arrow-left w-4 h-4"></i>
       <span>Back</span>
     </button>
-</div>
+  </div>
 
-<div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+  <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
     <!-- Pagination Component -->
     <Pagination 
       :totalPages="totalPages" 
@@ -16,25 +15,73 @@
       @update:currentPage="currentPage = $event" 
     />
     <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-      <!-- FontAwesome for Edit -->
       <i class="fas fa-edit w-4 h-4"></i>
       <span>Edit</span>
     </button>
 
-    <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-      <!-- FontAwesome for Save -->
+    <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
       <i class="fas fa-check w-4 h-4"></i>
       <span>Save</span>
     </button>
 
-    <!-- Download PDF Button -->
     <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-      <!-- FontAwesome for PDF Download -->
       <i class="fas fa-file-pdf w-4 h-4"></i>
       <span>Export PDF</span>
     </button>
+  </div>
+<!-- Modal for Save Confirmation -->
+<div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+  <div class="fixed inset-0 bg-black opacity-50"></div>
+  <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+    <div class="bg-white p-6">
+      <div class="flex items-center">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+      </div>
+      <div class="mt-2">
+        <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+      </div>
+    </div>
+    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+      <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+      <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+    </div>
+  </div>
 </div>
 
+
+  <!-- Modal for Save Result -->
+  <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6 text-center">
+          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+          </div>
+          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+  <form ref="ProgressNotes" @submit.prevent="submitForm">
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
 
   <div class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
@@ -42,7 +89,7 @@
       <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
       <p class="text-xs italic">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
     </div>
-    <form @submit.prevent="submitForm" class="space-y-8 w-full">
+    
       <!-- Header -->
       <div class="p-6 rounded-md bg-white">
         <div v-if="message" :class="`p-4 mt-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
@@ -79,7 +126,7 @@
           <div class="space-y-2">
   <div class="flex text-sm">
     <label for="interventionPeriod" class="block w-52">Period of Intervention Plan:</label>
-    <input type="text" id="interventionPeriod" v-model="form.intervention_period" class="block flex -ml-8 w-2/3 p-0 text-sm border-0 bg-transparent" :readonly="!editMode">
+    <input type="text" id="interventionPeriod" v-model="form.intervention_period" class="block flex -ml-8 w-2/3 p-0 text-sm border-0 bg-transparent" :readonly="!editMode" required>
   </div>
 </div>
         </div>
@@ -87,26 +134,27 @@
         <!-- Problem Behavior Log Section -->
         <div class="space-y-4 mt-6">
           <h2 class="font-bold">PROBLEM BEHAVIOR LOG</h2>
-          <textarea id="problemBehaviorLog" v-model="form.problem_behavior_log" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+          <textarea id="problemBehaviorLog" v-model="form.problem_behavior_log" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode" required></textarea>
         </div>
 
         <!-- Interventions Conducted Section -->
         <div class="space-y-4 mt-6">
           <h2 class="font-bold">INTERVENTIONS CONDUCTED</h2>
-          <textarea id="interventionsConducted" v-model="form.interventions_conducted" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+          <textarea id="interventionsConducted" v-model="form.interventions_conducted" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode" required></textarea>
         </div>
 
         <!-- Progress Notes Section -->
         <div class="space-y-4 mt-6">
           <h2 class="font-bold">PROGRESS NOTES</h2>
-          <textarea id="progressNotes" v-model="form.progress_notes" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+          <textarea id="progressNotes" v-model="form.progress_notes" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode" required></textarea>
         </div>
 
         <div class="space-y-4 mt-6">
           <div class="space-y-2">
             <label for="preparedBy" class="block mb-12 mt-12 font-sm">Prepared by:</label>
             <div class="flex flex-col">
-              <strong><input type="text" id="preparedBy" v-model="form.prepared_by" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode"></strong>
+              <strong><input type="text" id="preparedBy" v-model="form.prepared_by" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode" 
+                @input="form.prepared_by = removeNumbers(form.prepared_by)"></strong>
               <span>Psychologist</span>
             </div>
           </div>
@@ -133,30 +181,9 @@
           </div>
       </div>
   </div>
-    </form>
   </div>
 
-  <!-- Modal for Save Confirmation -->
-  <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="fixed inset-0 bg-black opacity-50"></div>
-    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-      <div class="bg-white p-6">
-        <div class="flex items-center">
-          <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z" />
-          </svg>
-          <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
-        </div>
-        <div class="mt-2">
-          <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
-        </div>
-      </div>
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
-        <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
-      </div>
-    </div>
-  </div>
+
 
   <!-- Modal for Save Result -->
   <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
@@ -189,7 +216,40 @@
       </div>
     </div>
   </div>
+  
+  <!-- Modal for Save Result -->
+  <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="fixed inset-0 bg-black opacity-50"></div>
+    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+      <div class="bg-white p-6 text-center">
+        <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+          <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </div>
+        </div>
+        <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+          <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+        </div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+        <div class="mt-2">
+          <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+          OK
+        </button>
+      </div>
+    </div>
   </div>
+  </div>
+</form>
 </template>
 
 <script>
@@ -282,7 +342,9 @@ export default {
         console.error('Error fetching center head:', error);
       });
   },
-  
+  removeNumbers(input) {
+    return input.replace(/[0-9]/g, '');
+  },
     toggleEdit() {
       this.editMode = !this.editMode;
     },
@@ -292,14 +354,77 @@ export default {
       this.fetchData(); // Reset the form with the latest data
     },
 
-    saveData() {
-      this.isModalOpen = true;
+    submitForm() {
+    const form = this.$refs.ProgressNotes;
+
+    if (!this.form.client_id || !this.form.admission_id) {
+      this.message = 'Client ID and Admission ID are required.';
+      this.messageType = 'error';
+      this.clearMessage();
+      return;
+    }
+
+    if (form.checkValidity()) {
+      this.isModalOpen = true; // Open the save confirmation modal
+    } else {
+      form.reportValidity(); // Show form validation errors
+    }
+  },
+
+  // Method to confirm save and process the form data
+  async confirmSave() {
+    try {
+      const url = `/api/cicl-progress-notes/${this.form.client_id}`;
+
+      // Send a PUT request to update the progress notes
+      const response = await axios.put(url, this.form);
+
+      if (response.status === 200) {
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data saved successfully.';
+      } else {
+        throw new Error('Unexpected response');
+      }
+    } catch (error) {
+      console.error('Error saving form:', error);
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = 'An error occurred while saving.';
+    } finally {
+      this.isModalOpen = false; // Close the save confirmation modal
+      this.isSaveResultModalOpen = true; // Open the result modal
+    }
+  },
+
+  // Method to close the save result modal when the user clicks "OK"
+  closeSaveResultModal() {
+    this.isSaveResultModalOpen = false; // Close the result modal
+    this.editMode = false; // Ensure the form is no longer in edit mode if applicable
+  },
+
+
+    calculateAge(birthDate) {
+      const today = new Date();
+      const birthDateObj = new Date(birthDate);
+      let age = today.getFullYear() - birthDateObj.getFullYear();
+      const monthDiff = today.getMonth() - birthDateObj.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
+        age--;
+      }
+      return age;
     },
-    confirmSave() {
-      this.isModalOpen = false;
-      this.submitForm();
-      this.closeModal();
+
+    clearMessage() {
+      setTimeout(() => {
+        this.message = '';
+        this.messageType = '';
+      }, 3000);
     },
+
+    updatePage(page) {
+      this.currentPage = page;
+    }
+  },
+
     openModal() {
       this.isModalOpen = true;
       console.log('Modal opened');
@@ -494,60 +619,6 @@ export default {
   pdf.save(`Progress_Report_${this.form.name || 'NoName'}.pdf`);
 },
 
-
-    submitForm() {
-      if (!this.form.client_id || !this.form.admission_id) {
-        this.message = 'Client ID and Admission ID are required.';
-        this.messageType = 'error';
-        this.clearMessage();
-        return;
-      }
-
-      const url = `/api/cicl-progress-notes/${this.form.client_id}`;
-
-      axios.put(url, this.form)
-        .then(response => {
-          this.editMode = false;
-          this.saveResultTitle = 'Success';
-          this.saveResultMessage = 'Data saved successfully!';
-          this.isSaveResultModalOpen = true;
-          this.fetchData(); // Re-fetch data to update the form with the latest saved data
-        })
-        .catch(error => {
-          if (error.response && error.response.status === 422) {
-            const errors = error.response.data.errors;
-            this.message = 'Validation error: ' + Object.values(errors).flat().join(', ');
-          } else {
-            this.message = 'Failed to save data';
-          }
-          this.saveResultTitle = 'Error';
-          this.saveResultMessage = this.message;
-          this.isSaveResultModalOpen = true;
-        });
-    },
-
-    calculateAge(birthDate) {
-      const today = new Date();
-      const birthDateObj = new Date(birthDate);
-      let age = today.getFullYear() - birthDateObj.getFullYear();
-      const monthDiff = today.getMonth() - birthDateObj.getMonth();
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-        age--;
-      }
-      return age;
-    },
-
-    clearMessage() {
-      setTimeout(() => {
-        this.message = '';
-        this.messageType = '';
-      }, 3000);
-    },
-
-    updatePage(page) {
-      this.currentPage = page;
-    }
-  }
 };
 </script>
 

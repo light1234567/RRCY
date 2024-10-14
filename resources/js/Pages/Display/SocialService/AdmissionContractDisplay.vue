@@ -116,9 +116,28 @@
   
       <div class="mb-8">
         <p>Signed 
-          <input type="text" v-model="form.signed_day" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-20 inline-block" :readonly="!editMode" maxlength="2" /> 
+          <select 
+  v-model="form.signed_day" 
+  class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-20 inline-block" 
+  :disabled="!editMode" 
+  required
+>
+  <option disabled value="">day</option>
+  <option v-for="day in 31" :key="day" :value="day">{{ day }}{{ daySuffix(day) }}</option>
+</select>
+
+
           day of 
-          <input type="text" v-model="form.signed_month" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-20 inline-block" :readonly="!editMode" />, 
+          <select 
+  v-model="form.signed_month" 
+  class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-32 inline-block" 
+  :disabled="!editMode" 
+  required
+>
+  <option disabled value="">month</option>
+  <option v-for="(month, index) in months" :key="index" :value="month">{{ month }}</option>
+</select>
+, 
           2024. RRCY Davao City.
         </p>
       </div>
@@ -138,11 +157,11 @@
                 <label class="block text-gray-700 mt-1">Signature above-completed Name of CICL</label>
               </div>
               <div>
-                <input type="text" v-model="form.parent_custodian_name" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
+                <input type="text" v-model="form.parent_custodian_name" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.parent_custodian_name = removeNumbers(form.parent_custodian_name)"/>
                 <label class="block text-gray-700 mt-1">Signature above-completed Name of Parent/ Custodian</label>
               </div>
               <div>
-                <input type="text" v-model="form.lgu_worker_name" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
+                <input type="text" v-model="form.lgu_worker_name" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.lgu_worker_name = removeNumbers(form.lgu_worker_name)"/>
                 <label class="block text-gray-700 mt-1">Signature above-completed Name of LGU Worker</label>
               </div>
             </div>
@@ -153,11 +172,11 @@
             <h2 class="text-lg font-semibold">Witnesses:</h2>
             <div class="space-y-8 mt-4">
               <div>
-                <input type="text" v-model="form.rrcy_officer" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
+                <input type="text" v-model="form.rrcy_officer" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.rrcy_officer = removeNumbers(form.rrcy_officer)"/>
                 <label class="block text-gray-700 mt-1">RRCY Administering Officer</label>
               </div>
               <div>
-                <input type="text" v-model="form.houseparent_on_duty" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
+                <input type="text" v-model="form.houseparent_on_duty" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.houseparent_on_duty = removeNumbers(form.houseparent_on_duty)"/>
                 <label class="block text-gray-700 mt-1">Houseparent-On Duty</label>
               </div>
             </div>
@@ -272,6 +291,10 @@
           houseparent_on_duty: '',
           id: null,
         },
+        months: [
+      'January', 'February', 'March', 'April', 'May', 'June', 
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ],
         clientName: '',
         errorMessage: '',
         currentPage: 1,
@@ -383,6 +406,21 @@
             this.isSaveResultModalOpen = true;
           });
       },
+
+      cancelEdit() {
+      this.editMode = false;
+    },
+
+    // Method to remove numbers from input
+removeNumbers(input) {
+  return input.replace(/[0-9]/g, '');
+},
+daySuffix(day) {
+    if (day === 1 || day === 21 || day === 31) return 'st';
+    if (day === 2 || day === 22) return 'nd';
+    if (day === 3 || day === 23) return 'rd';
+    return 'th';
+  },
       updatePage(page) {
         this.currentPage = page;
       },

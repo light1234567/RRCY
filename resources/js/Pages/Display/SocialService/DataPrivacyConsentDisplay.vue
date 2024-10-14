@@ -21,7 +21,7 @@
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -87,7 +87,8 @@
         </div>
       </div>
     </div>
-  
+    
+    <form ref="DataPrivacyConsentForm" @submit.prevent="saveData">
     <div class="graph-background pt-0.5  -mr-9 -mb-16">
     <div v-if="currentPage === 1" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
         <div class="flex items-center justify-between mb-4">
@@ -101,11 +102,25 @@
         <div class="flex justify-end items-center mb-4">
           <label class="text-gray-700 mr-4">Date:</label>
           <input 
-            type="date" 
-            class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-1/5"
-            v-model="form.date" 
-            :readonly="!editMode"
-          >
+  type="date" 
+  class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-1/5" 
+  v-model="form.date" 
+  :readonly="!editMode" 
+  required 
+  @input="(e) => { 
+    const inputDate = new Date(e.target.value); 
+    const inputYear = inputDate.getFullYear(); 
+    const currentYear = new Date().getFullYear();
+    if (inputYear < 1950 || inputYear > currentYear) { 
+      e.target.setCustomValidity(`Please provide a valid year between 1950 and ${currentYear}`); 
+    } else { 
+      e.target.setCustomValidity(''); 
+    } 
+  }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date between 1950 and the present year') }"
+/>
+
+
         </div>
         <div v-if="message" :class="`p-4 mt-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
           {{ message }}
@@ -138,8 +153,8 @@
           <input 
             type="text" 
             class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
-            v-model="form.client_signature" 
-            :readonly="!editMode"
+            v-model="clientName" 
+            readonly
           >
           <label class="block text-gray-700">Name and signature (Client):</label>
         </div>
@@ -173,6 +188,7 @@
             class="mt-1 w-1/3 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
             v-model="form.guardian_signature" 
             :readonly="!editMode"
+            @input="form.guardian_signature = removeNumbers(form.guardian_signature)"
           >
           <label class="block  text-gray-700 mb-2">Name and signature (Parent/Guardian):</label>
         </div>
@@ -197,7 +213,7 @@
   </div>
     </div>
    </div>
-  
+  </form>
   </template>
   <script>
   import axios from 'axios';
@@ -219,7 +235,6 @@
        messageType: '',
        form: {
          client_id: null,
-         client_signature: '',
          date: '',
          guardian_signature: '',
          id: null,
@@ -257,9 +272,9 @@
          this.clientName = `${client.first_name} ${client.middle_name ? client.middle_name + ' ' : ''}${client.last_name}`;
          this.form.client_id = client.id;
   
-         const consentResponse = await axios.get(`/api/data-privacy-consent/${clientId}`);
+         const consentResponse = await axios.get(`/api/data-privacy-consent/client/${clientId}`);
+
          const consent = consentResponse.data;
-         this.form.client_signature = consent.client_signature || '';
          this.form.date = consent.date || '';
          this.form.guardian_signature = consent.guardian_signature || '';
          this.form.id = consent.id;
@@ -276,56 +291,102 @@
        }
      },
      async saveData() {
-       if (!this.form.client_id) {
-         this.message = 'Client ID is missing.';
-         this.messageType = 'error';
-         setTimeout(() => {
-           this.message = '';
-         }, 3000);
-         return;
-       }
-  
-       try {
-         const response = await axios({
-           method: this.form.id ? 'put' : 'post',
-           url: `/api/data-privacy-consent${this.form.id ? '/' + this.form.id : ''}`,
-           data: this.form,
-         });
-         this.saveResultTitle = 'Success';
-         this.saveResultMessage = 'Data saved successfully!';
-         if (!this.form.id) {
-           this.form.id = response.data.id;
-         }
-         this.editMode = false;
-       } catch (error) {
-         this.saveResultTitle = 'Error';
-         this.saveResultMessage = 'Error saving data.';
-         console.error('Error saving data:', error);
-       } finally {
-         this.closeModal();
-         this.isSaveResultModalOpen = true;
-       }
-     },
-     openModal() {
-       this.isModalOpen = true;
-     },
-     closeModal() {
-       this.isModalOpen = false;
-     },
-     confirmSave() {
-       this.saveData();
-     },
-     closeSaveResultModal() {
-       this.isSaveResultModalOpen = false;
-       this.saveResultTitle = '';
-       this.saveResultMessage = '';
-     },
-     cancelEdit() {
-       this.editMode = false;
-     },
-     updatePage(page) {
-       this.currentPage = page;
-     },
+  // Total number of pages
+  const totalPages = this.totalPages;  // Ensure this is set correctly based on your pagination logic
+  let allFieldsValid = true;
+
+  // Loop through each page to check validity
+  for (let i = 1; i <= totalPages; i++) {
+    // Set the current page to the one we are validating
+    this.currentPage = i;
+    
+    // Ensure the view updates before validation
+    await this.$nextTick();
+
+    // Get the form ref for the current page
+    const form = this.$refs.DataPrivacyConsentForm;  // Make sure this ref matches your template
+
+    // Check if the current page's form is valid
+    if (!form.checkValidity()) {
+      allFieldsValid = false;
+      form.reportValidity(); // Show validation messages and focus on invalid fields
+      break; // Stop checking further pages if the current page is invalid
+    }
+  }
+
+  // If all fields across all pages are valid, open the confirmation modal
+  if (allFieldsValid) {
+    this.isModalOpen = true;  // Open the confirmation modal
+  } else {
+    console.warn('Form has invalid fields, please correct them.');
+    return;  // Exit if form is invalid
+  }
+},
+
+
+  openModal() {
+    // Ensure the modal is shown
+    this.isModalOpen = true;
+  },
+
+  async confirmSave() {
+    // Proceed with saving the data only after confirmation from the modal
+    if (!this.form.client_id) {
+      this.message = 'Client ID is missing.';
+      this.messageType = 'error';
+      setTimeout(() => {
+        this.message = '';
+      }, 3000);
+      return;
+    }
+
+    try {
+      const response = await axios({
+        method: this.form.id ? 'put' : 'post',
+        url: `/api/data-privacy-consent${this.form.id ? '/' + this.form.id : ''}`,
+        data: this.form,
+      });
+
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data saved successfully!';
+
+      if (!this.form.id) {
+        this.form.id = response.data.id;
+      }
+
+      this.editMode = false;
+    } catch (error) {
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = 'Error saving data.';
+      console.error('Error saving data:', error);
+    } finally {
+      this.closeModal();
+      this.isSaveResultModalOpen = true;
+    }
+  },
+
+  closeModal() {
+    this.isModalOpen = false;
+  },
+
+  closeSaveResultModal() {
+    this.isSaveResultModalOpen = false;
+    this.saveResultTitle = '';
+    this.saveResultMessage = '';
+  },
+
+  cancelEdit() {
+    this.editMode = false;
+  },
+
+  updatePage(page) {
+    this.currentPage = page;
+  },
+
+  // Method to remove numbers from input
+  removeNumbers(input) {
+    return input.replace(/[0-9]/g, '');
+  },
      exportToPdf() {
     const pdf = new jsPDF('p', 'mm', 'legal'); // Change to legal size (216x356 mm)
   
@@ -433,7 +494,7 @@
     pdf.setFontSize(12);
     pdf.setFont('arial', 'normal');
     contentYPos += 40;
-    pdf.text(`${this.form.client_signature || ''}`, initialX, contentYPos+-2);
+    pdf.text(`${this.clientName || ''}`, initialX, contentYPos+-2);
     pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
     contentYPos += 5; // Move Y position down for the text
     pdf.text('Name and signature (Client):', 20, contentYPos); // Label below the underline

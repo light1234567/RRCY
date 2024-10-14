@@ -37,9 +37,7 @@ class GeneralIntakeSheet extends Model
         'common_substance_used',
         'initial_assessment',
         'recommendations',
-        'prepared_by',
         'first_intake_case_manager',
-        'reviewed_by',
         'updated_by'
     ];
 

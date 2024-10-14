@@ -17,7 +17,6 @@ class DataPrivacyConsentController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'nullable|exists:clients,id',
-            'client_signature' => 'nullable|string|max:50',
             'date' => 'nullable|date',
             'guardian_signature' => 'nullable|string|max:50',
         ]);        
@@ -26,14 +25,15 @@ class DataPrivacyConsentController extends Controller
         return response()->json($consent, 201);
     }
 
-    public function show($id)
+    public function show($client_id)
     {
-        $consent = DataPrivacyConsent::find($id);
+        $consent = DataPrivacyConsent::where('client_id', $client_id)->first();
         if ($consent) {
             return response()->json($consent);
         }
         return response()->json(['message' => 'Not found'], 404);
     }
+    
 
     public function update(Request $request, $id)
     {
@@ -41,7 +41,6 @@ class DataPrivacyConsentController extends Controller
         if ($consent) {
             $validatedData = $request->validate([
                 'client_id' => 'nullable|exists:clients,id',
-                'client_signature' => 'nullable|string|max:50',
                 'date' => 'nullable|date',
                 'guardian_signature' => 'nullable|string|max:50',
             ]);            

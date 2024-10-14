@@ -35,7 +35,7 @@ class PerformanceObservationReportController extends Controller
         'client_id' => 'required|exists:clients,id',
         'period' => 'nullable|string',
         'assessment_date' => 'nullable|date',
-        'trainings_attended' => 'nullable|string',
+        'trainings_attended' => 'nullable|string|max:100',
         'general_remarks' => 'nullable|string',
         'prepared_by_one' => 'nullable|string',
         'prepared_by_two' => 'nullable|string',

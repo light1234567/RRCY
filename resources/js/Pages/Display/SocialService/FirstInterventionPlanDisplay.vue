@@ -1,8 +1,4 @@
 <template>
-  <!-- Tabs for Actions -->
- 
-
-
 
     <div v-if="editMode" class="flex absolute p-4 space-x-4">
       <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
@@ -30,7 +26,7 @@
       </button>
 
   <!-- Save Button (shown only in edit mode) -->
-  <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+  <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
     <i class="fas fa-check w-4 h-4"></i>
     <span>Save</span>
   </button>
@@ -45,6 +41,7 @@
 </div>
 
 
+<form ref="interventionForm" @submit.prevent="saveData" novalidate>
   <div class="graph-background p-0.5 -mr-9 -mb-16">
 
   <div v-if="currentPage === 1">
@@ -71,12 +68,30 @@
               <input type="text" v-model="plan.age" :class="{'twinkle-border': editMode}" class="ml-[53px] w-3/4 border border-transparent p-1" readonly>
             </div>
             <div class="flex items-center">
-              <label class="font-semibold w-1/5">PERIOD:</label>
-              <input type="text" v-model="plan.period" :class="{'twinkle-border': editMode}" class="w-3/4 border border-transparent p-1" :readonly="!editMode">
+              <label class="font-semibold w-1/5">PERIOD: <span class="text-red-500">*</span></label>
+              <input 
+  type="text" 
+  v-model="plan.period" 
+  :class="{'twinkle-border': editMode}" 
+  class="w-3/4 border border-transparent p-1" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the period for the plan'); }"
+  required
+/>
             </div>
             <div class="flex items-center relative">
-              <label class="font-semibold w-1/5 whitespace-nowrap">DATE PREPARED:</label>
-              <input type="date" v-model="plan.date_prepared" :class="{'twinkle-border': editMode}" class="ml-12 w-3/4 border border-transparent p-1" :readonly="!editMode">
+              <label class="font-semibold w-1/5 whitespace-nowrap">DATE PREPARED: <span class="text-red-500">*</span></label>
+              <input 
+  type="date" 
+  v-model="plan.date_prepared" 
+  :class="{'twinkle-border': editMode}" 
+  class="ml-12 w-3/4 border border-transparent p-1" 
+  :readonly="!editMode" 
+  required 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date for this field'); }"
+/>
               <span class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" @click="openCalendar">
                 
               </span>
@@ -95,69 +110,88 @@
     </tr>
   </thead>
   <tbody>
-    <tr v-for="(item, index) in plan.items" :key="item.id || index" class="hover:bg-gray-100">
-      <td class="py-1 px-2 border-b border-r border-black">
-        <textarea v-model="item.objectives" 
-          :class="{'twinkle-border': editMode}" 
-          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
-          :readonly="!editMode" 
-          @input="adjustHeight($event)">
-        </textarea>
-      </td>
-      <td class="py-1 px-2 border-b border-r border-black">
-        <textarea v-model="item.activities" 
-          :class="{'twinkle-border': editMode}" 
-          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
-          :readonly="!editMode" 
-          @input="adjustHeight($event)">
-        </textarea>
-      </td>
-      <td class="py-1 px-2 border-b border-r border-black">
-        <textarea v-model="item.time_frame" 
-          :class="{'twinkle-border': editMode}" 
-          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
-          :readonly="!editMode" 
-          @input="adjustHeight($event)">
-        </textarea>
-      </td>
-      <td class="py-1 px-2 border-b border-r border-black">
-        <textarea v-model="item.responsible_person" 
-          :class="{'twinkle-border': editMode}" 
-          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
-          :readonly="!editMode" 
-          @input="adjustHeight($event)">
-        </textarea>
-      </td>
-      <td class="py-1 px-2 border-b border-r border-black">
-        <textarea v-model="item.expected_outcome" 
-          :class="{'twinkle-border': editMode}" 
-          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
-          :readonly="!editMode" 
-          @input="adjustHeight($event)">
-        </textarea>
-      </td>
-      <td class="py-1 px-2 border-b border-black">
-        <textarea v-model="item.remarks" 
-          :class="{'twinkle-border': editMode}" 
-          class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
-          :readonly="!editMode" 
-          @input="adjustHeight($event)">
-        </textarea>
-      </td>
-    </tr>
-  </tbody>
+  <tr v-for="(item, index) in plan.items" :key="item.id || index" class="hover:bg-gray-100">
+    <td class="py-1 px-2 border-b border-r border-black">
+      <textarea 
+        v-model="item.objectives" 
+        :class="{'twinkle-border': editMode}" 
+        class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+        :readonly="!editMode" 
+        @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please provide your objectives for this field'); }" 
+        required
+      ></textarea>
+    </td>
+    <td class="py-1 px-2 border-b border-r border-black">
+      <textarea 
+        v-model="item.activities" 
+        :class="{'twinkle-border': editMode}" 
+        class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+        :readonly="!editMode" 
+        @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please provide activities for this field'); }" 
+        required
+      ></textarea>
+    </td>
+    <td class="py-1 px-2 border-b border-r border-black">
+      <textarea 
+        v-model="item.time_frame" 
+        :class="{'twinkle-border': editMode}" 
+        class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+        :readonly="!editMode" 
+        @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please provide a time frame for this field.'); }" 
+        required
+      ></textarea>
+    </td>
+    <td class="py-1 px-2 border-b border-r border-black">
+      <textarea 
+        v-model="item.responsible_person" 
+        :class="{'twinkle-border': editMode}" 
+        class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+        :readonly="!editMode" 
+        @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please provide the name of the responsible person for this field'); }" 
+        required
+      ></textarea>
+    </td>
+    <td class="py-1 px-2 border-b border-r border-black">
+      <textarea 
+        v-model="item.expected_outcome" 
+        :class="{'twinkle-border': editMode}" 
+        class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+        :readonly="!editMode" 
+        @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please provide the expected outcome for this field'); }" 
+        required
+      ></textarea>
+    </td>
+    <td class="py-1 px-2 border-b border-black">
+      <textarea 
+        v-model="item.remarks" 
+        :class="{'twinkle-border': editMode}" 
+        class="w-full p-1 resize-none overflow-hidden bg-transparent border-none" 
+        :readonly="!editMode" 
+        @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please provide remarks for this field'); }" 
+        required
+      ></textarea>
+    </td>
+  </tr>
+</tbody>
+
 </table>
 
       
         <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
           <div>
             <label class="font-semibold">Prepared by:</label>
-            <input type="text" v-model="plan.prepared_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode">
+            <input type="text" v-model="plan.prepared_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode" @input="plan.prepared_by = removeNumbers(plan.prepared_by)">
             <div class="text-xs mt-1">Social Welfare Officer I</div>
           </div>
           <div>
             <label class="font-semibold">Conformed by:</label>
-            <input type="text" v-model="plan.conformed_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode">
+            <input type="text" v-model="plan.conformed_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode" @input="plan.conformed_by = removeNumbers(plan.conformed_by)">
             <div class="text-xs mt-1">Resident</div>
           </div>
           <div>
@@ -249,6 +283,7 @@
     </div>
   </div>
   </div>
+</form>
 </template>
 
 <script>
@@ -364,7 +399,6 @@ export default {
       this.isModalOpen = false;
     },
     confirmSave() {
-      this.saveData();
       this.closeModal();
       this.editMode = false;
     },
@@ -375,46 +409,69 @@ export default {
       this.isSaveResultModalOpen = false;
     },
     saveData() {
-  if (!this.clientId) {
-    this.message = 'No client selected.';
-    this.messageType = 'error';
-    return;
+  const form = this.$refs.interventionForm;
+
+  // Reset all custom validity messages first to avoid stale errors
+  [...form.elements].forEach((element) => {
+    if (element.tagName === 'TEXTAREA' || element.tagName === 'INPUT') {
+      element.setCustomValidity('');
+    }
+  });
+
+  // Now check validity
+  if (form.checkValidity()) {
+    // If valid, proceed with the save logic or open the modal
+    this.isModalOpen = true;
+  } else {
+    // Show validation messages only when the form is submitted and fields are invalid
+    form.reportValidity();
   }
-
-  const payload = {
-    client_id: this.clientId,
-    period: this.plan.period,
-    date_prepared: this.plan.date_prepared,
-    prepared_by: this.plan.prepared_by,
-    conformed_by: this.plan.conformed_by,
-    items: this.plan.items, // Send items as an array
-  };
-
-  const method = this.plan.id ? 'put' : 'post';
-  const url = `/api/intervention-plans${this.plan.id ? '/' + this.plan.id : ''}`;
-
-  axios[method](url, payload)
-    .then(response => {
-      this.saveResultTitle = 'Success';
-      this.saveResultMessage = 'Data saved successfully.';
-      if (!this.plan.id) {
-        this.plan.id = response.data.id;
-      }
-      this.editMode = false;
-    })
-    .catch(error => {
-      this.messageType = 'error';
-      this.saveResultTitle = 'Error';
-      this.saveResultMessage = error.response.data.message || 'An error occurred while saving data.';
-      console.error('Error saving data:', error);
-    })
-    .finally(() => {
-      this.isModalOpen = false;
-      this.isSaveResultModalOpen = true;
-    });
 }
 
 ,
+
+  openModal() {
+    // Ensure the modal is shown
+    this.isModalOpen = true;
+  },
+
+  confirmSave() {
+    // Proceed with saving the data only after confirmation from modal
+    const payload = {
+      client_id: this.clientId,
+      period: this.plan.period,
+      date_prepared: this.plan.date_prepared,
+      prepared_by: this.plan.prepared_by,
+      conformed_by: this.plan.conformed_by,
+      items: this.plan.items,
+    };
+
+    const method = this.plan.id ? 'put' : 'post';
+    const url = `/api/intervention-plans${this.plan.id ? '/' + this.plan.id : ''}`;
+
+    axios[method](url, payload)
+      .then(response => {
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data saved successfully.';
+        if (!this.plan.id) {
+          this.plan.id = response.data.id;
+        }
+        this.editMode = false;
+      })
+      .catch(error => {
+        this.saveResultTitle = 'Error';
+        this.saveResultMessage = error.response.data.message || 'An error occurred while saving data.';
+        console.error('Error saving data:', error);
+      })
+      .finally(() => {
+        this.isModalOpen = false;
+        this.isSaveResultModalOpen = true;
+      });
+  },
+// Method to remove numbers from input
+removeNumbers(input) {
+  return input.replace(/[0-9]/g, '');
+},
     addItem() {
         // Add a new item with no `id` (new items should not have an `id` before saving to the database)
         const newItem = {
@@ -717,8 +774,10 @@ const addSignatureSection = (startY) => {
   },
   mounted() {
     this.clientId = this.$route.params.id;
+    if (this.clientId) {
     this.fetchClientData();
     this.fetchCenterHead();
+  }
   },
   watch: {
     '$route.params.id': function(newId) {

@@ -21,7 +21,7 @@
         <span>Edit</span>
       </button>
 
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -88,7 +88,7 @@
      </div>
    </div>
 
-
+   <form ref="FirstIntake" @submit.prevent="saveData">
    <!--- Page 1 of 4 -->
    <div class="graph-background p-0.5 -mr-9 -mb-16">
 
@@ -102,7 +102,25 @@
         </div>
        <h1 class="text-2xl font-bold">GENERAL INTAKE SHEET</h1>
        <div class="flex justify-end">
-         <p>Date: <input type="date" v-model="sheet.date" class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm  w-1/8 px-2 py-1" :readonly="!editMode" /></p>
+         <p>Date: <input 
+  type="date" 
+  v-model="sheet.date" 
+  class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" 
+  :readonly="!editMode" 
+  required 
+  @input="(e) => { 
+    const inputDate = new Date(e.target.value); 
+    const inputYear = inputDate.getFullYear(); 
+    const currentYear = new Date().getFullYear();
+    if (inputYear < 1950 || inputYear > currentYear) { 
+      e.target.setCustomValidity(`Please provide a valid year between 1950 and ${currentYear}`); 
+    } else { 
+      e.target.setCustomValidity(''); 
+    } 
+  }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date between 1950 and the present year') }"
+/>
+</p>
        </div>
      </div>
     
@@ -163,24 +181,57 @@
    <div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
        <label class="mt-2 block text-base font-semibold text-gray-700 mr-4">Occupation:</label>
-       <input type="text" v-model="sheet.occupation" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+       <input 
+  type="text" 
+  v-model="sheet.occupation" 
+  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide your occupation for this field'); }" 
+  required 
+/>
      </div>
    </div>
    <div class="flex items-center mb-4">
  <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Highest Educ'l Att't:</label>
- <input type="text" v-model="sheet.highest_educ_att" class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+ <input 
+  type="text" 
+  v-model="sheet.highest_educ_att" 
+  class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity(''); }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the highest educational attainment for this field.'); }" 
+  required 
+/>
 </div>
  
 <div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
        <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of School:</label>
-       <input type="text" v-model="sheet.school_name" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+       <input 
+  type="text" 
+  v-model="sheet.school_name" 
+  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity(''); }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the school name for this field.'); }" 
+  required 
+/>
      </div>
    </div>
    <div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
        <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap ">Class Adviser:</label>
-       <input type="text" v-model="sheet.class_adviser" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+       <input
+  type="text"
+  v-model="sheet.class_adviser"
+  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]"
+  :readonly="!editMode"
+  @input="(e) => { sheet.class_adviser = removeNumbers(e.target.value); e.target.setCustomValidity('') }"
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the name of the class adviser for this field'); }"
+  required
+/>
+
      </div>
    </div>
  </div>
@@ -189,7 +240,16 @@
 
      <div class="mb-8">
        <h2 class="text-lg font-semibold">II. Problem Presented:</h2>
-       <textarea v-model="sheet.problem_presented" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
+       <textarea 
+  v-model="sheet.problem_presented" 
+  class="border w-full px-2 py-1" 
+  rows="4" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a description of the problem presented.'); }" 
+  required
+></textarea>
+
      </div>
   
 
@@ -200,7 +260,15 @@
   <!-- Child's Description -->
   <div class="mb-4">
     <label class="block text-base text-black-700 mb-2">Child’s Description:</label>
-    <textarea v-model="sheet.brief_physical_description" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
+    <textarea 
+  v-model="sheet.brief_physical_description" 
+  class="border w-full px-2 py-1" 
+  rows="4" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a brief physical description.'); }" 
+  required
+></textarea>
   </div>
 </div>
 
@@ -791,19 +859,51 @@
       <div class="space-y-2">
         <div class="flex items-center mb-4">
           <label class="block text-base font-semibold text-gray-700 mr-4">Earnings/ income:</label>
-          <input type="text" v-model="sheet.earnings_income" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+          <input 
+  type="text" 
+  v-model="sheet.earnings_income" 
+  class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity(''); }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the earnings income.'); }" 
+  required 
+/>
         </div>
         <div class="flex items-center mb-4">
           <label class="block text-base font-semibold text-gray-700 mr-4">Hours of stay in the street:</label>
-          <input type="text" v-model="sheet.hrs_stay_in_street" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+          <input 
+  type="text" 
+  v-model="sheet.hrs_stay_in_street" 
+  class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity(''); }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the number of hours stayed in the street.'); }" 
+  required 
+/>
         </div>
         <div class="flex items-center mb-4">
           <label class="block text-base font-semibold text-gray-700 mr-4">Length of stay in the street:</label>
-          <input type="text" v-model="sheet.length_stay_in_street" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+          <input 
+  type="text" 
+  v-model="sheet.length_stay_in_street" 
+  class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the length of stay in the street for this field'); }"
+  required 
+/>
         </div>
         <div class="flex items-center mb-4">
           <label class="block text-base font-semibold text-gray-700 mr-4">Common Substance used:</label>
-          <input type="text" v-model="sheet.common_substance_used" class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+          <input 
+  type="text" 
+  v-model="sheet.common_substance_used" 
+  class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the common substance used for this field'); }" 
+  required 
+/>
         </div>
       </div>
     </div>
@@ -813,12 +913,28 @@
 
 <div class="mb-8">
   <h2 class="text-lg font-semibold">V. INITIAL ASSESSMENT:</h2>
-  <textarea v-model="sheet.initial_assessment" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
+  <textarea 
+  v-model="sheet.initial_assessment" 
+  class="border w-full px-2 py-1" 
+  rows="4" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide an initial assessment for this field'); }" 
+  required
+></textarea>
 </div>
 
 <div class="mb-8">
       <h2 class="text-lg font-semibold">VI. RECOMMENDATIONS:</h2>
-      <textarea v-model="sheet.recommendations" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
+      <textarea
+  v-model="sheet.recommendations"
+  class="border w-full px-2 py-1"
+  rows="4"
+  :readonly="!editMode"
+  @input="(e) => { e.target.setCustomValidity('') }"
+  @invalid="(e) => { e.target.setCustomValidity('Please provide your recommendations in this field'); }"
+  required
+></textarea>
     </div>
 
     <div class="flex justify-between mb-8">
@@ -858,7 +974,7 @@
 </div>
 </div>
 </div>
-
+</form>
 </template>
 
 <script>
@@ -1171,6 +1287,9 @@ export default {
     console.error('Error fetching client data:', error);
   }
 },
+removeNumbers(input) {
+    return input.replace(/[0-9]/g, '');
+  },
     fetchCenterHead() {
     axios.get('/api/center-head')  // Replace with the correct API route
       .then(response => {
@@ -1191,12 +1310,16 @@ calculateAge(birthDate) {
       return age;
     },
     toggleEdit() {
-      if (this.editMode) {
-        this.openModal();
-      } else {
-        this.editMode = !this.editMode;
-      }
-    },
+  // Check if the user is trying to exit edit mode
+  if (this.editMode) {
+    // When exiting edit mode, do not open the save modal; simply turn off edit mode
+    this.editMode = false;
+  } else {
+    // When entering edit mode, toggle edit mode to true
+    this.editMode = true;
+  }
+},
+
     openModal() {
       this.isModalOpen = true;
     },
@@ -1211,39 +1334,62 @@ calculateAge(birthDate) {
     cancelEdit() {
       this.editMode = false;
     },
-    saveData() {
-      if (!this.clientId) {
-        this.message = 'No client selected.';
-        this.messageType = 'error';
-        this.clearNotification();
-        return;
+    async saveData() {
+    // Go through all pages and check if they are valid
+    const totalPages = this.totalPages;
+    let allFieldsValid = true;
+
+    for (let i = 1; i <= totalPages; i++) {
+      // Temporarily set the page to the current iteration
+      this.currentPage = i;
+      await this.$nextTick();
+
+      // Get the form for the current page
+      const form = this.$refs.FirstIntake;
+
+      // Check if the current page's form is valid
+      if (!form.checkValidity()) {
+        allFieldsValid = false;
+        form.reportValidity(); // Show validation errors on the current page
+        break; // Stop checking if we find an invalid field
       }
+    }
 
-      const payload = {
-        client_id: this.clientId,
-        ...this.sheet
-      };
+    // If all fields are valid, open the modal
+    if (allFieldsValid) {
+      this.isModalOpen = true;
+    } else {
+      console.warn('Form has invalid fields, please correct them.');
+    }
+  },
 
-      const method = this.sheet.id ? 'put' : 'post';
-      const url = `/api/general-intake-sheets${this.sheet.id ? '/' + this.sheet.id : ''}`;
+  async confirmSave() {
+    const payload = {
+      client_id: this.clientId,
+      ...this.sheet,
+    };
 
-      axios[method](url, payload)
-        .then(response => {
-          this.saveResultTitle = 'Success';
-          this.saveResultMessage = 'Data saved successfully.';
-          if (!this.sheet.id) this.sheet.id = response.data.id;
-          this.editMode = false;
-        })
-        .catch(error => {
-          this.saveResultTitle = 'Error';
-          this.saveResultMessage = error.response.data.message || 'Error saving data.';
-          console.error('Error saving data:', error);
-        })
-        .finally(() => {
-          this.isModalOpen = false;
-          this.isSaveResultModalOpen = true;
-        });
-    },
+    const method = this.sheet.id ? 'put' : 'post';
+    const url = `/api/general-intake-sheets${this.sheet.id ? '/' + this.sheet.id : ''}`;
+
+    try {
+      const response = await axios[method](url, payload);
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data saved successfully.';
+      if (!this.sheet.id) this.sheet.id = response.data.id;
+
+      // Close modal and reset the edit mode
+      this.editMode = false;
+      this.isModalOpen = false;
+
+    } catch (error) {
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = error.response.data.message || 'Error saving data.';
+      console.error('Error saving data:', error);
+    } finally {
+      this.isSaveResultModalOpen = true;
+    }
+  },
     closeSaveResultModal() {
       this.isSaveResultModalOpen = false;
       this.saveResultTitle = '';

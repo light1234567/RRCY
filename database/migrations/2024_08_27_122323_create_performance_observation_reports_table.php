@@ -13,7 +13,7 @@ class CreatePerformanceObservationReportsTable extends Migration
             $table->unsignedMediumInteger('client_id');
             $table->string('period', 15)->nullable();
             $table->date('assessment_date')->nullable();
-            $table->string('trainings_attended', 50)->nullable();
+            $table->string('trainings_attended', 100)->nullable();
             $table->text('general_remarks')->nullable();
             $table->string('prepared_by_one', 50)->nullable();
             $table->string('prepared_by_two', 50)->nullable();

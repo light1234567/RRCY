@@ -11,7 +11,6 @@ class CreateDataPrivacyConsentsTable extends Migration
         Schema::create('data_privacy_consents', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');
-            $table->string('client_signature', 50)->nullable();
             $table->date('date')->nullable();
             $table->string('guardian_signature', 50)->nullable();
             $table->timestamps();

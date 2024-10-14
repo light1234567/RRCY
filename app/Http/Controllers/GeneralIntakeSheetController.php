@@ -38,8 +38,8 @@ class GeneralIntakeSheetController extends Controller
         'highest_educ_att' => 'nullable|string|max:20',
         'school_name' => 'nullable|string|max:50',
         'class_adviser' => 'nullable|string|max:50',
-        'problem_presented' => 'nullable|string|max:150',
-        'brief_physical_description' => 'nullable|string|max:150',
+        'problem_presented' => 'nullable|string',
+        'brief_physical_description' => 'nullable|string',
         'major_life_event' => 'nullable|array',
         'enduring_life_strain' => 'nullable|array',
         'life_transition' => 'nullable|array',
@@ -56,9 +56,7 @@ class GeneralIntakeSheetController extends Controller
         'common_substance_used' => 'nullable|string|max:20',
         'initial_assessment' => 'nullable|string',
         'recommendations' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:50',
         'first_intake_case_manager' => 'nullable|string|max:50',
-        'reviewed_by' => 'nullable|string|max:50',
     ]);    
 
     try {
@@ -113,8 +111,8 @@ public function update(Request $request, $id)
         'highest_educ_att' => 'nullable|string|max:20',
         'school_name' => 'nullable|string|max:50',
         'class_adviser' => 'nullable|string|max:50',
-        'problem_presented' => 'nullable|string|max:150',
-        'brief_physical_description' => 'nullable|string|max:150',
+        'problem_presented' => 'nullable|string',
+        'brief_physical_description' => 'nullable|string',
         'major_life_event' => 'nullable|array',
         'enduring_life_strain' => 'nullable|array',
         'life_transition' => 'nullable|array',
@@ -131,9 +129,7 @@ public function update(Request $request, $id)
         'common_substance_used' => 'nullable|string|max:20',
         'initial_assessment' => 'nullable|string',
         'recommendations' => 'nullable|string',
-        'prepared_by' => 'nullable|string|max:50',
         'first_intake_case_manager' => 'nullable|string|max:50',
-        'reviewed_by' => 'nullable|string|max:50',
             ]); 
 
             $sheet->update($validatedData);

@@ -21,7 +21,7 @@
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -86,6 +86,7 @@
         </div>
       </div>
   
+      <form ref="indicatorsForm" @submit.prevent="saveData">
       <div class="graph-background pt-0.5  -mr-9 -mb-16">
     <div class="mt-8">
       <!-- Page 1 -->
@@ -125,7 +126,26 @@
         <div class="flex items-center mb-4">
           <div class="flex-grow flex items-center mr-4">
             <label class="block text-base font-semibold text-gray-700 mr-4 flex items-center h-full">DATE ADMINISTERED:</label>
-            <input type="date" class="ml-8 p-0 mt-1 w-1/2 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-md" v-model="form.date_administered" :readonly="!editMode" />
+            <input 
+  type="date" 
+  class="ml-8 p-0 mt-1 w-1/2 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-md" 
+  v-model="form.date_administered" 
+  :readonly="!editMode" 
+  required 
+  @input="(e) => { 
+    const inputDate = new Date(e.target.value); 
+    const inputYear = inputDate.getFullYear(); 
+    const currentYear = new Date().getFullYear();
+    if (inputYear < 1950 || inputYear > currentYear) { 
+      e.target.setCustomValidity(`Please provide a valid year between 1950 and ${currentYear}`); 
+    } else { 
+      e.target.setCustomValidity(''); 
+    } 
+  }" 
+  oninvalid="this.setCustomValidity('Please provide a valid date between 1950 and the present year')"
+/>
+
+
           </div>
         </div>
               <!-- The rest of your table goes here -->
@@ -194,7 +214,15 @@
                   <input type="checkbox" v-model="form.indicators_level.physical_three" :disabled="!editMode" @change="selectOnlyOne('physical_first', 'physical_three', 3)">
                 </td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score1" :readonly="!editMode" @input="handleRawScoreInput('physical_raw_score1', 'physical_first')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.physical_raw_score1" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('physical_raw_score1', 'physical_first'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the physical raw score for this field'); }"
+  required 
+/>
                 </td>
                 <td class="py-2 px-3 border border-black" rowspan="2">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_score_per_area1" readonly>
@@ -207,7 +235,15 @@
                 <td class="py-2 px-4 border border-black">Has appropriate skills to function within capacity</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.physical_six" :disabled="!editMode" @change="selectOnlyOne('physical_second','physical_six', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.physical_raw_score2" :readonly="!editMode" @input="handleRawScoreInput('physical_raw_score2','physical_second')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.physical_raw_score2" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('physical_raw_score2', 'physical_second'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the physical raw score for this field'); }"
+  required 
+/>
                 </td>
                 <tr>
                 <td class="py-2 px-4 text-[16px] font-bold border border-black" rowspan="6">Emotional</td>
@@ -218,7 +254,15 @@
                 <td class="py-2 px-4 border border-black">Copes well with sadness or loneliness as he or she does not let such emotion interfere both in daily tasks and social relationship.</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_three" :disabled="!editMode" @change="selectOnlyOne('emotional_first','emotional_three', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score1" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score1','emotional_first')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.emotional_raw_score1" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('emotional_raw_score1', 'emotional_first'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the emotional raw score for this field'); }"
+  required 
+/>
                 </td>
                 <td class="py-2 px-3 border border-black" rowspan="6">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_score_per_area1" readonly>
@@ -236,7 +280,15 @@
                 <td class="py-2 px-4 border border-black">Is generally optimistic despite difficult situations which enable him or her to perform tasks or roles</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_six" :disabled="!editMode" @change="selectOnlyOne('emotional_second','emotional_six', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score2" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score2','emotional_second')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.emotional_raw_score2" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('emotional_raw_score2', 'emotional_second'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the emotional raw score for this field'); }"
+  required 
+/>
                 </td>
                 <tr>
                 
@@ -247,7 +299,15 @@
                 <td class="py-2 px-4 border border-black">Copes well with traumatic events as evident by his or her social and functional adjustment even with very minimal requirement for support from others</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_nine" :disabled="!editMode" @change="selectOnlyOne('emotional_third','emotional_nine', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score3" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score3','emotional_third')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.emotional_raw_score3" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('emotional_raw_score3', 'emotional_third'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the emotional raw score for this field'); }"
+  required 
+/>
                 </td>
               </tr> 
               
@@ -351,7 +411,15 @@
                 </td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_twelve" :disabled="!editMode" @change="selectOnlyOne('emotional_fourth','emotional_twelve', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score4" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score4','emotional_fourth')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.emotional_raw_score4" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('emotional_raw_score4', 'emotional_fourth'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the emotional raw score for this field'); }"
+  required 
+/>
                 </td>
                 <td class="py-2 px-4 border border-black" rowspan="6">
                   
@@ -367,7 +435,15 @@
                 <td class="py-2 px-4 border border-black">Because of feelings of guilt for an offense committed, he or she strives to change negative attitudes that cause damage to others</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.emotional_fifteen" :disabled="!editMode" @change="selectOnlyOne('emotional_fifth','emotional_fifteen', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score5" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score5','emotional_fifth')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.emotional_raw_score5" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('emotional_raw_score5', 'emotional_fifth'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the emotional raw score for this field'); }"
+  required 
+/>
                 </td>
               </tr> 
   
@@ -382,7 +458,15 @@
 
                 <td class="py-2 px-4 border border-black">
 
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.emotional_raw_score6" :readonly="!editMode" @input="handleRawScoreInput('emotional_raw_score6','emotional_sixth')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.emotional_raw_score6" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('emotional_raw_score6', 'emotional_sixth'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the emotional raw score for this field'); }"
+  required 
+/>
                 </td>
               </tr> 
                   </tbody>
@@ -406,7 +490,15 @@
                 </td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_three" :disabled="!editMode" @change="selectOnlyOne('social_first','social_three', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score1" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score1','social_first')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.social_raw_score1" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('social_raw_score1', 'social_first'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the social raw score for this field'); }"
+  required 
+/>
                 </td>
                 <td class="py-2 px-3 border border-black" rowspan="6">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_score_per_area1" readonly>
@@ -423,7 +515,15 @@
                 <td class="text-[11px]  py-2 px-4 border border-black">Performs responsibilities to the best of his or her ability even without prodding. He or she may at times express complaints but does so only when task given is not within his or her own capacity and not against religious beliefs and principles</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_six" :disabled="!editMode" @change="selectOnlyOne('social_second','social_six', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full  p-2 border border-black rounded-md" v-model="form.social_raw_score2" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score2','social_second')">
+                  <input 
+  type="text" 
+  class="w-full p-2 border border-black rounded-md" 
+  v-model="form.social_raw_score2" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('social_raw_score2', 'social_second'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the social raw score for this field'); }"
+  required 
+/>
                 </td> 
               </tr>   
               </table>
@@ -509,7 +609,15 @@
                 </td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_nine" :disabled="!editMode" @change="selectOnlyOne('social_third','social_nine', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score3" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score3','social_third')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.social_raw_score3" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('social_raw_score3', 'social_third'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the social raw score for this field'); }"
+  required 
+/>
                 </td>
                 <td class="py-2 px-4 border border-black" rowspan="6">
                 </td>
@@ -528,7 +636,15 @@
                 <td class="py-2 px-4 border border-black">Respects others at all times</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_twelve" :disabled="!editMode" @change="selectOnlyOne('social_fourth','social_twelve', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score4" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score4','social_fourth')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.social_raw_score4" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('social_raw_score4', 'social_fourth'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the social raw score for this field'); }"
+  required 
+/>
                 </td>
                 
               </tr> 
@@ -542,7 +658,15 @@
                 <td class="py-2 px-4 border border-black">Decides for himself or herself but refers to others for assistance when appropriate</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_fifteen" :disabled="!editMode" @change="selectOnlyOne('social_fifth','social_fifteen', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score5" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score5','social_fifth')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.social_raw_score5" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('social_raw_score5', 'social_fifth'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the social raw score for this field'); }"
+  required 
+/>
                 </td>
               </tr> 
               <tr>
@@ -561,7 +685,15 @@
                 </td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_eighteen" :disabled="!editMode" @change="selectOnlyOne('social_sixth','social_eighteen', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score6" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score6','social_sixth')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.social_raw_score6" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('social_raw_score6', 'social_sixth'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the social raw score for this field'); }"
+  required 
+/>
                 </td>
              
               </tr> 
@@ -575,7 +707,15 @@
                 <td class="py-2 px-4 border border-black">Does not steal</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_twenty_one" :disabled="!editMode" @change="selectOnlyOne('social_seventh','social_twenty_one', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.social_raw_score7" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score7','social_seventh')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.social_raw_score7" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('social_raw_score7', 'social_seventh'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the social raw score for this field'); }"
+  required 
+/>
                 </td>
                
               </tr> 
@@ -589,7 +729,15 @@
                 <td class="py-2 px-4 border border-black">Strives to be honest at all times</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.social_twenty_four" :disabled="!editMode" @change="selectOnlyOne('social_eighth','social_twenty_four', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black  rounded-md" v-model="form.social_raw_score8" :readonly="!editMode" @input="handleRawScoreInput('social_raw_score8','social_eighth')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.social_raw_score8" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('social_raw_score8', 'social_eighth'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the social raw score for this field'); }"
+  required 
+/>
                 </td>
                
               </tr> 
@@ -674,7 +822,15 @@
                 <td class="py-2 px-4 border border-black">Recognizes that God cares for him or her and is ready to provide needed strength to cope with the crisis and failures in life</td>
                 <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.spiritual_three" :disabled="!editMode"  @change="selectOnlyOne('spiritual','spiritual_three', 3)"></td>
                 <td class="py-2 px-4 border border-black">
-                  <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_raw_score1" :readonly="!editMode" @input="handleRawScoreInput('spiritual_raw_score1','spiritual')">
+                  <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.spiritual_raw_score1" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('spiritual_raw_score1', 'spiritual'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the spiritual raw score for this field'); }"
+  required 
+/>
                 </td>
                 <td class="py-2 px-3 border border-black">
                   <input type="text" class="w-full mt-1 p-2 border border-black rounded-md" v-model="form.spiritual_score_per_area1" readonly>
@@ -702,15 +858,16 @@
       </td>
       <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.educational_three" :disabled="!editMode" @change="selectOnlyOne('educational','educational_three', 3)"></td>
       <td class="py-2 px-4 border border-black">
-          <input
-              type="text"
-              min="0"
-              max="3"
-              class="w-full mt-1 p-2 border border-black rounded-md"
-              v-model="form.educational_raw_score"
-              :readonly="!editMode"
-              @input="handleRawScoreInput('educational_raw_score','educational')"
-          />
+        <input 
+  type="text" 
+  class="w-full mt-1 p-2 border border-black rounded-md" 
+  v-model="form.educational_raw_score" 
+  :readonly="!editMode" 
+  @input="(e) => { handleRawScoreInput('educational_raw_score', 'educational'); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the educational raw score for this field'); }"
+  required 
+/>
+
       </td>
       <td class="py-2 px-3 border border-black">
           <input
@@ -742,15 +899,16 @@
       </td>
       <td class="py-2 px-4 border border-black"><input type="checkbox" v-model="form.indicators_level.economic_three" :disabled="!editMode" @change="selectOnlyOne('economic','economic_three', 3)"></td>
       <td class="py-2 px-4 border border-black">
-          <input
-              type="text"
-              min="0"
-              max="3"
-              class="w-full mt-1 p-2 border border-black  rounded-md"
-              v-model="form.economic_raw_score"
-              :readonly="!editMode"
-              @input="handleRawScoreInput('economic_raw_score','economic')"
-          />
+        <input
+  type="text"
+  class="w-full mt-1 p-2 border border-black rounded-md"
+  v-model="form.economic_raw_score"
+  :readonly="!editMode"
+  @input="(e) => { handleRawScoreInput('economic_raw_score', 'economic'); e.target.setCustomValidity('') }"
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the economic raw score for this field'); }"
+  required
+/>
+
       </td>
       <td class="py-2 px-3 border border-black">
           <input
@@ -774,7 +932,16 @@
                 <tr>
                   <td class="border border-black p-2 font-semibold text-gray-700">INTERPRETATION</td>
                   <td class="border border-black p-2">
-                    <input type="text" class="w-full border-0 p-2 focus:ring-0 text-xs" v-model="form.interpretation" :readonly="!editMode">
+                    <input 
+                      type="text" 
+                      class="w-full border-0 p-2 focus:ring-0 text-xs" 
+                      v-model="form.interpretation" 
+                      :readonly="!editMode" 
+                      required 
+                      oninvalid="this.setCustomValidity('Please provide an interpretation')" 
+                      oninput="this.setCustomValidity('')"
+                    />
+
                   </td>
                 </tr>
               </table>
@@ -794,6 +961,7 @@
                     class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
                     v-model="case_manager" 
                     :readonly="!editMode"
+                    @input="case_manager = removeNumbers(case_manager)"
                   >
                   <span class="text-xs text-gray-700 mt-1">Case Manager</span>
                 </div>
@@ -832,6 +1000,7 @@
         </div>
   
         </div>
+      </form>
   </template>
   
   
@@ -1137,6 +1306,9 @@
         // Recalculate the score after input change
         this.calculateScores();
     },
+    removeNumbers(input) {
+  return input.replace(/[0-9]/g, '');
+},
     calculateScores() {
     // Calculate physical score per area and round to 2 decimal places
     this.form.physical_score_per_area1 =
@@ -1252,33 +1424,64 @@
       },
   
       async saveData() {
-  if (!this.form.client_id || !this.form.admission_id) {
-    this.message = 'Client or Admission ID is missing.';
-    this.messageType = 'error';
-    return;
+  // Total number of pages (assuming you have a way to determine the total pages)
+  const totalPages = this.totalPages;  // Ensure this is set correctly based on your pagination logic
+  let allFieldsValid = true;
+
+  // Loop through each page to check validity
+  for (let i = 1; i <= totalPages; i++) {
+    // Set the current page to the one we are validating
+    this.currentPage = i;
+    
+    // Ensure the view updates before validation
+    await this.$nextTick();
+
+    // Get the form ref for the current page
+    const form = this.$refs.indicatorsForm;  // Make sure the ref is correctly set in your template
+
+    // Check if the current page's form is valid
+    if (!form.checkValidity()) {
+      allFieldsValid = false;
+      form.reportValidity(); // Show validation messages and focus on invalid fields
+      break; // Stop checking further pages if the current page is invalid
+    }
   }
 
+  // If all fields across all pages are valid, open the confirmation modal
+  if (allFieldsValid) {
+    this.isModalOpen = true;  // Open the confirmation modal
+  } else {
+    console.warn('Form has invalid fields, please correct them.');
+    return;  // Exit if form is invalid
+  }
+},
+
+// Method to confirm and save data after the user clicks "Save" in the confirmation modal
+async confirmSave() {
+  // Proceed with saving data after user confirmation
   try {
-    // Perform the update using client_id and admission_id
     const response = await axios({
-      method: 'put',  // Ensure it only updates the existing record
+      method: 'put',  // Use PUT to update the existing record
       url: `/api/indicators-of-social-functioning/${this.form.client_id}/${this.form.admission_id}`,
       data: this.form
     });
 
+    // Display success message
     this.saveResultTitle = 'Success';
     this.saveResultMessage = 'Data saved successfully!';
 
     // After saving, refetch the data to update the UI
     this.fetchData(this.form.client_id);
 
-    this.editMode = false;
+    this.editMode = false; // Disable edit mode
   } catch (error) {
+    // Display error message
     this.saveResultTitle = 'Error';
     this.saveResultMessage = 'Error saving data.';
     console.error('Error saving data:', error);
   } finally {
-    this.closeModal();
+    // Close the confirmation modal and show the result modal
+    this.isModalOpen = false;
     this.isSaveResultModalOpen = true;
   }
 },
@@ -1291,15 +1494,11 @@
         this.isModalOpen = false;
       },
   
-      confirmSave() {
-        this.saveData();
-        this.saveCaseManager();
-      },
-  
       closeSaveResultModal() {
         this.isSaveResultModalOpen = false;
         this.saveResultTitle = '';
         this.saveResultMessage = '';
+        this.closeModal();
       },
   
       cancelEdit() {

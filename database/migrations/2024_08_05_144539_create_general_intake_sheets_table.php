@@ -16,8 +16,8 @@ class CreateGeneralIntakeSheetsTable extends Migration
             $table->string('highest_educ_att', 20)->nullable();
             $table->string('school_name', 50)->nullable();
             $table->string('class_adviser', 50)->nullable();
-            $table->string('problem_presented', 150)->nullable();
-            $table->string('brief_physical_description', 150)->nullable();
+            $table->text('problem_presented')->nullable();
+            $table->text('brief_physical_description')->nullable();
             $table->json('major_life_event')->nullable();
             $table->json('enduring_life_strain')->nullable();
             $table->json('life_transition')->nullable();
@@ -34,9 +34,7 @@ class CreateGeneralIntakeSheetsTable extends Migration
             $table->string('common_substance_used', 20)->nullable();
             $table->text('initial_assessment')->nullable();
             $table->text('recommendations')->nullable();
-            $table->string('prepared_by', 50)->nullable();
             $table->string('first_intake_case_manager', 50)->nullable();
-            $table->string('reviewed_by', 50)->nullable();
             $table->timestamps();
         
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');

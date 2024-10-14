@@ -14,7 +14,6 @@ class DataPrivacyConsent extends Model
 
     protected $fillable = [
         'client_id',
-        'client_signature',
         'date',
         'guardian_signature',
         'updated_by'

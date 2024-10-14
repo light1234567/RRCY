@@ -22,12 +22,12 @@ class InterventionPlanController extends Controller
             'prepared_by' => 'nullable|string|max:50',
             'conformed_by' => 'nullable|string|max:50',
             'items' => 'nullable|array', // Expect an array for items
-            'items.*.objectives' => 'nullable|string|max:50',
-            'items.*.activities' => 'nullable|string|max:50',
+            'items.*.objectives' => 'nullable|string|max:150',
+            'items.*.activities' => 'nullable|string|max:150',
             'items.*.time_frame' => 'nullable|string|max:20',
             'items.*.responsible_person' => 'nullable|string|max:50',
-            'items.*.expected_outcome' => 'nullable|string|max:100',
-            'items.*.remarks' => 'nullable|string|max:150',
+            'items.*.expected_outcome' => 'nullable|string|max:150',
+            'items.*.remarks' => 'nullable|string',
         ]);
 
         // Store items as JSON
@@ -48,12 +48,12 @@ class InterventionPlanController extends Controller
                 'prepared_by' => 'nullable|string|max:50',
                 'conformed_by' => 'nullable|string|max:50',
                 'items' => 'nullable|array',
-                'items.*.objectives' => 'nullable|string|max:50',
-                'items.*.activities' => 'nullable|string|max:50',
+                'items.*.objectives' => 'nullable|string|max:150',
+                'items.*.activities' => 'nullable|string|max:150',
                 'items.*.time_frame' => 'nullable|string|max:20',
                 'items.*.responsible_person' => 'nullable|string|max:50',
-                'items.*.expected_outcome' => 'nullable|string|max:100',
-                'items.*.remarks' => 'nullable|string|max:150',
+                'items.*.expected_outcome' => 'nullable|string|max:150',
+                'items.*.remarks' => 'nullable|string',
             ]);
 
             // Update plan and store items as JSON
@@ -65,14 +65,18 @@ class InterventionPlanController extends Controller
         return response()->json(['message' => 'Not found'], 404);
     }
 
-    public function show($id)
-    {
-        $plan = InterventionPlan::with('client')->find($id);
-        if ($plan) {
-            return response()->json($plan);
-        }
-        return response()->json(['message' => 'Not found'], 404);
+    public function show($client_id)
+{
+    // Fetch the intervention plan based on client_id
+    $plan = InterventionPlan::where('client_id', $client_id)->with('client')->first();
+    
+    if ($plan) {
+        return response()->json($plan);
     }
+
+    return response()->json(['message' => 'Not found'], 404);
+}
+
 
     public function destroy($id)
     {

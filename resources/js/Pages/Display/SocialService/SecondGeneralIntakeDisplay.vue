@@ -21,7 +21,7 @@
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -89,6 +89,7 @@
       </div>
     </div>
   
+    <form ref="secondIntake" @submit.prevent="saveData">
     <!-- Page 1 of 2 -->
     <div class="graph-background p-0.5 -mr-9 -mb-16">
   
@@ -103,7 +104,25 @@
         <h1 class="text-2xl font-bold text-center">GENERAL INTAKE SHEET</h1>
       
         <div class="flex justify-end">
-           <p>Date: <input type="date" v-model="sheet.date" class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm  w-1/8 px-2 py-1" :readonly="!editMode" /></p>
+          <p>Date: <input 
+  type="date" 
+  v-model="sheet.date" 
+  class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" 
+  :readonly="!editMode" 
+  required 
+  @input="(e) => { 
+    const inputDate = new Date(e.target.value); 
+    const inputYear = inputDate.getFullYear(); 
+    const currentYear = new Date().getFullYear();
+    if (inputYear < 1950 || inputYear > currentYear) { 
+      e.target.setCustomValidity(`Please provide a valid year between 1950 and ${currentYear}`); 
+    } else { 
+      e.target.setCustomValidity(''); 
+    } 
+  }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date between 1950 and the present year') }"
+/>
+</p>
          </div>
   
         <div v-if="message" :class="`p-4 mt-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
@@ -162,24 +181,57 @@
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
          <label class="mt-2 block text-base font-semibold text-gray-700 mr-4">Occupation:</label>
-         <input type="text" v-model="sheet.occupation" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+         <input 
+  type="text" 
+  v-model="sheet.occupation" 
+  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide your occupation for this field'); }" 
+  required 
+/>
        </div>
      </div>
      <div class="flex items-center mb-4">
    <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Highest Educ'l Att't:</label>
-   <input type="text" v-model="sheet.highest_educ_att" class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+   <input 
+  type="text" 
+  v-model="sheet.highest_educ_att" 
+  class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity(''); }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the highest educational attainment for this field.'); }" 
+  required 
+/>
   </div>
    
   <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
          <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of School:</label>
-         <input type="text" v-model="sheet.school_name" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+         <input 
+  type="text" 
+  v-model="sheet.school_name" 
+  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity(''); }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the school name for this field.'); }" 
+  required 
+/>
        </div>
      </div>
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
          <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap ">Class Adviser:</label>
-         <input type="text" v-model="sheet.class_adviser" class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" :readonly="!editMode" />
+         <input
+  type="text"
+  v-model="sheet.class_adviser"
+  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]"
+  :readonly="!editMode"
+  @input="(e) => { sheet.class_adviser = removeNumbers(e.target.value); e.target.setCustomValidity('') }"
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the name of the class adviser for this field'); }"
+  required
+/>
+
        </div>
      </div>
    </div>
@@ -229,7 +281,16 @@
       <div class="mb-8">
         <h2 class="text-lg font-semibold">Schools Activities Achievement:</h2>
         <div class="space-y-2">
-          <textarea v-model="sheet.school_activities_achievement" class="border w-full px-2 py-1" rows="4" :readonly="!editMode"></textarea>
+          <textarea 
+  v-model="sheet.school_activities_achievement" 
+  class="border w-full px-2 py-1" 
+  rows="4" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide details about school activities and achievements.'); }" 
+  required
+></textarea>
+
         </div>
       </div>
   
@@ -247,9 +308,9 @@
         </div>
         <div class="space-y-2">
           <label>Siblings:</label>
-          <input type="text" v-model="sheet.siblings[0]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
-          <input type="text" v-model="sheet.siblings[1]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
-          <input type="text" v-model="sheet.siblings[2]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
+          <input type="text" v-model="sheet.siblings[0]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[0] = removeNumbers(sheet.siblings[0])"/>
+          <input type="text" v-model="sheet.siblings[1]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[1] = removeNumbers(sheet.siblings[1])"/>
+          <input type="text" v-model="sheet.siblings[2]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[2] = removeNumbers(sheet.siblings[2])"/>
         </div>
         <div class="space-y-2">
           <label>Responsible for Households Chores:</label>
@@ -292,6 +353,7 @@
       </div>
     </div>
     </div>
+  </form>
   </template>
   
   <script>
@@ -465,90 +527,124 @@
       closeModal() {
         this.isModalOpen = false;
       },
-      confirmSave() {
-        this.saveData();
-        this.closeModal();
-        this.editMode = false;
-      },
       cancelEdit() {
         this.editMode = false;
       },
-      saveData() {
-    if (!this.clientId) {
-      this.message = 'No client selected.';
-      this.messageType = 'error';
-      this.clearNotification();
-      return;
-    }
-  
-    // Prepare data for general intake sheet
-    const generalIntakePayload = {
-      client_id: this.clientId,
-      occupation: this.sheet.occupation,
-      highest_educ_att: this.sheet.highest_educ_att,
-      school_name: this.sheet.school_name,
-      class_adviser: this.sheet.class_adviser,
-      // Add other general intake fields here if needed
-    };
-  
-    // Prepare data for second intake sheet
-    const secondIntakePayload = {
-      client_id: this.clientId,
-      general_intake_id: this.sheet.general_intake_id || null,
-      vices: this.sheet.vices,
-      date: this.sheet.date,
-      school_activities_achievement: this.sheet.school_activities_achievement,
-      occupation_of_mother: this.sheet.occupation_of_mother,
-      occupation_of_father: this.sheet.occupation_of_father,
-      siblings: this.sheet.siblings,
-      responsible_for_households_chores: this.sheet.responsible_for_households_chores,
-      detention_days: this.sheet.detention_days,
-      community: this.sheet.community,
-      house_made_of: this.sheet.house_made_of,
-    };
-  
-    // Save or update general intake sheet first
-    let generalIntakeMethod, generalIntakeUrl;
-    if (this.sheet.general_intake_id) {
-      generalIntakeMethod = 'put';
-      generalIntakeUrl = `/api/general-intake-sheets/${this.sheet.general_intake_id}`;
-    } else {
-      generalIntakeMethod = 'post';
-      generalIntakeUrl = `/api/general-intake-sheets`;
-    }
-  
-    axios[generalIntakeMethod](generalIntakeUrl, generalIntakePayload)
-      .then(response => {
-        this.sheet.general_intake_id = response.data.id;  // Store the new or updated general intake ID
-  
-        // Now save or update the second intake sheet
-        let secondIntakeMethod, secondIntakeUrl;
-        if (this.sheet.id) {
-          secondIntakeMethod = 'put';
-          secondIntakeUrl = `/api/second-intake-sheets/${this.sheet.id}`;
-        } else {
-          secondIntakeMethod = 'post';
-          secondIntakeUrl = `/api/second-intake-sheets`;
-        }
-  
-        return axios[secondIntakeMethod](secondIntakeUrl, secondIntakePayload);
-      })
-      .then(response => {
-        this.saveResultTitle = 'Success';
-        this.saveResultMessage = 'Data saved successfully.';
-        if (!this.sheet.id) this.sheet.id = response.data.id;  // Set the new second intake sheet ID
-        this.editMode = false;
-      })
-      .catch(error => {
-        this.saveResultTitle = 'Error';
-        this.saveResultMessage = error.response.data.message || 'Error saving data.';
-        console.error('Error saving data:', error);
-      })
-      .finally(() => {
-        this.isModalOpen = false;
-        this.isSaveResultModalOpen = true;
-      });
+      removeNumbers(input) {
+    return input.replace(/[0-9]/g, '');
   },
+  async saveData() {
+  if (!this.clientId) {
+    this.message = 'No client selected.';
+    this.messageType = 'error';
+    this.clearNotification();
+    return;
+  }
+
+  const totalPages = this.totalPages;  // Ensure this is set correctly based on your pagination logic
+  let allFieldsValid = true;
+
+  // Loop through each page to check its validity
+  for (let i = 1; i <= totalPages; i++) {
+    // Set the current page to the one being validated
+    this.currentPage = i;
+
+    // Wait for the page to be fully rendered before validation
+    await this.$nextTick();
+
+    // Get the form for the current page
+    const form = this.$refs.secondIntake;  // Ensure this ref matches the form in your template
+
+    // Validate the form on the current page
+    if (!form.checkValidity()) {
+      allFieldsValid = false;
+      form.reportValidity();  // Show validation messages and focus on the first invalid field
+
+      // Break out of the loop and stop checking further pages
+      break;
+    }
+  }
+
+  // If all fields across all pages are valid, open the confirmation modal
+  if (allFieldsValid) {
+    this.isModalOpen = true;
+  } else {
+    console.warn('Form has invalid fields, please correct them.');
+  }
+}
+,
+
+
+confirmSave() {
+  // Prepare data for general intake sheet
+  const generalIntakePayload = {
+    client_id: this.clientId,
+    occupation: this.sheet.occupation,
+    highest_educ_att: this.sheet.highest_educ_att,
+    school_name: this.sheet.school_name,
+    class_adviser: this.sheet.class_adviser,
+    // Add other general intake fields here if needed
+  };
+
+  // Prepare data for second intake sheet
+  const secondIntakePayload = {
+    client_id: this.clientId,
+    general_intake_id: this.sheet.general_intake_id || null,
+    vices: this.sheet.vices,
+    date: this.sheet.date,
+    school_activities_achievement: this.sheet.school_activities_achievement,
+    occupation_of_mother: this.sheet.occupation_of_mother,
+    occupation_of_father: this.sheet.occupation_of_father,
+    siblings: this.sheet.siblings,
+    responsible_for_households_chores: this.sheet.responsible_for_households_chores,
+    detention_days: this.sheet.detention_days,
+    community: this.sheet.community,
+    house_made_of: this.sheet.house_made_of,
+  };
+
+  // Save or update general intake sheet first
+  let generalIntakeMethod, generalIntakeUrl;
+  if (this.sheet.general_intake_id) {
+    generalIntakeMethod = 'put';
+    generalIntakeUrl = `/api/general-intake-sheets/${this.sheet.general_intake_id}`;
+  } else {
+    generalIntakeMethod = 'post';
+    generalIntakeUrl = `/api/general-intake-sheets`;
+  }
+
+  axios[generalIntakeMethod](generalIntakeUrl, generalIntakePayload)
+    .then(response => {
+      this.sheet.general_intake_id = response.data.id;  // Store the new or updated general intake ID
+
+      // Now save or update the second intake sheet
+      let secondIntakeMethod, secondIntakeUrl;
+      if (this.sheet.id) {
+        secondIntakeMethod = 'put';
+        secondIntakeUrl = `/api/second-intake-sheets/${this.sheet.id}`;
+      } else {
+        secondIntakeMethod = 'post';
+        secondIntakeUrl = `/api/second-intake-sheets`;
+      }
+
+      return axios[secondIntakeMethod](secondIntakeUrl, secondIntakePayload);
+    })
+    .then(response => {
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data saved successfully.';
+      if (!this.sheet.id) this.sheet.id = response.data.id;  // Set the new second intake sheet ID
+      this.editMode = false;
+    })
+    .catch(error => {
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = error.response.data.message || 'Error saving data.';
+      console.error('Error saving data:', error);
+    })
+    .finally(() => {
+      this.isModalOpen = false;
+      this.isSaveResultModalOpen = true;
+    });
+}
+,
       updateVicesOthers1(event) {
         this.sheet.vices.others1 = event.target.innerText;
       },

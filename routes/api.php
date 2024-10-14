@@ -105,11 +105,13 @@ Route::get('/kasabutan/{id}', [KasabutanController::class, 'show']);
 Route::post('/kasabutan', [KasabutanController::class, 'store']);
 Route::put('/kasabutan/{id}', [KasabutanController::class, 'update']);
 Route::delete('/kasabutan/{id}', [KasabutanController::class, 'destroy']);
+Route::get('/kasabutan/client/{client_id}', [KasabutanController::class, 'showByClientId']);
+
 });
 // Data Privacy Consent Routes
 Route::middleware(['web', 'auth'])->group(function () {
 Route::get('/data-privacy-consent', [DataPrivacyConsentController::class, 'index']);
-Route::get('/data-privacy-consent/{id}', [DataPrivacyConsentController::class, 'show']);
+Route::get('/data-privacy-consent/client/{client_id}', [DataPrivacyConsentController::class, 'show']);
 Route::post('/data-privacy-consent', [DataPrivacyConsentController::class, 'store']);
 Route::put('/data-privacy-consent/{id}', [DataPrivacyConsentController::class, 'update']);
 Route::delete('/data-privacy-consent/{id}', [DataPrivacyConsentController::class, 'destroy']);

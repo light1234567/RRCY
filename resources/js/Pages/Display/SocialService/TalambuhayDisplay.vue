@@ -21,7 +21,7 @@
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -89,7 +89,7 @@
          </div>
        </div>
      </div>
-  
+     <form ref="TalambuhayForm" @submit.prevent="saveData">
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
    <div class="p-8">
      <!-- Page 1 -->
@@ -109,12 +109,30 @@
        <div class="mb-6">
    
          <p class=" mb-2"><u>Tungkol sa aking <span class="font-bold">Pamilya</span></u> (Ilan kaming magkakapatid at tungkol sa kanilang buhay o kaya trabaho; papa/mama at tungkol sa kanilang ikinabubuhay, tungkol sa pamilya at iba pa)</p>
-         <textarea class="w-full mt-1 p-2 border border-gray-300 rounded-md" rows="10" v-model="form.about_my_family" :readonly="!editMode"></textarea>
+         <textarea 
+  class="w-full mt-1 p-2 border border-gray-300 rounded-md" 
+  rows="10" 
+  v-model="form.about_my_family" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide details about your family') }" 
+  required
+></textarea>
+
        </div>
   
        <div class="mb-6">
          <p class="mb-2"><u>Tungkol sa aking <span class="font-bold">Sarili</span></u> (Karanasan mula pagkabata, mga napagtagumpayan, mga bisyo/pagkakamali, eskwela, interes at mga gustong gawin, sports, ambisyon, pangarap at iba pa)</p>
-         <textarea class="w-full mt-1 p-2 border border-gray-300 rounded-md" rows="10" v-model="form.about_my_self" :readonly="!editMode"></textarea>
+         <textarea 
+  class="w-full mt-1 p-2 border border-gray-300 rounded-md" 
+  rows="10" 
+  v-model="form.about_my_self" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide details about yourself') }" 
+  required
+></textarea>
+
        </div>
   
        <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
@@ -139,7 +157,15 @@
   
        <div class="mb-6 mt-12">
          <p class="mb-2"><u>Tungkol sa aking <span class="font-bold">kaso</span></u> (Ano at papaano nangyari, detalye ng pangyayari, ano ang rason at bakit nasangkot "Na-apil" sa kaso, sino-sino ang sangkot at iba pa)</p>
-         <textarea class="w-full mt-1 p-2 border border-gray-300 rounded-md" rows="15" v-model="form.about_my_case" :readonly="!editMode"></textarea>
+         <textarea 
+  class="w-full mt-1 p-2 border border-gray-300 rounded-md" 
+  rows="15" 
+  v-model="form.about_my_case" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide details about your case') }" 
+  required
+></textarea>
        </div>
   
        <div class="mb-6">
@@ -151,6 +177,7 @@
                class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full"
                v-model="form.talambuhay_case_manager" 
                :readonly="!editMode"
+               @input="form.talambuhay_case_manager = removeNumbers(form.talambuhay_case_manager)"
              >
              <label class="">Case Manager:</label>
            </div>
@@ -167,11 +194,15 @@
        </div>
        <div class="mt-12">
              <input 
-               type="date" 
-               class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-1/4"
-               v-model="form.date" 
-               :readonly="!editMode"
-             >
+  type="date" 
+  class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-1/4" 
+  v-model="form.date" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date') }" 
+  required
+>
+
             
            </div>
            <label class=" mb-2 -mt-12">Petsa:</label>
@@ -196,6 +227,7 @@
          </div>
          </div>
          </div>
+         </form>
   </template>
   
   <script>
@@ -310,44 +342,82 @@
        this.closeModal();
        this.editMode = false;
      },
-     async saveData() {
-    if (!this.form.client_id) {
-      this.message = 'Client ID is missing.';
-      this.messageType = 'error';
-      return;
-    }
-  
-    try {
-      // Try fetching Talambuhay by client_id
-      const response = await axios.get(`/api/talambuhay/client/${this.form.client_id}`);
-      
-      if (response.status === 200) {
-        // If the record exists, update it
-        await axios.put(`/api/talambuhay/client/${this.form.client_id}`, this.form);
-        this.saveResultTitle = 'Success';
-        this.saveResultMessage = 'Data updated successfully!';
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        // If no record exists, create a new one
-        try {
-          await axios.post('/api/talambuhay', this.form);
-          this.saveResultTitle = 'Success';
-          this.saveResultMessage = 'Data created successfully!';
-        } catch (postError) {
-          console.error('Error creating record:', postError);
-          this.saveResultTitle = 'Error';
-          this.saveResultMessage = 'Error creating record.';
-        }
-      } else {
-        console.error('Error fetching data:', error);
-        this.saveResultTitle = 'Error';
-        this.saveResultMessage = 'Error saving data.';
-      }
-    } finally {
-      this.isSaveResultModalOpen = true;
-    }
+     removeNumbers(input) {
+    return input.replace(/[0-9]/g, '');
   },
+  async saveData() {
+  if (!this.form.client_id) {
+    this.message = 'Client ID is missing.';
+    this.messageType = 'error';
+    return;
+  }
+
+  const totalPages = this.totalPages;  // Ensure this is set correctly based on your pagination logic
+  let allFieldsValid = true;
+
+  // Loop through each page and check for required field validation
+  for (let i = 1; i <= totalPages; i++) {
+    // Set the current page to the page being validated
+    this.currentPage = i;
+    
+    // Wait for the page to be fully rendered
+    await this.$nextTick();
+    
+    // Get the form reference for validation
+    const form = this.$refs.TalambuhayForm;  // Ensure this matches the form's ref in your template
+
+    // Validate the current page's form
+    if (!form.checkValidity()) {
+      allFieldsValid = false;
+      form.reportValidity();  // Show validation messages and focus on the first invalid field
+      
+      // Stop validation if we find an invalid field
+      break;
+    }
+  }
+
+  // If all fields are valid across all pages, show the confirmation modal
+  if (allFieldsValid) {
+    this.isModalOpen = true;  // Open confirmation modal
+  } else {
+    console.warn('Form has invalid fields, please correct them.');
+  }
+},
+
+async confirmSave() {
+  try {
+    // Check if the Talambuhay record exists and update it
+    const response = await axios.get(`/api/talambuhay/client/${this.form.client_id}`);
+    
+    if (response.status === 200) {
+      // Update the existing Talambuhay record
+      await axios.put(`/api/talambuhay/client/${this.form.client_id}`, this.form);
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data updated successfully!';
+    }
+  } catch (error) {
+    // If record does not exist, create a new one
+    if (error.response && error.response.status === 404) {
+      try {
+        await axios.post('/api/talambuhay', this.form);
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data created successfully!';
+      } catch (postError) {
+        console.error('Error creating record:', postError);
+        this.saveResultTitle = 'Error';
+        this.saveResultMessage = 'Error creating record.';
+      }
+    } else {
+      console.error('Error fetching data:', error);
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = 'Error saving data.';
+    }
+  } finally {
+    this.isModalOpen = false;  // Close confirmation modal
+    this.isSaveResultModalOpen = true;  // Show save result modal
+  }
+}
+,
      closeSaveResultModal() {
        this.isSaveResultModalOpen = false;
        this.saveResultTitle = '';
