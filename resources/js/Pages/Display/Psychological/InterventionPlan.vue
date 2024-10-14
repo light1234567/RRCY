@@ -21,7 +21,7 @@
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -34,6 +34,7 @@
       </button> 
   </div>
     
+  <form ref="interventionPlanForm" @submit.prevent="saveData" novalidate>
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
   
     <div class="max-w-7xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
@@ -47,7 +48,16 @@
         <h1 class="text-sm font-bold mb-4 text-center">PSYCHOLOGICAL SERVICE</h1>
         <div class="ml-16 flex justify-center items-center my-4">
           <p>As of:
-            <input type="date" v-model="form.as_of_date" class="flex-grow border-b-0 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" :readonly="!editMode" />
+            <input 
+              type="date" 
+              v-model="form.as_of_date" 
+              class="flex-grow border-b-0 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" 
+              :readonly="!editMode" 
+              :max="currentDate" 
+              @input="(e) => { e.target.setCustomValidity('') }" 
+              @invalid="(e) => { e.target.setCustomValidity('Please select a valid date up to the present') }" 
+              required 
+            />
           </p>
         </div>
   
@@ -88,22 +98,66 @@
           <tbody>
             <tr v-for="(item, index) in form.items" :key="index">
               <td class="py-1 px-2 border-b border-r border-black">
-                <textarea v-model="item.objectives" :readonly="!editMode" class="w-full p-1 border border-transparent"></textarea>
+                <textarea 
+                  v-model="item.objectives" 
+                  :readonly="!editMode" 
+                  class="w-full p-1 border border-transparent" 
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide objectives') }" 
+                  required
+                ></textarea>
               </td>
               <td class="py-1 px-2 border-b border-r border-black">
-                <textarea v-model="item.activities" :readonly="!editMode" class="w-full p-1 border border-transparent"></textarea>
+                <textarea 
+                  v-model="item.activities" 
+                  :readonly="!editMode" 
+                  class="w-full p-1 border border-transparent" 
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide the activities') }" 
+                  required
+                ></textarea>
               </td>
               <td class="py-1 px-2 border-b border-r border-black">
-                <input type="text" v-model="item.responsible_person" :readonly="!editMode" class="w-full p-1 border border-transparent" />
+                <input 
+                  type="text" 
+                  v-model="item.responsible_person" 
+                  :readonly="!editMode" 
+                  class="w-full p-1 border border-transparent" 
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a responsible person name') }" 
+                  required 
+                />
               </td>
               <td class="py-1 px-2 border-b border-r border-black">
-                <input type="text" v-model="item.time_frame" :readonly="!editMode" class="w-full p-1 border border-transparent" />
+                <input 
+                  type="text" 
+                  v-model="item.time_frame" 
+                  :readonly="!editMode" 
+                  class="w-full p-1 border border-transparent" 
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a time frame') }" 
+                  required 
+                />
               </td>
               <td class="py-1 px-2 border-b border-r border-black">
-                <textarea v-model="item.expected_output" :readonly="!editMode" class="w-full p-1 border border-transparent"></textarea>
+                <textarea 
+                  v-model="item.expected_output" 
+                  :readonly="!editMode" 
+                  class="w-full p-1 border border-transparent" 
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide the expected output') }" 
+                  required
+                ></textarea>
               </td>
               <td class="py-1 px-2 border-b border-black">
-                <textarea v-model="item.progress" :readonly="!editMode" class="w-full p-1 border border-transparent"></textarea>
+                <textarea 
+                  v-model="item.progress" 
+                  :readonly="!editMode" 
+                  class="w-full p-1 border border-transparent" 
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide progress details') }" 
+                  required
+                ></textarea>
               </td>
               <td v-if="editMode" class="py-1 px-2 border-b border-black">
                 <button @click="removeItem(index)" class="px-2 py-1 bg-red-500 text-white rounded-md text-xs">Remove</button>
@@ -122,7 +176,14 @@
         <!-- Progress Notes Section -->
         <div class="space-y-4 mt-6">
           <label for="progressNotes" class="block font-medium">Progress Notes:</label>
-          <textarea v-model="form.progress_notes" :readonly="!editMode" class="block w-full p-2 border border-transparent"></textarea>
+          <textarea 
+            v-model="form.progress_notes" 
+            :readonly="!editMode" 
+            class="block w-full p-2 border border-transparent" 
+            @input="(e) => { e.target.setCustomValidity('') }" 
+            @invalid="(e) => { e.target.setCustomValidity('Please provide progress notes') }" 
+            required
+          ></textarea>
         </div>
   
         <!-- Signatures Section -->
@@ -207,6 +268,7 @@
       </div>
     </div>
     </div>
+  </form>
   </template>
   
   <script>
@@ -356,57 +418,74 @@
         this.isModalOpen = false;
         console.log('Modal closed');
       },
-      confirmSave() {
-        this.saveData();
-        this.closeModal();
-      },
       cancelEdit() {
         this.editMode = false;
         console.log('Edit mode canceled');
       },
       saveData() {
-        let url, method;
-  
-        if (!this.form.client_id) {
-          this.form.client_id = this.$route.params.id;
+    const form = this.$refs.interventionPlanForm;
+
+    // Reset all custom validity messages first to avoid stale errors
+    [...form.elements].forEach((element) => {
+      if (element.tagName === 'TEXTAREA' || element.tagName === 'INPUT') {
+        element.setCustomValidity('');
+      }
+    });
+
+    // Now check validity
+    if (form.checkValidity()) {
+      // If valid, proceed to open the confirmation modal
+      this.isModalOpen = true;
+    } else {
+      // Show validation messages only when the form is submitted and fields are invalid
+      form.reportValidity();
+    }
+  },
+
+  confirmSave() {
+    let url, method;
+
+    if (!this.form.client_id) {
+      this.form.client_id = this.$route.params.id;
+    }
+
+    if (this.form.id) {
+      url = `/api/psychological-intervention-plans/${this.form.client_id}`;
+      method = 'put';
+    } else {
+      url = `/api/psychological-intervention-plans`;
+      method = 'post';
+    }
+
+    console.log('Saving data with method:', method, 'URL:', url);
+
+    axios[method](url, this.form)
+      .then(response => {
+        if (!this.form.id) {
+          this.form.id = response.data.id;
         }
-  
-        if (this.form.id) {
-          url = `/api/psychological-intervention-plans/${this.form.client_id}`;
-          method = 'put';
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data saved successfully!';
+        console.log('Data saved successfully:', response.data);
+      })
+      .catch(error => {
+        if (error.response) {
+          this.saveResultMessage = `Error saving data: ${error.response.data.message || 'An unexpected error occurred.'}`;
+        } else if (error.request) {
+          this.saveResultMessage = 'Error saving data: No response from server.';
         } else {
-          url = `/api/psychological-intervention-plans`;
-          method = 'post';
+          this.saveResultMessage = `Error saving data: ${error.message}`;
         }
-  
-        console.log('Saving data with method:', method, 'URL:', url);
-  
-        axios[method](url, this.form)
-          .then(response => {
-            if (!this.form.id) {
-              this.form.id = response.data.id;
-            }
-            this.saveResultTitle = 'Success';
-            this.saveResultMessage = 'Data saved successfully!';
-            console.log('Data saved successfully:', response.data);
-          })
-          .catch(error => {
-            if (error.response) {
-              this.saveResultMessage = `Error saving data: ${error.response.data.message || 'An unexpected error occurred.'}`;
-            } else if (error.request) {
-              this.saveResultMessage = 'Error saving data: No response from server.';
-            } else {
-              this.saveResultMessage = `Error saving data: ${error.message}`;
-            }
-            this.saveResultTitle = 'Error';
-            console.error('Error saving data:', error);
-          })
-          .finally(() => {
-            this.isSaveResultModalOpen = true;
-            this.editMode = false;
-            console.log('Save result modal opened');
-          });
-      },
+        this.saveResultTitle = 'Error';
+        console.error('Error saving data:', error);
+      })
+      .finally(() => {
+        this.isSaveResultModalOpen = true; // Show save result modal
+        this.isModalOpen = false; // Close confirmation modal
+        this.editMode = false; // Reset edit mode
+        console.log('Save result modal opened');
+      });
+  },
       updatePage(page) {
         this.currentPage = page;
         console.log('Page updated to:', page);

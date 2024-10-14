@@ -29,57 +29,6 @@
       <span>Export PDF</span>
     </button>
   </div>
-<!-- Modal for Save Confirmation -->
-<div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-  <div class="fixed inset-0 bg-black opacity-50"></div>
-  <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-    <div class="bg-white p-6">
-      <div class="flex items-center">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
-      </div>
-      <div class="mt-2">
-        <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
-      </div>
-    </div>
-    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-      <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
-      <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
-    </div>
-  </div>
-</div>
-
-
-  <!-- Modal for Save Result -->
-  <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-      <div class="fixed inset-0 bg-black opacity-50"></div>
-      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-        <div class="bg-white p-6 text-center">
-          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
-            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
-              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </div>
-          </div>
-          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
-            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-          </div>
-          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
-          <div class="mt-2">
-            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
-          </div>
-        </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-            OK
-          </button>
-        </div>
-      </div>
-    </div>
 
   <form ref="ProgressNotes" @submit.prevent="submitForm">
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
@@ -126,7 +75,16 @@
           <div class="space-y-2">
   <div class="flex text-sm">
     <label for="interventionPeriod" class="block w-52">Period of Intervention Plan:</label>
-    <input type="text" id="interventionPeriod" v-model="form.intervention_period" class="block flex -ml-8 w-2/3 p-0 text-sm border-0 bg-transparent" :readonly="!editMode" required>
+    <input 
+  type="text" 
+  id="interventionPeriod" 
+  v-model="form.intervention_period" 
+  class="block flex -ml-8 w-2/3 p-0 text-sm border-0 bg-transparent" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the intervention period.'); }" 
+  required
+/>
   </div>
 </div>
         </div>
@@ -134,19 +92,43 @@
         <!-- Problem Behavior Log Section -->
         <div class="space-y-4 mt-6">
           <h2 class="font-bold">PROBLEM BEHAVIOR LOG</h2>
-          <textarea id="problemBehaviorLog" v-model="form.problem_behavior_log" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode" required></textarea>
+          <textarea 
+  id="problemBehaviorLog" 
+  v-model="form.problem_behavior_log" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a log of problem behavior'); }" 
+  required>
+</textarea>
         </div>
 
         <!-- Interventions Conducted Section -->
         <div class="space-y-4 mt-6">
           <h2 class="font-bold">INTERVENTIONS CONDUCTED</h2>
-          <textarea id="interventionsConducted" v-model="form.interventions_conducted" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode" required></textarea>
+          <textarea 
+  id="interventionsConducted" 
+  v-model="form.interventions_conducted" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide details about the interventions conducted'); }" 
+  required>
+</textarea>
         </div>
 
         <!-- Progress Notes Section -->
         <div class="space-y-4 mt-6">
           <h2 class="font-bold">PROGRESS NOTES</h2>
-          <textarea id="progressNotes" v-model="form.progress_notes" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode" required></textarea>
+          <textarea 
+  id="progressNotes" 
+  v-model="form.progress_notes" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide progress notes for this field'); }" 
+  required>
+</textarea>
         </div>
 
         <div class="space-y-4 mt-6">
@@ -248,6 +230,56 @@
       </div>
     </div>
   </div>
+  <!-- Modal for Save Confirmation -->
+<div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="fixed inset-0 bg-black opacity-50"></div>
+    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+      <div class="bg-white p-6">
+        <div class="flex items-center">
+          <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+        </div>
+        <div class="mt-2">
+          <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+        </div>
+      </div>
+      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+        <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Save Result -->
+  <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6 text-center">
+          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </div>
+          </div>
+          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </form>
 </template>
@@ -413,6 +445,11 @@ export default {
       return age;
     },
 
+    closeModal() {
+        this.isModalOpen = false;
+        console.log('Modal closed');
+      },
+
     clearMessage() {
       setTimeout(() => {
         this.message = '';
@@ -423,14 +460,10 @@ export default {
     updatePage(page) {
       this.currentPage = page;
     }
-  },
-
-    openModal() {
+  ,
+  openModal() {
       this.isModalOpen = true;
       console.log('Modal opened');
-    },
-    closeModal() {
-      this.isModalOpen = false;
     },
 
     closeSaveResultModal() {
@@ -438,6 +471,8 @@ export default {
       this.saveResultTitle = '';
       this.saveResultMessage = '';
     },
+
+
     exportToPdf() {
   const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
   const pageHeight = 356; // Total page height in mm
@@ -618,7 +653,7 @@ export default {
   // Save the PDF with dynamic file name
   pdf.save(`Progress_Report_${this.form.name || 'NoName'}.pdf`);
 },
-
+}
 };
 </script>
 

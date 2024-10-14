@@ -21,7 +21,7 @@
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -37,9 +37,9 @@
     
   
   <!-- Page 1 -->
-  
+  <form ref="IPAForm" @submit.prevent="submitForm" class="space-y-8 w-full">
     <div class="-mt-8 mx-auto p-8 rounded-lg max-w-full" style="width: 8.5in; height: 13in;">
-    <form @submit.prevent="submitForm" class="space-y-8 w-full">
+    
       <div v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
         <div class="relative flex justify-between items-center mb-2">
           <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
@@ -196,7 +196,15 @@
         <!-- Reason for Referral Section -->
         <div class="space-y-4 mt-6">
           <h2 class="font-bold">II. REASON FOR REFERRAL</h2>
-          <textarea id="reasonForReferral" v-model="form.reason_for_referral" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+          <textarea 
+  id="reasonForReferral" 
+  v-model="form.reason_for_referral" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a reason for referral') }" 
+  required
+></textarea>
         </div>
   
         <!-- Brief Background Section -->
@@ -204,7 +212,15 @@
           <h2 class="font-bold">III. BRIEF BACKGROUND</h2>
           <div class="space-y-2">
             <label for="familyHistory" class="block font-bold">Family History</label>
-            <textarea id="familyHistory" v-model="form.family_history" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+            <textarea 
+  id="familyHistory" 
+  v-model="form.family_history" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide family history information') }" 
+  required
+></textarea>
           </div>
         </div>
   
@@ -222,7 +238,6 @@
       </div>
   </div>
 </div>
-    </form>
   
   
    <!-- Page 2 -->
@@ -234,30 +249,78 @@
    
             <div class="space-y-2">
               <label for="sexualDevelopment" class="block font-bold">Sexual Development</label>
-              <textarea id="sexualDevelopment" v-model="form.sexual_development" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+              <textarea 
+  id="sexualDevelopment" 
+  v-model="form.sexual_development" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide details on sexual development') }" 
+  required
+></textarea>
             </div>
             <div class="space-y-2 mt-20">
               <label for="medicalHistory" class="block font-bold">Medical and Psychological History</label>
-              <textarea id="medicalHistory" v-model="form.medical_history" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+              <textarea 
+  id="medicalHistory" 
+  v-model="form.medical_history" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide medical history') }" 
+  required
+></textarea>
             </div>
             <div class="space-y-2 mt-20">
               <label for="schoolHistory" class="block font-bold">School History</label>
-              <textarea id="schoolHistory" v-model="form.school_history" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+              <textarea 
+  id="schoolHistory" 
+  v-model="form.school_history" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the school history') }" 
+  required
+></textarea>
             </div>
             <div class="space-y-2 mt-20">
               <label for="socialHistory" class="block font-bold">Social History (including Spiritual Development and Work Experience)</label>
-              <textarea id="socialHistory" v-model="form.social_history" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+              <textarea 
+  id="socialHistory" 
+  v-model="form.social_history" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide social history information') }" 
+  required
+></textarea>
             </div>
             <div class="space-y-2 mt-20">
               <label for="personalCharacteristics" class="block font-bold">Personal Characteristics</label>
-              <textarea id="personalCharacteristics" v-model="form.personal_characteristics" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+              <textarea 
+  id="personalCharacteristics" 
+  v-model="form.personal_characteristics" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide personal characteristics') }" 
+  required
+></textarea>
             </div>
         
           <div class="space-y-4 mt-20">
             <h2 class="font-bold">IV. ASSESSMENT TOOLS</h2>
             <div class="space-y-2">
               <label for="assessmentInterview" class="block font-medium"></label>
-              <textarea id="assessmentInterview" v-model="form.assessment_interview" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+              <textarea 
+  id="assessmentInterview" 
+  v-model="form.assessment_interview" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide an assessment interview') }" 
+  required
+></textarea>
             </div>
           </div>
   
@@ -296,20 +359,44 @@
             
             <h2 class="font-bold">V. TEST RESULT AND DISCUSSION</h2>
             <div class="space-y-2">
-              <textarea id="testResult" v-model="form.test_result" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+              <textarea 
+  id="testResult" 
+  v-model="form.test_result" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the test result') }" 
+  required
+></textarea>
             </div>
           </div>
   
   
           <div class="space-y-4 mt-20">
             <h2 class="font-bold">VI. CLINICAL IMPRESSION</h2>
-            <textarea id="clinicalImpression" v-model="form.clinical_impression" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+            <textarea 
+  id="clinicalImpression" 
+  v-model="form.clinical_impression" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a clinical impression') }" 
+  required
+></textarea>
           </div>
   
           <!-- Plan of Action Section -->
           <div class="space-y-4 mt-20">
             <h2 class="font-bold">VII. PLAN OF ACTION</h2>
-            <textarea id="planOfAction" v-model="form.plan_of_action" class="block w-full p-2 border border-gray-300 rounded-md" :readonly="!editMode"></textarea>
+            <textarea 
+  id="planOfAction" 
+  v-model="form.plan_of_action" 
+  class="block w-full p-2 border border-gray-300 rounded-md" 
+  :readonly="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a plan of action') }" 
+  required
+></textarea>
           </div>
   
           <div class="space-y-4 mt-20">
@@ -412,6 +499,7 @@
      </div>
    </div>
    </div>
+  </form>
   </template>
   
   <script>
@@ -537,14 +625,6 @@
         this.editMode = false;
         this.fetchData(); // Reset the form with the latest data
       },
-      saveData() {
-        this.isModalOpen = true;
-      },
-      confirmSave() {
-        this.isModalOpen = false;
-        this.submitForm();
-        this.closeModal();
-      },
       openModal() {
         this.isModalOpen = true;
         console.log('Modal opened');
@@ -559,38 +639,75 @@
         this.saveResultMessage = '';
       },
       submitForm() {
-        if (!this.form.client_id || !this.form.admission_id) {
-          this.message = 'Client ID and Admission ID are required.';
-          this.messageType = 'error';
-          return;
-        }
+  const totalPages = this.totalPages;
+  let allFieldsValid = true;
   
-        const url = this.form.id 
-          ? `/api/initial-psychological-assessments/${this.form.id}` 
-          : `/api/initial-psychological-assessments`;
-  
-        const method = this.form.id ? 'put' : 'post';
-  
-        axios[method](url, this.form)
-          .then(response => {
-            this.editMode = false;
-            this.saveResultTitle = 'Success';
-            this.saveResultMessage = 'Data saved successfully!';
-            this.isSaveResultModalOpen = true;
-            this.fetchData(); // Re-fetch data to update the form with the latest saved data
-          })
-          .catch(error => {
-            if (error.response && error.response.status === 422) {
-              const errors = error.response.data.errors;
-              this.message = 'Validation error: ' + Object.values(errors).flat().join(', ');
-            } else {
-              this.message = 'Failed to save data';
-            }
-            this.saveResultTitle = 'Error';
-            this.saveResultMessage = this.message;
-            this.isSaveResultModalOpen = true;
-          });
-      },
+  const checkValidityPerPage = (page) => {
+    // Set the current page
+    this.currentPage = page;
+    
+    // Use $nextTick to ensure the page has been rendered before validating
+    this.$nextTick(() => {
+      const form = this.$refs.IPAForm; // Ensure that the form is correctly referenced
+      
+      // Check if the form is valid
+      if (!form.checkValidity()) {
+        allFieldsValid = false;
+        form.reportValidity(); // Display validation errors
+      }
+      
+      // If fields are valid, move to the next page
+      if (allFieldsValid && page < totalPages) {
+        checkValidityPerPage(page + 1);
+      } else if (!allFieldsValid) {
+        console.warn('Form has invalid fields, please correct them.');
+      } else if (allFieldsValid && page === totalPages) {
+        // If we reached the last page and all fields are valid, open the confirmation modal
+        this.isModalOpen = true;
+      }
+    });
+  };
+
+  // Start checking the validity from page 1
+  checkValidityPerPage(1);
+}
+,
+
+confirmSave() {
+  if (!this.form.client_id || !this.form.admission_id) {
+    this.message = 'Client ID and Admission ID are required.';
+    this.messageType = 'error';
+    return;
+  }
+
+  const url = this.form.id 
+    ? `/api/initial-psychological-assessments/${this.form.id}` 
+    : `/api/initial-psychological-assessments`;
+
+  const method = this.form.id ? 'put' : 'post';
+
+  axios[method](url, this.form)
+    .then(response => {
+      this.editMode = false;
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data saved successfully!';
+      this.isModalOpen = false;
+      this.isSaveResultModalOpen = true; // Open the result modal
+      this.fetchData(); // Re-fetch data to update the form with the latest saved data
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 422) {
+        const errors = error.response.data.errors;
+        this.message = 'Validation error: ' + Object.values(errors).flat().join(', ');
+      } else {
+        this.message = 'Failed to save data';
+      }
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = this.message;
+      this.isSaveResultModalOpen = true; // Open the result modal on error
+    });
+}
+,
       calculateAge(birthDate) {
         const today = new Date();
         const birthDateObj = new Date(birthDate);

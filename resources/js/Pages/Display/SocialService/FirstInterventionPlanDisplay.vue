@@ -426,15 +426,7 @@ export default {
     // Show validation messages only when the form is submitted and fields are invalid
     form.reportValidity();
   }
-}
-
-,
-
-  openModal() {
-    // Ensure the modal is shown
-    this.isModalOpen = true;
-  },
-
+},
   confirmSave() {
     // Proceed with saving the data only after confirmation from modal
     const payload = {
