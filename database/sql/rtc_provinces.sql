@@ -1,5 +1,5 @@
 -- Create the rtc_provinces table
-CREATE TABLE rtc_provinces (
+CREATE TABLE IF NOT EXISTS rtc_provinces (
     id INT AUTO_INCREMENT PRIMARY KEY,
     province_name VARCHAR(20) NOT NULL
 );

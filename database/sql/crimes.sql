@@ -1,5 +1,5 @@
 -- Create the crimes table
-CREATE TABLE crimes (
+CREATE TABLE IF NOT EXISTS crimes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     crime_name VARCHAR(100) NOT NULL,
     category_id INT,
