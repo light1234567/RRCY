@@ -21,7 +21,7 @@
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -35,6 +35,61 @@
       </button>
   </div>
   
+  <!-- Modal for Save Confirmation -->
+  <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6">
+          <div class="flex items-center">
+            <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+            </svg>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+          </div>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+          <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal for Save Result -->
+    <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6 text-center">
+          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </div>
+          </div>
+          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <form ref="IncidentForm" @submit.prevent="submitForm">
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
   
     <div class="max-w-3xl mx-auto mt-8 p-16 bg-white border border-gray-400 rounded-lg shadow-lg">
@@ -68,7 +123,11 @@
           class="border border-gray-400 p-2 w-full"
           rows="3"
           :readonly="!editMode"
+          @input="(e) => { e.target.setCustomValidity('') }"
+          @invalid="(e) => { e.target.setCustomValidity('Please provide details about the incident') }"
+          required
         ></textarea>
+
       </div>
   
       <!-- When It Happened -->
@@ -79,27 +138,33 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div>
           <label for="dateOfIncident" class="block text-sm"><span class="w-auto mr-2 font-semibold">Date of Incident:</span>
-          <input
-            type="date"
-            id="dateOfIncident"
-            v-model="form.date_of_incident"
-            required
-            class="underline-input p-2 text-sm w-28"
-            :readonly="!editMode"
-          >
+            <input
+              type="date"
+              id="dateOfIncident"
+              v-model="form.date_of_incident"
+              required
+              class="underline-input p-2 text-sm w-28"
+              :readonly="!editMode"
+              @input="(e) => { e.target.setCustomValidity('') }"
+              @invalid="(e) => { e.target.setCustomValidity('Please provide a date of incident') }"
+            />
+
         </label>
         </div>
         <br />
         <div>
           <label for="timeOfIncident" class="block text-sm"><span class="w-auto mr-2 font-semibold">Time:</span>
-          <input
-            type="time"
-            id="timeOfIncident"
-            v-model="form.time_of_incident"
-            required
-            class="underline-input text-sm p-2 w-28"
-            :readonly="!editMode"
-          >
+            <input
+  type="time"
+  id="timeOfIncident"
+  v-model="form.time_of_incident"
+  required
+  class="underline-input text-sm p-2 w-28"
+  :readonly="!editMode"
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a time for the incident') }"
+/>
+
         </label>
         </div>
       </div>
@@ -113,19 +178,27 @@
           class="border border-gray-400 p-2 w-full"
           rows="3"
           :readonly="!editMode"
-        ></textarea>
+          @input="(e) => { e.target.setCustomValidity('') }"
+          @invalid="(e) => { e.target.setCustomValidity('Please provide details about those involved') }"
+          required
+></textarea>
+
       </div>
   
       <!-- Where It Happened -->
       <div class="mb-6">
         <label for="location" class="block font-semibold">Where it happened? (Exact place of the incident)</label>
-        <textarea
-          id="location"
-          v-model="form.location"
-          class="border border-gray-400 p-2 w-full"
-          rows="3"
-          :readonly="!editMode"
+        <textarea 
+          id="location" 
+          v-model="form.location" 
+          class="border border-gray-400 p-2 w-full" 
+          rows="3" 
+          :readonly="!editMode" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide a location') }" 
+          required
         ></textarea>
+
       </div>
   
       <!-- Action Taken -->
@@ -137,7 +210,11 @@
           class="border border-gray-400 p-2 w-full"
           rows="3"
           :readonly="!editMode"
+          @input="(e) => { e.target.setCustomValidity('') }"
+          @invalid="(e) => { e.target.setCustomValidity('Please provide the action taken') }"
+          required
         ></textarea>
+
       </div>
   
       <!-- Agreements Reached/Advice Given -->
@@ -149,7 +226,11 @@
           class="border border-gray-400 p-2 w-full"
           rows="3"
           :readonly="!editMode"
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide agreements') }" 
+          required
         ></textarea>
+
       </div>
   
       <!-- Corrective Measure -->
@@ -161,7 +242,11 @@
           class="border border-gray-400 p-2 w-full"
           rows="3"
           :readonly="!editMode"
+          @input="(e) => { e.target.setCustomValidity('') }"
+          @invalid="(e) => { e.target.setCustomValidity('Please provide a corrective measure') }"
+          required
         ></textarea>
+
       </div>
   
      <!-- Signatures Section -->
@@ -217,62 +302,9 @@
             </div>
         </div>
     </div>
-  
-    <!-- Modal for Save Confirmation -->
-    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-      <div class="fixed inset-0 bg-black opacity-50"></div>
-      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-        <div class="bg-white p-6">
-          <div class="flex items-center">
-            <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
-            </svg>
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
-          </div>
-          <div class="mt-2">
-            <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
-          </div>
-        </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
-          <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Modal for Save Result -->
-    <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-      <div class="fixed inset-0 bg-black opacity-50"></div>
-      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-        <div class="bg-white p-6 text-center">
-          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
-            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
-              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </div>
-          </div>
-          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
-            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-          </div>
-          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
-          <div class="mt-2">
-            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
-          </div>
-        </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-            OK
-          </button>
-        </div>
-      </div>
     </div>
     </div>
-    </div>
+  </form>
   </template>
   <script>
   import axios from 'axios';
@@ -396,64 +428,74 @@
       },
   
       submitForm() {
-  if (!this.form.client_id) {
-    this.message = 'Client ID is required.';
-    this.messageType = 'error';
-    this.clearMessage();
-    return;
+  const form = this.$refs.IncidentForm; // Ensure the form's ref is set in the template
+  let isFormValid = true;
+
+  // Validate the form fields and check for any invalid fields
+  if (!form.checkValidity()) {
+    isFormValid = false;
+    form.reportValidity(); // This will display validation messages and scroll to the first invalid field
   }
 
-  if (this.form.time_of_incident) {
-    this.form.time_of_incident = this.form.time_of_incident.slice(0, 5);
+  // If all fields are valid, open the confirmation modal
+  if (isFormValid) {
+    this.isModalOpen = true;  // Open the modal to confirm saving
+  } else {
+    console.warn('Form contains invalid fields. Please correct them.');
   }
+},
 
+confirmSave() {
   const url = `/api/incident-reports/${this.form.client_id}`;
 
-  // Check if we are updating or creating a new record
+  // Check if an existing record needs to be updated or a new one created
   axios.get(`/api/incident-reports/${this.form.client_id}`)
     .then(response => {
       if (response.data.report) {
-        // Update existing report
+        // Update the existing incident report
         axios.put(url, this.form)
-          .then(response => {
+          .then(() => {
             this.message = 'Data updated successfully!';
             this.messageType = 'success';
             this.saveResultTitle = 'Success';
             this.saveResultMessage = 'Data updated successfully.';
-            this.isSaveResultModalOpen = true; // Show modal
-            this.fetchData(); // Refresh data
+            this.isSaveResultModalOpen = true; // Show success modal
+            this.fetchData(this.form.client_id); // Refresh the data after successful update
           })
           .catch(error => {
             this.message = 'Failed to update data';
             this.messageType = 'error';
             this.saveResultTitle = 'Error';
             this.saveResultMessage = error.response?.data?.message || 'Error updating data.';
-            this.isSaveResultModalOpen = true; // Show modal
-            this.handleError(error);
+            this.isSaveResultModalOpen = true; // Show error modal
+            console.error('Error saving data:', error);
           });
       } else {
-        // Create new report
+        // Create a new incident report if none exists
         axios.post(`/api/incident-reports`, this.form)
-          .then(response => {
+          .then(() => {
             this.message = 'Data created successfully!';
             this.messageType = 'success';
             this.saveResultTitle = 'Success';
             this.saveResultMessage = 'Data created successfully.';
-            this.isSaveResultModalOpen = true; // Show modal
-            this.fetchData(); // Refresh data
+            this.isSaveResultModalOpen = true; // Show success modal
+            this.fetchData(this.form.client_id); // Refresh the data after successful creation
           })
           .catch(error => {
             this.message = 'Failed to create data';
             this.messageType = 'error';
             this.saveResultTitle = 'Error';
             this.saveResultMessage = error.response?.data?.message || 'Error creating data.';
-            this.isSaveResultModalOpen = true; // Show modal
-            this.handleError(error);
+            this.isSaveResultModalOpen = true; // Show error modal
+            console.error('Error saving data:', error);
           });
       }
     })
     .catch(error => {
-      console.error('Error fetching report for validation:', error);
+      console.error('Error fetching incident report for validation:', error);
+    })
+    .finally(() => {
+      this.isModalOpen = false;  // Close the confirmation modal
     });
 },
 

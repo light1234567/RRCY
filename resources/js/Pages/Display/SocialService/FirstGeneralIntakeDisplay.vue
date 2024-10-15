@@ -186,9 +186,6 @@
   v-model="sheet.occupation" 
   class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide your occupation for this field'); }" 
-  required 
 />
      </div>
    </div>
@@ -199,9 +196,6 @@
   v-model="sheet.highest_educ_att" 
   class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity(''); }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the highest educational attainment for this field.'); }" 
-  required 
 />
 </div>
  
@@ -213,9 +207,6 @@
   v-model="sheet.school_name" 
   class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity(''); }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the school name for this field.'); }" 
-  required 
 />
      </div>
    </div>
@@ -227,9 +218,6 @@
   v-model="sheet.class_adviser"
   class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]"
   :readonly="!editMode"
-  @input="(e) => { sheet.class_adviser = removeNumbers(e.target.value); e.target.setCustomValidity('') }"
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the name of the class adviser for this field'); }"
-  required
 />
 
      </div>
@@ -863,10 +851,7 @@
   type="text" 
   v-model="sheet.earnings_income" 
   class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity(''); }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the earnings income.'); }" 
-  required 
+  :readonly="!editMode"  
 />
         </div>
         <div class="flex items-center mb-4">
@@ -876,9 +861,6 @@
   v-model="sheet.hrs_stay_in_street" 
   class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity(''); }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the number of hours stayed in the street.'); }" 
-  required 
 />
         </div>
         <div class="flex items-center mb-4">
@@ -888,9 +870,6 @@
   v-model="sheet.length_stay_in_street" 
   class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the length of stay in the street for this field'); }"
-  required 
 />
         </div>
         <div class="flex items-center mb-4">
@@ -900,9 +879,6 @@
   v-model="sheet.common_substance_used" 
   class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the common substance used for this field'); }" 
-  required 
 />
         </div>
       </div>
@@ -919,7 +895,7 @@
   rows="4" 
   :readonly="!editMode" 
   @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide an initial assessment for this field'); }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide an initial assessment'); }" 
   required
 ></textarea>
 </div>

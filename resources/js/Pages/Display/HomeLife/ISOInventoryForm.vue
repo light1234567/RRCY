@@ -25,7 +25,7 @@
       
   
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -43,7 +43,62 @@
         <span>Export PDF</span>
       </button> -->
   </div>
+
+  <!-- Modal for Save Confirmation -->
+  <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6">
+          <div class="flex items-center">
+            <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+            </svg>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+          </div>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+          <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal for Save Result -->
+    <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6 text-center">
+          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </div>
+          </div>
+          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+          </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
     
+  <form ref="InventoryForm" @submit.prevent="submitForm">
     <!-- Header Section -->
     <div class="graph-background pt-0.5  -mr-9 -mb-16">
   
@@ -66,7 +121,30 @@
       <h1 class="font-bold text-md">MONTHLY INVENTORY OF BELONGINGS</h1>
       <p class="text-sm">
     FOR THE MONTH OF
-    <input type="text" v-model="form.month" class="underline-input text-sm p-1" :readonly="!editMode" />
+    <select 
+  v-model="form.month" 
+  class="underline-input text-sm p-1" 
+  :disabled="!editMode" 
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please select a month') }" 
+  required
+>
+    <option value="" disabled>Select Month</option>
+    <option value="January">January</option>
+    <option value="February">February</option>
+    <option value="March">March</option>
+    <option value="April">April</option>
+    <option value="May">May</option>
+    <option value="June">June</option>
+    <option value="July">July</option>
+    <option value="August">August</option>
+    <option value="September">September</option>
+    <option value="October">October</option>
+    <option value="November">November</option>
+    <option value="December">December</option>
+</select>
+
+
   </p>  </div>
   
     <!-- Inventory Table -->
@@ -91,7 +169,7 @@
             <input type="text" v-model="item.name" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
           </td>
           <td class="border border-gray-300 p-2">
-            <input type="number" v-model.number="item.qty" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+            <input min="0" type="number" v-model.number="item.qty" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
           </td>
           <td class="border border-gray-300 p-2">
             <input type="text" v-model="item.brand" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
@@ -122,10 +200,10 @@
     </table>
     <!-- Button to Add New Row -->
     <div v-if="editMode" class="mt-4 text-right">
-      <button @click="addNewRow" class="px-4 py-2 bg-green-500 text-white rounded-md text-xs">
-        Add New Row
-      </button>
-    </div>
+  <button type="button" @click="addNewRow" class="px-4 py-2 bg-green-500 text-white rounded-md text-xs">
+    Add New Row
+  </button>
+</div>
   </div>
   
   
@@ -185,63 +263,9 @@
           </div>
         </div>
       </div>
-  
-  
-    <!-- Modal for Save Confirmation -->
-    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-      <div class="fixed inset-0 bg-black opacity-50"></div>
-      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-        <div class="bg-white p-6">
-          <div class="flex items-center">
-            <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
-            </svg>
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
-          </div>
-          <div class="mt-2">
-            <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
-          </div>
-        </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
-          <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Modal for Save Result -->
-    <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-      <div class="fixed inset-0 bg-black opacity-50"></div>
-      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-        <div class="bg-white p-6 text-center">
-          <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
-            <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
-              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </div>
-          </div>
-          <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
-            <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-          </div>
-          <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
-          <div class="mt-2">
-            <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
-          </div>
-        </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-            OK
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
   </div>
+</form>
   </template>
   
   <script>
@@ -360,22 +384,40 @@
     },
   
     submitForm() {
+  // Ensure client_id exists before proceeding
   if (!this.form.client_id) {
     this.message = 'Client ID is required.';
     this.messageType = 'error';
     return;
   }
-  
+
+  const form = this.$refs.InventoryForm; // Reference to the form for validation
+  let isFormValid = true;
+
+  // Validate the form and check for any invalid fields
+  if (!form.checkValidity()) {
+    isFormValid = false;
+    form.reportValidity(); // Show validation messages and focus on the first invalid field
+  }
+
+  // If all fields are valid, open the confirmation modal
+  if (isFormValid) {
+    this.isModalOpen = true;  // Open the modal to confirm saving
+  } else {
+    console.warn('Form contains invalid fields. Please correct them.');
+  }
+},
+
+confirmSave() {
   const isUpdate = this.form.id !== null;
-  const url = isUpdate
-    ? `/api/monthly-inventories` // Update URL
-    : `/api/monthly-inventories`; // Create URL (same as update URL but different HTTP method)
-  
-  const method = isUpdate ? 'put' : 'post'; // Decide HTTP method
+  const url = `/api/monthly-inventories`; // Same URL for both update and create actions
+
+  // Use PUT for updating and POST for creating new records
+  const method = isUpdate ? 'put' : 'post';
   
   console.log(`Submitting form with method ${method} to URL:`, url); // Debugging
   console.log('Form data being submitted:', this.form); // Debugging
-  
+
   axios({ method, url, data: this.form })
     .then(response => {
       console.log('Form submission successful:', response.data); // Debugging
@@ -399,9 +441,12 @@
       this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
       this.isSaveResultModalOpen = true;
       this.clearMessage();
+    })
+    .finally(() => {
+      this.isModalOpen = false; // Close the confirmation modal
     });
-  }
-  ,
+},
+
   
     clearMessage() {
       setTimeout(() => {

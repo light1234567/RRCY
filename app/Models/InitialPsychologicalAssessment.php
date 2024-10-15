@@ -16,6 +16,7 @@ class InitialPsychologicalAssessment extends Model
         'client_id',
         'admission_id',
         'nickname',
+        'report_date',
         'educational_attainment',
         'reason_for_referral',
         'family_history',

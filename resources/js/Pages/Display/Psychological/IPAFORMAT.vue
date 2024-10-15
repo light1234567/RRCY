@@ -187,7 +187,11 @@
                   v-model="form.report_date"
                   class="p-1 border-b border-transparent focus:outline-none"
                   :readonly="!editMode"
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a report date') }"
+                  required
                 />
+
               </div>
             </div>
           </div>
@@ -599,7 +603,6 @@
                 this.form.offense_committed = admission.offense_committed;
                 this.form.educational_attainment = highest_educ_att;
                 this.form.admission_date = admission.date_admitted;
-                this.form.report_date = new Date().toISOString().split('T')[0];
               }
             })
             .catch(error => {

@@ -22,7 +22,7 @@
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -36,7 +36,61 @@
       </button>
   </div>
   
+  <!-- Modal for Save Confirmation -->
+  <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+       <div class="fixed inset-0 bg-black opacity-50"></div>
+       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+         <div class="bg-white p-6">
+           <div class="flex items-center">
+             <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+             </svg>
+             <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+           </div>
+           <div class="mt-2">
+             <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+           </div>
+         </div>
+         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+           <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+           <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+         </div>
+       </div>
+     </div>
   
+     <!-- Modal for Save Result -->
+     <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+       <div class="fixed inset-0 bg-black opacity-50"></div>
+       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+         <div class="bg-white p-6 text-center">
+           <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+             <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+               <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+               </svg>
+             </div>
+           </div>
+           <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+             <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+               </svg>
+             </div>
+           </div>
+           <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+           <div class="mt-2">
+             <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+           </div>
+         </div>
+         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+           <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+             OK
+           </button>
+         </div>
+       </div>
+     </div>
+  
+  <form ref="AnecdotalForm" @submit.prevent="submitForm">
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
   
    <div class="max-w-3xl mx-auto mt-8 p-16 bg-white border border-gray-400 rounded-lg shadow-lg">
@@ -60,25 +114,29 @@
        <p class="text-sm font-semibold">
     FOR THE MONTH OF
     <select 
-  v-model="form.month" 
-  class="underline-input text-sm -p-1" 
-   style="background: transparent;"
-  :readonly="!editMode"
->
-  <option value="" disabled></option>
-  <option value="January">January</option>
-  <option value="February">February</option>
-  <option value="March">March</option>
-  <option value="April">April</option>
-  <option value="May">May</option>
-  <option value="June">June</option>
-  <option value="July">July</option>
-  <option value="August">August</option>
-  <option value="September">September</option>
-  <option value="October">October</option>
-  <option value="November">November</option>
-  <option value="December">December</option>
-</select>
+        v-model="form.month" 
+        class="underline-input text-sm -p-1" 
+        style="background: transparent;" 
+        :readonly="!editMode" 
+        @input="(e) => { e.target.setCustomValidity('') }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please select a month') }" 
+        required
+      >
+        <option value="" disabled selected>Select a month</option>
+        <option value="January">January</option>
+        <option value="February">February</option>
+        <option value="March">March</option>
+        <option value="April">April</option>
+        <option value="May">May</option>
+        <option value="June">June</option>
+        <option value="July">July</option>
+        <option value="August">August</option>
+        <option value="September">September</option>
+        <option value="October">October</option>
+        <option value="November">November</option>
+        <option value="December">December</option>
+      </select>
+
 
   </p>
      </div>
@@ -98,12 +156,16 @@
        <div class="flex items-center">
          <label for="date" class="block font-medium w-auto mr-2 text-sm ">Petsa:</label>
          <input
-           type="date"
-           id="date"
-           v-model="form.date"
-           class=" border-transparent text-sm underline-input p-2 w-28"
-           :readonly="!editMode"
-         >
+            type="date"
+            id="date"
+            v-model="form.date"
+            class="border-transparent text-sm underline-input p-2 w-28"
+            :readonly="!editMode"
+            @input="(e) => { e.target.setCustomValidity('') }"
+            @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date') }"
+            required
+          >
+
        </div>
      </div>
   
@@ -115,12 +177,16 @@
            <span class="font-normal text-sm"> Management of personal hygiene and improvement of self-care habits.</span>
          </label>
          <textarea
-           id="physical"
-           v-model="form.physical"
-           class="border border-gray-400 p-2 rounded-md w-full"
-           rows="3"
-           :readonly="!editMode"
-         ></textarea>
+          id="physical"
+          v-model="form.physical"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          rows="3"
+          :readonly="!editMode"
+          @input="(e) => { e.target.setCustomValidity('') }"
+          @invalid="(e) => { e.target.setCustomValidity('Please provide a physical description') }"
+          required
+        ></textarea>
+
        </div>
   
        <div>
@@ -130,12 +196,16 @@
          </label>
         
          <textarea
-           id="emotional"
-           v-model="form.emotional"
-           class="border border-gray-400 p-2 rounded-md w-full"
-           rows="3"
-           :readonly="!editMode"
-         ></textarea>
+            id="emotional"
+            v-model="form.emotional"
+            class="border border-gray-400 p-2 rounded-md w-full"
+            rows="3"
+            :readonly="!editMode"
+            @input="(e) => { e.target.setCustomValidity('') }"
+            @invalid="(e) => { e.target.setCustomValidity('Please provide an emotional response') }"
+            required
+          ></textarea>
+
        </div>
   
        <div>
@@ -144,12 +214,16 @@
            <span class="font-normal text-sm justify-text"> The level to which the resident demonstrated honesty, self-control, and a sense of responsibility.</span>
          </label>
          <textarea
-           id="behavioral"
-           v-model="form.behavioral"
-           class="border border-gray-400 p-2 rounded-md w-full"
-           rows="3"
-           :readonly="!editMode"
-         ></textarea>
+            id="behavioral"
+            v-model="form.behavioral"
+            class="border border-gray-400 p-2 rounded-md w-full"
+            rows="3"
+            :readonly="!editMode"
+            @input="(e) => { e.target.setCustomValidity('') }"
+            @invalid="(e) => { e.target.setCustomValidity('Please provide behavioral information') }"
+            required
+          ></textarea>
+
        </div>
   
        <div>
@@ -158,23 +232,31 @@
            <span class="font-normal text-sm justify-text"> Attitude displayed towards the acceptance of the present situation.</span>
          </label>
          <textarea
-           id="spiritual"
-           v-model="form.spiritual"
-           class="border border-gray-400 p-2 rounded-md w-full"
-           rows="3"
-           :readonly="!editMode"
-         ></textarea>
+            id="spiritual"
+            v-model="form.spiritual"
+            class="border border-gray-400 p-2 rounded-md w-full"
+            rows="3"
+            :readonly="!editMode"
+            @input="(e) => { e.target.setCustomValidity('') }"
+            @invalid="(e) => { e.target.setCustomValidity('Please provide a spiritual input') }"
+            required
+          ></textarea>
+
        </div>
   
        <div>
          <label for="recommendation" class="block text-sm font-semibold">V. RECOMMENDATION:</label>
          <textarea
-           id="recommendation"
-           v-model="form.recommendation"
-           class="border border-gray-400 p-2 rounded-md w-full"
-           rows="3"
-           :readonly="!editMode"
-         ></textarea>
+          id="recommendation"
+          v-model="form.recommendation"
+          class="border border-gray-400 p-2 rounded-md w-full"
+          rows="3"
+          :readonly="!editMode"
+          @input="(e) => { e.target.setCustomValidity('') }"
+          @invalid="(e) => { e.target.setCustomValidity('Please provide a recommendation') }"
+          required
+        ></textarea>
+
        </div>
      </div>
   
@@ -266,63 +348,9 @@
             </div>
         </div>
     </div>
-  
-   
-     <!-- Modal for Save Confirmation -->
-     <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-       <div class="fixed inset-0 bg-black opacity-50"></div>
-       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-         <div class="bg-white p-6">
-           <div class="flex items-center">
-             <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
-             </svg>
-             <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
-           </div>
-           <div class="mt-2">
-             <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
-           </div>
-         </div>
-         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-           <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
-           <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
-         </div>
-       </div>
-     </div>
-  
-     <!-- Modal for Save Result -->
-     <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-       <div class="fixed inset-0 bg-black opacity-50"></div>
-       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-         <div class="bg-white p-6 text-center">
-           <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
-             <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
-               <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-               </svg>
-             </div>
-           </div>
-           <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
-             <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-               <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-               </svg>
-             </div>
-           </div>
-           <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
-           <div class="mt-2">
-             <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
-           </div>
-         </div>
-         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-           <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-             OK
-           </button>
-         </div>
-       </div>
-     </div>
    </div>
   </div>
+  </form>
   </template>
   
   
@@ -417,14 +445,9 @@
         });
     },
     
-     toggleEdit() {
-       if (this.editMode) {
-         this.openModal();
-       } else {
-         this.editMode = true;
-         this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store the original form data before editing
-       }
-     },
+    toggleEdit() {
+      this.editMode = !this.editMode;
+    },
   
      openModal() {
        this.isModalOpen = true;
@@ -432,11 +455,6 @@
   
      closeModal() {
        this.isModalOpen = false;
-     },
-  
-     confirmSave() {
-       this.submitForm();
-       this.closeModal();
      },
   
      cancelEdit() {
@@ -448,9 +466,26 @@
      },
   
      submitForm() {
+  const form = this.$refs.AnecdotalForm; // Make sure the form ref is properly set in the template
+  let isFormValid = true;
+
+  // Validate the form, if there are invalid fields, report them
+  if (!form.checkValidity()) {
+    isFormValid = false;
+    form.reportValidity();  // This will scroll to the first invalid field and show a validation message
+  }
+
+  // If the form is valid, open the confirmation modal
+  if (isFormValid) {
+    this.isModalOpen = true;  // Open the confirmation modal for saving
+  } else {
+    console.warn('Form has invalid fields, please correct them.');
+  }
+},
+
+confirmSave() {
   const url = `/api/anecdotal-reports/${this.form.client_id}`;
 
-  // Avoid fetching and losing current data. Use form directly.
   axios.put(url, this.form)
     .then(response => {
       this.message = 'Data updated successfully!';
@@ -458,7 +493,7 @@
       this.saveResultTitle = 'Success';
       this.saveResultMessage = 'Data updated successfully.';
       this.isSaveResultModalOpen = true; // Show the modal after saving
-      this.fetchData(); // Refresh data, but ensure you're not wiping out other fields.
+      this.fetchData(this.form.client_id); // Refresh the data after successful save
     })
     .catch(error => {
       this.message = 'Failed to update data';
@@ -466,9 +501,13 @@
       this.saveResultTitle = 'Error';
       this.saveResultMessage = error.response?.data?.message || 'Error updating data.';
       this.isSaveResultModalOpen = true; // Show the modal even on error
-      this.handleError(error); // Handle the error appropriately
+      console.error('Error saving data:', error);
+    })
+    .finally(() => {
+      this.isModalOpen = false;  // Close the confirmation modal after the save operation
     });
 },
+
 
   
   

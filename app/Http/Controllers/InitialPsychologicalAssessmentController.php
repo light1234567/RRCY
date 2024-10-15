@@ -22,6 +22,7 @@ class InitialPsychologicalAssessmentController extends Controller
     $validatedData = $request->validate([
         'client_id' => 'required|exists:clients,id',
         'admission_id' => 'required|exists:admissions,id',
+        'report_date' =>'required|date',
         'nickname' => 'nullable|string|max:15',
         'educational_attainment' => 'nullable|string|max:20',
         'reason_for_referral' => 'nullable|string',
@@ -83,6 +84,7 @@ class InitialPsychologicalAssessmentController extends Controller
 {
     $validatedData = $request->validate([
         'admission_id' => 'required|exists:admissions,id',
+        'report_date' =>'required|date',
         'nickname' => 'nullable|string|max:15',
         'educational_attainment' => 'nullable|string|max:20',
         'reason_for_referral' => 'nullable|string',

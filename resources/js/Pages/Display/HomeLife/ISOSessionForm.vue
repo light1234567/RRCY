@@ -21,7 +21,7 @@
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="openModal" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
@@ -34,6 +34,8 @@
         <span>Export PDF</span>
       </button>
   </div>
+
+  <form ref="SessionForm" @submit.prevent="submitForm">
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
   
     <div class="max-w-3xl mx-auto mt-8 p-16 bg-white border border-gray-400 rounded-lg shadow-lg">
@@ -66,12 +68,31 @@
       <!-- Date Conducted Field -->
       <div class="w-1/2 flex items-center justify-end space-x-2">
         <label for="dateConducted" class="block font-medium text-right">Date Conducted:</label>
-        <input type="date" id="dateConducted" v-model="form.date_conducted" class="underline-input shadow-sm w-1/2" :readonly="!editMode">
+        <input 
+            type="date" 
+            id="dateConducted" 
+            v-model="form.date_conducted" 
+            class="underline-input shadow-sm w-1/2" 
+            :readonly="!editMode" 
+            @input="(e) => { e.target.setCustomValidity('') }" 
+            @invalid="(e) => { e.target.setCustomValidity('Please provide a date conducted') }" 
+            required
+          />
+
         </div>
       </div>
      
       <div class="mb-6 flex flex-col items-center">
-        <input type="text" id="title" v-model="form.title" class="underline-input shadow-sm w-1/2 text-center" :readonly="!editMode">
+        <input 
+        type="text" 
+        id="title" 
+        v-model="form.title" 
+        class="underline-input shadow-sm w-1/2 text-center" 
+        :readonly="!editMode" 
+        @input="(e) => { e.target.setCustomValidity('') }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please provide a title') }" 
+        required 
+      />
         <label for="title" class="block font-medium mt-2 text-center">Title of Session:</label>
       </div>
   
@@ -79,19 +100,51 @@
       <div class="space-y-4 mb-6">
         <div class="space-y-2">
           <label for="objective" class="block font-medium">I. Objective</label>
-          <textarea id="objective" v-model="form.objective" class="border border-gray-400 p-2 rounded-md w-full" :readonly="!editMode"></textarea>
+          <textarea 
+            id="objective" 
+            v-model="form.objective" 
+            class="border border-gray-400 p-2 rounded-md w-full" 
+            :readonly="!editMode" 
+            @input="(e) => { e.target.setCustomValidity('') }" 
+            @invalid="(e) => { e.target.setCustomValidity('Please provide an objective') }" 
+            required
+          ></textarea>
         </div>
         <div class="space-y-2">
           <label for="methodology" class="block font-medium">II. Methodology</label>
-          <textarea id="methodology" v-model="form.methodology" class="border border-gray-400 p-2 rounded-md w-full" :readonly="!editMode"></textarea>
+          <textarea 
+            id="methodology" 
+            v-model="form.methodology" 
+            class="border border-gray-400 p-2 rounded-md w-full" 
+            :readonly="!editMode" 
+            @input="(e) => { e.target.setCustomValidity('') }" 
+            @invalid="(e) => { e.target.setCustomValidity('Please provide the methodology') }" 
+            required
+          ></textarea>
         </div>
         <div class="space-y-2">
           <label for="highlight" class="block font-medium">III. Highlight of the Session and Activity</label>
-          <textarea id="highlight" v-model="form.highlight" class="border border-gray-400 p-2 rounded-md w-full" :readonly="!editMode"></textarea>
+          <textarea 
+            id="highlight" 
+            v-model="form.highlight" 
+            class="border border-gray-400 p-2 rounded-md w-full" 
+            :readonly="!editMode" 
+            @input="(e) => { e.target.setCustomValidity('') }" 
+            @invalid="(e) => { e.target.setCustomValidity('Please provide a highlight') }" 
+            required
+          ></textarea>
         </div>
         <div class="space-y-2">
           <label for="outcome" class="block font-medium">IV. Outcome</label>
-          <textarea id="outcome" v-model="form.outcome" class="border border-gray-400 p-2 rounded-md w-full" :readonly="!editMode"></textarea>
+          <textarea 
+            id="outcome" 
+            v-model="form.outcome" 
+            class="border border-gray-400 p-2 rounded-md w-full" 
+            :readonly="!editMode" 
+            @input="(e) => { e.target.setCustomValidity('') }" 
+            @invalid="(e) => { e.target.setCustomValidity('Please provide an outcome') }" 
+            required
+          ></textarea>
         </div>
       </div>
   
@@ -205,6 +258,7 @@
       </div>
     </div>
     </div>
+  </form>
   </template>
   
   <script>
@@ -315,34 +369,50 @@
       },
   
       submitForm() {
-        if (!this.form.client_id) {
-          this.message = 'Client ID is required.';
-          this.messageType = 'error';
-          return;
-        }
-  
-        const url = `/api/cicl-sessions/${this.form.client_id}`;
-  
-        axios.put(url, this.form)
-          .then(response => {
-            this.editMode = false;
-            this.message = 'Data updated successfully!';
-            this.messageType = 'success';
-            this.saveResultTitle = 'Success';
-            this.saveResultMessage = 'Data saved successfully.';
-            this.isSaveResultModalOpen = true;
-            this.clearMessage();
-            this.fetchData(); // Re-fetch data to update the form with the latest saved data
-          })
-          .catch(error => {
-            this.message = 'Failed to update data';
-            this.messageType = 'error';
-            this.saveResultTitle = 'Error';
-            this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
-            this.isSaveResultModalOpen = true;
-            this.clearMessage();
-          });
-      },
+  const form = this.$refs.SessionForm; // Ensure the form's ref is set in the template
+  let isFormValid = true;
+
+  // Validate the form fields and check for any invalid fields
+  if (!form.checkValidity()) {
+    isFormValid = false;
+    form.reportValidity(); // This will display validation messages and scroll to the first invalid field
+  }
+
+  // If all fields are valid, open the confirmation modal
+  if (isFormValid) {
+    this.isModalOpen = true;  // Open the modal to confirm saving
+  } else {
+    console.warn('Form contains invalid fields. Please correct them.');
+  }
+},
+
+confirmSave() {
+  const url = `/api/cicl-sessions/${this.form.client_id}`;
+
+  // Proceed to update or save the session details
+  axios.put(url, this.form)
+    .then(response => {
+      this.editMode = false;
+      this.message = 'Data saved successfully!';
+      this.messageType = 'success';
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data saved successfully.';
+      this.isSaveResultModalOpen = true; // Show success modal
+      this.fetchData(this.form.client_id); // Re-fetch data to update the form with the latest saved data
+    })
+    .catch(error => {
+      this.message = 'Failed to save data';
+      this.messageType = 'error';
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
+      this.isSaveResultModalOpen = true; // Show error modal
+      console.error('Error saving data:', error);
+    })
+    .finally(() => {
+      this.isModalOpen = false;  // Close the confirmation modal after saving
+    });
+},
+
   
       clearMessage() {
         setTimeout(() => {

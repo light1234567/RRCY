@@ -186,9 +186,6 @@
   v-model="sheet.occupation" 
   class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide your occupation for this field'); }" 
-  required 
 />
        </div>
      </div>
@@ -199,9 +196,6 @@
   v-model="sheet.highest_educ_att" 
   class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity(''); }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the highest educational attainment for this field.'); }" 
-  required 
 />
   </div>
    
@@ -213,9 +207,6 @@
   v-model="sheet.school_name" 
   class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity(''); }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the school name for this field.'); }" 
-  required 
 />
        </div>
      </div>
@@ -227,9 +218,6 @@
   v-model="sheet.class_adviser"
   class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]"
   :readonly="!editMode"
-  @input="(e) => { sheet.class_adviser = removeNumbers(e.target.value); e.target.setCustomValidity('') }"
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the name of the class adviser for this field'); }"
-  required
 />
 
        </div>
@@ -286,9 +274,6 @@
   class="border w-full px-2 py-1" 
   rows="4" 
   :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide details about school activities and achievements.'); }" 
-  required
 ></textarea>
 
         </div>
