@@ -101,12 +101,16 @@
         <h1 class="text-2xl font-bold text-center mb-4">DATA PRIVACY CONSENT</h1>
         <div class="flex justify-end items-center mb-4">
           <label class="text-gray-700 mr-4">Date:</label>
+       
           <input 
   type="date" 
   class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-1/5" 
   v-model="form.date" 
   :readonly="!editMode" 
+  :max="new Date().toISOString().split('T')[0]"  
   required 
+
+
   @input="(e) => { 
     const inputDate = new Date(e.target.value); 
     const inputYear = inputDate.getFullYear(); 
@@ -264,6 +268,8 @@
        }
      }
    },
+
+
    methods: {
      async fetchClientData(clientId) {
        try {

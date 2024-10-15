@@ -143,6 +143,7 @@
               id="dateOfIncident"
               v-model="form.date_of_incident"
               required
+              :max="new Date().toISOString().split('T')[0]"  
               class="underline-input p-2 text-sm w-28"
               :readonly="!editMode"
               @input="(e) => { e.target.setCustomValidity('') }"

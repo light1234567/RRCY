@@ -132,6 +132,7 @@
   v-model="form.date_administered" 
   :readonly="!editMode" 
   required 
+  :max="new Date().toISOString().split('T')[0]"  
   @input="(e) => { 
     const inputDate = new Date(e.target.value); 
     const inputYear = inputDate.getFullYear(); 

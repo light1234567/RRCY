@@ -104,23 +104,25 @@
         <h1 class="text-2xl font-bold text-center">GENERAL INTAKE SHEET</h1>
       
         <div class="flex justify-end">
-          <p>Date: <input 
-  type="date" 
-  v-model="sheet.date" 
-  class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" 
-  :readonly="!editMode" 
-  required 
-  @input="(e) => { 
-    const inputDate = new Date(e.target.value); 
-    const inputYear = inputDate.getFullYear(); 
-    const currentYear = new Date().getFullYear();
-    if (inputYear < 1950 || inputYear > currentYear) { 
-      e.target.setCustomValidity(`Please provide a valid year between 1950 and ${currentYear}`); 
-    } else { 
-      e.target.setCustomValidity(''); 
-    } 
-  }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date between 1950 and the present year') }"
+          <p>Date: 
+  <input 
+    type="date" 
+    v-model="sheet.date" 
+    class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" 
+    :readonly="!editMode" 
+    :max="currentDateTime.date" 
+    required 
+    @input="(e) => { 
+      const inputDate = new Date(e.target.value); 
+      const inputYear = inputDate.getFullYear(); 
+      const currentYear = new Date().getFullYear();
+      if (inputYear < 1950 || inputYear > currentYear) { 
+        e.target.setCustomValidity(`Please provide a valid year between 1950 and ${currentYear}`); 
+      } else { 
+        e.target.setCustomValidity(''); 
+      } 
+    }" 
+    @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date between 1950 and the present year') }"
 />
 </p>
          </div>
@@ -408,6 +410,30 @@
         }
       };
     },
+
+  
+    computed: {
+  currentDateTime() {
+    // Get the current date and time in the Asia/Manila timezone
+    const options = { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const formatter = new Intl.DateTimeFormat('en-CA', options); // 'en-CA' is used for the format YYYY-MM-DD
+    const parts = formatter.formatToParts(new Date());
+
+    const year = parts.find(part => part.type === 'year').value;
+    const month = parts.find(part => part.type === 'month').value;
+    const day = parts.find(part => part.type === 'day').value;
+    const hour = parts.find(part => part.type === 'hour').value;
+    const minute = parts.find(part => part.type === 'minute').value;
+    const second = parts.find(part => part.type === 'second').value;
+
+    // Return the current date and time in the 'Asia/Manila' timezone
+    return {
+      date: `${year}-${month}-${day}`,
+      time: `${hour}:${minute}:${second}`
+    };
+  }
+},
+
     mounted() {
       this.clientId = this.$route.params.id;
       console.log('Client ID fetched:', this.clientId); // Console log showing client ID

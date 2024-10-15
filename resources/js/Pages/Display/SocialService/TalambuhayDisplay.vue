@@ -198,6 +198,7 @@
   class="mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-1/4" 
   v-model="form.date" 
   :readonly="!editMode" 
+  :max="new Date().toISOString().split('T')[0]"  
   @input="(e) => { e.target.setCustomValidity('') }" 
   @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date') }" 
   required

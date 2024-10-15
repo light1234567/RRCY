@@ -528,14 +528,16 @@
 
   <!-- When in edit mode, show a single input for both date and time -->
   <template v-else>
-    <input 
-      type="datetime-local"  
-      class="underline mt-1 w-full text-[15px]" 
-      v-model="client.admissions[0].date_time"  
-      placeholder="Select Date and Time"
-      required
-    >
-  </template>
+  <input 
+    type="datetime-local"  
+    class="underline mt-1 w-full text-[15px]" 
+    v-model="client.admissions[0].date_time"  
+    placeholder="Select Date and Time"
+    :max="currentDateTime"
+    required
+  >
+</template>
+
 
   <label class="block text-black text-[15px] -mt-3">Date/Time</label>
 </div>
@@ -600,6 +602,10 @@ export default {
   name: 'ClientList',
   data() {
     return {
+      currentDateTime: new Date().toLocaleString('sv-SE', { 
+      timeZone: 'Asia/Manila', 
+      hour12: false 
+    }).replace(' ', 'T').slice(0, 16),
       clients: [],
       isSticky: false,
       admission_id: null, // Admission ID used for update logic
