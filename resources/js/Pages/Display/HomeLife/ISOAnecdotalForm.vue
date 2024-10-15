@@ -161,6 +161,12 @@
             v-model="form.date"
             class="border-transparent text-sm underline-input p-2 w-28"
             :readonly="!editMode"
+            :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
             @input="(e) => { e.target.setCustomValidity('') }"
             @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date') }"
             required

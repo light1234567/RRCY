@@ -132,7 +132,12 @@
   v-model="form.date_administered" 
   :readonly="!editMode" 
   required 
-  :max="new Date().toISOString().split('T')[0]"  
+  :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
   @input="(e) => { 
     const inputDate = new Date(e.target.value); 
     const inputYear = inputDate.getFullYear(); 

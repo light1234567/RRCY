@@ -74,7 +74,12 @@
             v-model="form.date_conducted" 
             class="underline-input shadow-sm w-1/2" 
             :readonly="!editMode" 
-            :max="new Date().toISOString().split('T')[0]"  
+            :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
             @input="(e) => { e.target.setCustomValidity('') }" 
             @invalid="(e) => { e.target.setCustomValidity('Please provide a date conducted') }" 
             required

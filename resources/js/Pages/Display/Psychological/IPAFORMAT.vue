@@ -187,7 +187,12 @@
                   v-model="form.report_date"
                   class="p-1 border-b border-transparent focus:outline-none"
                   :readonly="!editMode"
-                  :max="new Date().toISOString().split('T')[0]"  
+                  :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
                   @input="(e) => { e.target.setCustomValidity('') }" 
                   @invalid="(e) => { e.target.setCustomValidity('Please provide a report date') }"
                   required

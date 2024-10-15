@@ -124,7 +124,12 @@
         @input="(e) => { e.target.setCustomValidity('') }" 
         @invalid="(e) => { e.target.setCustomValidity('Please provide a date of filing') }" 
         required
-        :max="new Date().toISOString().split('T')[0]"  
+        :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
       />
    </div>
  
@@ -148,7 +153,12 @@
        <label for="dateOfDuty" class="block font-medium">Date of Duty:</label>
        <input type="date" v-model="form.date_of_duty" id="dateOfDuty" 
              class="underline-input shadow-sm w-3/4" 
-             :max="new Date().toISOString().split('T')[0]"  
+             :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
              :readonly="!editMode">
              
      </div>
@@ -185,7 +195,12 @@
        <label for="sodDateOfDuty" class="block font-medium">Date of Duty:</label>
        <input type="date" v-model="form.sod_date_of_duty" id="sodDateOfDuty" 
              class="underline-input shadow-sm w-3/4" 
-             :max="new Date().toISOString().split('T')[0]"  
+             :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
              :readonly="!editMode">
      </div>
      <div>

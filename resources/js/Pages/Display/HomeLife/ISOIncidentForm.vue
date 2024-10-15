@@ -139,16 +139,22 @@
         <div>
           <label for="dateOfIncident" class="block text-sm"><span class="w-auto mr-2 font-semibold">Date of Incident:</span>
             <input
-              type="date"
-              id="dateOfIncident"
-              v-model="form.date_of_incident"
-              required
-              :max="new Date().toISOString().split('T')[0]"  
-              class="underline-input p-2 text-sm w-28"
-              :readonly="!editMode"
-              @input="(e) => { e.target.setCustomValidity('') }"
-              @invalid="(e) => { e.target.setCustomValidity('Please provide a date of incident') }"
-            />
+  type="date"
+  id="dateOfIncident"
+  v-model="form.date_of_incident"
+  required
+  :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
+  class="underline-input p-2 text-sm w-28"
+  :readonly="!editMode"
+  @input="(e) => { e.target.setCustomValidity('') }"
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a date of incident') }"
+/>
+
 
         </label>
         </div>
