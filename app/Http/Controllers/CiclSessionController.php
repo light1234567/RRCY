@@ -19,6 +19,7 @@ class CiclSessionController extends Controller
 {
     $validatedData = $request->validate([
         'client_id' => 'required|exists:clients,id',
+        'drn' => 'nullable|string|max:20',
         'session' => 'nullable|string|max:20',
         'title' => 'nullable|string|max:50',
         'date_conducted' => 'nullable|date',
@@ -75,6 +76,7 @@ class CiclSessionController extends Controller
     public function update(Request $request, $client_id)
 {
     $validatedData = $request->validate([
+        'drn' => 'nullable|string|max:20',
         'session' => 'nullable|string|max:20',
         'title' => 'nullable|string|max:50',
         'date_conducted' => 'nullable|date',

@@ -406,7 +406,7 @@
                 <strong> 
     <input
       type="text"
-      value="BRYAN V. GALANG"
+      v-model="form.prepared_by"
       class="w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
       :readonly="!editMode"
     >
@@ -1089,7 +1089,7 @@ confirmSave() {
     addNewPageIfNeeded();
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text('BRYAN V. GALANG, MPsy, RPsy', initialX, contentYPos);
+    pdf.text(this.form.prepared_by, initialX, contentYPos);
     contentYPos += 4; 
     addNewPageIfNeeded();
     pdf.setFont('arial', 'normal');

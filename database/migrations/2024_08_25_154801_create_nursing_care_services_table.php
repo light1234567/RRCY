@@ -11,6 +11,7 @@ class CreateNursingCareServicesTable extends Migration
         Schema::create('nursing_care_services', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id')->nullable();
+            $table->string('selectedMonth', 15)->nullable();
             $table->string('current_medical_status', 50)->nullable();
             $table->float('temperature')->nullable();
             $table->integer('pulse_rate')->nullable();

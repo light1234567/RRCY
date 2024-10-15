@@ -13,6 +13,7 @@ class CreateAnecdotalReportsTable extends Migration
             $table->unsignedMediumInteger('client_id');              
             $table->date('date');
             $table->string('month', 20)->nullable();
+            $table->string('drn', 20)->nullable();
             $table->string('color', 10)->nullable();
             $table->text('physical')->nullable();
             $table->text('emotional')->nullable();

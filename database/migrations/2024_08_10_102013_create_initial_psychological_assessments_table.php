@@ -13,6 +13,7 @@ class CreateInitialPsychologicalAssessmentsTable extends Migration
             $table->unsignedMediumInteger('client_id');             
             $table->unsignedMediumInteger('admission_id');            
             $table->string('nickname', 15)->nullable();
+            $table->string('prepared_by', 50)->nullable();
             $table->text('educational_attainment')->nullable();
             $table->text('reason_for_referral')->nullable();
             $table->text('family_history')->nullable();

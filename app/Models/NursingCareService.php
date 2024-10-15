@@ -14,6 +14,7 @@ class NursingCareService extends Model
     protected $fillable = [
         'client_id',
         'date_of_admission',
+        'selectedMonth',
         'current_medical_status',
         'temperature',
         'pulse_rate',

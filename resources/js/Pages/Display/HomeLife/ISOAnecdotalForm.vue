@@ -52,7 +52,7 @@
            <div class="text-xs font-semibold pt-12">
     <p class="text-sm font-semibold">
     DRN :
-    <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+    <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" />
   </p>
   </div>
          </div>
@@ -339,9 +339,9 @@
    data() {
      return {
       center_head: '',
-      drn: '',
        form: {
          client_id: null,
+         drn: '',
          name: '',
          anecdotal_shp:'',
          date: '',
@@ -371,12 +371,10 @@
    mounted() {
      const clientId = this.$route.params.id;
      this.fetchCenterHead();
-     this.fetchDrn(clientId);
      this.fetchData(clientId);
    },
    watch: {
       '$route.params.id': function(newId) {
-       this.fetchDrn(newId);
        this.fetchData(newId);
      }
    },
@@ -393,6 +391,8 @@
         Object.assign(this.form, response.data.report);
         this.form.client_id = clientId;
         this.form.month = response.data.report.month;
+        this.form.drn = response.data.report.drn;
+        this.form.anecdotal_shp = response.data.report.anecdotal_shp;
         this.form.name = `${response.data.client.first_name} ${response.data.client.last_name}`; // Ensure correct field mapping
         this.originalForm = JSON.parse(JSON.stringify(this.form)); // Store original form
       } else {
@@ -416,45 +416,7 @@
           console.error('Error fetching center head:', error);
         });
     },
-    fetchDrn(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    // Fetch DRN based on clientId
-    axios.get(`/api/drn/${clientId}`)
-      .then(response => {
-        this.drn = response.data.drn || ''; // Set DRN to the response, or an empty string if not present
-        console.log("Fetched DRN:", this.drn);
-      })
-      .catch(error => {
-        console.error("Error fetching DRN:", error);
-      });
-  },
-  
-  
-  saveDrn() {
-    const clientId = this.form.client_id; // Ensure client_id is available in the form
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-  
-    // Save or update DRN
-    axios.post('/api/drn', {
-      client_id: clientId, // Pass the client_id
-      drn: this.drn // Pass the DRN value
-    })
-    .then(response => {
-      console.log("DRN saved successfully:", response.data);
-      this.fetchDrn(clientId); // Fetch updated DRN after save
-    })
-    .catch(error => {
-      console.error("Error saving DRN:", error.response.data); // Log detailed error message
-    });
-  },
-  
-  
+    
      toggleEdit() {
        if (this.editMode) {
          this.openModal();
@@ -474,7 +436,6 @@
   
      confirmSave() {
        this.submitForm();
-       this.saveDrn();
        this.closeModal();
      },
   
@@ -487,18 +448,28 @@
      },
   
      submitForm() {
-       const url = `/api/anecdotal-reports/${this.form.client_id}`;
-  
-    // Avoid fetching and losing current data. Use form directly.
-    axios.put(url, this.form)
-      .then(response => {
-        this.message = 'Data updated successfully!';
-        this.messageType = 'success';
-        this.fetchData(); // Refresh data, but ensure you're not wiping out other fields.
-      })
-      .catch(error => {
-      });
-  },
+  const url = `/api/anecdotal-reports/${this.form.client_id}`;
+
+  // Avoid fetching and losing current data. Use form directly.
+  axios.put(url, this.form)
+    .then(response => {
+      this.message = 'Data updated successfully!';
+      this.messageType = 'success';
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data updated successfully.';
+      this.isSaveResultModalOpen = true; // Show the modal after saving
+      this.fetchData(); // Refresh data, but ensure you're not wiping out other fields.
+    })
+    .catch(error => {
+      this.message = 'Failed to update data';
+      this.messageType = 'error';
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = error.response?.data?.message || 'Error updating data.';
+      this.isSaveResultModalOpen = true; // Show the modal even on error
+      this.handleError(error); // Handle the error appropriately
+    });
+},
+
   
   
      clearMessage() {
@@ -601,7 +572,7 @@
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
     pdf.text(`DRN :`, initialX+110, contentYPos+-5);
-    pdf.text(`${this.drn || ''}`, initialX+122, contentYPos+-5);
+    pdf.text(`${this.form.drn || ''}`, initialX+122, contentYPos+-5);
     pdf.line(142, contentYPos+-4, 190, contentYPos+-4); 
   
   
@@ -803,7 +774,7 @@
   
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text('VAN M. DE LEON', initialX, contentYPos);
+    pdf.text(this.form.anecdotal_shp, initialX, contentYPos);
     contentYPos += 4; 
     pdf.setFont('arial', 'normal');
     pdf.setFontSize(10);

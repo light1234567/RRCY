@@ -14,6 +14,7 @@ class MonthlyInventory extends Model
 
     protected $fillable = [
         'client_id',
+        'drn',
         'month',
         'resident_name',
         'houseparent_name',

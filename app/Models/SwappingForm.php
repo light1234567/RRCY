@@ -13,6 +13,7 @@ class SwappingForm extends Model
 
     protected $fillable = [
         'client_id',
+        'drn',
         'date_of_filing',
         'requesting_party_name',
         'requesting_party_position',

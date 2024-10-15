@@ -19,7 +19,7 @@ class IncidentReportController extends Controller
     {
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'drn' => 'nullable|string|max:25',
+            'drn' => 'nullable|string|max:20',
             'incident' => 'nullable|string',
             'date_of_incident' => 'nullable|date',
             'time_of_incident' => 'nullable|date_format:H:i',
@@ -71,7 +71,7 @@ class IncidentReportController extends Controller
 
     // Validate the incoming request data
     $validatedData = $request->validate([
-        'drn' => 'nullable|string|max:25',
+        'drn' => 'nullable|string|max:20',
         'incident' => 'nullable|string',
         'date_of_incident' => 'nullable|date',
         'time_of_incident' => 'nullable|date_format:H:i',

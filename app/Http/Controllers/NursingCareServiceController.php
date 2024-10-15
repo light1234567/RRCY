@@ -18,6 +18,7 @@ class NursingCareServiceController extends Controller
         $validatedData = $request->validate([
             'client_id' => 'required|exists:clients,id',
             'current_medical_status' => 'nullable|string|max:50',
+            'selectedMonth' => 'nullable|string|max:15',
             'temperature' => 'nullable|numeric',
             'pulse_rate' => 'nullable|integer',
             'respiratory_rate' => 'nullable|integer',

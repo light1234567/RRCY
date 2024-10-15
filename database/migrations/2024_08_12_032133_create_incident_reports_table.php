@@ -11,7 +11,7 @@ class CreateIncidentReportsTable extends Migration
         Schema::create('incident_reports', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');              
-            $table->string('drn', 25)->nullable();
+            $table->string('drn', 20)->nullable();
             $table->text('incident')->nullable();
             $table->date('date_of_incident')->nullable();
             $table->time('time_of_incident')->nullable();

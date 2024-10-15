@@ -21,6 +21,7 @@ class MonthlyInventoryController extends Controller
         $validatedData = $request->validate([
             'id' => 'nullable|exists:monthly_inventories,id',
             'client_id' => 'required|exists:clients,id',
+            'drn' => 'nullable|string|max:20',
             'month' => 'nullable|string|max:10',
             'resident_name' => 'nullable|string|max:50',
             'houseparent_name' => 'nullable|string|max:50',
@@ -86,6 +87,7 @@ class MonthlyInventoryController extends Controller
     public function update(Request $request, $client_id)
     {
         $validatedData = $request->validate([
+            'drn' => 'nullable|string|max:20',
             'month' => 'nullable|string|max:20',
             'resident_name' => 'nullable|string|max:50',
             'houseparent_name' => 'nullable|string|max:50',

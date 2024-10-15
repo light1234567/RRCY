@@ -11,6 +11,7 @@ class CreateCiclSessionsTable extends Migration
         Schema::create('cicl_sessions', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');              
+            $table->string('drn', 20)->nullable();
             $table->string('session', 20)->nullable();
             $table->string('title', 50)->nullable();
             $table->date('date_conducted')->nullable();

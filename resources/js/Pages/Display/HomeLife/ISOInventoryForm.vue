@@ -59,7 +59,7 @@
           <div class="text-xs font-semibold pt-12">
     <p class="text-sm">
     DRN
-    <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+    <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" />
   </p>
   </div>      </div>
       </div>
@@ -260,6 +260,7 @@
       form: {
         id: null,
         client_id: null,
+        drn: '',
         month: '',
         resident_name: '',
         houseparent_name: '',
@@ -276,18 +277,15 @@
       saveResultMessage: '',
       currentPage: 1,
       totalPages: 1,
-      drn: '',
     };
   },
   mounted() {
     const clientId = this.$route.params.id;
       this.fetchData(clientId);
-      this.fetchDrn(clientId);
   },
   watch: {
     '$route.params.id': function(newId) {
         this.fetchData(newId);
-        this.fetchDrn(newId);
     }
   },
   methods: {
@@ -327,43 +325,7 @@
           });
       }
     },
-  fetchDrn(clientId) {
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-    // Fetch DRN based on clientId
-    axios.get(`/api/drn/${clientId}`)
-      .then(response => {
-        this.drn = response.data.drn || ''; // Set DRN to the response, or an empty string if not present
-        console.log("Fetched DRN:", this.drn);
-      })
-      .catch(error => {
-        console.error("Error fetching DRN:", error);
-      });
-  },
   
-  
-  saveDrn() {
-    const clientId = this.form.client_id; // Ensure client_id is available in the form
-    if (!clientId) {
-      console.error("Client ID is missing.");
-      return;
-    }
-  
-    // Save or update DRN
-    axios.post('/api/drn', {
-      client_id: clientId, // Pass the client_id
-      drn: this.drn // Pass the DRN value
-    })
-    .then(response => {
-      console.log("DRN saved successfully:", response.data);
-      this.fetchDrn(clientId); // Fetch updated DRN after save
-    })
-    .catch(error => {
-      console.error("Error saving DRN:", error.response.data); // Log detailed error message
-    });
-  },
   removeItem(index) {
         this.form.items.splice(index, 1);
         console.log('Item removed from form at index:', index, 'Remaining items:', this.form.items);
@@ -387,7 +349,6 @@
   
     confirmSave() {
       this.submitForm();
-      this.saveDrn();
       this.closeModal();
     },
   
@@ -508,7 +469,7 @@
       pdf.setFontSize(12);
       pdf.text(`For the Month of: ${this.form.month||''}`, 105, 60, "center");
       pdf.line(120, 61, 145, 61);
-      pdf.text(`DRN: ${this.drn||''}`, 135, 45);
+      pdf.text(`DRN: ${this.form.drn||''}`, 135, 45);
       pdf.line(145, 46, 200, 46);
   
       // Table Headers

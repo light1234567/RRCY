@@ -94,7 +94,23 @@
         <thead>
           <tr class="bg-gray-100 text-base">
             <th class="border p-2">VITAL SIGNS / BMI</th>
-            <th class="border p-2">APRIL</th>
+            <th class="border p-2">
+              <select v-model="form.selectedMonth" class="border p-2" :disabled="!editMode">
+                <option value="">Select a month</option>
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+              </select>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -405,6 +421,7 @@ import '../../../fonts/arialbd-bold.js';
           religion: '',
           address: '',
           date_of_admission: '',
+          selectedMonth: '',
           temperature: '',
           pulse_rate: '',
           respiratory_rate: '',
@@ -487,39 +504,15 @@ import '../../../fonts/arialbd-bold.js';
             this.clearMessageAfterDelay();
           });
       },
-      fetchCenterHead(clientId) {
-        if (!clientId) {
-          console.error("Client ID is missing.");
-          return;
-        }
-        axios.get(`/api/center-head/${clientId}`)
-          .then(response => {
-            this.center_head = response.data.center_head;
-            console.log("Fetched center head:", this.center_head); // Log the center head
-          })
-          .catch(error => {
-            console.error("Error fetching center head:", error);
-          });
-      },
-      saveCenterHead() {
-        const clientId = this.$route.params.id;
-        if (!this.center_head || !clientId) {
-          return;
-        }
-        axios
-          .put(`/api/update-center-head`, {
-            center_head: this.center_head,
-            client_id: clientId, // Use the correct client ID
-          })
-          .then(response => {
-            this.editMode = false;
-            this.fetchData(clientId); // Refetch the data to update the UI
-          })
-          .catch(error => {
-            console.error("Error updating center head:", error);
-          });
-      },
-  
+      fetchCenterHead() {
+      axios.get('/api/center-head')  // Replace with the correct API route
+        .then(response => {
+          this.center_head = response.data.name;  // Bind the fetched name to v-model
+        })
+        .catch(error => {
+          console.error('Error fetching center head:', error);
+        });
+    },
       calculateAge(birthDate) {
         const today = new Date();
         const birthDateObj = new Date(birthDate);

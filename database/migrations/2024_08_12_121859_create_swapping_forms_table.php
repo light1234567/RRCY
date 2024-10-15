@@ -11,6 +11,7 @@ class CreateSwappingFormsTable extends Migration
         Schema::create('swapping_forms', function (Blueprint $table) {
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');              
+            $table->string('drn', 20)->nullable();
             $table->date('date_of_filing')->nullable();
             $table->string('requesting_party_name', 50)->nullable();
             $table->string('requesting_party_position', 50)->nullable();

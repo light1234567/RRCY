@@ -50,7 +50,7 @@
            <div class="text-xs font-semibold pt-12">
     <p class="text-sm font-semibold">
     DRN :
-    <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+    <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" />
   </p>
   </div> 
        
@@ -301,7 +301,6 @@
           prepared_by: '',
           prepared_by_position: '',
           incident_report_shp: '',
-          approved_by: 'ANGELIC B. PAÑA',
         },
         originalForm: null, // To store the original form data
         editMode: false,
@@ -318,14 +317,12 @@
     mounted() {
       const clientId = this.$route.params.id;
       this.fetchData(clientId);
-      this.fetchDrn(clientId);
       this.fetchCenterHead();
     },
     watch: {
       '$route.params.id': function(newId) {
         this.fetchData(newId);
         this.fetchSHP(newId);
-        this.fetchDrn(newId);
       }
     },
     methods: {
@@ -366,42 +363,6 @@
         });
     },
     
-  fetchDrn(clientId) {
-      if (!clientId) {
-        console.error("Client ID is missing.");
-        return;
-      }
-      axios.get(`/api/drn/${clientId}`)
-        .then(response => {
-          this.drn = response.data.drn || '';
-          console.log("Fetched DRN:", this.drn);
-        })
-        .catch(error => {
-          console.error("Error fetching DRN:", error);
-        });
-    },
-  
-    saveDrn() {
-      const clientId = this.form.client_id; // Assuming client_id is in the form
-      console.log("Saving DRN:", this.drn, "for client:", clientId);
-  
-      if (!clientId) {
-          console.error("Client ID is missing.");
-          return;
-      }
-  
-      axios.post('/api/drn', {  // Ensure the correct URL with /api prefix
-          client_id: clientId,
-          drn: this.drn
-      })
-      .then(response => {
-          console.log("DRN saved successfully:", response.data);
-          this.fetchDrn(clientId); // Fetch updated DRN
-      })
-      .catch(error => {
-          console.error("Error saving DRN:", error.response.data); // Log detailed error message
-      });
-  },
       toggleEdit() {
         if (this.editMode) {
           this.openSaveModal();
@@ -421,10 +382,11 @@
   
       confirmSave() {
         this.submitForm();
-        this.saveDrn();
         this.closeModal();
       },
-  
+      openModal() {
+       this.isModalOpen = true;
+     },
       cancelEdit() {
         if (this.originalForm) {
           // Revert to the original data
@@ -434,50 +396,67 @@
       },
   
       submitForm() {
-      if (!this.form.client_id) {
-        this.message = 'Client ID is required.';
-        this.messageType = 'error';
-        this.clearMessage();
-        return;
+  if (!this.form.client_id) {
+    this.message = 'Client ID is required.';
+    this.messageType = 'error';
+    this.clearMessage();
+    return;
+  }
+
+  if (this.form.time_of_incident) {
+    this.form.time_of_incident = this.form.time_of_incident.slice(0, 5);
+  }
+
+  const url = `/api/incident-reports/${this.form.client_id}`;
+
+  // Check if we are updating or creating a new record
+  axios.get(`/api/incident-reports/${this.form.client_id}`)
+    .then(response => {
+      if (response.data.report) {
+        // Update existing report
+        axios.put(url, this.form)
+          .then(response => {
+            this.message = 'Data updated successfully!';
+            this.messageType = 'success';
+            this.saveResultTitle = 'Success';
+            this.saveResultMessage = 'Data updated successfully.';
+            this.isSaveResultModalOpen = true; // Show modal
+            this.fetchData(); // Refresh data
+          })
+          .catch(error => {
+            this.message = 'Failed to update data';
+            this.messageType = 'error';
+            this.saveResultTitle = 'Error';
+            this.saveResultMessage = error.response?.data?.message || 'Error updating data.';
+            this.isSaveResultModalOpen = true; // Show modal
+            this.handleError(error);
+          });
+      } else {
+        // Create new report
+        axios.post(`/api/incident-reports`, this.form)
+          .then(response => {
+            this.message = 'Data created successfully!';
+            this.messageType = 'success';
+            this.saveResultTitle = 'Success';
+            this.saveResultMessage = 'Data created successfully.';
+            this.isSaveResultModalOpen = true; // Show modal
+            this.fetchData(); // Refresh data
+          })
+          .catch(error => {
+            this.message = 'Failed to create data';
+            this.messageType = 'error';
+            this.saveResultTitle = 'Error';
+            this.saveResultMessage = error.response?.data?.message || 'Error creating data.';
+            this.isSaveResultModalOpen = true; // Show modal
+            this.handleError(error);
+          });
       }
-  
-      if (this.form.time_of_incident) {
-        this.form.time_of_incident = this.form.time_of_incident.slice(0, 5);
-      }
-  
-      const url = `/api/incident-reports/${this.form.client_id}`;
-  
-      // Check if we are updating or creating a new record
-      axios.get(`/api/incident-reports/${this.form.client_id}`)
-        .then(response => {
-          if (response.data.report) {
-            // Update existing report
-            axios.put(url, this.form)
-              .then(response => {
-                this.message = 'Data updated successfully!';
-                this.messageType = 'success';
-                this.fetchData(); // Refresh data
-              })
-              .catch(error => {
-                this.handleError(error);
-              });
-          } else {
-            // Create new report
-            axios.post(`/api/incident-reports`, this.form)
-              .then(response => {
-                this.message = 'Data created successfully!';
-                this.messageType = 'success';
-                this.fetchData(); // Refresh data
-              })
-              .catch(error => {
-                this.handleError(error);
-              });
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching report for validation:', error);
-        });
-    },
+    })
+    .catch(error => {
+      console.error('Error fetching report for validation:', error);
+    });
+},
+
     handleError(error) {
       if (error.response && error.response.status === 422) {
         this.message = 'Validation error: ' + JSON.stringify(error.response.data.errors);
@@ -586,7 +565,7 @@
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
     pdf.text(`DRN :`, initialX+110, contentYPos+-5);
-    pdf.text(`${this.drn || ''}`, initialX+122, contentYPos+-5);
+    pdf.text(`${this.form.drn || ''}`, initialX+122, contentYPos+-5);
     pdf.line(142, contentYPos+-4, 190, contentYPos+-4); 
   
   

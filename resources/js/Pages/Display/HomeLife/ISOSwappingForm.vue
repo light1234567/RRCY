@@ -51,7 +51,7 @@
           <div class="text-xs font-semibold pt-12">
    <p class="text-sm font-semibold">
    DRN :
-   <input type="text" v-model="drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+   <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" />
  </p>
  </div>      </div>
      </div>
@@ -269,7 +269,6 @@
  data() {
    return {
      center_head: '',
-     drn: '',
      form: {
        client_id: null,
        drn: '',
@@ -288,7 +287,6 @@
        requested_by: '',
        accepted_by: '',
        swapping_shp: '',
-       approved_by: 'ANGELIC B. PAÑA',
      },
      originalForm: null,
      editMode: false,
@@ -305,13 +303,11 @@
  mounted() {
    const clientId = this.$route.params.id;
      this.fetchData(clientId);
-     this.fetchDrn(clientId);
      this.fetchCenterHead();
  },
  watch: {
    '$route.params.id': function(newId) {
        this.fetchData(newId);
-       this.fetchDrn(newId);
    }
  },
  methods: {
@@ -342,43 +338,6 @@
        });
    },
    
-   fetchDrn(clientId) {
-   if (!clientId) {
-     console.error("Client ID is missing.");
-     return;
-   }
-   // Fetch DRN based on clientId
-   axios.get(`/api/drn/${clientId}`)
-     .then(response => {
-       this.drn = response.data.drn || ''; // Set DRN to the response, or an empty string if not present
-       console.log("Fetched DRN:", this.drn);
-     })
-     .catch(error => {
-       console.error("Error fetching DRN:", error);
-     });
- },
- 
- 
- saveDrn() {
-   const clientId = this.form.client_id; // Ensure client_id is available in the form
-   if (!clientId) {
-     console.error("Client ID is missing.");
-     return;
-   }
- 
-   // Save or update DRN
-   axios.post('/api/drn', {
-     client_id: clientId, // Pass the client_id
-     drn: this.drn // Pass the DRN value
-   })
-   .then(response => {
-     console.log("DRN saved successfully:", response.data);
-     this.fetchDrn(clientId); // Fetch updated DRN after save
-   })
-   .catch(error => {
-     console.error("Error saving DRN:", error.response.data); // Log detailed error message
-   });
- },
  formatTime(value) {
    if (!value) return ''; // Handle empty time case
  
@@ -409,7 +368,6 @@
  
    confirmSave() {
      this.submitForm();
-     this.saveDrn();
      this.closeModal();
    },
  
@@ -549,7 +507,7 @@
    pdf.setFont('arialbd', 'bold');
    pdf.setFontSize(11);
    pdf.text(`DRN :`, initialX+110, contentYPos+-5);
-   pdf.text(`${this.drn || ''}`, initialX+122, contentYPos+-5);
+   pdf.text(`${this.form.drn || ''}`, initialX+122, contentYPos+-5);
    pdf.line(142, contentYPos+-4, 190, contentYPos+-4); 
  
  

@@ -14,6 +14,7 @@ class CiclSession extends Model
 
     protected $fillable = [
         'client_id',
+        'drn',
         'session',
         'title',
         'date_conducted',
