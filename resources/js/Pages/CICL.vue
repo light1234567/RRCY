@@ -8,87 +8,63 @@
       </div>
     </template>
 
-    <div class="ml-5 max-w-8xl mx-auto px-4 -mr-4 sm:px-6 lg:px-8 mt-4">
-      <!-- Filter and Search section -->
-      <div class="p-4 rounded-lg flex flex-col md:flex-row justify-between items-center bg-gray-100 shadow-sm space-y-4 md:space-y-0">
-        <div class="text-md font-semibold text-gray-500">
-          Total number of CICL: <span class="text-gray-900">{{ totalCICL }}</span>
-        </div>
+    <div class="bg-slate-50 min-h-screen ml-5 max-w-8xl mx-auto px-4 -mr-4 sm:px-6 lg:px-8 mt-4">
 
-        <div class="flex items-center space-x-4">
-          <!-- Filter Icon -->
-          <div class="relative">
-            <button @click="toggleDropdown" class="p-2 rounded-full text-gray-700 bg-gray-200 hover:bg-gray-300 transition-all duration-150">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                <circle cx="8" cy="6" r="2" fill="currentColor"></circle>
-                <circle cx="16" cy="12" r="2" fill="currentColor"></circle>
-                <circle cx="8" cy="18" r="2" fill="currentColor"></circle>
-              </svg>
-            </button>
 
-            <!-- Dropdown Menu for Filters -->
-            <div v-if="isDropdownOpen" class="absolute right-0 mt-2 w-96 bg-white shadow-lg rounded-md z-10">
-              <div class="p-4">
-                <!-- Filter for Case Status -->
-                <div>
-                  <h3 class="font-semibold text-gray-800 mb-2">Case Status</h3>
-                  <div class="flex flex-wrap">
-                    <button
-                      v-for="status in caseStatuses"
-                      :key="status"
-                      @click="selectCaseStatus(status)"
-                      :class="{'bg-blue-600 text-white': selectedCaseStatus === status, 'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedCaseStatus !== status}"
-                      class="px-4 py-2 mr-2 mb-2 rounded-full text-xs transition-all duration-150">
-                      {{ status }}
-                    </button>
-                  </div>
-                </div>
 
-                <!-- Filter for Child Status -->
-                <div class="mt-4">
-                  <h3 class="font-semibold text-gray-800 mb-2">Child Status</h3>
-                  <div class="flex flex-wrap">
-                    <button
-                      v-for="status in childStatuses"
-                      :key="status"
-                      @click="selectChildStatus(status)"
-                      :class="{'bg-green-600 text-white': selectedChildStatus === status, 'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedChildStatus !== status}"
-                      class="px-4 py-2 mr-2 mb-2 rounded-full text-xs transition-all duration-150">
-                      {{ status }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="-mt-3 pt-4 flex justify-between items-center space-x-4 w-full">
+  <!-- Search Bar (left-aligned) -->
+  <div class="relative w-full max-w-xs">
+    <span class="absolute inset-y-0 right-0 flex items-center pr-3">
+      <svg class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+      </svg>
+    </span>
+    <input v-model="searchQuery" type="text" placeholder="Search" class="p-2 pr-10 border border-gray-300 rounded-md w-full text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none transition duration-150"/>
+   
+  </div>
 
-          <!-- Search Bar -->
-          <div class="relative w-full max-w-xs">
-            <input v-model="searchQuery" type="text" placeholder="Search" class="p-2 pr-10 border border-gray-300 rounded-md w-full text-sm focus:ring-2 focus:ring-indigo-400 focus:outline-none"/>
-            <span class="absolute inset-y-0 right-0 flex items-center pr-3">
-              <svg class="h-5 w-5 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.099zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-              </svg>
-            </span>
-          </div>
-        </div>
-      </div>
+  <!-- Filters (right-aligned) -->
+  <div class="mr-4 flex items-center space-x-4">
+    <!-- Label for Sort by -->
+    <label class="text-gray-600 text-sm font-medium">Sort by:</label>
+
+    <!-- Case Status Filter -->
+    <div class="relative">
+      <select v-model="selectedCaseStatus" class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
+        <option value="">Case Status</option>
+        <option v-for="status in caseStatuses" :key="status" :value="status">{{ status }}</option>
+      </select>
+      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"></div>
+    </div>
+
+    <!-- Child Status Filter -->
+    <div class="relative">
+      <select v-model="selectedChildStatus" class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
+        <option value="">Child Status</option>
+        <option v-for="status in childStatuses" :key="status" :value="status">{{ status }}</option>
+      </select>
+      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"></div>
+    </div>
+  </div>
+</div>
+
+
 
       <!-- Clients Table -->
-      <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg mt-6">
+      <div class="-ml-3 overflow-hidden  sm:rounded-lg mt-6">
         <div class="p-4">
-          <table class="min-w-full divide-y divide-gray-200 table-auto">
-            <thead class="bg-gray-50">
+          <table class="min-w-full divide-y  table-auto">
+            <thead class="border border-gray-300 text-white bg-white">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Age</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Case Status</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Child Status</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Date Admitted</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Age</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Case Status</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Child Status</th>
+                <th class="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Date Admitted</th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class=" divide-y divide-gray-300">
               <tr v-for="(client, index) in sortedClients" :key="index"
                   class="cursor-pointer hover:bg-gray-100 transition-all duration-150"
                   @click="handleRowClick(client)">
@@ -116,41 +92,50 @@
       </div>
 
      <!-- Pagination Controls -->
-      <div class="mt-4 mb-8 flex justify-center space-x-2">
-        <!-- First Page Button (Disabled if on the first page) -->
-        <button @click="firstPage" :disabled="currentPage === 1" 
-                class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-          «
-        </button>
+     <div class=" mt-4 mb-8 flex justify-between items-center space-x-2">
+  <!-- Total number of CICL (left-aligned) -->
+  <div class="ml-4 text-sm font-semibold text-gray-700">
+    TOTAL NUMBER OF CICL = <span class="text-gray-700">{{ totalCICL }} </span>
+  </div>
 
-        <!-- Previous Page Button (Disabled if on the first page) -->
-        <button @click="previousPage" :disabled="currentPage === 1" 
-                class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-          ‹
-        </button>
+  <!-- Pagination (right-aligned) -->
+  <div class="flex items-center space-x-2">
+    <!-- First Page Button (Disabled if on the first page) -->
+    <button @click="firstPage" :disabled="currentPage === 1" 
+            class="text-xs px-3 py-1 bg-gray-100 text-black rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+      « Previous
+    </button>
 
-        <!-- Page Numbers -->
-        <button v-for="page in totalPages" :key="page"
-                @click.stop="goToPage(page)" 
-                :class="{
-                  'px-3 py-1 border-2 border-blue-500 text-blue-500 rounded-md': currentPage === page,
-                  'px-3 py-1 bg-white border-2 border-gray-200 text-black rounded-md hover:bg-gray-100': currentPage !== page
-                }">
-          {{ page }}
-        </button>
+    <!-- Previous Page Button (Disabled if on the first page) -->
+    <button @click="previousPage" :disabled="currentPage === 1" 
+            class="text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+      ‹
+    </button>
 
-        <!-- Next Page Button (Disabled if on the last page) -->
-        <button @click="nextPage" :disabled="currentPage === totalPages" 
-                class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-          ›
-        </button>
+    <!-- Page Numbers -->
+    <button v-for="page in totalPages" :key="page"
+            @click.stop="goToPage(page)" 
+            :class="{
+              'text-xs px-3 py-1 border-2 border-blue-500 text-blue-500 rounded-md': currentPage === page,
+              'text-xs px-3 py-1 bg-white border-2 border-gray-200 text-black rounded-md hover:bg-gray-100': currentPage !== page
+            }">
+      {{ page }}
+    </button>
 
-        <!-- Last Page Button (Disabled if on the last page) -->
-        <button @click="lastPage" :disabled="currentPage === totalPages" 
-                class="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-          »
-        </button>
-      </div>
+    <!-- Next Page Button (Disabled if on the last page) -->
+    <button @click="nextPage" :disabled="currentPage === totalPages" 
+            class="text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+      ›
+    </button>
+
+    <!-- Last Page Button (Disabled if on the last page) -->
+    <button @click="lastPage" :disabled="currentPage === totalPages" 
+            class="text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
+     Next »
+    </button>
+  </div>
+</div>
+
 
     </div>
   </AppLayout>

@@ -28,21 +28,7 @@
       </div>
     </div>
 
-    <!-- Dropdown Content -->
-    <div v-if="isDropdownOpen" ref="dropdown" class="absolute -ml-12 mt-2 w-48 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 rounded-md shadow-lg z-10">
-      <div class="block px-4 py-2 text-xs text-white">Manage Account</div>
-
-      <DropdownLink :href="route('profile.show')" class="">
-        Profile
-      </DropdownLink>
-
-
-      <DropdownLink v-if="$page.props.jetstream.hasApiFeatures" :href="route('api-tokens.index')">
-        API Tokens
-      </DropdownLink>
-
-      <div class="border-t border-gray-200"></div>
-    </div>
+   
   </div>
 </template>
 

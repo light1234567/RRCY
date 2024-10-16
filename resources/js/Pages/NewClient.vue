@@ -8,12 +8,13 @@
       </div>
     </template>
 
-    <div class="">
+    <div class="bg-slate-100 mt-0.5">
       <h1 class="text-lg p-1 text-customBlue ml-10 font-bold mb-4"></h1>
       <form @submit.prevent="saveForm">
         
 <!-- Client Information -->
-<fieldset class="bg-white border shadow-lg p-6 mb-4 mr-8 ml-16 rounded-md">
+
+<fieldset class="bg-white border border-gray-300 shadow-md p-6 mb-4 mr-8 ml-16 rounded-xs">
   <legend class="text-base bg-gradient-to-r from-blue-900 to-blue-600 text-white pl-2 pr-2 pt-1 pb-1 rounded-md font-bold shadow-md">
     CLIENT INFORMATION
   </legend>
@@ -231,8 +232,8 @@
 
 
 <!-- Distinguishing Marks -->
-<fieldset class="bg-white border shadow-lg p-6 mb-4 mr-8 ml-16 rounded-md">
-  <legend class="text-base bg-gradient-to-r from-blue-900 to-blue-600 text-white pl-2 pr-2 pt-1 pb-1 rounded-md font-bold shadow-md">
+<fieldset class="bg-white border border-gray-300 shadow-md p-6 mb-4 mr-8 ml-16 rounded-xs">
+  <legend class="text-base bg-gradient-to-r from-blue-900 to-blue-600 text-white pl-2 pr-2 pt-1 pb-1 rounded-xs font-bold shadow-sm">
     DISTINGUISHING MARKS
   </legend>
 
@@ -350,12 +351,67 @@
 
 
 <!-- Admission Details -->
-<fieldset class="bg-white border shadow-lg p-6 mb-4 mr-8 ml-16 rounded-md">
+<fieldset class="bg-white border shadow-md p-6 mb-4 mr-8 ml-16 rounded-xs">
   <legend class="text-base bg-gradient-to-r from-blue-900 to-blue-600 text-white pl-2 pr-2 pt-1 pb-1 rounded-md font-bold shadow-md">
     ADMISSION DETAILS
   </legend>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- RTC Province -->
+        <div class="mb-2">
+      <label for="rtcProvince" class="block mb-1 text-sm font-medium">
+        RTC Province: <span class="text-red-500">*</span>
+      </label>
+      <select
+        id="rtcProvince"
+        v-model="selectedProvince"
+        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+        required
+      >
+        <option value="" disabled>Select a province</option>
+        <option v-for="province in rtcProvinces" :key="province.id" :value="province.id">
+          {{ province.province_name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Committing Court Dropdown -->
+    <transition name="fade-in">
+      <div class="mb-2" v-if="selectedProvince">
+        <label for="committingCourt" class="block mb-1 text-sm font-medium">
+          Committing Court: <span class="text-red-500">*</span>
+        </label>
+        <select
+          id="committingCourt"
+          v-model="form.admission.committing_court"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
+          required
+        >
+          <option value="" disabled>Select a branch</option>
+          <option v-for="branch in filteredBranches" :key="branch.id" :value="branch.branch_name">
+            {{ branch.branch_name }}
+          </option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </transition>
+
+    <!-- Custom Committing Court Input -->
+    <transition name="fade-in">
+      <div class="mb-2" v-if="form.admission.committing_court === 'Other'">
+        <label for="customCourt" class="block mb-1 text-sm font-medium">
+          Custom Committing Court: <span class="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="customCourt"
+          v-model="customCommittingCourt"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
+          placeholder="Enter custom committing court"
+          required
+        />
+      </div>
+    </transition>
     <!-- Criminal Case Number -->
     <div class="mb-2 w-full">
       <label for="crimCaseNumber" class="block mb-1 text-sm font-medium">
@@ -434,61 +490,7 @@
       </select>
     </div>
 
-    <!-- RTC Province -->
-    <div class="mb-2">
-      <label for="rtcProvince" class="block mb-1 text-sm font-medium">
-        RTC Province: <span class="text-red-500">*</span>
-      </label>
-      <select
-        id="rtcProvince"
-        v-model="selectedProvince"
-        class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-        required
-      >
-        <option value="" disabled>Select a province</option>
-        <option v-for="province in rtcProvinces" :key="province.id" :value="province.id">
-          {{ province.province_name }}
-        </option>
-      </select>
-    </div>
 
-    <!-- Committing Court Dropdown -->
-    <transition name="fade-in">
-      <div class="mb-2" v-if="selectedProvince">
-        <label for="committingCourt" class="block mb-1 text-sm font-medium">
-          Committing Court: <span class="text-red-500">*</span>
-        </label>
-        <select
-          id="committingCourt"
-          v-model="form.admission.committing_court"
-          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
-          required
-        >
-          <option value="" disabled>Select a branch</option>
-          <option v-for="branch in filteredBranches" :key="branch.id" :value="branch.branch_name">
-            {{ branch.branch_name }}
-          </option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-    </transition>
-
-    <!-- Custom Committing Court Input -->
-    <transition name="fade-in">
-      <div class="mb-2" v-if="form.admission.committing_court === 'Other'">
-        <label for="customCourt" class="block mb-1 text-sm font-medium">
-          Custom Committing Court: <span class="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          id="customCourt"
-          v-model="customCommittingCourt"
-          class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
-          placeholder="Enter custom committing court"
-          required
-        />
-      </div>
-    </transition>
 
     <!-- Crime Category Dropdown -->
     <div class="mb-2">
@@ -551,7 +553,7 @@
 
 
 <!-- Documents Submitted -->
-<fieldset class="bg-white border shadow-lg p-6 mb-4 mr-8 ml-16 rounded-md">
+<fieldset class="bg-white border shadow-md p-6 mb-4 mr-8 ml-16 rounded-xs">
   <legend class="text-base bg-gradient-to-r from-blue-900 to-blue-600 text-white pl-2 pr-2 pt-1 pb-1 rounded-md font-bold shadow-md">
     DOCUMENTS SUBMITTED
   </legend>

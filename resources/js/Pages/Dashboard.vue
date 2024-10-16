@@ -23,10 +23,10 @@
     </template>
 
 
-    
+    <div class="mt-1 min-h-screen bg-slate-100">
     <!-- Main Content Wrapper -->
-    <div class="-mb-14 -mt-4 flex flex-wrap lg:flex-nowrap p-8 -gap-1">
-      <div class="flex flex-col space-y-4 w-1/2">
+    <div class="-mb-10 flex flex-wrap lg:flex-nowrap p-8 -gap-1">
+      <div class="-mt-6 flex flex-col space-y-4 w-1/2">
         <!-- Horizontal Layout for Total Clients and Average Age -->
         <div class="flex justify-between space-x-4 w-full lg:w-9/10">
           <!-- Total Clients -->
@@ -52,11 +52,9 @@
           <!-- Line Chart for Admissions by Month (Full Width) -->
         <div class="flex justify-center">
           <div class="bg-white ml-4 p-4 rounded-lg shadow-md w-full">
-            <h2 class="-mt-2 -ml-4 mb-4 pb-2 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm flex items-center justify-between">
+            <h2 class="-mt-4 -ml-4 mb-4 pb-2 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-slate-200 px-6 py-1 rounded-sm flex items-center justify-between">
               Admission by Month
-              <button @click="openModal" class="focus:outline-none">
-                <i class="fas fa-expand"></i> <!-- Grid icon on the right -->
-              </button>
+             
             </h2>
 
             <div class="flex justify-center">
@@ -72,104 +70,25 @@
       </div>
 
     <!-- Doughnut Chart (Case Status Overview) -->
-<div class="-mr-2 ml-4 bg-gray-50 border-4 border-gray-50 shadow-md p-4 w-full lg:w-1/2 h-auto">
-  <h2 class="-mt-5 -ml-5 mb-12 pb-2 -mr-5 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm">
-    Case Status Overview
-  </h2>
-  
-  <!-- Adjust the height and width of the container -->
-  <div class="relative -mt-20 w-full h-[300px] lg:h-[390px]">  
+    <div class="-mt-6 -mr-2 ml-4 bg-gray-50 border-4 border-gray-50 shadow-md p-4 w-full lg:w-1/2 h-auto">
+    <h2 class="-mt-5 -ml-5 mb-12 pb-2 -mr-5 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-slate-200 px-6 py-1 rounded-sm">
+      Case Status Overview
+    </h2>
     
-    <Doughnut 
-      :data="caseStatusData"
-      :options="{
-        layout: {
-          padding: {
-            top: 100,   // Add padding to top, bottom, and sides
-            bottom: 30,
-            left: 60,
-            right: 50,
-          },
-          margin:{
-           
-          }
-        },
-        plugins: {
-          legend: { 
-            position: 'right', 
-            labels: { 
-              font: { size: 10 }, 
-              boxWidth: 20, 
-              padding: 17,
-            },
-            // Add margin right to the entire legend
-            title: {
-              padding: {
-                top: 0,
-                bottom: 0,
-                left: 100,
-              },
-              margin:{
-                left: 20,
-              }
-            }
-          },
-          datalabels: {
-            anchor: 'end',  // Position the label outside
-            align: 'end',   // Align the label towards the outside of the chart
-            offset: 5,     // Push the labels further outside the chart
-            formatter: (value, context) => {
-              let total = context.chart._metasets[0].total;
-              let percentage = (value / total * 100).toFixed(1);
+    <!-- Adjust the height and width of the container -->
+    <div class="relative -mt-20 w-full h-[300px] lg:h-[390px]">  
+      <Doughnut 
+        :data="caseStatusData"
+        :options="chartOptions"
+      />
 
-              // Show percentages greater than 0
-              return percentage > 0 ? percentage + '%' : '';
-            },
-            color: '#000',  // Black label color for better visibility outside the chart
-            font: {
-              weight: 'bold',
-              size: 12,
-            },
-       
-            listeners: {
-              beforeDraw: function(context) {
-                // Draw line from chart segment to label
-                const ctx = context.chart.ctx;
-                const meta = context.chart.getDatasetMeta(0);
-                meta.data.forEach((element, index) => {
-                  const dataset = context.chart.data.datasets[0];
-                  const value = dataset.data[index];
-
-                  if (value > 0) { // Only for segments with data
-                    ctx.beginPath();
-                    ctx.moveTo(element.tooltipPosition().x, element.tooltipPosition().y); // Start from chart slice
-                    ctx.lineTo(element.tooltipPosition().x + 30, element.tooltipPosition().y); // Draw line towards label
-                    ctx.strokeStyle = '#000';
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                    ctx.closePath();
-                  }
-                });
-              }
-            }
-          }
-        },
-        responsive: true,
-        maintainAspectRatio: false, // Allow chart to fill the container
-        onClick: (e, activeEls) => {
-          if (activeEls.length > 0) {
-            const index = activeEls[0].index;
-            const status = caseStatusData.labels[index];
-            openCaseStatusModal(status); // Trigger modal
-          }
-        }
-      }"
-    />
-    <h3 class="font-semibold text-gray-700">Suspended Sentence Total</h3>
-    <p class="text-xl text-gray-900">{{ suspendedSentenceTotal }} case</p>
+      <!-- Suspended Sentence Total -->
+      <h3 class="-mt-4 font-semibold text-gray-700"> Total Suspended Sentence</h3>
+      <p class="text-xl text-gray-900">
+        {{ suspendedSentenceTotal }} Case{{ suspendedSentenceTotal > 1 ? 's' : '' }}
+      </p>
+    </div>
   </div>
-</div>
-
     </div>
 
   
@@ -180,7 +99,7 @@
 
   <!-- Child Status Distribution Pie Chart -->
 <div class="ml-4 bg-white p-4 rounded-lg shadow-md w-full lg:w-1/3">
-  <h2 class="-mt-2 -ml-4 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm">
+  <h2 class="-mt-4 -ml-4 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-slate-200 px-6 py-1 rounded-sm">
           Child Status Distribution
         </h2>   <div class="mt-2 flex justify-center relative h-[330px] mb-12 ">
     <Pie 
@@ -207,12 +126,12 @@
 </div>
 <!-- Offense Committed Table -->
 <div class="bg-white p-6 rounded-lg shadow-md w-full lg:w-2/5">
-  <h2 class="-mt-4 -ml-6 mb-4 -mr-6 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm">
+  <h2 class="-mt-6 -ml-6 mb-4 -mr-6 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-slate-200 px-6 py-1 rounded-sm">
     Offense Committed
   </h2>
   <div class="overflow-hidden rounded-lg shadow">
     <!-- Set fixed height and enable scrolling -->
-    <div class="max-h-80 overflow-y-auto hide-scrollbar"> <!-- Adjusted height to max-h-80 -->
+    <div class="max-h-100 overflow-y-auto hide-scrollbar"> <!-- Adjusted height to max-h-80 -->
       <table class="min-w-full leading-normal table-auto relative"> <!-- Add 'relative' for positioning -->
         <thead class="bg-white shadow-md text-black uppercase text-xs font-semibold sticky top-0 z-10"> <!-- Add sticky and z-index -->
           <tr>
@@ -373,10 +292,10 @@
 
 <!-- Age Distribution Bar Chart -->
 <div class="-mr-4 bg-white p-4 rounded-lg shadow-md w-full lg:w-1/3">
-  <h2 class="-mt-2 -ml-4 -mb-4 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-gray-100 px-6 py-1 rounded-sm">
+  <h2 class="-mt-4 -ml-4 -mb-4 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-slate-200 px-6 py-1 rounded-sm">
           Age Distribution
         </h2> 
-  <div class="-mb-12 relative w-full" style="height: 350px;">
+  <div class="-mb-12 relative w-full" style="height: 400px;">
     <Bar 
       :data="filteredAgeData"
       :options="{
@@ -404,7 +323,7 @@
  <!-- Sidebar (Dashboard Filters) -->
 <div :class="{ 'translate-x-full': !isSidebarOpen }" class="fixed right-0 top-0 w-64 h-full bg-white shadow-lg transition-transform duration-300 ease-in-out z-50">
   <!-- Sidebar Header with Collapse Button -->
-  <div class="p-4 flex justify-between items-center bg-gray-200">
+  <div class="p-4 flex justify-between items-center bg-slate-100">
     <h2 class="text-lg font-semibold">Dashboard Filters</h2>
     <button @click="toggleSidebar" class="text-gray-500 hover:text-gray-700">
       <i class="fa fa-times"></i>
@@ -453,7 +372,7 @@
     <div v-if="isSidebarOpen" @click="toggleSidebar" class="fixed inset-0 bg-black bg-opacity-70 z-40"></div>
 
     <!-- Toggle Sidebar Button -->
-    <button v-if="!isSidebarOpen" @click="toggleSidebar" class="mt-9 fixed right-0 top-4 z-50 bg-gray-200 p-2 rounded-l-md text-gray-700 shadow-md hover:bg-gray-300 flex items-center">
+    <button v-if="!isSidebarOpen" @click="toggleSidebar" class="mt-9 fixed right-0 top-4 z-50 bg-blue-900 p-2 rounded-l-md text-gray-200 shadow-md hover:bg-blue-950 flex items-center">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="h-5 w-5 mr-2">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         <circle cx="8" cy="6" r="2" fill="currentColor"></circle>
@@ -464,7 +383,7 @@
     
 </button>
 
-
+</div>
 
   </AppLayout>
 </template>
@@ -864,15 +783,95 @@ const filteredChildStatusData = computed(() => {
 });
 
 
+
+// Calculating the total suspended sentence
 const suspendedSentenceTotal = computed(() => {
-  const diversion = filteredCaseStatusCountsArray.value.find(status => status.label === 'Diversion');
-  const dispositionMeasure = filteredCaseStatusCountsArray.value.find(status => status.label === 'Disposition Measure');
+  const diversionIndex = caseStatusData.value.labels.indexOf('Diversion');
+  const dispositionMeasureIndex = caseStatusData.value.labels.indexOf('Disposition Measure');
 
-  const diversionCount = diversion ? diversion.count : 0;
-  const dispositionMeasureCount = dispositionMeasure ? dispositionMeasure.count : 0;
+  const diversion = caseStatusData.value.datasets[0].data[diversionIndex] || 0;
+  const dispositionMeasure = caseStatusData.value.datasets[0].data[dispositionMeasureIndex] || 0;
 
-  return diversionCount + dispositionMeasureCount;
+  return diversion + dispositionMeasure;
 });
+
+// Chart options with afterDatasetsDraw to draw lines
+const chartOptions = ref({
+  layout: {
+    padding: {
+      top: 50,
+      bottom: 50,
+      left: 20,
+      right: 20,
+    },
+  },
+  plugins: {
+    legend: {
+      position: 'right',
+      labels: {
+        font: { size: 13 },
+        boxWidth: 20,
+        padding: 15,
+      },
+    },
+    datalabels: {
+      color: '#000',
+      font: {
+        weight: 'bold',
+        size: 12,
+      },
+      formatter: (value, context) => {
+        const total = context.chart._metasets[0].total;
+        const percentage = ((value / total) * 100).toFixed(1);
+        return percentage > 0 ? `${percentage}%` : '';
+      },
+    },
+  },
+  responsive: true,
+  maintainAspectRatio: false,
+  afterDatasetsDraw: function(chart) {
+    const ctx = chart.ctx;
+    const chartArea = chart.chartArea;
+    const meta = chart.getDatasetMeta(0);
+
+    const diversionIndex = chart.data.labels.indexOf('Diversion');
+    const dispositionMeasureIndex = chart.data.labels.indexOf('Disposition Measure');
+
+    if (diversionIndex >= 0 && dispositionMeasureIndex >= 0) {
+      const diversionPoint = meta.data[diversionIndex].tooltipPosition();
+      const dispositionPoint = meta.data[dispositionMeasureIndex].tooltipPosition();
+
+      const centerX = (chartArea.left + chartArea.right) / 2;
+      const centerY = chartArea.bottom + 20; // Adjust this for line positioning
+
+      // Draw line from Diversion
+      ctx.beginPath();
+      ctx.moveTo(diversionPoint.x, diversionPoint.y);
+      ctx.lineTo(centerX, centerY);
+      ctx.strokeStyle = '#33FF57'; // Green for Diversion
+      ctx.lineWidth = 3; // Increase the width of the line
+      ctx.stroke();
+      ctx.closePath();
+
+      // Draw line from Disposition Measure
+      ctx.beginPath();
+      ctx.moveTo(dispositionPoint.x, dispositionPoint.y);
+      ctx.lineTo(centerX, centerY);
+      ctx.strokeStyle = '#FF5733'; // Red for Disposition Measure
+      ctx.lineWidth = 3; // Increase the width of the line
+      ctx.stroke();
+      ctx.closePath();
+    }
+  },
+  onClick: (e, activeEls) => {
+    if (activeEls.length > 0) {
+      const index = activeEls[0].index;
+      const status = caseStatusData.value.labels[index];
+      openCaseStatusModal(status); // Placeholder for your modal logic
+    }
+  },
+});
+
 
 // Filtered Date Admitted Data for the Line Chart
 const filteredDateAdmittedData = computed(() => {
