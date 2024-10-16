@@ -36,13 +36,63 @@
           <span>Export PDF</span>
       </button>
   </div>
+  <!-- Modal for Save Confirmation -->
+<div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+     <div class="fixed inset-0 bg-black opacity-50"></div>
+     <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+       <div class="bg-white p-6">
+         <div class="flex items-center">
+           <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+           </svg>
+           <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+         </div>
+         <div class="mt-2">
+           <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+         </div>
+       </div>
+       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+         <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+         <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+       </div>
+     </div>
+   </div>
+
+   <!-- Modal for Save Result -->
+   <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+     <div class="fixed inset-0 bg-black opacity-50"></div>
+     <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+       <div class="bg-white p-6 text-center">
+         <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+           <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+             <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+             </svg>
+           </div>
+         </div>
+         <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+           <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+             </svg>
+           </div>
+         </div>
+         <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+         <div class="mt-2">
+           <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+         </div>
+       </div>
+       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+         <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+           OK
+         </button>
+       </div>
+     </div>
+   </div>
+
+      <form ref="LearnerForm" @submit.prevent="submitForm">
   
   <div class="graph-background pt-0.5 -ml-4 -mr-9 -mb-16">
-  
-  <!-- Success/Error Message -->
-  <div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
-    {{ message }}
-  </div>
   
     <div class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
       <!-- Header Section with Logo and Document Details -->
@@ -55,23 +105,37 @@
           <p class="text-xs flex justify-center">DSWD-GF-007 | REV 03 / 22 SEP 2023</p>
         </div>
       </div>
-  
-      <form @submit.prevent="submitForm">
-  
-  
+      
         <div class="text-center mb-6">
           <h1 class="font-bold text-xl">LEARNER’S ACADEMIC BEHAVIORAL FORM</h1>
           <div class="flex justify-center gap-2 mt-4">
             <div class="flex items-center">
-  <label for="month" class="block font-medium">For the month of</label>
-  <input 
-    v-model="form.month" 
-    type="text" 
-    id="month" 
-    class="block w-20 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
-    style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
-    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')"
-  />
+  <label for="month" class="block font-medium">For the month of : </label>
+  <select 
+  v-model="form.month" 
+  id="month" 
+  class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-left focus:outline-none focus:border-black"
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please select a valid month') }" 
+  :disabled="!editMode" 
+  required
+>
+  <option value="" disabled selected>Select month</option>
+  <option value="January">January</option>
+  <option value="February">February</option>
+  <option value="March">March</option>
+  <option value="April">April</option>
+  <option value="May">May</option>
+  <option value="June">June</option>
+  <option value="July">July</option>
+  <option value="August">August</option>
+  <option value="September">September</option>
+  <option value="October">October</option>
+  <option value="November">November</option>
+  <option value="December">December</option>
+</select>
+
+
 </div>
 
   </div>
@@ -79,15 +143,19 @@
           <div class="flex justify-center gap-4 mt-4">
   
             <div class="flex justify-center">
-  <label for="schoolYear" class="block font-medium">School Year:</label>
-  <input 
-    v-model="form.school_year" 
-    type="text" 
-    id="schoolYear" 
-    class="block w-7 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
-    style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
-    oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '')"
-  />
+              <label for="schoolYear" class="block font-medium">School Year:</label>
+<input 
+  v-model="form.school_year" 
+  type="text" 
+  id="schoolYear" 
+  class="block w-[9ch] border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none focus:border-black p-0" 
+  style="margin-left: 5px; border-color: transparent; border-bottom-color: black;" 
+  @input="(e) => { e.target.setCustomValidity(''); e.target.value = e.target.value.replace(/[^a-zA-Z0-9\s-]/g, '') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide the school year') }" 
+  :readonly="!editMode"
+  required
+/>
+
 </div>
 
 
@@ -116,6 +184,7 @@
     class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
     style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
     oninput="this.value = Math.min(100, this.value.replace(/[^0-9]/g, '').slice(0, 3))" 
+    :readonly="!editMode" 
   />
 </div>
 
@@ -129,6 +198,7 @@
     class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
     style="margin-right:310px; margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
     oninput="this.value = this.value.replace(/[^0-9-]/g, '')"
+    :readonly="!editMode"
   />
 </div>
 
@@ -142,6 +212,7 @@
     class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
     style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
     oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+    :readonly="!editMode"
   />
 </div>
 
@@ -232,7 +303,17 @@
   
         <div class="mb-6">
           <label for="observationFeedback" class="block font-medium">Observation/Feedback:</label>
-          <textarea v-model="form.observation_feedback" id="observationFeedback" rows="6" class="block w-full p-2 border border-gray-300"></textarea>
+          <textarea 
+            v-model="form.observation_feedback" 
+            id="observationFeedback" 
+            rows="6" 
+            class="block w-full p-2 border border-gray-300" 
+            @input="(e) => { e.target.setCustomValidity('') }" 
+            @invalid="(e) => { e.target.setCustomValidity('Please provide your observation feedback') }" 
+            :readonly="!editMode"
+            required
+          ></textarea>
+
         </div>
   
         <div class="mb-6 flex gap-3 ">
@@ -245,6 +326,7 @@
                 id="learner"
                 class="block w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
                 style=" font-size:65%; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
+                readonly
               >
             </div>
             <p class="flex justify-center text-xs mt-2 font-bold">Learner</p>
@@ -261,6 +343,7 @@
                 id="categoryAdviserSignature"
                 class="block w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
                 style=" font-size:65%;padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
+                :readonly="!editMode"
               >
             </div>
             <p class="flex justify-center text-xs mt-2 font-bold">Category Adviser</p>
@@ -317,10 +400,9 @@
             </div>
         </div>
   </div>
-        
-      </form>
     </div>
     </div>
+  </form>
   </template>
   
   <script>
@@ -362,8 +444,10 @@
         originalForm: null,
         editMode: false,
         center_head: '',
-        message: '', 
-        messageType: '', 
+        isModalOpen: false,
+        isSaveResultModalOpen: false,
+        saveResultTitle: '',
+        saveResultMessage: '',
       };
     },
     mounted() {
@@ -401,9 +485,6 @@
             }
           })
           .catch(error => {
-            this.message = 'Error fetching data: ' + (error.response?.data || error.message);
-            this.messageType = 'error';
-            console.error('Error fetching data:', error.response?.data || error);
           });
       },
       fetchCenterHead() {
@@ -423,43 +504,64 @@
         skill.satisfactory = type === 'satisfactory';
         skill.fairlySatisfactory = type === 'fairlySatisfactory';
       },
-    submitForm() {
-        if (!this.form.client_id) {
-          this.message = 'Client ID is missing. Cannot submit the form.';
-          this.messageType = 'error';
-          console.error('client_id is missing. Cannot submit the form.');
-          return;
-        }
-  
-        const url = `/api/learner-academic-behavioral-forms`;
-        
-        axios.post(url, this.form)
-          .then(response => {
-            this.editMode = false;
-            this.message = 'Form submitted successfully!';
-            this.messageType = 'success'; // Set success message
-            this.clearMessageAfterDelay();
-            this.fetchData(); // Reload the form data
-            console.log('Form submitted successfully:', response.data);
-  
-          })
-          .catch(error => {
-            this.message = 'Error saving data: ' + (error.response?.data || error.message);
-            this.messageType = 'error'; // Set error message
-            this.clearMessageAfterDelay();
-            console.error('Error saving data:', error.response?.data || error);
-          });
-      },
+      submitForm() {
+  const form = this.$refs.LearnerForm; // Ensure the form reference is correct
+  let isFormValid = true;
+
+  // Validate the form fields and check for invalid fields
+  if (!form.checkValidity()) {
+    isFormValid = false;
+    form.reportValidity(); // This will display the browser's validation and scroll to the first invalid field
+  }
+
+  // If the form is valid, show the confirmation modal
+  if (isFormValid) {
+    this.isModalOpen = true;  // Open the confirmation modal to ask the user if they want to proceed
+  } else {
+    console.warn('Form contains invalid fields. Please correct them.');
+  }
+},
+
+confirmSave() {
+  const url = `/api/learner-academic-behavioral-forms`;
+
+  axios.post(url, this.form)
+    .then(response => {
+      this.editMode = false;
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Form has been saved successfully.';
+      this.isSaveResultModalOpen = true;  // Show the success modal
+      this.fetchData(); // Reload the form data after submission
+    })
+    .catch(error => {
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
+      this.isSaveResultModalOpen = true; // Show the error modal
+      console.error('Error saving data:', error.response?.data || error);
+    })
+    .finally(() => {
+      this.isModalOpen = false;  // Close the confirmation modal
+    });
+},
+
       clearMessageAfterDelay() {
       setTimeout(() => {
-        this.message = '';
       }, 3000); // Clear the message after 3 seconds
     },
       toggleEdit() {
-        this.message = ''; // Clear any existing messages when toggling edit mode
-        this.messageType = ''; // Clear message type as well
         this.editMode = !this.editMode;
       },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    closeSaveResultModal() {
+       this.isSaveResultModalOpen = false;
+       this.saveResultTitle = '';
+       this.saveResultMessage = '';
+     },
       exportToPdf() {
       const pdf = new jsPDF('p', 'mm', [216, 356]); // 216mm x 356mm is legal size
   

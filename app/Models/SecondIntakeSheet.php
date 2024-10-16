@@ -15,7 +15,7 @@ class SecondIntakeSheet extends Model
     protected $fillable = [
         'client_id',
         'general_intake_id',
-        'date',
+        'date_second',
         'vices',
         'school_activities_achievement',
         'occupation_of_mother',

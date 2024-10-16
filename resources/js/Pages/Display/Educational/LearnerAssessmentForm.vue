@@ -1,22 +1,96 @@
 <template>
-  <!-- Buttons for Edit and Save -->
-  <div class="flex justify-end gap-4">
-      <button type="button" @click="isEditable = !isEditable" class="bg-blue-500 text-white px-4 py-2 rounded">
-        {{ isEditable ? 'Cancel' : 'Edit' }}
+  <!-- Tabs for Actions -->
+  <div v-if="isEditable" class="flex absolute p-4 space-x-4">
+      <button @click="cancelEdit" class=" flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+          <!-- FontAwesome for Back -->
+          <i class="fas fa-arrow-left w-4 h-4"></i>
+          <span>Back</span>
       </button>
-      <button v-if="isEditable" type="submit" @click="submitForm" class="bg-green-500 text-white px-4 py-2 rounded">Save</button>
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-      <span>Export to PDF</span>
-    </button>
-    </div>
+  </div>
+  
+  <div class="flex justify-end -mr-9  bg-transparent border border-gray-300 p-4 space-x-4 -mt-9">
+      <!-- Pagination Component -->
+      <Pagination 
+        :totalPages="totalPages" 
+        :currentPage="currentPage" 
+        @update:currentPage="currentPage = $event" 
+      />
+      
+      <button v-if="!isEditable" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+          <!-- FontAwesome for Edit -->
+          <i class="fas fa-edit w-4 h-4"></i>
+          <span>Edit</span>
+        </button>
+  
+      <button v-if="isEditable" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+          <!-- FontAwesome for Save -->
+          <i class="fas fa-check w-4 h-4"></i>
+          <span>Save</span>
+      </button>
+  
+      <!-- Download PDF Button -->
+      <button @click="exportToPdf" class="flex items-center mr-8 space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+          <!-- FontAwesome for PDF Download -->
+          <i class="fas fa-file-pdf w-4 h-4"></i>
+          <span>Export PDF</span>
+      </button>
+  </div>
+  <!-- Modal for Save Confirmation -->
+<div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+     <div class="fixed inset-0 bg-black opacity-50"></div>
+     <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+       <div class="bg-white p-6">
+         <div class="flex items-center">
+           <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+           </svg>
+           <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+         </div>
+         <div class="mt-2">
+           <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+         </div>
+       </div>
+       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+         <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+         <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+       </div>
+     </div>
+   </div>
 
-    <!-- Success/Error Message -->
-    <div v-if="message" :class="messageClass" class="p-4 mb-4 rounded">
-      {{ message }}
-    </div>
+   <!-- Modal for Save Result -->
+   <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+     <div class="fixed inset-0 bg-black opacity-50"></div>
+     <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+       <div class="bg-white p-6 text-center">
+         <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+           <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+             <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+             </svg>
+           </div>
+         </div>
+         <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+           <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+             </svg>
+           </div>
+         </div>
+         <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+         <div class="mt-2">
+           <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+         </div>
+       </div>
+       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+         <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+           OK
+         </button>
+       </div>
+     </div>
+   </div>
+
+
+      <form ref="LearnerAssessmentForm" @submit.prevent="submitForm">
 
   <div class="max-w-3xl p-8 bg-white shadow-xl mx-auto my-8 border border-gray-200">
     
@@ -31,19 +105,20 @@
       </div>
     </div>
 
-    <form @submit.prevent="submitForm">
       <!-- Learner's Information -->
       <h1 class="font-bold text-lg mb-4 ml-56">LEARNER’S ASSESSMENT FORM</h1>
       <div class="ml-56 -mt-4">
   <label for="schoolYear" class="w-full block font-medium">School Year:
     <input 
-      type="text" 
-      id="schoolYear" 
-      class="underline-input w-20 p-1 border bg-transparent border-gray-300 mx-auto text-sm" 
-      v-model="form.school_year" 
-      :readonly="!isEditable" 
-      oninput="this.value = this.value.replace(/[a-zA-Z]/g, '')" 
-    />
+  type="text" 
+  id="schoolYear" 
+  class="underline-input w-20 p-1 border bg-transparent border-gray-300 mx-auto text-sm" 
+  v-model="form.school_year" 
+  :readonly="!isEditable" 
+  @input="(e) => { e.target.value = e.target.value.replace(/[a-zA-Z]/g, ''); e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid school year') }" 
+  required
+/>
   </label>
 </div>
 
@@ -74,14 +149,19 @@
   <div class="flex items-center ml-20">
   <label for="grade" class="block font-medium mr-2">Grade:</label>
   <input 
-    type="text" 
-    id="grade" 
-    class="underline-input border-none focus:outline-none w-7 p-0" 
-    v-model="form.grade" 
-    :readonly="!isEditable" 
-    oninput="this.value = Math.min(100, Math.max(0, this.value.replace(/[^0-9]/g, '')))" 
+  type="text" 
+  id="grade" 
+  class="underline-input border-none focus:outline-none w-7 p-0" 
+  v-model="form.grade" 
+  :readonly="!isEditable" 
+  @input="(e) => { 
+    e.target.value = Math.min(100, Math.max(0, e.target.value.replace(/[^0-9]/g, '')));
+    e.target.setCustomValidity('');
+  }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid grade between 0 and 100'); }"
+  required
+/>
 
-  />
 </div>
 
 
@@ -90,7 +170,17 @@
   <!-- Date Input -->
   <div class="flex items-center">
     <label for="date" class="block font-medium mr-2">Date:</label>
-    <input type="date" id="date" class="underline-input border-none focus:outline-none w-full p-0" v-model="form.date" :readonly="!isEditable" />
+    <input 
+    type="date" 
+    id="date" 
+    class="underline-input border-none focus:outline-none w-full p-0" 
+    v-model="form.date" 
+    :readonly="!isEditable" 
+    @input="(e) => { e.target.setCustomValidity('') }" 
+    @invalid="(e) => { e.target.setCustomValidity('Please select a date') }" 
+    required
+  />
+
   </div>
 
 
@@ -118,7 +208,19 @@
       <td class="border text-[12px] align-top border-black p-2">Most words are pronounced correctly</td>
       <td class="border text-[12px] align-top border-black p-2">All words are pronounced correctly</td>
       <td class="border border-black w-10 p-2">
-        <input type="number" class="text border-none" v-model.number="form.assessments.reading.pronunciation" :disabled="!isEditable" style="width: 2ch; padding: 0.2em;" min="0" max="4"/>      </td>
+        <input 
+        type="number" 
+        class="text border-none" 
+        v-model.number="form.assessments.reading.pronunciation" 
+        :disabled="!isEditable" 
+        style="width: 2ch; padding: 0.2em;" 
+        min="0" 
+        max="4" 
+        @input="(e) => { e.target.setCustomValidity('') }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please provide a valid pronunciation score between 0 and 4') }" 
+        required
+      />
+      </td>
       <td class="border border-black p-2" rowspan="3" style="width: 200px;">
         <textarea 
   class="w-full p-1 text-sm border-none text-center" v-model="form.assessments.reading.pronunciation_remarks" :readonly="!isEditable" rows="6" style="height: 270px; padding-top: 90%; line-height: 1; resize: none;"> </textarea>
@@ -132,7 +234,19 @@
       <td class="border text-[12px] align-top border-black p-2">Words are grouped together logically</td>
       <td class="border text-[12px] align-top border-black p-2">Reading is easy and fluent</td>
       <td class="border border-black w-10 p-2">
-        <input type="number" class="text border-none" v-model.number="form.assessments.reading.fluency" :disabled="!isEditable" style="width: 2ch; padding: 0.2em;" min="0" max="4"/>      </td>
+        <input 
+          type="number" 
+          class="text border-none" 
+          v-model.number="form.assessments.reading.fluency" 
+          :disabled="!isEditable" 
+          style="width: 2ch; padding: 0.2em;" 
+          min="0" 
+          max="4" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide a valid fluency score between 0 and 4') }" 
+          required
+        />
+      </td>
     </tr>
     <tr>
       <td class="border text-sm font-semibold border-black p-2">Use of Punctuation</td>
@@ -141,7 +255,19 @@
       <td class="border text-[12px] align-top border-black p-2">Punctuation is observed, but tends to stop at the end of a line.</td>
       <td class="border text-[12px] align-top border-black p-2">Punctuation is used correctly and efficiently</td>
       <td class="border border-black w-10 p-2">
-        <input type="number" class="text border-none" v-model.number="form.assessments.reading.punctuation" :disabled="!isEditable" style="width: 2ch; padding: 0.2em;" min="0" max="4"/>      </td>
+        <input 
+  type="number" 
+  class="text border-none" 
+  v-model.number="form.assessments.reading.punctuation" 
+  :disabled="!isEditable" 
+  style="width: 2ch; padding: 0.2em;" 
+  min="0" 
+  max="4"
+  @input="(e) => { e.target.setCustomValidity('') }" 
+  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid punctuation score between 0 and 4') }"
+  required
+/>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -377,7 +503,17 @@
       <!-- Recommendation -->
       <div class="mb-6">
         <label for="Recommendation" class="block font-medium">Recommendation/s:</label>
-        <textarea id="Recommendation" rows="6" class="block w-full p-2 border border-gray-300" v-model="form.recommendations" :readonly="!isEditable"></textarea>
+        <textarea 
+          id="Recommendation" 
+          rows="6" 
+          class="block w-full p-2 border border-gray-300" 
+          v-model="form.recommendations" 
+          :readonly="!isEditable" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide your recommendations') }" 
+          required
+        ></textarea>
+
       </div>
 
       <!-- Signatures Section -->
@@ -414,8 +550,8 @@
           </div>
         </div>
       </div>
-    </form>
   </div>
+</form>
 </template>
 
 <script>
@@ -436,9 +572,11 @@ export default {
     return {
       totalPages: 1,
       currentPage: 1,
-      isEditable: false, // State to toggle edit mode
-      message: '', // State to hold the success/error message
-      messageClass: '', // Class to style the message (success/error)
+      isEditable: false,
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
       form: {
         client_id: null,  // Store the client ID
         school_year: '',
@@ -504,12 +642,6 @@ export default {
     }
   },
   methods: {
-    toggleEdit() {
-      this.isEditable = !this.isEditable;
-      if (!this.isEditable) {
-        this.message = '';
-      }
-    },
     selectOnlyOne(aspect, index) {
         // Reset all checkboxes for the given aspect
         this.form.assessments.writing[aspect] = [false, false, false, false];
@@ -521,20 +653,59 @@ export default {
         this.form.assessments.group_work[aspect][index] = true;
     },
     submitForm() {
-    axios.post('/api/learner-assessment-forms', this.form)
-        .then(response => {
-            this.message = response.data.message;
-            this.messageClass = 'bg-green-100 text-green-800';
-            console.log('Form saved successfully:', response.data);
-            this.isEditable = false;
-        })
-        .catch(error => {
-            this.message = 'An error occurred while saving the form.';
-            this.messageClass = 'bg-red-100 text-red-800';
-            console.error('Error saving form:', error.response ? error.response.data : error.message);
-        });
-}
-,
+  const form = this.$refs.LearnerAssessmentForm; // Ensure this matches the form's ref in your template
+  let isFormValid = true;
+
+  // Validate the form fields and check for invalid fields
+  if (!form.checkValidity()) {
+    isFormValid = false;
+    form.reportValidity();  // This will display validation messages and scroll to the first invalid field
+  }
+
+  // If all fields are valid, open the confirmation modal
+  if (isFormValid) {
+    this.isModalOpen = true;  // Open the modal to confirm saving
+  } else {
+    console.warn('Form contains invalid fields. Please correct them.');
+  }
+},
+
+confirmSave() {
+  // Submit the form to the server
+  axios.post('/api/learner-assessment-forms', this.form)
+    .then(response => {
+      console.log('Form saved successfully:', response.data);
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data saved successfully.';
+      this.isSaveResultModalOpen = true; // Show success modal
+      this.isEditable = false;  // Disable editing after saving
+    })
+    .catch(error => {
+      console.error('Error saving form:', error);
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = 'Error saving data. Please try again.';
+      this.isSaveResultModalOpen = true; // Show error modal
+    })
+    .finally(() => {
+      this.isModalOpen = false;  // Close the confirmation modal after saving
+    });
+},
+
+
+toggleEdit() {
+        this.isEditable = !this.isEditable;
+      },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    cancelEdit() {
+      this.isEditable = false;
+    },
+    closeSaveResultModal() {
+       this.isSaveResultModalOpen = false;
+       this.saveResultTitle = '';
+       this.saveResultMessage = '';
+     },
 fetchData() {
     // Fetch client information first
     console.log('Attempting to fetch client data for client_id:', this.form.client_id);
@@ -551,17 +722,12 @@ fetchData() {
                 console.log('Learner name loaded:', this.form.learner_name);
             } else {
                 console.warn('Client data is incomplete or not formatted as expected:', client);
-                this.message = 'Client data is incomplete.';
-                this.messageClass = 'bg-yellow-100 text-yellow-800';
             }
 
             // After successfully fetching client information, fetch the form data
             this.fetchFormData();
         })
         .catch(error => {
-            this.message = 'An error occurred while fetching client data.';
-            this.messageClass = 'bg-red-100 text-red-800';
-            console.error('Error fetching client data:', error.response ? error.response.data : error.message);
         });
 },
 
@@ -600,14 +766,11 @@ fetchFormData() {
                     }
                 };
                 console.log('Form updated with fetched data:', this.form);
-                this.message = ''; // Clear any previous messages
-                this.messageClass = ''; // Clear any previous message classes
             } else {
                 console.warn('No form data found:', response.data);
             }
         })
         .catch(error => {
-            console.error('Error fetching form data:', error.response ? error.response.data : error.message);
         });
 },
 exportToPdf() {

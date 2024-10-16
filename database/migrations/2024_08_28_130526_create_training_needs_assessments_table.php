@@ -19,7 +19,7 @@ class CreateTrainingNeedsAssessmentsTable extends Migration
             $table->string('center_duration', 20)->nullable();
             $table->string('period', 10)->nullable();
             $table->date('date_of_admission')->nullable();
-
+            $table->date('date')->nullable();
             $table->json('training_details')->nullable();
             $table->json('training_sector_details')->nullable();
             $table->json('education_details')->nullable();

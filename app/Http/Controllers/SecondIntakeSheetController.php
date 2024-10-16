@@ -37,7 +37,7 @@ class SecondIntakeSheetController extends Controller
             $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
                 'general_intake_id' => 'nullable|exists:general_intake_sheets,id',
-                'date' => 'nullable|date',
+                'date_second' => 'nullable|date',
                 'vices' => 'nullable|array',
                 'school_activities_achievement' => 'nullable|string',
                 'occupation_of_mother' => 'nullable|string|max:50', 
@@ -92,7 +92,7 @@ public function update(Request $request, $id)
             $validatedData = $request->validate([
                 'client_id' => 'required|exists:clients,id',
                 'general_intake_id' => 'nullable|exists:general_intake_sheets,id',
-                'date' => 'nullable|date',
+                'date_second' => 'nullable|date',
                 'vices' => 'nullable|array',
                 'school_activities_achievement' => 'nullable|string',
                 'occupation_of_mother' => 'nullable|string|max:50', 

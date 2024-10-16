@@ -63,6 +63,7 @@ class TrainingNeedsAssessmentController extends Controller
         'center_duration' => 'nullable|string|max:20',
         'period' => 'nullable|string|max:10',
         'date_of_admission' => 'nullable|date',
+        'date' => 'nullable|date',
         'training_details' => 'nullable|array',
         'training_sector_details' => 'nullable|array',
         'education_details' => 'nullable|array',
@@ -81,6 +82,7 @@ class TrainingNeedsAssessmentController extends Controller
                 'center_duration' => $validatedData['center_duration'] ?? null,
                 'period' => $validatedData['period'] ?? null,
                 'date_of_admission' => $validatedData['date_of_admission'] ?? null,
+                'date' => $validatedData['date'] ?? null,
                 'training_details' => $validatedData['training_details'] ?? [], // Store as JSON
                 'training_sector_details' => $validatedData['training_sector_details'] ?? [], // Store as JSON
                 'education_details' => $validatedData['education_details'] ?? [], // Store as JSON

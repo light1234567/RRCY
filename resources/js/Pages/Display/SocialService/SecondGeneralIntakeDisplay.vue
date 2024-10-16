@@ -107,7 +107,7 @@
           <p>Date: 
   <input 
     type="date" 
-    v-model="sheet.date" 
+    v-model="sheet.date_second" 
     class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" 
     :readonly="!editMode" 
     :max="currentDateTime.date" 
@@ -381,7 +381,7 @@
           highest_educ_att: '',
           school_name: '',
           class_adviser: '',
-          date: '',
+          date_second: '',
           vices: {
             gambling: false,
             drugs: false,
@@ -601,8 +601,8 @@ confirmSave() {
   const secondIntakePayload = {
     client_id: this.clientId,
     general_intake_id: this.sheet.general_intake_id || null,
+    date_second: this.sheet.date_second,
     vices: this.sheet.vices,
-    date: this.sheet.date,
     school_activities_achievement: this.sheet.school_activities_achievement,
     occupation_of_mother: this.sheet.occupation_of_mother,
     occupation_of_father: this.sheet.occupation_of_father,
@@ -779,7 +779,7 @@ confirmSave() {
   pdf.setFont('arial', 'normal');
   pdf.setFontSize(13);
   pdf.text(`Date:`, initialX + 105, contentYPos);
-  const dateValue = `${this.sheet.date || ''}`;
+  const dateValue = `${this.sheet.date_second || ''}`;
   const dateWidth = pdf.getTextWidth(dateValue);
   pdf.text(dateValue, initialX + 119, contentYPos);  
   pdf.line(initialX + 119, contentYPos + 1, initialX + 119 + dateWidth, contentYPos + 1); 

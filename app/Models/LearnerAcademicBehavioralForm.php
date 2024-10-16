@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Session; // Import Session facade
-use Illuminate\Support\Facades\Log as Logger; // Import Log facade for logging
-use App\Models\Log; // Import Log model for saving actions
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log as Logger;
+use App\Models\Log;
 
 class LearnerAcademicBehavioralForm extends Model
 {
@@ -52,7 +52,7 @@ class LearnerAcademicBehavioralForm extends Model
 
     /**
      * Handle logging for created and updated events
-     * 
+     *
      * @param  \App\Models\LearnerAcademicBehavioralForm  $model
      * @param  string  $action
      * @return void
@@ -96,15 +96,45 @@ class LearnerAcademicBehavioralForm extends Model
             'client_full_name' => $clientFullName,
         ]);
 
-        // Log the action in the logs table
-        Log::create([
-            'model' => 'LearnerAcademicBehavioralForm',
-            'record_id' => $model->id,
-            'action' => $action,
-            'changes' => json_encode($model->getAttributes()), // Log the model's attributes
-            'updated_by' => $fullName,
-            'user_role' => $userRole,
-            'client_full_name' => $clientFullName,
+        // Filter out unnecessary fields from the attributes
+        $currentAttributes = collect($model->getAttributes())->except([
+            'id', 'client_id', 'created_at', 'updated_at', 'updated_by'
         ]);
+
+        // Handle logging for 'created' action (only show new values)
+        if ($action === 'created') {
+            Log::create([
+                'model' => 'LearnerAcademicBehavioralForm',
+                'record_id' => $model->id,
+                'action' => $action,
+                'changes' => json_encode($currentAttributes), // Log the filtered attributes
+                'updated_by' => $fullName,
+                'user_role' => $userRole,
+                'client_full_name' => $clientFullName,
+            ]);
+        }
+
+        // Handle logging for 'updated' action (show old and new values)
+        if ($action === 'updated') {
+            // Get the original attributes of the model before updating
+            $original = $model->getOriginal();
+
+            // Get the changes that were made (only dirty fields)
+            $changes = collect($model->getDirty())->mapWithKeys(function ($value, $key) use ($original) {
+                return [$key => ['old' => $original[$key] ?? null, 'new' => $value]];
+            })->except([
+                'id', 'client_id', 'created_at', 'updated_at', 'updated_by'
+            ]); // Exclude unnecessary fields from changes
+
+            Log::create([
+                'model' => 'LearnerAcademicBehavioralForm',
+                'record_id' => $model->id,
+                'action' => $action,
+                'changes' => json_encode($changes), // Log only necessary changes
+                'updated_by' => $fullName,
+                'user_role' => $userRole,
+                'client_full_name' => $clientFullName,
+            ]);
+        }
     }
 }

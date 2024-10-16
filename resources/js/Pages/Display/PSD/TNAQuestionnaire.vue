@@ -26,7 +26,11 @@
   </button>
 
   <!-- Save Button (visible only in edit mode) -->
-  <button v-else @click="saveData" type="button" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
+  <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for Save -->
+        <i class="fas fa-check w-4 h-4"></i>
+        <span>Save</span>
+      </button>
 
   <!-- Export PDF Button (commented out for now, uncomment to use) -->
   
@@ -35,11 +39,63 @@
     <i class="fas fa-file-pdf w-4 h-4"></i>
     <span>Export PDF</span>
   </button>
-
 </div>
-  <!-- Success/Error Message -->
-  <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
 
+<!-- Modal for Save Confirmation -->
+<div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+     <div class="fixed inset-0 bg-black opacity-50"></div>
+     <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+       <div class="bg-white p-6">
+         <div class="flex items-center">
+           <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+           </svg>
+           <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+         </div>
+         <div class="mt-2">
+           <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+         </div>
+       </div>
+       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+         <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+         <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+       </div>
+     </div>
+   </div>
+
+   <!-- Modal for Save Result -->
+   <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+     <div class="fixed inset-0 bg-black opacity-50"></div>
+     <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+       <div class="bg-white p-6 text-center">
+         <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+           <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+             <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+             </svg>
+           </div>
+         </div>
+         <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+           <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+             </svg>
+           </div>
+         </div>
+         <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+         <div class="mt-2">
+           <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+         </div>
+       </div>
+       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+         <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+           OK
+         </button>
+       </div>
+     </div>
+   </div>
+
+    <form ref="TNAForm" @submit.prevent="saveData">
 
 <div class="graph-background pt-0.5  -mr-9 -mb-16">
 
@@ -62,19 +118,43 @@
   <!-- FOR THE and Date of Admission Section -->
   <div class="flex items-center justify-center mb-2">
     <p class="text-xs text-md font-semibold mr-2">FOR THE </p>
-    <input type="text" v-model="form.period" class="text-xs block w-32 border-b-1 border-black border-t-0 border-l-0 border-r-0 border-b-1 text-center focus:outline-none" />
+    <input 
+      type="text" 
+      v-model="form.period" 
+      class="text-xs block w-32 border-b-1 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
+      :readonly="!editMode" 
+      @input="(e) => { e.target.setCustomValidity('') }" 
+      @invalid="(e) => { e.target.setCustomValidity('Please provide a period') }" 
+      required 
+    />
   </div>
   
   <div class="flex items-center justify-center mb-6">
     <p class="text-xs font-semibold mr-2">Date of Admission:</p>
-    <input type="date" v-model="form.date_of_admission" class="border-b-1 border-black border-t-0 border-l-0 border-r-0 border-b-1 text-xs block w-32 border-b-1 border-black text-center focus:outline-none" />
+    <input 
+      type="date" 
+      v-model="form.date_of_admission" 
+      class="border-b-1 border-black border-t-0 border-l-0 border-r-0 text-xs block w-32 text-center focus:outline-none" 
+      :readonly="!editMode" 
+      @input="(e) => { e.target.setCustomValidity('') }" 
+      @invalid="(e) => { e.target.setCustomValidity('Please provide a date of admission') }" 
+      required 
+/>
+
   </div>
 
   <!-- Petsa sa Pagtubag Section -->
   <div class="flex items-center justify-end mb-6">
     <p class="text-xs font-semibold mr-2">Petsa sa Pagtubag:</p>
-    <input type="date" v-model="form.date_of_admission" class="border-b-1 border-black border-t-0 border-l-0 border-r-0 border-b-1 text-xs block w-32 border-b-1 border-black text-center focus:outline-none" />
-  </div>
+    <input 
+      type="date" 
+      v-model="form.date" 
+      class="border-b-1 border-black border-t-0 border-l-0 border-r-0 text-xs block w-32 text-center focus:outline-none" 
+      :readonly="!editMode" 
+      @input="(e) => { e.target.setCustomValidity('') }" 
+      @invalid="(e) => { e.target.setCustomValidity('Please provide the date') }" 
+      required 
+/>  </div>
 </div>
 
 <!-- Form Fields for Name, Birthdate, and Age -->
@@ -114,6 +194,9 @@
 <!-- Education Section -->
 <div class="p-1 mt-2 border bg-blue-300 font-bold">
   <p>Natapos nga Grado:</p>
+</div>
+<div v-if="educationError" class="text-red-500 text-xs font-bold mt-1">
+  {{ educationErrorMessage }}
 </div>
 
 <div class="flex flex-col p-2">
@@ -548,11 +631,11 @@
   <div class="w-1/2 ml-auto">
 <div class="flex justify-center flex items-center mt-7">
   <input
-    v-model="center_head"
+    v-model="form.name"
     type="text"
     id="centerHeadSignature"
     class=" mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none"
-    :readonly="!editMode"
+    readonly
   >
 </div>
 <p class="flex justify-center items-center text-sm mt-2">Pangalan ug Pirma sa Residente</p>
@@ -575,7 +658,7 @@
 
 </div>
 </div>
-
+</form>
 </template>
 
 <script>
@@ -593,6 +676,12 @@ data() {
   return {
     totalPages: 2,
     currentPage: 1,
+    isModalOpen: false,
+    isSaveResultModalOpen: false,
+    saveResultTitle: '',
+    saveResultMessage: '',
+    educationError: false,
+    educationErrorMessage: '',
     form: {
       client_id: null,
       name: '',
@@ -615,6 +704,7 @@ data() {
       center_duration: '',
       period: '',
       date_of_admission: '',
+      date:'',
       lugar_nga_natawhan: '',
     },
     automotiveSector: [
@@ -694,7 +784,6 @@ data() {
 mounted() {
   this.id = this.$route.params.id;
   this.fetchData();
-  this.fetchCenterHead();
   console.log('Automotive Sector Data on mount:', this.automotiveSector);
 },
 watch: {
@@ -711,15 +800,6 @@ methods: {
       this.editMode = true;
       this.originalForm = JSON.parse(JSON.stringify(this.form)); // store the original form data before editing
     }
-  },
-  fetchCenterHead() {
-    axios.get('/api/center-head')  // Replace with the correct API route
-      .then(response => {
-        this.center_head = response.data.name;  // Bind the fetched name to v-model
-      })
-      .catch(error => {
-        console.error('Error fetching center head:', error);
-      });
   },
   toggleEducation(level) {
     const index = this.form.education.findIndex(edu => edu.education_level === level);
@@ -914,70 +994,122 @@ fetchClientData(clientId) {
 }
 ,
 saveData() {
-    // Validate that education level is provided before saving
-    if (!this.form.selectedEducationLevel) {
-        this.message = 'Education level is required.';
-        this.messageType = 'error';
-        return;
+  const form = this.$refs.TNAForm; // Ensure the form has the correct ref in the template
+  let isFormValid = true;
+
+  // Validate education level
+  if (!this.form.selectedEducationLevel) {
+      this.educationError = true;
+      this.educationErrorMessage = 'Please select an education level.';
+      isFormValid = false;
+    } else {
+      this.educationError = false;
+      this.educationErrorMessage = '';
     }
 
-    // Prepare the education details array
-    this.form.education_details = [{
-        education_level: this.form.selectedEducationLevel,
-        year_or_grade: this.getYearOrGradeForLevel(this.form.selectedEducationLevel)
-    }];
+  // Validate the form fields and check for any invalid fields
+  if (!form.checkValidity()) {
+    isFormValid = false;
+    form.reportValidity(); // This will display validation messages and scroll to the first invalid field
+  }
 
-    // Ensure all other fields are properly filled
-    if (!this.form.client_id) {
-        this.message = 'Client ID is missing. Cannot save the form.';
-        this.messageType = 'error';
-        return; // Prevent saving without a valid client_id
-    }
-
-    // Ensure that all sectors are initialized as arrays before mapping
-    const automotiveSector = this.automotiveSector || [];
-    const agriculturalSector = this.agriculturalSector || [];
-    const healthSector = this.healthSector || [];
-    const ictSector = this.ictSector || [];
-    const metalsSector = this.metalsSector || [];
-    const tourismSector = this.tourismSector || [];
-    const constructionSector = this.constructionSector || [];
-    const basicTrainings = this.basicTrainings || [];
-
-    // Prepare the training_sector_details array
-    this.form.training_sector_details = [
-        ...automotiveSector.map(s => ({ sector: 'Automotive', ...s })),
-        ...agriculturalSector.map(s => ({ sector: 'Agricultural', ...s })),
-        ...healthSector.map(s => ({ sector: 'Health', ...s })),
-        ...ictSector.map(s => ({ sector: 'ICT', ...s })),
-        ...metalsSector.map(s => ({ sector: 'Metals', ...s })),
-        ...tourismSector.map(s => ({ sector: 'Tourism', ...s })),
-        ...constructionSector.map(s => ({ sector: 'Construction', ...s })),
-        ...basicTrainings.map(s => ({ sector: 'Basic', ...s })),
-    ];
-
-    // Ensure that trainings is an array before mapping
-    const trainings = this.form.trainings || [];
-    this.form.training_details = trainings.map(t => ({
-        title: t.title,
-        duration: t.duration,
-        location_outside: t.location_outside,
-        location_inside: t.location_inside
-    }));
-
-    // Send the data to the backend
-    axios.put(`/api/training-needs-assessment/${this.form.client_id}`, this.form)
-        .then(response => {
-            this.message = 'Data saved successfully.';
-            this.messageType = 'success';
-            this.editMode = false; // Exit edit mode after saving
-        })
-        .catch(error => {
-            this.message = 'Failed to save data.';
-            this.messageType = 'error';
-            console.error('Failed to save data:', error.response ? error.response.data : error.message);
-        });
+  // If all fields are valid, open the confirmation modal
+  if (isFormValid) {
+    this.isModalOpen = true;  // Open the modal to confirm saving
+  } else {
+    console.warn('Form contains invalid fields. Please correct them.');
+  }
 },
+
+confirmSave() {
+  // Prepare data for saving
+  const clientId = this.form.client_id;
+  const url = `/api/training-needs-assessment/${clientId}`;
+
+  // Validate that education level is provided before saving
+  if (!this.form.selectedEducationLevel) {
+    this.message = 'Education level is required.';
+    this.messageType = 'error';
+    return;
+  }
+
+  // Prepare the education details array
+  this.form.education_details = [{
+    education_level: this.form.selectedEducationLevel,
+    year_or_grade: this.getYearOrGradeForLevel(this.form.selectedEducationLevel)
+  }];
+
+  // Prepare the training_sector_details array based on the sectors
+  this.form.training_sector_details = [
+    ...this.automotiveSector.map(s => ({ sector: 'Automotive', ...s })),
+    ...this.agriculturalSector.map(s => ({ sector: 'Agricultural', ...s })),
+    ...this.healthSector.map(s => ({ sector: 'Health', ...s })),
+    ...this.ictSector.map(s => ({ sector: 'ICT', ...s })),
+    ...this.metalsSector.map(s => ({ sector: 'Metals', ...s })),
+    ...this.tourismSector.map(s => ({ sector: 'Tourism', ...s })),
+    ...this.constructionSector.map(s => ({ sector: 'Construction', ...s })),
+    ...this.basicTrainings.map(s => ({ sector: 'Basic', ...s })),
+  ];
+
+  // Prepare the training details array
+  this.form.training_details = this.form.trainings.map(t => ({
+    title: t.title,
+    duration: t.duration,
+    location_outside: t.location_outside,
+    location_inside: t.location_inside
+  }));
+
+  // Save data using Axios PUT
+  axios.put(url, this.form)
+    .then(response => {
+      this.message = 'Data saved successfully!';
+      this.messageType = 'success';
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data saved successfully.';
+      this.isSaveResultModalOpen = true;
+      this.editMode = false; // Exit edit mode after saving
+    })
+    .catch(error => {
+      this.message = 'Failed to save data.';
+      this.messageType = 'error';
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = error.response?.data?.message || 'Error saving data.';
+      this.isSaveResultModalOpen = true;
+      console.error('Error saving data:', error);
+    })
+    .finally(() => {
+      this.isModalOpen = false;  // Close the confirmation modal
+    });
+},
+getYearOrGradeForLevel(level) {
+    // Logic to get the year or grade based on selected education level
+    switch (level) {
+      case 'Elementary Level':
+        return this.form.elementaryGrade;
+      case 'Junior High School Level':
+        return this.form.juniorHighYear;
+      case 'Senior High School Level':
+        return this.form.seniorHighYear;
+      case 'College Level':
+        return this.form.collegeYear;
+      default:
+        return '';
+    }
+  },
+openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    closeSaveResultModal() {
+       this.isSaveResultModalOpen = false;
+       this.saveResultTitle = '';
+       this.saveResultMessage = '';
+     },
 getYearOrGradeForLevel(level) {
   switch (level) {
     case 'Elementary Level':
@@ -1417,7 +1549,7 @@ pdf.autoTable({
 
     
 
-    pdf.text(`${this.center_head||''}`, 160, 300, "center");
+    pdf.text(`${this.form.name||''}`, 160, 300, "center");
     pdf.line(130, 301, 190, 301);
     pdf.text("Pangalan ug Pirma sa Residente", 160, 306, "center");
 

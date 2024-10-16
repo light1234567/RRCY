@@ -12,7 +12,7 @@ class CreateSecondIntakeSheetsTable extends Migration
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('client_id');
             $table->unsignedMediumInteger('general_intake_id')->nullable();
-            $table->date('date')->nullable();
+            $table->date('date_second')->nullable();
             $table->json('vices')->nullable();
             $table->text('school_activities_achievement')->nullable(); 
             $table->string('occupation_of_mother', 50)->nullable(); 
