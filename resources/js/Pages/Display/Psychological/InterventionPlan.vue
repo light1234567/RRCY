@@ -189,6 +189,11 @@
         <!-- Signatures Section -->
         <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
           <div>
+            <label class="font-semibold">Approved by:</label>
+            <input type="text" v-model="form.approved_by" :readonly="!editMode" class="w-full border border-transparent p-1" />
+            <div class="text-xs mt-1"></div>
+          </div>
+          <div>
             <label class="font-semibold">Prepared by:</label>
             <input type="text" v-model="form.prepared_by" :readonly="!editMode" class="w-full border border-transparent p-1" />
             <div class="text-xs mt-1">Psychologist I</div>
@@ -318,6 +323,7 @@
           ],
           progress_notes: '',
           prepared_by: '',
+          approved_by:'',
           noted_by: ''
         },
         clientName: '',

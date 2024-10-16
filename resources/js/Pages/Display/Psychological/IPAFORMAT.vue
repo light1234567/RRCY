@@ -361,7 +361,11 @@
   
   
    <!-- Page 3 -->
+<<<<<<< HEAD
    <div v-if="currentPage === 3" class="mt-8 max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto border border-gray-400">
+=======
+   <div v-if="currentPage === 3" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+>>>>>>> 50f6526afd507bd6ae94f3f07ae9cac4881d14ae
     <div class="relative flex justify-end items-center mb-2">
       <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
             </div>
@@ -412,28 +416,42 @@
   
           <div class="space-y-4 mt-20">
             <div class="space-y-2">
-              <label for="preparedBy" class="block mb-12 mt-12 font-sm">Prepared by:</label>
-              <div class="flex flex-col">
-                <strong> 
-    <input
-      type="text"
-      v-model="form.prepared_by"
-      class="w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
-      :readonly="!editMode"
-    >
-  </strong>
-  
-                <span>Psychologist I</span>
-              </div>
-            </div>
-            <div class="space-y-2 mt-4">
-              <label for="notedBy" class="block mb-12 mt-12 font-sm">Noted by:</label>
-              <div class="flex flex-col">
-                <strong><input type="text" v-model="center_head" class="block w-full p-0 border border-transparent rounded-md" :readonly></strong>
-                <span>SWO IV / Center Head</span>
-              </div>
-            </div>
-  
+  <label for="preparedBy" class="block mb-4 mt-8 font-sm">Prepared by:</label>
+  <div class="flex flex-col">
+    <strong> 
+      <input
+        type="text"
+        v-model="form.prepared_by"
+        class="w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
+        :readonly="!editMode"
+      >
+    </strong>
+  </div>
+</div>
+
+<div class="space-y-2">
+  <label for="approveBy" class="block mb-4 mt-8 font-sm">Approved by:</label>
+  <div class="flex flex-col">
+    <strong> 
+      <input
+        type="text"
+        v-model="form.approved_by"
+        class="w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
+        :readonly="!editMode"
+      >
+    </strong>
+    <span></span>
+  </div>
+</div>
+
+<div class="space-y-2 mt-4">
+  <label for="notedBy" class="block mb-4 mt-8 font-sm">Noted by:</label>
+  <div class="flex flex-col">
+    <strong><input type="text" v-model="center_head" class="block w-full p-0 border border-transparent rounded-md" :readonly></strong>
+    <span>SWO IV / Center Head</span>
+  </div>
+</div>
+
             <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
     <div class="flex justify-between items-center">
       
@@ -555,6 +573,7 @@
           clinical_impression: '',
           plan_of_action: '',
           prepared_by: '',
+          approved_by: '',
         },
         editMode: false,
         message: '',

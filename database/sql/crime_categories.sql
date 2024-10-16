@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS crimes;
+
 -- Create the crime_categories table
 CREATE TABLE IF NOT EXISTS crime_categories (
     id INT AUTO_INCREMENT PRIMARY KEY,

@@ -16,6 +16,7 @@ class PsychologicalInterventionPlanController extends Controller
             'as_of_date' => 'nullable|date',
             'progress_notes' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
+            'approved_by' => 'nullable|string|max:50',
             'items' => 'required|array', // Ensure the items are an array
             'items.*.objectives' => 'nullable|string',
             'items.*.activities' => 'nullable|string',
@@ -31,6 +32,7 @@ class PsychologicalInterventionPlanController extends Controller
                 'as_of_date' => $validatedData['as_of_date'],
                 'progress_notes' => $validatedData['progress_notes'],
                 'prepared_by' => $validatedData['prepared_by'],
+                'approved_by' => $validatedData['approved_by'],
                 'items' => json_encode($validatedData['items']), // Store items as JSON
             ]);
 
@@ -70,6 +72,7 @@ class PsychologicalInterventionPlanController extends Controller
             'as_of_date' => 'nullable|date',
             'progress_notes' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
+            'approved_by' => 'nullable|string|max:50',
             'items' => 'required|array', // Ensure the items are an array
             'items.*.objectives' => 'nullable|string',
             'items.*.activities' => 'nullable|string',
@@ -86,6 +89,7 @@ class PsychologicalInterventionPlanController extends Controller
                 'as_of_date' => $validatedData['as_of_date'],
                 'progress_notes' => $validatedData['progress_notes'],
                 'prepared_by' => $validatedData['prepared_by'],
+                'approved_by' => $validatedData['approved_by'],
                 'items' => json_encode($validatedData['items']), // Update items as JSON
             ]);
 

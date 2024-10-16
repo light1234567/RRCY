@@ -15,6 +15,7 @@ class CreateInitialPsychologicalAssessmentsTable extends Migration
             $table->string('nickname', 15)->nullable();
             $table->date('report_date')->nullable();
             $table->string('prepared_by', 50)->nullable();
+            $table->string('approved_by', 50)->nullable();
             $table->text('educational_attainment')->nullable();
             $table->text('reason_for_referral')->nullable();
             $table->text('family_history')->nullable();

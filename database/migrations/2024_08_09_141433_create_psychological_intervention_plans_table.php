@@ -14,6 +14,7 @@ class CreatePsychologicalInterventionPlansTable extends Migration
             $table->date('as_of_date')->nullable();
             $table->text('progress_notes')->nullable();
             $table->string('prepared_by', 50)->nullable();
+            $table->string('approved_by', 50)->nullable();
             $table->json('items'); // Store items as JSON
             $table->timestamps();
         
