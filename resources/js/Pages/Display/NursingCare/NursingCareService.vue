@@ -21,80 +21,73 @@
   <div v-if="message" :class="messageType === 'success' ? 'bg-green-500' : 'bg-red-500'" class="mt-4 p-4 text-white rounded">
     {{ message }}
   </div>
-  
     <div class="p-8 bg-white max-w-screen-md mx-auto border border-gray-300 rounded-lg shadow-lg">
       <!-- Header Section -->
-      <div class="text-center border-b pb-2 mb-4">
+      <div class=" border border-black"> 
+      <div class="text-center border-none pb-2 mb-4">
         <div class="flex justify-between items-center">
     <!-- Stretch the image -->
-    <img src="/images/headerlogo3.png" alt="DSWD Logo" class="h-20 w-auto"> 
+    <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-32 w-64"> 
     <div class="text-center">
-      <p class="item-center mr-6 text-xs font-semibold">REGIONAL REHABILITATION CENTER FOR YOUTH</p>
-      <p class="text-xs text-center font-semibold">RRCY/FIELD OFFICE XI</p>
-      <p class="text-xs font-semibold italic">DSWD-GF-010 | REV 01 | 17 AUG 2022</p>
+      <p class="item-center mr-6 text-sm font-semibold">REGIONAL REHABILITATION CENTER FOR YOUTH</p>
+      <p class="text-sm text-center font-semibold">RRCY/FIELD OFFICE XI</p>
+      <p class="text-[11px] font-semibold italic">DSWD-GF-010 | REV 01 | 17 AUG 2022</p>
     </div>
         </div>
-        <h1 class="text-xl font-bold mt-2">NURSING CARE SERVICE</h1>
+        <div class="border-t border-black">
+        <h1 class="text-xl font-bold mt-4">NURSING CARE SERVICE</h1>
       </div>
-  
+      </div>
       <div class="grid grid-cols-4 gap-2 mb-2">
-    <!-- Row 1: Name and B-Day with Date Admitted -->
-    <div class="flex w-auto col-span-2">
-      <label class="border-none flex items-center block font-bold text-xs">CLIENT'S NAME:</label>
-      <input type="text" v-model="form.client_name" class="w-56 border-none p-1 text-xs" readonly>
-    </div>
-  
-    <div class="flex col-span-1 -ml-10">
-      <label class="border-none flex items-center block font-bold text-xs">BIRTHDATE:</label>
-      <input type="date" v-model="form.birthdate" class="w-full border-none p-1 text-xs" readonly>
-    </div>
-  
-    <div class="flex col-span-1 ml-8">
-      <label class="border-none w-40 flex items-center block font-bold -ml-20 text-xs">DATE ADMITTED:</label>
-      <input type="date" v-model="form.date_of_admission" class="w-full -ml-8 bg-transparent border-none p-1 text-xs" readonly>
-    </div>
-  
-    <!-- Row 2: Age, Medical Status, Religion -->
-    <div class="flex col-span-1 w-20">
-      <label class="border-none flex items-center block font-bold text-xs">AGE:</label>
-      <input type="number" v-model="form.age" class="w-10 border-none p-1 text-xs" readonly>
-    </div>
-  
-    <div class="flex -ml-28 col-span-2">
-  <label class="border-none flex items-center block font-bold text-xs">CURRENT MEDICAL STATUS:</label>
-  <input 
-    type="text" 
-    v-model="form.current_medical_status" 
-    class="w-60 border-none p-1 text-xs" 
-    :readonly="!editMode" 
-    oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
-  >
+  <!-- Row 1: Name and Birthdate -->
+  <div class="flex custom-border-t w-auto col-span-2">
+    <label class="border-none flex items-center ml-1 -mt-2 block font-bold text-xs">CLIENT'S NAME:</label>
+    <input type="text" v-model="form.client_name" class="w-56 border-none -mt-2 bg-transparent p-1 text-xs" readonly>
+  </div>
+  <div class="flex custom-border-l custom-border-t2 ml-28 border-black col-span-2">
+    <label class="border-none flex items-center block ml-1 font-bold -mt-2 text-xs">BIRTHDATE:</label>
+    <input type="date" v-model="form.birthdate" class="w-full border-none -mt-2 bg-transparent p-1 text-xs" readonly>
+  </div>
+
+  <!-- Row 2: Age and Medical Status -->
+  <div class="flex  border-black custom-border-t col-span-2">
+    <label class="border-none flex items-center block font-bold text-xs -mt-2  ml-1 whitespace-nowrap">CURRENT MEDICAL STATUS:</label>
+    <input type="text" v-model="form.current_medical_status" class="w-full border-none bg-transparent -mt-2 p-1 text-xs" :readonly="!editMode" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
+  </div>
+  <div class="flex custom-border-l  custom-border-t2 ml-28 border-black col-span-2">
+    <label class="border-none flex items-center  block  -mt-2 ml-1 font-bold text-xs">AGE:</label>
+    <input type="number" v-model="form.age" class="w-20  border-none p-1 -mt-2 bg-transparent text-xs" readonly>
+  </div>
+
+  <!-- Row 3: Religion and Date Admitted -->
+  <div class="flex custom-border-t col-span-2">
+    <label class="border-none flex items-center ml-1 block font-bold -mt-2  text-xs">RELIGION:</label>
+    <input type="text" v-model="form.religion" class="w-full border-none -mt-2 bg-transparent  p-1 text-xs" readonly>
+  </div>
+  <div class="flex custom-border-l custom-border-t2 ml-28 border-black col-span-2">
+  <label class="border-none flex items-center block font-bold text-xs  ml-1 -mt-2 whitespace-nowrap">DATE ADMITTED:</label>
+  <input type="date" v-model="form.date_of_admission" class="w-full border-none  -mt-2 bg-transparent p-1 text-xs" readonly>
+</div>
+
+
+  <!-- Row 4: Address -->
+  <div class="flex border-black border-b custom-border-t3 col-span-4">
+    <label class="border-none flex items-center block ml-1 font-bold -mt-2  text-xs">ADDRESS:</label>
+    <input type="text" v-model="form.address" class="w-full border-none bg-transparent -mt-2  p-1 text-xs" readonly>
+  </div>
 </div>
 
   
-    <div class="flex col-span-1">
-      <label class="border-none -ml-12 flex items-center block font-bold text-xs">RELIGION:</label>
-      <input type="text" v-model="form.religion" class="w-full border-none p-1 text-xs" readonly>
-    </div>
-  
-    <!-- Row 3: Address -->
-    <div class="flex col-span-4">
-      <label class="border-none flex items-center block font-bold text-xs">ADDRESS:</label>
-      <input type="text" v-model="form.address" class="w-full border-none p-1 text-xs" readonly>
-    </div>
-  </div>
-  
-  
       <!-- BMI Monitoring Table -->
-      <div class="text-center border-b pb-2 mb-4">
-        <h2 class="text-lg font-bold">MONTHLY BMI MONITORING 2024</h2>
+      <div class="text-center  pb-2 mb-4">
+        <h2 class="text-lg mt-6 font-bold">MONTHLY BMI MONITORING 2024</h2>
       </div>
   
-      <table class="w-full border-collapse border mb-4">
+      <table class="w-full border-black mb-4">
         <thead>
-          <tr class="bg-gray-100 text-base">
-            <th class="border p-2">VITAL SIGNS / BMI</th>
-            <th class="border p-2">
+          <tr class="bg-white border-black text-base">
+            <th class="border-t border-r border-b border-black p-2">VITAL SIGNS / BMI</th>
+            <th class="border-t border-black border-b p-2">
               <select v-model="form.selectedMonth" class="border p-2" :disabled="!editMode">
                 <option value="">Select a month</option>
                 <option value="January">January</option>
@@ -113,26 +106,26 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="border-black">
           <tr>
-            <td class="border text-sm p-2">TEMPERATURE</td>
-            <td class="border text-sm p-2"><input type="number" v-model="form.temperature" class="w-full border-none p-1" :readonly="!editMode"></td>
+            <td class="border-black border-r border-b text-sm p-2" style="width: 320px; ">TEMPERATURE</td>
+            <td class="border-black border-b text-sm p-2"><input type="number" v-model="form.temperature" class="w-full ml-40 bg-transparent border-none p-1" style="width: 200px; " :readonly="!editMode"></td>
           </tr>
           <tr>
-            <td class="border text-sm p-2">PULSE RATE</td>
-            <td class="border text-sm p-2"><input type="number" v-model="form.pulse_rate" class="w-full border-none p-1" :readonly="!editMode"></td>
+            <td class="border-black border-r border-b text-sm p-2" style="width: 320px; ">PULSE RATE</td>
+            <td class="border-black border-b text-sm p-2"><input type="number" v-model="form.pulse_rate" class="w-full ml-40 bg-transparent border-none p-1" style="width: 200px; "  :readonly="!editMode"></td>
           </tr>
           <tr>
-            <td class="border text-sm p-2">RESPIRATORY RATE</td>
-            <td class="border text-sm p-2"><input type="number" v-model="form.respiratory_rate" class="w-full border-none p-1" :readonly="!editMode"></td>
+            <td class="border-black border-r border-b text-sm p-2" style="width: 320px; ">RESPIRATORY RATE</td>
+            <td class="border-black border-b text-sm p-2"><input type="number" v-model="form.respiratory_rate" class="w-full ml-40 bg-transparent border-none p-1" style="width: 200px; "  :readonly="!editMode"></td>
           </tr>
           <tr>
-            <td class="border text-sm p-2">BLOOD PRESSURE</td>
-            <td class="border text-sm p-2">
+            <td class="border-black border-r border-b text-sm p-2" style="width: 320px; ">BLOOD PRESSURE</td>
+            <td class="border-black border-b text-sm p-2">
   <input 
     type="text" 
     v-model="form.blood_pressure" 
-    class="w-full border-none p-1" 
+    class="w-full ml-40 bg-transparent  border-none p-1"  style="width: 200px; " 
     :readonly="!editMode" 
     oninput="this.value = this.value.replace(/[^0-9\/]/g, '')" 
   >
@@ -140,20 +133,20 @@
 
           </tr>
           <tr>
-            <td class="border text-sm p-2">HEIGHT (cm)</td>
-            <td class="border text-sm p-2"><input type="number" v-model="form.height_cm" @input="computeBMI" class="w-full border-none p-1" :readonly="!editMode"></td>
+            <td class="border-black border-r border-b text-sm p-2" style="width: 320px; ">HEIGHT (cm)</td>
+            <td class="border-black border-b text-sm p-2"><input type="number" v-model="form.height_cm" @input="computeBMI" class="w-full  ml-40 bg-transparent border-none p-1" style="width: 200px; "  :readonly="!editMode"></td>
           </tr>
           <tr>
-            <td class="border text-sm p-2">WEIGHT (kg)</td>
-            <td class="border text-sm p-2"><input type="number" v-model="form.weight_kg" @input="computeBMI" class="w-full border-none p-1" :readonly="!editMode"></td>
+            <td class="border-black border-r border-b text-sm p-2" style="width: 320px; ">WEIGHT (kg)</td>
+            <td class="border-black border-b text-sm p-2"><input type="number" v-model="form.weight_kg" @input="computeBMI" class="w-full ml-40 bg-transparent border-none p-1" style="width: 200px; "  :readonly="!editMode"></td>
           </tr>
           <tr>
-            <td class="border text-sm p-2">BODY MASS INDEX (BMI)</td>
-            <td class="border text-sm p-2"><input type="number" v-model="form.bmi" class="w-full border-none p-1" readonly></td>
+            <td class="border-black border-r border-b text-sm p-2" style="width: 320px; ">BODY MASS INDEX (BMI)</td>
+            <td class="border-black border-b text-sm p-2"><input type="number" v-model="form.bmi" class="w-full ml-40 bg-transparent border-none p-1" style="width: 200px; "  :readonly="!editMode"></td>
           </tr>
           <tr>
-            <td class="border text-sm p-2">BMI REMARKS</td>
-            <td class="border text-sm p-2"><input type="text" v-model="form.bmi_remarks" class="w-full border-none p-1" :readonly="!editMode"></td>
+            <td class="border-black border-r border-b text-sm p-2" style="width: 320px; ">BMI REMARKS</td>
+            <td class="border-black border-b text-sm p-2"><input type="text" v-model="form.bmi_remarks" class="w-full bg-transparent border-none p-1" :readonly="!editMode"></td>
           </tr>
         </tbody>
       </table>
@@ -167,9 +160,9 @@
   
   
    <!-- Table with health status information -->
-  <div class="grid grid-cols-2 gap-4 w-full border">
+  <div class="grid grid-cols-2 gap-4 w-full border-t border-b border-black">
     <!-- Column 1: Eyes, Ears, Mouth & Teeth -->
-    <div class="border border-black-0 w-58 p-2">
+    <div class="border-black border-r w-58 p-2">
       <!-- Eyes Section -->
       <div class="flex items-center mb-2">
         <label class="font-bold text-xs mr-2">EYES:</label>
@@ -214,7 +207,7 @@
     <div class="border-none p-2">
       <!-- Nails Section -->
       <div class="flex items-center mb-2">
-        <label class="font-bold text-xs mr-2">NAILS:</label>
+        <label class="font-bold text-xs -ml-4 mr-2">NAILS:</label>
         <input 
   type="text" 
   v-model="form.nails_status" 
@@ -227,7 +220,7 @@
   
       <!-- Skin Section -->
       <div class="flex items-center mb-2">
-        <label class="font-bold text-xs mr-2">SKIN:</label>
+        <label class="font-bold text-xs -ml-4 mr-2">SKIN:</label>
         <input 
   type="text" 
   v-model="form.skin_status" 
@@ -240,7 +233,7 @@
   
       <!-- Hair Section -->
       <div class="flex items-center mb-2">
-        <label class="font-bold text-xs mr-2">HAIR:</label>
+        <label class="font-bold text-xs -ml-4 mr-2">HAIR:</label>
         <input 
   type="text" 
   v-model="form.hair_status" 
@@ -257,21 +250,22 @@
   
   
   
-      <div class="border">
+      <div class="border-none">
       <div class="grid grid-cols-3 gap-4 mb-4">
     <!-- Left Column: Services Given and Remarks -->
     <div class="col-span-2">
       <!-- Services Given Section -->
       <div class="mb-4 bg-transparent w-96 ">
         <label class=" font-bold ml-2 text-sm">SERVICES GIVEN:</label>
-        <textarea v-model="form.services_given" rows="5" class="w-full ml-2 p-1 border-none text-sm mb-2"></textarea>
+        <textarea v-model="form.services_given" rows="5" class="w-full ml-2 p-1 border-none text-sm mb-2" :readonly="!editMode"></textarea>
       </div>
+
   
-      <!-- Remarks Section -->
       <div class="mb-4 bg-transparent w-96 ">
         <label class=" font-bold ml-2 text-sm">REMARKS:</label>
-        <textarea v-model="form.remarks" rows="5" class="w-full p-1 ml-2 border-none text-sm mb-2"></textarea>
+        <textarea v-model="form.remarks" rows="5" class="w-full p-1 ml-2 border-none text-sm mb-2" :readonly="!editMode"></textarea>
       </div>
+
 
 
    
@@ -325,7 +319,7 @@
       alt="Profile Image" 
       class="h-full w-full object-cover" 
     />
-
+    
     <img 
     v-else 
     src="/images/default-profile.jpg" 
@@ -333,7 +327,7 @@
     class="h-full w-full object-cover"
   />
   </div>
-</div>
+</div>  
 
 
 
@@ -343,9 +337,9 @@
   
   
   <!-- Signatures Section -->
-  <div class="flex gap-4 mb-6 border p-4">
+  <div class="flex gap-4 mb-6 border-black border-t p-4">
     <!-- Prepared by Signature -->
-    <div class="w-1/2 border-r pr-4">
+    <div class="w-1/2 pr-4">
       <label class="block text-sm font-bold">PREPARED BY:</label>
       <div class="font-semibold flex items-center">
         <input
@@ -355,6 +349,21 @@
           :readonly="!editMode"
         >
       </div>
+
+
+
+      <div class="font-semibold text-sm flex items-center">
+  <input
+    type="text"
+    value="PHILIP ROY D. CONTANGCO, RN"
+    class="w-full text-sm -ml-3 mt-1 border-none shadow-none"
+    :readonly="!editMode"
+    style="width: 100%;"
+  >
+</div>
+
+
+
       <div class="font-semibold text-sm flex items-center">
         <input
           type="text"
@@ -369,7 +378,7 @@
     <!-- Noted by Signature -->
     <div class="w-1/2 pl-4">
       <label class="block text-sm font-bold">NOTED BY:</label>
-      <div class="flex items-center">
+      <div class="flex items-center mt-14">
         <input
           type="text"
           v-model="center_head"
@@ -381,21 +390,22 @@
     </div>
   </div>
   
-        <!-- Footer Section -->
-        <div class=" pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-          <div class="flex justify-between items-center">
-            <div class="flex flex-col">
-              <p class="font-bold">PAGE 1 of 1</p>
-              <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-              <p>Email: <span class="text-blue-600 underline">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-            </div>
-            <div>
-              <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
-            </div>
-          </div>
-        </div>
   
     </div>
+    <div class=" border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;"> 
+      <div class="flex justify-between items-start w-full">
+          <div class="flex flex-col w-full"> <!-- Expanded width for the text section -->
+              <p class="font-bold">PAGE 1 of 1</p>
+              <p class="border-t-2 border-black"></p>
+              <p class="pt-2">DSWD Field Office XI , Ramon Magsaysay Avenue corner Damaso Suazo Street, Davao City, Philippines 8000</p>
+              <p > Website: <span class="text-blue-600 underline">http://www.dswd.gov.ph </span>Tel Nos.: (082) 227-1964 Email: <span class="text-blue-600 underline">fo11@dswd.gov.ph </span> </p>
+          </div>
+          <div class="w-1/6 flex justify-end"> <!-- Restricting the image section to the right side -->
+              <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-32 object-cover"> <!-- Expanded width for image -->
+          </div>
+      </div>
+        </div>
+  </div>
   </template>
   <script>
   import axios from 'axios';
@@ -666,74 +676,128 @@ import '../../../fonts/arialbd-bold.js';
       this.message = '';
     }, 3000); // Clear the message after 3 seconds
   },
+
+
   exportToPdf() { 
-    const pdf = new jsPDF('p', 'mm', [216, 356]);
-    const pageHeight = 356; // Total page height in mm
-    const marginBottom = 10; // Bottom margin in mm
-    const rowHeight = 10; // Height of each row
-    const lineHeight = 7; // Space between lines
-    const footerHeight = 0; // Adjust to fit the height of your footer
-    const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
-    const maxWidth = 170; // Maximum width for text
-    let contentYPos = 0; // Start Y position for content
-    let initialX = 20; // X position for content
-    let currentPage = 1; // Start at page 1
+  const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
+  const pageHeight = 356; // Total page height in mm
+  const marginBottom = 30; // Bottom margin in mm
+  const rowHeight = 8; // Height of each row
+  const lineHeight = 7; // Space between lines
+  const footerHeight = 0; // Adjust to fit the height of your footer
+  const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
+  const maxWidth = 170; // Maximum width for text
+  let contentYPos = 0; // Start Y position for content
+  let initialX = 20; // X position for content
+  let currentPage = 1; // Start at page 1
+
   
-    
-    const addHeader = () => {
-      // Header text
-      pdf.setFontSize(9);
-      pdf.setFont('TimesNewRoman', 'italic');
-      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
-    };
-    
-    // Helper function to add a new page if content exceeds the page height
-    const addNewPageIfNeeded = () => {
-      if (contentYPos >= maxContentHeight) {
-        pdf.addPage(); // Add new page
-        addHeader(); // Add the header on the new page
+  const addHeader = () => {
+    // Header text
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'italic');
+    pdf.setTextColor(0, 0, 0);
+    pdf.text('DSWD-GF-010 | REV 02 | 22 SEP 2023', 135, 20);
+  };
+  
+  // Helper function to add a new page if content exceeds the page height
+  const addNewPageIfNeeded = () => {
+    if (contentYPos >= maxContentHeight) {
+      pdf.setTextColor(0, 0, 0);
+      addFooter(); // Add the footer for the current page
+      pdf.setLineWidth(0.5);
+      pdf.setDrawColor(0, 0, 0);
+      pdf.addPage(); // Add new page
+      addHeader(); // Add the header on the new page
+      pdf.rect(10, 10, 190, 315); 
+      currentPage++; // Increment page number
+      contentYPos = 40; // Reset Y position for the new page
+      pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
+      pdf.setFontSize(11); // Set font size back to what it was
+    }
+  };
+
+  const addFooter = () => {
+      if (currentPage === 1) {
+        pdf.setFontSize(9);
+        pdf.setFont('TimesNewRoman', 'bold');
         pdf.setLineWidth(0.5);
-        pdf.rect(10, 10, 190, 335); 
-        currentPage++; // Increment page number
-        contentYPos = 40; // Reset Y position for the new page
-        pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
-        pdf.setFontSize(11); // Set font size back to what it was
+        pdf.line(17, 335, 173, 335); // Footer line
+  
+        pdf.setFont('times', 'normal');
+        const footerText = pdf.splitTextToSize('DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000', 160);
+        pdf.text(footerText, 95, 340, { align: 'center' });
+        pdf.text('Website: ', 45, 345, { align: 'center' });
+        pdf.text('Tel Nos.: (082) 227-1964 Email:', 105, 345, { align: 'center' });
+
+        pdf.setFontSize(9);
+        pdf.setTextColor(0, 0, 255);
+        pdf.text('http://www.dswd.gov.ph', 67, 345, { align: 'center' });
+        pdf.text('fo11@dswd.gov.ph ', 140, 345, { align: 'center' });
+        pdf.setLineWidth(0);
+        pdf.setDrawColor(0, 0, 255);
+        pdf.line(51, 346, 83, 346);
+        pdf.line(127, 346, 153, 346);
+        pdf.setTextColor(0, 0, 0);
+
+
+        //pdf.text('Website: http://www.dswd.gov.ph Tel Nos.: (082) 227-1964 Email: fo11@dswd.gov.ph ', 105, 345, { align: 'center' });
+  
+        const footerImgData = '/images/footerimg.png';
+        pdf.addImage(footerImgData, 'PNG', 175, 330, 25, 12); // Footer image
+  
+      } else {
+        // Footer for Page 2 and beyond
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(8.5);
+        pdf.setFont('TimesNewRoman', 'bold');
+        pdf.setDrawColor(0, 0, 0);
+        pdf.setLineWidth(0.5);
+        pdf.line(17, 335, 193, 335); // Footer line extending further
+  
+        pdf.setFont('times', 'bold');
+        pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 340, { align: 'center' });
       }
     };
 
-    pdf.setLineWidth(0.5);
-  pdf.rect(10, 10, 190, 335); 
 
+    pdf.setLineWidth(0.5);
+  pdf.rect(10, 10, 190, 315); 
+
+
+  //horizyontal 
   pdf.line(10, 40, 200, 40); 
   pdf.line(10, 52, 200, 52); 
   pdf.line(10, 58, 200, 58); 
   pdf.line(10, 64, 200, 64); 
   pdf.line(10, 69, 200, 69); 
-  pdf.line(10, 80, 200, 80); 
+  pdf.line(10, 74, 200, 74); 
   pdf.line(10, 85, 200, 85); 
   pdf.line(10, 90, 200, 90); 
   pdf.line(10, 95, 200, 95); 
   pdf.line(10, 100, 200, 100); 
-  pdf.line(10, 105, 200,105); 
-  pdf.line(10, 110, 200, 110); 
-  pdf.line(10, 115, 200, 115); 
-  pdf.line(10, 120, 200, 120); 
-  pdf.line(10, 125, 200, 125); 
-  pdf.line(10, 135, 200, 135); 
-  pdf.line(10, 155, 200, 155); 
+  pdf.line(10, 105, 200, 105);
+  pdf.line(10, 110, 200, 110);
+  pdf.line(10, 115, 200, 115);
+  pdf.line(10, 120, 200, 120);
+  pdf.line(10, 125, 200, 125);
+  pdf.line(10, 130, 200, 130);
+  pdf.line(10, 140, 200, 140);
+  pdf.line(10, 156, 200, 156);
 
+  //vertical ni siya
+  pdf.line(108, 52 , 108, 69); 
+  pdf.line(90, 85 , 90, 130); 
+  pdf.line(110, 140, 110, 156); 
 
-  pdf.line(110, 135, 110, 155); 
-  pdf.line(90, 80 , 90, 125); 
 
   pdf.setLineWidth(0);
 
-  pdf.line(139, 52 , 139, 64); 
-  pdf.line(49, 58 , 49, 64); 
+
 
   // Add header logo
-  const logoImg = "/images/headerlogo3.png"; 
-  pdf.addImage(logoImg, "PNG", 15, 15, 90, 20); 
+  const logoImg = "/images/headerlogo2.png"; 
+  pdf.addImage(logoImg, "PNG", 15, 10, 80, 30); 
   contentYPos += 40; 
 
   // Add title and header text
@@ -762,40 +826,46 @@ import '../../../fonts/arialbd-bold.js';
   pdf.setFontSize(10);
   pdf.setFont('arialbd', 'bold'); 
   pdf.text(`CLIENT'S NAME: ${this.form.client_name || ''}`, initialX+-9, contentYPos);
-  pdf.text(`BIRTHDATE: ${this.form.birthdate || ''}`, initialX+120, contentYPos);
+  pdf.text(`BIRTHDATE: ${this.form.birthdate || ''}`, initialX+90, contentYPos);
 
   contentYPos += 6;
-  pdf.text(`AGE: ${this.form.age || ''}`, initialX+-9, contentYPos);
-  pdf.text(`CURRENT MEDICAL STATUS: ${this.form.current_medical_status || ''}`, initialX+30, contentYPos);
-  pdf.text(`RELIGION: ${this.form.religion || ''}`, initialX+120, contentYPos);
+  pdf.text(`CURRENT MEDICAL STATUS: ${this.form.current_medical_status || ''}`, initialX+-9, contentYPos);
+  pdf.text(`AGE: ${this.form.age || ''}`, initialX+90, contentYPos);
+
 
   contentYPos += 6;
+  pdf.text(`RELIGION: ${this.form.religion || ''}`, initialX+-9, contentYPos);
+  pdf.setFontSize(10);
+  pdf.text(`DATE OF ADMISSION: ${this.form.date_of_admission || ''}`, initialX+90, contentYPos);
+
+  contentYPos += 5;
   pdf.text(`ADDRESS:`, initialX+-9, contentYPos);
   pdf.setFontSize(9);
   pdf.text(`${this.form.address || ''}`, initialX+10, contentYPos);
-  pdf.setFontSize(10);
-  pdf.text(`DATE OF ADMISSION: ${this.form.date_of_admission || ''}`, initialX+120, contentYPos);
 
+contentYPos +=6;
   pdf.setFontSize(16);
   pdf.setTextColor(50, 50, 255);
   pdf.setFont('arialbd', 'bold'); 
-  pdf.text('MONTHLY BMI MONITORING 2024', 105, 77, { align: 'center' });
+  pdf.text('MONTHLY BMI MONITORING 2024', 105, 82, { align: 'center' });
 
 
-contentYPos += 16;
+contentYPos += 10;
 pdf.setFontSize(10);
 pdf.setTextColor(0, 0, 0);
 pdf.setFont('arialbd', 'bold'); 
 pdf.text(`VITAL SIGNS / BMI`, initialX+15, contentYPos);
-pdf.text(`APRIL`, initialX+125, contentYPos);
+const selectedMonth = this.form.selectedMonth || ''; // Get the temperature value
+pdf.text(`${selectedMonth}`, initialX+123, contentYPos); 
+
 
 contentYPos += 5;
 pdf.setFont('arial', 'normal'); 
 pdf.text(`TEMPERATURE`, initialX+-9, contentYPos);
 const temperature = this.form.temperature || ''; // Get the temperature value
-pdf.text(`${temperature}`, 136, 89); 
+pdf.text(`${temperature}`, 136, contentYPos); 
 const tempTextWidth = pdf.getTextWidth(`${temperature}`);
-pdf.text('degree celsius', 136 + tempTextWidth + 2, 89);
+pdf.text('degree celsius', 136 + tempTextWidth + 2, contentYPos);
 
 contentYPos += 5;
 pdf.setFont('arial', 'normal'); 
@@ -846,7 +916,7 @@ pdf.text(`${this.form.bmi_remarks || ''}`, 150, contentYPos, { align: 'center' }
 
 pdf.setFontSize(14);
   pdf.setFont('arialbd', 'bold'); 
-  pdf.text('GENERAL APPEARANCE', 105, 132, { align: 'center' });
+  pdf.text('GENERAL APPEARANCE', 105, 137, { align: 'center' });
 
   contentYPos += 15;
   pdf.setFontSize(10);
@@ -890,7 +960,9 @@ pdf.setFontSize(14);
   pdf.setFont('arial', 'normal'); 
   pdf.text(`${this.form.hair_status || ''}`, initialX+103, contentYPos);
 
-  contentYPos +=6;
+
+
+  contentYPos +=3;
   const profileImage = this.form.profile_image 
   ? `/profile_images/${this.form.profile_image}` 
   : this.previewImage || '/images/default-profile.jpg'; // Fallback to default image if none
@@ -899,7 +971,7 @@ pdf.setFontSize(14);
   img.src = profileImage; // Set the image source
   img.onload = () => {
       // Add the profile image to the PDF
-      pdf.addImage(img, 'PNG', initialX + 90, contentYPos, 90, 81); // Adjust size as necessary
+      pdf.addImage(img, 'PNG', initialX+ 90, contentYPos, 89, 81); // Adjust size as necessary
 
 
 
@@ -908,43 +980,56 @@ pdf.setFontSize(14);
 
 
 
-      contentYPos +=5;
+      contentYPos +=3;
       pdf.setFontSize(10);
+
+
   pdf.setFont('arialbd', 'bold');
-  pdf.text(`SERVICES GIVEN:`, initialX+-9, contentYPos);
+  pdf.text(`SERVICES GIVEN:`, initialX + -9, contentYPos);
 
-  contentYPos += rowHeight;
-  contentYPos +=2;
-  pdf.setFont('arial', 'normal');
-  pdf.setFontSize(10);
-  const services_giveLog = `${this.form.services_given || ''}`;
-  const services_giveLogLines = pdf.splitTextToSize(services_giveLog, maxWidth+-75);
+pdf.setLineWidth(0);
+contentYPos += rowHeight;
+contentYPos += 2;
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(10);
 
-  services_giveLogLines.forEach(line => {
-    addNewPageIfNeeded(); // Check for overflow before adding a line
-    pdf.text(line, initialX+-9, contentYPos-3);
-    contentYPos += lineHeight;
-  });
+// Split the text into lines
+const services_giveLog = `${this.form.services_given || ''}`;
+const services_giveLogLines = pdf.splitTextToSize(services_giveLog, maxWidth + -75);
+
+services_giveLogLines.forEach(line => {
+  addNewPageIfNeeded(); // Check for overflow before adding a line
+  
+  // Just print the lines as they are, since the numbering is handled in the textarea itself
+  pdf.text(line, initialX + -9, contentYPos - 5);
+  
+  contentYPos += lineHeight + -2;
+});
 
 
-  contentYPos +=5;
-  addNewPageIfNeeded();
-      pdf.setFontSize(10);
+
+  contentYPos +=25;
+
   pdf.setFont('arialbd', 'bold');
-  pdf.text(`REMARKS:`, initialX+-9, contentYPos);
+  pdf.text(`REMARKS:`, initialX + -9, contentYPos);
 
-  contentYPos += rowHeight;
-  contentYPos +=2;
-  pdf.setFont('arial', 'normal');
-  pdf.setFontSize(10);
-  const remarksLog = `${this.form.remarks || ''}`;
-  const remarksLogLines = pdf.splitTextToSize(remarksLog, maxWidth+-75);
+contentYPos += rowHeight;
+contentYPos += 2;
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(10);
 
-  remarksLogLines.forEach(line => {
-    addNewPageIfNeeded(); // Check for overflow before adding a line
-    pdf.text(line, initialX+-9, contentYPos-3);
-    contentYPos += lineHeight;
-  });
+// Split the text into lines
+const remarksLog = `${this.form.remarks || ''}`;
+const remarksLogLines = pdf.splitTextToSize(remarksLog, maxWidth + -75);
+
+remarksLogLines.forEach(line => {
+  addNewPageIfNeeded(); // Check for overflow before adding a line
+
+  // Just print the lines as they are, since the numbering is handled in the textarea itself
+  pdf.text(line, initialX + -9, contentYPos - 5);
+
+  contentYPos += lineHeight + -2;
+});
 
 
 
@@ -952,8 +1037,10 @@ pdf.setFontSize(14);
 
 
   
- contentYPos +=50
+ contentYPos +=60;
  addNewPageIfNeeded();
+ pdf.setLineWidth(0.5);
+ pdf.line(10, contentYPos+-10, 200,contentYPos+-10); 
   pdf.setFontSize(10);
   pdf.setFont('arialbd', 'bold'); 
   pdf.text(`PREPARED BY:`, initialX+-9, contentYPos);
@@ -985,15 +1072,24 @@ pdf.setFont('arialbd', 'bold');
 
   pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(11);
-  pdf.text('ANGELIC B. PAÑA,RSW', initialX+105, contentYPos+5);
+  pdf.text('ANGELIC B. PAÑA, RSW, MSSW', initialX+105, contentYPos+5);
   contentYPos += 5; 
   pdf.setFont('arial', 'normal');
   pdf.setFontSize(10);
-  pdf.line(125, contentYPos+1, 170, contentYPos+1);
-  pdf.text('SWO IV / Center Head', initialX+110, contentYPos+5);
+  pdf.line(125, contentYPos+1, 185, contentYPos+1);
+  pdf.text('SWO IV / Center Head', initialX+116, contentYPos+5);
 
 
+  addFooter();
 
+const totalPages = pdf.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    pdf.setFontSize(9);
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFont('TimesNewRoman', 'bold');
+    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 333, { align: 'center' }); // Update the footer with the correct total pages
+  }
 
 // Save the PDF with a dynamic filename
 pdf.save(`Nursing_Care_${this.form.client_name || ''}.pdf`);
@@ -1021,6 +1117,65 @@ img.onerror = (err) => {
     padding: 0;
     margin: 0;
     vertical-align: bottom; /* Ensures the text aligns with the bottom of the input */
+    width: 80%;
   }
+  
+  .custom-border-l {
+  position: relative;
+}
+
+.custom-border-l::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -7px;
+  bottom: -1px; /* Adjust this value to make the border extend lower */
+  width: 1px; /* The thickness of the border */
+  background-color: black; /* Same as the border color */
+}
+.custom-border-t {
+  position: relative;
+}
+
+.custom-border-t::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: -120px;
+  top: -2px;
+  height: 1px; /* Thickness of the top border */
+  background-color: black; /* Same as the border color */
+  transform: translateY(-5px); /* Adjust this value to move the top border higher */
+}
+
+.custom-border-t2 {
+  position: relative;
+}
+
+.custom-border-t2::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -2px;
+  height: 1px; /* Thickness of the top border */
+  background-color: black; /* Same as the border color */
+  transform: translateY(-5px); /* Adjust this value to move the top border higher */
+}
+.custom-border-t3 {
+  position: relative;
+}
+
+.custom-border-t3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -2px;
+  height: 1px; /* Thickness of the top border */
+  background-color: black; /* Same as the border color */
+  transform: translateY(-5px); /* Adjust this value to move the top border higher */
+}
+
   </style>
   
