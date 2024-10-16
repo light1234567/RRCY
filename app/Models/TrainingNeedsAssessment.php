@@ -22,6 +22,7 @@ class TrainingNeedsAssessment extends Model
         'center_duration',
         'period', 
         'date_of_admission', 
+        'date',
         'training_details',
         'training_sector_details',
         'education_details',

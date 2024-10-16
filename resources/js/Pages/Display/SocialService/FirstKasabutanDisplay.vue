@@ -113,10 +113,9 @@
         <div class="mb-8">
           <div class="space-y-12">
             <div>
-              <input type="text" v-model="form.client_resident" 
+              <input type="text" v-model="clientName" 
                 class="underline-input w-1/3 px-2 text-xs" 
-                :readonly="!editMode"
-                @input="form.client_resident = removeNumbers(form.client_resident)"/>
+                readonly/>
               <label class="block text-base -mt-1">Client/Resident</label>
             </div>
             <div>

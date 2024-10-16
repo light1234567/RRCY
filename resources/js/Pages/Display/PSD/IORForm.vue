@@ -27,7 +27,11 @@
   
     
     <!-- Save Button (visible only in edit mode) -->
-    <button v-else @click="submitForm" type="button" class="px-4 py-2 bg-green-500 text-white rounded">Save</button>
+    <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for Save -->
+        <i class="fas fa-check w-4 h-4"></i>
+        <span>Save</span>
+      </button>
   
     <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
         <!-- FontAwesome for PDF Download -->
@@ -37,12 +41,62 @@
   
   </div>
   
-  
-      <!-- Success/Error Message -->
-      <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">{{ message }}</div>
+<!-- Modal for Save Confirmation -->
+<div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+     <div class="fixed inset-0 bg-black opacity-50"></div>
+     <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+       <div class="bg-white p-6">
+         <div class="flex items-center">
+           <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+           </svg>
+           <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+         </div>
+         <div class="mt-2">
+           <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+         </div>
+       </div>
+       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+         <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+         <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+       </div>
+     </div>
+   </div>
+
+   <!-- Modal for Save Result -->
+   <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+     <div class="fixed inset-0 bg-black opacity-50"></div>
+     <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+       <div class="bg-white p-6 text-center">
+         <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
+           <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
+             <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+             </svg>
+           </div>
+         </div>
+         <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
+           <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
+             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+             </svg>
+           </div>
+         </div>
+         <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
+         <div class="mt-2">
+           <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
+         </div>
+       </div>
+       <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+         <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
+           OK
+         </button>
+       </div>
+     </div>
+   </div>
+
+      <form ref="IORForm" @submit.prevent="submitForm">
       <div class="graph-background pt-0.5  -mr-9 -mb-16">
-  
-  
   
     <div v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
       <!-- Header -->
@@ -61,12 +115,15 @@
   
       <div class="flex -mt-4 bg-sky-400 items-center justify-center mb-6 bg-gray-300">
         <p class="text-md text-sm font-bold mr-4">For the Period:</p>
-        <input type="text" v-model="form.period" class="underline-input2 bg-transparent border-b-2 border-gray-300 text-center text-xs" />
-      </div>
-  
-      <!-- Success/Error Message -->
-      <div v-if="message" :class="`mt-4 p-4 rounded text-white ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`">
-        {{ message }}
+        <input 
+          type="text" 
+          v-model="form.period" 
+          class="underline-input2 bg-transparent border-b-2 border-gray-300 text-center text-xs" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide a period') }" 
+          :readonly="!editMode" required 
+        />
+
       </div>
         
       <!-- General Information -->
@@ -79,10 +136,15 @@
         <div class="flex items-center justify-start ml-12 mb-6">
       <label class="block text-xs font-bold mr-2">Date of Assessment:</label>
       <input
-          type="date"
-          v-model="form.assessment_date"
-          class="underline-input2 text-xs p-2 border border-gray-300 w-1/2"
-          :readonly="!editMode" />
+        type="date"
+        v-model="form.assessment_date"
+        class="underline-input2 text-xs p-2 border border-gray-300 w-1/2"
+        :readonly="!editMode"
+        @input="(e) => { e.target.setCustomValidity('') }" 
+        @invalid="(e) => { e.target.setCustomValidity('Please provide an assessment date') }" 
+        required
+      />
+
   </div>
   
       </div>
@@ -609,7 +671,17 @@
             <th class="text-left p-1 text-sm border-black border" colspan="5">General Remarks/Recommendation:</th>
           </tr>
           <tr class="bg-white border-black">
-            <th class="text-left p-1 border-black border" colspan="5">   <textarea v-model="form.general_remarks" class="w-full p-2 border border-gray-300 rounded text-sm" :readonly="!editMode"></textarea></th>
+            <th class="text-left p-1 border-black border" colspan="5">
+            <textarea 
+              v-model="form.general_remarks" 
+              class="w-full p-2 border border-gray-300 rounded text-sm" 
+              :readonly="!editMode" 
+              @input="(e) => { e.target.setCustomValidity('') }" 
+              @invalid="(e) => { e.target.setCustomValidity('Please provide general remarks') }" 
+              required
+            ></textarea>
+          </th>
+
           </tr>
   
   
@@ -743,6 +815,7 @@
         
         </div>
     </div>
+  </form>
   </template>
   
   
@@ -862,6 +935,10 @@
       totalPages: 2,
       currentPage: 1,
       messageType: '',
+      isModalOpen: false,
+      isSaveResultModalOpen: false,
+      saveResultTitle: '',
+      saveResultMessage: '',
     };
   }
   ,
@@ -998,53 +1075,96 @@
               }
           });
   },
-      submitForm() {
-      console.log("Submitting form with data:", this.form);
-  
-      // Check for missing client_id (only check if in edit mode)
-      if (!this.form.client_id && this.editMode) {
-        this.message = 'Failed to save data: Missing client ID';
-        this.messageType = 'error';
-        return;
+  async submitForm() {
+  const totalPages = this.totalPages;  // Ensure this is set correctly based on your pagination logic
+  let allFieldsValid = true;
+
+  // Loop through each page and check for required field validation
+  for (let i = 1; i <= totalPages; i++) {
+    // Set the current page to the page being validated
+    this.currentPage = i;
+    
+    // Wait for the page to be fully rendered
+    await this.$nextTick();
+    
+    // Get the form reference for validation
+    const form = this.$refs.IORForm;  // Ensure this matches the form's ref in your template
+
+    // Validate the current page's form
+    if (!form.checkValidity()) {
+      allFieldsValid = false;
+      form.reportValidity();  // Show validation messages and focus on the first invalid field
+      
+      // Stop validation if we find an invalid field
+      break;
+    }
+  }
+    // If all fields are valid across all pages, show the confirmation modal
+    if (allFieldsValid) {
+    this.isModalOpen = true;  // Open confirmation modal
+  } else {
+    console.warn('Form has invalid fields, please correct them.');
+  }
+},
+async confirmSave() {
+  this.isModalOpen = false;  // Close the confirmation modal
+
+  if (!this.form.client_id && this.editMode) {
+    this.message = 'Failed to save data: Missing client ID';
+    this.messageType = 'error';
+    return;
+  }
+
+  const payload = {
+    client_id: this.form.client_id,
+    period: this.form.period,
+    assessment_date: this.form.assessment_date,
+    trainings_attended: this.form.trainings_attended,
+    general_remarks: this.form.general_remarks,
+    prepared_by_one: this.form.prepared_by_one || '',
+    prepared_by_two: this.form.prepared_by_two || '',
+    sections: this.form.sections,
+    trainings: this.form.trainings,
+  };
+
+  const apiMethod = this.editMode ? 'put' : 'post';
+  const apiUrl = this.editMode
+    ? `/api/performance-observation-reports/${this.form.client_id}`  // Update if in edit mode
+    : `/api/performance-observation-reports`;  // Create if not in edit mode
+
+  try {
+    // Check if the record exists and update it
+    const response = await axios.get(`/api/performance-observation-reports/${this.form.client_id}`);
+    
+    if (response.status === 200) {
+      // Update the existing report
+      await axios.put(`/api/performance-observation-reports/${this.form.client_id}`, payload);
+      this.saveResultTitle = 'Success';
+      this.saveResultMessage = 'Data updated successfully!';
+    }
+  } catch (error) {
+    // If record does not exist, create a new one
+    if (error.response && error.response.status === 404) {
+      try {
+        await axios.post('/api/performance-observation-reports', payload);
+        this.saveResultTitle = 'Success';
+        this.saveResultMessage = 'Data created successfully!';
+      } catch (postError) {
+        console.error('Error creating record:', postError);
+        this.saveResultTitle = 'Error';
+        this.saveResultMessage = 'Error creating record.';
       }
-  
-      // Prepare the payload with the required fields
-      const payload = {
-        client_id: this.form.client_id,
-        period: this.form.period,
-        assessment_date: this.form.assessment_date,
-        trainings_attended: this.form.trainings_attended,
-        general_remarks: this.form.general_remarks,
-        prepared_by_one: this.form.prepared_by_one || '',
-        prepared_by_two: this.form.prepared_by_two || '',
-  
-        // JSON fields for sections and ratings
-        sections: this.form.sections,
-        trainings: this.form.trainings
-      };
-  
-      // Determine whether to create or update based on whether the form is in edit mode
-      const apiMethod = this.editMode ? 'put' : 'post';
-      const apiUrl = this.editMode 
-        ? `/api/performance-observation-reports/${this.form.client_id}`  // Update if in edit mode
-        : `/api/performance-observation-reports`;  // Create if not in edit mode
-  
-      // Perform the API call to submit the form data
-      axios[apiMethod](apiUrl, payload)
-        .then(response => {
-          // Handle successful response
-          this.message = 'Form submitted successfully!';
-          this.messageType = 'success';
-          this.editMode = false; // Exit edit mode after saving
-          console.log('Success:', response.data);
-        })
-        .catch(error => {
-          // Handle validation or other errors (e.g., 422 HTTP response)
-          this.message = this.constructDetailedErrorMessage(error);
-          this.messageType = 'error';
-          console.error('Error:', error);
-        });
-    },
+    } else {
+      console.error('Error fetching data:', error);
+      this.saveResultTitle = 'Error';
+      this.saveResultMessage = 'Error saving data.';
+    }
+  } finally {
+    this.isSaveResultModalOpen = true;  // Show save result modal
+    console.log(this.saveResultTitle, this.saveResultMessage);  // Log save result for debugging
+  }
+},
+
       clearMessageAfterDelay() {
       setTimeout(() => {
         this.message = '';
@@ -1077,6 +1197,20 @@
       toggleEdit() {
           this.editMode = !this.editMode;
       },
+      openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    cancelEdit() {
+      this.editMode = false;
+    },
+    closeSaveResultModal() {
+       this.isSaveResultModalOpen = false;
+       this.saveResultTitle = '';
+       this.saveResultMessage = '';
+     },
       calculateTotalRating(indicator) {
     if (!indicator) return 0;
     
