@@ -140,6 +140,13 @@
               <span>Psychologist</span>
             </div>
           </div>
+          <div class="space-y-2">
+            <label for="ApprovedBy" class="block mb-12 mt-12 font-sm">Approved by:</label>
+            <div class="flex flex-col">
+              <strong><input type="text" id="preparedBy" v-model="form.approved_by" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode" 
+                @input="form.approved_by = removeNumbers(form.approved_by)"></strong>
+            </div>
+          </div>
           <div class="space-y-2 mt-4">
             <label for="notedBy" class="block mb-12 mt-12 font-sm">Noted by:</label>
             <div class="flex flex-col">
@@ -231,33 +238,36 @@
     </div>
   </div>
   <!-- Modal for Save Confirmation -->
-<div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="fixed inset-0 bg-black opacity-50"></div>
-    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-      <div class="bg-white p-6">
-        <div class="flex items-center">
-          <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+  <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+      <div class="fixed inset-0 bg-black opacity-50"></div>
+      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+        <div class="bg-white p-6">
+          <div class="flex items-center">
+            <svg class="w-6 h-6 text-yellow-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.93 5h13.86c1.1 0 1.96-.9 1.84-1.98l-1.18-12.14a2 2 0 00-1.98-1.88H4.27a2 2 0 00-1.98 1.88L1.11 16.02c-.12 1.08.74 1.98 1.84 1.98z"/>
+            </svg>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Save changes?</h3>
+          </div>
+          <div class="mt-2">
+            <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+          </div>
         </div>
-        <div class="mt-2">
-          <p class="text-sm text-gray-500">Are you sure you want to save the changes?</p>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+          <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+          <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
         </div>
-      </div>
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button @click="confirmSave" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">Save</button>
-        <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
       </div>
     </div>
-  </div>
-
-  <!-- Modal for Save Result -->
-  <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+  
+    <!-- Modal for Save Result -->
+    <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
       <div class="fixed inset-0 bg-black opacity-50"></div>
       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
         <div class="bg-white p-6 text-center">
           <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
             <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
               <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </div>
           </div>
@@ -308,6 +318,7 @@ export default {
         interventions_conducted: '',
         progress_notes: '',
         prepared_by: '',
+        approved_by: '',
         noted_by: '',
       },
       editMode: false,

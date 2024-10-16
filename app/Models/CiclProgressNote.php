@@ -20,6 +20,7 @@ class CiclProgressNote extends Model
         'interventions_conducted',
         'progress_notes',
         'prepared_by',
+        'approved_by',
         'updated_by'
     ];
 

@@ -37,6 +37,7 @@ class InitialPsychologicalAssessmentController extends Controller
         'clinical_impression' => 'nullable|string',
         'plan_of_action' => 'nullable|string',
         'prepared_by' => 'nullable|string|max:50',
+        'approved_by' => 'nullable|string|max:50',
     ]);    
 
     try {
@@ -101,6 +102,7 @@ class InitialPsychologicalAssessmentController extends Controller
         'clinical_impression' => 'nullable|string',
         'plan_of_action' => 'nullable|string',
         'prepared_by' => 'nullable|string|max:50',
+        'approved_by' => 'nullable|string|max:50',
         'noted_by' => 'nullable|string|max:50',
         'educational_attainment' => 'nullable|string|max:255',
     ]);    

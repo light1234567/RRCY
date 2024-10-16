@@ -46,6 +46,7 @@ class MonthlyInventoryController extends Controller
 
             $inventory->fill([
                 'client_id' => $validatedData['client_id'],
+                'drn' => $validatedData['drn'],
                 'month' => $validatedData['month'],
                 'resident_name' => $validatedData['resident_name'],
                 'houseparent_name' => $validatedData['houseparent_name'],

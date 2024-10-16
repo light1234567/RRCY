@@ -26,6 +26,7 @@ class CiclProgressNoteController extends Controller
             'interventions_conducted' => 'nullable|string',
             'progress_notes' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
+            'approved_by' => 'nullable|string|max:50',
         ]);        
 
         try {
@@ -85,6 +86,7 @@ class CiclProgressNoteController extends Controller
             'interventions_conducted' => 'nullable|string',
             'progress_notes' => 'nullable|string',
             'prepared_by' => 'nullable|string|max:50',
+            'approved_by' => 'nullable|string|max:50',
         ]);        
 
         try {

@@ -30,7 +30,8 @@ class InitialPsychologicalAssessment extends Model
         'clinical_impression',
         'plan_of_action',
         'updated_by',
-        'prepared_by'
+        'prepared_by',
+        'approved_by'
     ];
 
     public function client()

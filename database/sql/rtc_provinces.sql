@@ -1,3 +1,6 @@
+-- Drop the rtc_branches table if it exists
+DROP TABLE IF EXISTS rtc_branches;
+
 -- Drop the rtc_provinces table if it exists
 DROP TABLE IF EXISTS rtc_provinces;
 

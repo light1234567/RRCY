@@ -29,9 +29,9 @@ use App\Http\Controllers\LearnerAcademicBehavioralFormController;
 use App\Http\Controllers\LearnerAssessmentFormController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\CaseManagerController;
-use App\Http\Controllers\SHPController;
-use App\Http\Controllers\DrnController;
 use App\Http\Controllers\CenterHeadController;
+use App\Http\Controllers\CrimeController;
+use App\Http\Controllers\RtcController;
 
 
 Route::post('/check-email', [UserController::class, 'checkEmail']);
@@ -257,26 +257,6 @@ Route::get('/case-manager/{clientId}', [CaseManagerController::class, 'getCaseMa
 Route::put('/update-case-manager/{clientId}', [CaseManagerController::class, 'storeCaseManager']);
 Route::get('/case-manager/{clientId}', [CaseManagerController::class, 'getCaseManager']);
 
-
-// API routes for SHP
-Route::post('/shp', [SHPController::class, 'storeSHP']);
-Route::get('/shp/{clientId}', [SHPController::class, 'getSHP']);
-Route::put('/update-shp/{clientId}', [SHPController::class, 'storeSHP']);
-
-// DRN API Routes
-Route::post('/drn', [DrnController::class, 'storeDrn']); // This should handle both create and update
-Route::get('/drn/{clientId}', [DrnController::class, 'getDrn']);
-
-// routes/api.php
 Route::get('/center-head', [CenterHeadController::class, 'getCenterHead']);
-
-
-use App\Http\Controllers\CrimeController;
-
 Route::get('/crimes', [CrimeController::class, 'getCrimes']);
-
-
-use App\Http\Controllers\RtcController;
-
-// Route to fetch all RTC provinces with branches
 Route::get('/rtcBranches', [RtcController::class, 'getRtcBranches']);
