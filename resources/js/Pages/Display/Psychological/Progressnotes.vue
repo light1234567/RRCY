@@ -1,9 +1,9 @@
 <template>
 <!-- Tabs for Actions -->
 <div v-if="editMode" class="flex absolute p-4 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
       <i class="fas fa-arrow-left w-4 h-4"></i>
-      <span>Back</span>
+      <span>Cancel</span>
     </button>
   </div>
 
@@ -14,10 +14,11 @@
       :currentPage="currentPage" 
       @update:currentPage="currentPage = $event" 
     />
-    <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-      <i class="fas fa-edit w-4 h-4"></i>
-      <span>Edit</span>
-    </button>
+    <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for Edit -->
+        <i class="fas fa-edit w-4 h-4"></i>
+        <span>Edit</span>
+      </button>
 
     <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
       <i class="fas fa-check w-4 h-4"></i>
@@ -36,7 +37,7 @@
   <div class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
     <div class="relative flex justify-between items-center mb-2">
       <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-      <p class="text-xs italic">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
+      <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
     </div>
     
       <!-- Header -->
@@ -485,8 +486,54 @@ export default {
   let contentYPos = 75; // Start Y position for content
   let initialX = 20; // X position for content
   let currentPage = 1; // Start at page 1
-
   
+  const addFooter = () => {
+  if (currentPage === 1) {
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'bold');
+    pdf.setLineWidth(0.5);
+    pdf.line(17, 335, 173, 335); // Footer line
+
+    pdf.setFont('times', 'normal');
+    const footerText = pdf.splitTextToSize('DSWD Field Office XI , Ramon Magsaysay Avenue corner Damaso Suazo Street, Davao City, Philippines 8000', 160);
+    pdf.text(footerText, 95, 340, { align: 'center' });
+    pdf.text('Website: ', 45, 345, { align: 'center' });
+    pdf.text('Tel Nos.: (082) 227-1964 Email:', 105, 345, { align: 'center' });
+
+    pdf.setFontSize(9);
+    pdf.setTextColor(0, 0, 255); // Blue text color for links
+    pdf.text('http://www.dswd.gov.ph', 67, 345, { align: 'center' });
+    pdf.text('fo11@dswd.gov.ph ', 140, 345, { align: 'center' });
+    pdf.setLineWidth(0);
+    pdf.setDrawColor(0, 0, 255); // Blue lines for links
+    pdf.line(51, 346, 83, 346); // Underline for website link
+    pdf.line(127, 346, 153, 346); // Underline for email link
+
+    const footerImgData = '/images/footerimg.png';
+    pdf.addImage(footerImgData, 'PNG', 175, 330, 25, 12); // Footer image
+
+  } else {
+    // Footer for Page 2 and beyond
+    pdf.setTextColor(0, 0, 0); // Black text color for footer
+    pdf.setFontSize(8.5);
+    pdf.setFont('TimesNewRoman', 'bold');
+    pdf.setDrawColor(0, 0, 0); // Black lines for footer
+    pdf.setLineWidth(0.5);
+    pdf.line(17, 335, 193, 335); // Footer line extending further
+
+    pdf.setFont('times', 'bold');
+    pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 340, { align: 'center' });
+  }
+
+  // Reset the settings to defaults for the content after the footer
+  pdf.setTextColor(0, 0, 0); // Reset text color to black
+  pdf.setFontSize(11); // Reset font size to 11 (or whatever default size you use)
+  pdf.setFont('arial', 'normal'); // Reset font to Arial and normal style
+  pdf.setLineWidth(0); // Reset line width if needed
+  pdf.setDrawColor(0, 0, 0); // Reset draw color to black
+};
+
+    
   const addHeader = () => {
     // Header text
     pdf.setFontSize(9);
@@ -506,8 +553,6 @@ export default {
       pdf.setFontSize(11); // Set font size back to what it was
     }
   };
-
-
 
   addHeader();
   pdf.setTextColor(0, 0, 0);
@@ -597,15 +642,13 @@ export default {
     contentYPos += lineHeight;
   });
 
-
-  contentYPos +=50;
   // Prepared by Section
+  contentYPos += 50;
   contentYPos += rowHeight; 
   addNewPageIfNeeded();
-  
   pdf.setFontSize(11);
   pdf.text('Prepared by:', initialX, contentYPos);
-  
+
   contentYPos += rowHeight; 
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
@@ -622,7 +665,6 @@ export default {
   // Noted by Section
   contentYPos += rowHeight; 
   addNewPageIfNeeded();
-  
   pdf.setFontSize(11);
   pdf.text('Noted by:', initialX, contentYPos);
   
@@ -641,18 +683,20 @@ export default {
   // Add the footer for the last page
   addFooter();
 
+  // Page numbers for all pages
   const totalPages = pdf.internal.getNumberOfPages();
-    for (let i = 1; i <= totalPages; i++) {
-      pdf.setPage(i);
-      pdf.setFontSize(9);
-      pdf.setTextColor(0, 0, 0);
-      pdf.setFont('TimesNewRoman', 'bold');
-      pdf.text(`PAGE ${i} of ${totalPages}`, 105, 333, { align: 'center' }); // Update the footer with the correct total pages
-    }
+  for (let i = 1; i <= totalPages; i++) {
+    pdf.setPage(i);
+    pdf.setFontSize(9);
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFont('TimesNewRoman', 'bold');
+    pdf.text(`PAGE ${i} of ${totalPages}`, 105, 334, { align: 'center' }); // Footer at bottom center with correct page numbers
+  }
 
   // Save the PDF with dynamic file name
   pdf.save(`Progress_Report_${this.form.name || 'NoName'}.pdf`);
 },
+
 }
 };
 </script>

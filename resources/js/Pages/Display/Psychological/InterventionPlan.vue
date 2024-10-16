@@ -1,10 +1,10 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class="fas fa-arrow-left w-4 h-4"></i>
-        <span>Back</span>
+        <span>Cancel</span>
       </button>
   </div>
   
@@ -15,7 +15,7 @@
         :currentPage="currentPage" 
         @update:currentPage="currentPage = $event" 
       />
-      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
@@ -40,7 +40,7 @@
     <div class="max-w-7xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
       <div class="relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-        <p class="text-xs">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+        <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010 | REV 01 | 17 AUG 2022        </p>
       </div>
   
       <div class="p-4">
@@ -84,87 +84,87 @@
   
         <!-- Intervention Plan Table -->
         <table class="min-w-full bg-white border border-black text-xs">
-          <thead>
-            <tr>
-              <th class="py-1 px-2 border-b border-r border-black">Objectives</th>
-              <th class="py-1 px-2 border-b border-r border-black">Activities</th>
-              <th class="py-1 px-2 border-b border-r border-black">Responsible Person</th>
-              <th class="py-1 px-2 border-b border-r border-black">Time Frame</th>
-              <th class="py-1 px-2 border-b border-r border-black">Expected Output</th>
-              <th class="py-1 px-2 border-b border-black">Progress</th>
-              <th v-if="editMode" class="py-1 px-2 border-b border-black">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in form.items" :key="index">
-              <td class="py-1 px-2 border-b border-r border-black">
-                <textarea 
-                  v-model="item.objectives" 
-                  :readonly="!editMode" 
-                  class="w-full p-1 border border-transparent" 
-                  @input="(e) => { e.target.setCustomValidity('') }" 
-                  @invalid="(e) => { e.target.setCustomValidity('Please provide objectives') }" 
-                  required
-                ></textarea>
-              </td>
-              <td class="py-1 px-2 border-b border-r border-black">
-                <textarea 
-                  v-model="item.activities" 
-                  :readonly="!editMode" 
-                  class="w-full p-1 border border-transparent" 
-                  @input="(e) => { e.target.setCustomValidity('') }" 
-                  @invalid="(e) => { e.target.setCustomValidity('Please provide the activities') }" 
-                  required
-                ></textarea>
-              </td>
-              <td class="py-1 px-2 border-b border-r border-black">
-                <input 
-                  type="text" 
-                  v-model="item.responsible_person" 
-                  :readonly="!editMode" 
-                  class="w-full p-1 border border-transparent" 
-                  @input="(e) => { e.target.setCustomValidity('') }" 
-                  @invalid="(e) => { e.target.setCustomValidity('Please provide a responsible person name') }" 
-                  required 
-                />
-              </td>
-              <td class="py-1 px-2 border-b border-r border-black">
-                <input 
-                  type="text" 
-                  v-model="item.time_frame" 
-                  :readonly="!editMode" 
-                  class="w-full p-1 border border-transparent" 
-                  @input="(e) => { e.target.setCustomValidity('') }" 
-                  @invalid="(e) => { e.target.setCustomValidity('Please provide a time frame') }" 
-                  required 
-                />
-              </td>
-              <td class="py-1 px-2 border-b border-r border-black">
-                <textarea 
-                  v-model="item.expected_output" 
-                  :readonly="!editMode" 
-                  class="w-full p-1 border border-transparent" 
-                  @input="(e) => { e.target.setCustomValidity('') }" 
-                  @invalid="(e) => { e.target.setCustomValidity('Please provide the expected output') }" 
-                  required
-                ></textarea>
-              </td>
-              <td class="py-1 px-2 border-b border-black">
-                <textarea 
-                  v-model="item.progress" 
-                  :readonly="!editMode" 
-                  class="w-full p-1 border border-transparent" 
-                  @input="(e) => { e.target.setCustomValidity('') }" 
-                  @invalid="(e) => { e.target.setCustomValidity('Please provide progress details') }" 
-                  required
-                ></textarea>
-              </td>
-              <td v-if="editMode" class="py-1 px-2 border-b border-black">
-                <button @click="removeItem(index)" class="px-2 py-1 bg-red-500 text-white rounded-md text-xs">Remove</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+  <thead>
+    <tr>
+      <th class="py-2 px-2 border-b border-r border-black bg-orange-100">Objectives</th>
+      <th class="py-2 px-2 border-b border-r border-black bg-orange-100">Activities</th>
+      <th class="py-2 px-2 border-b border-r border-black bg-orange-100">Responsible Person</th>
+      <th class="py-2 px-2 border-b border-r border-black bg-orange-100">Time Frame</th>
+      <th class="py-2 px-2 border-b border-r border-black bg-orange-100">Expected Output</th>
+      <th class="py-2 px-2 border-b border-black bg-blue-200">Progress</th>
+      <th v-if="editMode" class="py-2 px-2 border-b border-black">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(item, index) in form.items" :key="index">
+      <td class="py-2 px-2 border-b border-r border-black bg-orange-100 align-top">
+        <textarea 
+          v-model="item.objectives" 
+          :readonly="!editMode" 
+          class="w-full h-full p-1 bg-transparent border border-transparent align-top" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide objectives') }" 
+          required
+        ></textarea>
+      </td>
+      <td class="py-2 px-2 border-b border-r border-black bg-orange-100 align-top">
+        <textarea 
+          v-model="item.activities" 
+          :readonly="!editMode" 
+          class="w-full h-full p-1 bg-transparent border border-transparent align-top" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide the activities') }" 
+          required
+        ></textarea>
+      </td>
+      <td class="py-2 px-2 border-b border-r border-black bg-orange-100 align-top">
+        <textarea 
+          v-model="item.responsible_person" 
+          :readonly="!editMode" 
+          class="w-full h-full p-1 bg-transparent border border-transparent align-top" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide a responsible person name') }" 
+          required
+        ></textarea>
+      </td>
+      <td class="py-2 px-2 border-b border-r border-black bg-orange-100 align-top">
+        <textarea 
+          v-model="item.time_frame" 
+          :readonly="!editMode" 
+          class="w-full h-full p-1 bg-transparent border border-transparent align-top" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide a time frame') }" 
+          required
+        ></textarea>
+      </td>
+      <td class="py-2 px-2 border-b border-r border-black bg-orange-100 align-top">
+        <textarea 
+          v-model="item.expected_output" 
+          :readonly="!editMode" 
+          class="w-full h-full p-1 bg-transparent border border-transparent align-top" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide the expected output') }" 
+          required
+        ></textarea>
+      </td>
+      <td class="py-2 px-2 border-b border-black bg-blue-200 align-top">
+        <textarea 
+          v-model="item.progress" 
+          :readonly="!editMode" 
+          class="w-full h-full p-1 bg-transparent border border-transparent align-top" 
+          @input="(e) => { e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide progress details') }" 
+          required
+        ></textarea>
+      </td>
+      <td v-if="editMode" class="py-2 px-2 border-b border-black">
+        <button @click="removeItem(index)" class="px-2 py-1 bg-red-500 text-white rounded-md text-xs">Remove</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
   
         <!-- Add Row Button -->
         <div v-if="editMode" class="text-right mt-2">
@@ -199,18 +199,32 @@
             <div class="text-xs mt-1">SWO IV / Center Head</div>
           </div>
         </div>
-        <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-          <div class="flex justify-between items-center">
-            <div class="flex flex-col">
-              <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
-              <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-              <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-            </div>
-            <div class="ml-4">
-              <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
-            </div>
-          </div>
-        </div>
+        <div class="border-gray-300 mt-24 text-center text-xs w-full" style="font-family: 'Times New Roman', Times, serif;">
+  <div class="flex justify-between items-center w-full">
+    <div class="flex flex-col w-full">
+      <!-- PAGE Number -->
+      <p class="text-center font-bold">PAGE 1 of {{ totalPages }}</p>
+
+      <!-- Border Line and Address -->
+      <p class="border-t mt-2 mb-1" style="border-top: 3px solid black;"></p>
+      <p class="text-center">DSWD Field Office XI, Ramon Magsaysay Avenue corner DamasoSuazo Street, Davao City
+      </p>
+
+      <!-- Email, Phone, and Website -->
+      <p class="text-center">
+        Email: 
+        <a href="mailto:fo11@dswd.gov.ph" class="text-blue-600 underline">fo11@dswd.gov.ph</a> 
+        Tel. No.: (082) 227-1964 Website: 
+        <a href="http://www.dswd.gov.ph" class="text-blue-600 underline">www.dswd.gov.ph</a>
+      </p>
+    </div>
+
+    <!-- Footer Image (aligned to the right) -->
+    <div class="ml-4">
+      <img src="/images/footerimg.png" alt="Footer Logo" class="h-12 w-24 object-cover">
+    </div>
+  </div>
+</div>
       </div>
     </div>
   
@@ -712,7 +726,7 @@
   
     // 'Prepared by' section - Left aligned
   const preparedByLabel = 'Prepared by:';
-  const preparedByName = this.form.prepared_by || 'N/A'; // Use 'N/A' if not defined
+  const preparedByName = this.form.prepared_by || ''; // Use 'N/A' if not defined
   
   // Set the font for the label and name
   pdf.setFont('Arial', 'normal'); // Set font to normal for the label
@@ -725,7 +739,7 @@
   
   // 'Noted by' section - Right aligned
   const notedByLabel = 'Noted by:';
-  const notedByName = this.center_head || 'N/A'; // Use 'N/A' if not defined
+  const notedByName = this.center_head || ''; // Use 'N/A' if not defined
   const notedByX = pageWidth - 95; // Starting x position for 'Noted by'
   
   // Set the font for the label and name
@@ -779,7 +793,7 @@
   pdf.setFontSize(10);
   pdf.setFont('Arial', 'normal');
   // Use splitTextToSize to handle long text dynamically
-  const progressNotesText = this.form.progress_notes || 'No notes available.';
+  const progressNotesText = this.form.progress_notes || '';
   const maxWidth = pageWidth - 30; // Maximum width for text wrapping
   const splitNotes = pdf.splitTextToSize(progressNotesText, maxWidth); // Split text into multiple lines
   

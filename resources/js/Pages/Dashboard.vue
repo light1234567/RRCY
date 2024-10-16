@@ -109,7 +109,7 @@
           title: { display: true, font: { size: 0 } },
           legend: {
             position: 'bottom',
-            labels: { font: { size: 12 }, margin: 10, boxWidth: 10, padding: 10 }
+            labels: { font: { size: 13 }, margin: 20, boxWidth: 15, padding: 10 }
           }
         },
         responsive: true,
@@ -131,7 +131,7 @@
   </h2>
   <div class="overflow-hidden rounded-lg shadow">
     <!-- Set fixed height and enable scrolling -->
-    <div class="max-h-100 overflow-y-auto hide-scrollbar"> <!-- Adjusted height to max-h-80 -->
+    <div class="max-h-96 overflow-y-auto hide-scrollbar"> <!-- Adjusted height to max-h-80 -->
       <table class="min-w-full leading-normal table-auto relative"> <!-- Add 'relative' for positioning -->
         <thead class="bg-white shadow-md text-black uppercase text-xs font-semibold sticky top-0 z-10"> <!-- Add sticky and z-index -->
           <tr>
@@ -295,7 +295,7 @@
   <h2 class="-mt-4 -ml-4 -mb-4 -mr-4 border border-gray-300 pt-2 text-sm font-semibold text-gray-700 bg-slate-200 px-6 py-1 rounded-sm">
           Age Distribution
         </h2> 
-  <div class="-mb-12 relative w-full" style="height: 400px;">
+  <div class="-mb-12 relative w-full" style="height: 425px;">
     <Bar 
       :data="filteredAgeData"
       :options="{

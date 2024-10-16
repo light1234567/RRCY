@@ -1,10 +1,10 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="isEditable" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class=" flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class=" flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
           <!-- FontAwesome for Back -->
           <i class="fas fa-arrow-left w-4 h-4"></i>
-          <span>Back</span>
+          <span>Cancel</span>
       </button>
   </div>
   
@@ -16,11 +16,11 @@
         @update:currentPage="currentPage = $event" 
       />
       
-      <button v-if="!isEditable" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-          <!-- FontAwesome for Edit -->
-          <i class="fas fa-edit w-4 h-4"></i>
-          <span>Edit</span>
-        </button>
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+        <!-- FontAwesome for Edit -->
+        <i class="fas fa-edit w-4 h-4"></i>
+        <span>Edit</span>
+      </button>
   
       <button v-if="isEditable" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
           <!-- FontAwesome for Save -->
@@ -91,8 +91,8 @@
 
 
       <form ref="LearnerAssessmentForm" @submit.prevent="submitForm">
-
-  <div class="max-w-3xl p-8 bg-white shadow-xl mx-auto my-8 border border-gray-200">
+        <div class="graph-background pt-0.5 -ml-4 -mr-9 -mb-16">
+  <div v-if="currentPage === 1" class="max-w-3xl p-8 bg-white shadow-xl mx-auto my-8 border border-gray-400">
     
     <!-- Header Section with Logo and Document Details -->
     <div class="relative flex justify-between items-center mb-4">
@@ -321,8 +321,22 @@
           </tr>
         </tbody>
       </table>
-
+      <div class="border-t border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <p class="font-bold">PAGE 1 of 1</p>
+            <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+            <p>Email: <span class="text-blue-600 underline">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          </div>
+          <div>
+            <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
+          </div>
+        </div>
+      </div>
+</div>
       <!-- Writing Assessment -->
+      <div v-if="currentPage === 2" class="max-w-3xl p-8 bg-white shadow-xl mx-auto my-8 border border-gray-400">
+
 <h2 class=" text-lg mb-4">Writing Assessment</h2>
 <table class="w-full border-collapse mb-6">
   <thead>
@@ -446,6 +460,7 @@
       </table>
 
       <!-- Group-work Assessment -->
+
 <h2 class=" text-lg mb-4">Group-work Assessment</h2>
 <table class="w-full border-collapse mb-6">
   <thead>
@@ -538,19 +553,9 @@
       </div>
 
       <!-- Footer Section -->
-      <div class="border-t border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-        <div class="flex justify-between items-center">
-          <div class="flex flex-col">
-            <p class="font-bold">PAGE 1 of 1</p>
-            <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p>Email: <span class="text-blue-600 underline">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-          </div>
-          <div>
-            <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
-          </div>
-        </div>
+      
       </div>
-  </div>
+      </div>
 </form>
 </template>
 
@@ -570,7 +575,7 @@ export default {
   },
   data() {
     return {
-      totalPages: 1,
+      totalPages: 2,
       currentPage: 1,
       isEditable: false,
       isModalOpen: false,

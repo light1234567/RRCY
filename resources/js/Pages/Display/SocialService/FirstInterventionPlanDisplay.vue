@@ -1,29 +1,33 @@
 <template>
 
-    <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
-        <!-- FontAwesome for Back -->
-        <i class="fas fa-arrow-left w-4 h-4"></i>
-        <span>Back</span>
-      </button>
-  </div>
-  <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+<!-- Tabs for Actions (Back button visible only in edit mode) -->
+<div v-if="editMode" class="flex  p-4 space-x-4  bg-white">
+  <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
+    <!-- FontAwesome for Back -->
+    <i class="fas fa-arrow-left w-4 h-4"></i>
+    <span>Cancel</span>
+  </button>
+</div>
+
+<!-- Main Action Buttons -->
+<div class="flex justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9  bg-white">
   
   <!-- Add Row Button -->
-  <!-- Pagination Component -->
   <Pagination :totalPages="totalPages" :currentPage="currentPage" @update:currentPage="updatePage" />
+
   <button v-if="editMode" @click="addItem" class="flex items-center space-x-2 px-3 py-1 bg-customBlue text-white rounded-md text-xs">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m-7-7h14" />
     </svg>
     <span>Add Row</span>
   </button>
+
   <!-- Edit Button -->
   <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-        <!-- FontAwesome for Edit -->
-        <i class="fas fa-edit w-4 h-4"></i>
-        <span>Edit</span>
-      </button>
+    <!-- FontAwesome for Edit -->
+    <i class="fas fa-edit w-4 h-4"></i>
+    <span>Edit</span>
+  </button>
 
   <!-- Save Button (shown only in edit mode) -->
   <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
@@ -31,12 +35,11 @@
     <span>Save</span>
   </button>
 
-<!-- Export to PDF Button -->
-<button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-  <i class="fas fa-file-pdf w-4 h-4"></i>
-  <span>Export PDF</span>
-</button>
-
+  <!-- Export to PDF Button -->
+  <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+    <i class="fas fa-file-pdf w-4 h-4"></i>
+    <span>Export PDF</span>
+  </button>
 
 </div>
 
@@ -45,7 +48,7 @@
   <div class="graph-background p-0.5 -mr-9 -mb-16">
 
   <div v-if="currentPage === 1">
-    <div class="max-w-7xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+    <div class="h-[820px] max-w-7xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
       <div class="relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
         <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
@@ -70,29 +73,29 @@
             <div class="flex items-center">
               <label class="font-semibold w-1/5">PERIOD: <span class="text-red-500">*</span></label>
               <input 
-  type="text" 
-  v-model="plan.period" 
-  :class="{'twinkle-border': editMode}" 
-  class="w-3/4 border border-transparent p-1" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the period for the plan'); }"
-  required
-/>
-            </div>
-            <div class="flex items-center relative">
-              <label class="font-semibold w-1/5 whitespace-nowrap">DATE PREPARED: <span class="text-red-500">*</span></label>
-              <input 
-  type="date" 
-  v-model="plan.date_prepared" 
-  :class="{'twinkle-border': editMode}" 
-  class="ml-12 w-3/4 border border-transparent p-1" 
-  :readonly="!editMode" 
-   :max="currentDateTime.date"
-  required 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date for this field'); }"
-/>
+                type="text" 
+                v-model="plan.period" 
+                :class="{'twinkle-border': editMode}" 
+                class="w-3/4 border border-transparent p-1" 
+                :readonly="!editMode" 
+                @input="(e) => { e.target.setCustomValidity('') }" 
+                @invalid="(e) => { e.target.setCustomValidity('Please provide the period for the plan'); }"
+                required
+              />
+                          </div>
+                          <div class="flex items-center relative">
+                            <label class="font-semibold w-1/5 whitespace-nowrap">DATE PREPARED: <span class="text-red-500">*</span></label>
+                            <input 
+                type="date" 
+                v-model="plan.date_prepared" 
+                :class="{'twinkle-border': editMode}" 
+                class="ml-12 w-3/4 border border-transparent p-1" 
+                :readonly="!editMode" 
+                :max="currentDateTime.date"
+                required 
+                @input="(e) => { e.target.setCustomValidity('') }" 
+                @invalid="(e) => { e.target.setCustomValidity('Please provide a valid date for this field'); }"
+              />
 
               <span class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer" @click="openCalendar">
                 
@@ -202,7 +205,7 @@
             <div class="text-xs mt-1">Center Head/ SWO IV</div>
           </div>
         </div>
-        <div class="border-gray-300 mt-24 text-center text-xs w-full" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="border-gray-300 mt-[200px] text-center text-xs w-full" style="font-family: 'Times New Roman', Times, serif;">
   <div class="flex justify-between items-center w-full">
     <div class="flex flex-col w-full">
       <!-- PAGE Number -->

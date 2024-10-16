@@ -1,10 +1,10 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class="fas fa-arrow-left w-4 h-4"></i>
-        <span>Back</span>
+        <span>Cancel</span>
       </button>
   </div>
   
@@ -15,7 +15,7 @@
         :currentPage="currentPage" 
         @update:currentPage="currentPage = $event" 
       />
-      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
@@ -36,17 +36,7 @@
   </div>
   
   
-    <div class="graph-background pt-0.5  -mr-9 -mb-16">
-    <div>
-      <div ref="contentToPrint" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
-        <div class="relative flex justify-between items-center mb-2">
-          <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-          <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
-  </p>
-        </div>
-        <div class="text-center mb-8">
-          <h1 class="text-[35px] font-bold">KASABUTAN</h1>
-        </div>
+ 
   
         <!-- Save Confirmation Modal -->
         <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
@@ -101,7 +91,17 @@
             </div>
           </div>
         </div>
-        
+        <div class="graph-background pt-0.5  -mr-9 -mb-16">
+    <div>
+      <div ref="contentToPrint" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+        <div class="relative flex justify-between items-center mb-2">
+          <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
+          <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
+  </p>
+        </div>
+        <div class="text-center mb-8">
+          <h1 class="text-[35px] font-bold">KASABUTAN</h1>
+        </div>
         
         <div class="mb-8 text-justify">
           <p class="mb-4">

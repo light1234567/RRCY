@@ -1,10 +1,10 @@
 <template>
   <!-- Tabs for Actions (Back button visible only in edit mode) -->
 <div v-if="editMode" class="flex absolute p-4 space-x-4">
-  <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+  <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
     <!-- FontAwesome for Back -->
     <i class="fas fa-arrow-left w-4 h-4"></i>
-    <span>Back</span>
+    <span>Cancel</span>
   </button>
 </div>
 
@@ -20,10 +20,10 @@
 
   <!-- Edit Button (visible only when not in edit mode) -->
   <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
-    <!-- FontAwesome for Edit -->
-    <i class="fas fa-edit w-4 h-4"></i>
-    <span>Edit</span>
-  </button>
+        <!-- FontAwesome for Edit -->
+        <i class="fas fa-edit w-4 h-4"></i>
+        <span>Edit</span>
+      </button>
 
   <!-- Save Button (visible only in edit mode) -->
   <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
@@ -491,7 +491,7 @@
 </div>
 
 
-<div  v-if="currentPage === 2" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border bg-blue-100">
+<div  v-if="currentPage === 2" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
     <div class="flex justify-end text-right">
       
       <p class="flex justify-center text-xs">DSWD-GF-010 | REV 02 | 22 SEPT 2023</p>

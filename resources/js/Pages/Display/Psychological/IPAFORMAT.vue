@@ -1,10 +1,10 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class="fas fa-arrow-left w-4 h-4"></i>
-        <span>Back</span>
+        <span>Cancel</span>
       </button>
   </div>
   
@@ -15,7 +15,7 @@
         :currentPage="currentPage" 
         @update:currentPage="currentPage = $event" 
       />
-      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
@@ -35,15 +35,16 @@
   
   </div>
     
-  
   <!-- Page 1 -->
-  <form ref="IPAForm" @submit.prevent="submitForm" class="space-y-8 w-full">
+  <form ref="IPAForm" @submit.prevent="submitForm" class="">
+    <div class="graph-background pt-0.5  -mr-9 -mb-8">
+
     <div class="-mt-8 mx-auto p-8 rounded-lg max-w-full" style="width: 8.5in; height: 13in;">
     
       <div v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
         <div class="relative flex justify-between items-center mb-2">
           <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-          <p class="text-xs text-right italic">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
+          <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
         </div>
      
   
@@ -254,7 +255,7 @@
     
    <div v-if="currentPage === 2" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
     <div class="relative flex justify-end items-center mb-2">
-              <p class="text-xs text-right">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
+      <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
             </div>
    
             <div class="space-y-2">
@@ -360,9 +361,9 @@
   
   
    <!-- Page 3 -->
-   <div v-if="currentPage === 3" class="max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto border border-gray-200">
+   <div v-if="currentPage === 3" class="mt-8 max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto border border-gray-400">
     <div class="relative flex justify-end items-center mb-2">
-              <p class="text-xs text-right">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
+      <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
             </div>
   
             <div class="space-y-4 mt-6">
@@ -507,6 +508,7 @@
          </button>
        </div>
      </div>
+   </div>
    </div>
    </div>
   </form>

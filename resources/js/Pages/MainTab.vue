@@ -35,7 +35,7 @@
             <p class="text-sm"><span class="font-semibold">Age:</span> {{ calculateAge(client.date_of_birth) }} years old</p>
             <p class="text-sm"><span class="font-semibold">Address:</span> {{ formattedAddress }}</p>
             <p class="text-sm">
-  <span class="font-semibold">Case Status:</span>
+  <span class="font-semibold">Case Status: </span>
   <span v-if="!editCaseStatusMode">{{ client?.admission?.case_status || 'N/A' }}</span>
   <select v-if="editCaseStatusMode" v-model="editedClient.case_status">
     <option v-for="status in caseStatusOptions" :key="status" :value="status">
@@ -47,7 +47,7 @@
 </p>
 
 <p class="text-sm">
-  <span class="font-semibold">Child Status:</span>
+  <span class="font-semibold">Child Status: </span>
   <span v-if="!editChildStatusMode">{{ client.child_status }}</span>
   <select v-if="editChildStatusMode" v-model="editedClient.child_status">
     <option v-for="status in childStatusOptions" :key="status" :value="status">
@@ -55,7 +55,7 @@
     </option>
   </select>
   <!-- Edit icon at the end of Child Status -->
-  <i v-if="!editChildStatusMode" class="fas fa-edit ml-2 cursor-pointer" @click="toggleEditChildStatus"></i>
+  <i v-if="!editChildStatusMode" class="border-0 fas fa-edit ml-2 cursor-pointer" @click="toggleEditChildStatus"></i>
 </p>
 
 

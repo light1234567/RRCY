@@ -3,10 +3,10 @@
   <div>
 <!-- Tabs for Actions -->
 <div v-if="editMode" class="flex absolute p-4 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-600 text-white rounded-md text-xs">
       <!-- FontAwesome for Back -->
-      <i class="fas fa-arrow-left w-4 h-4"></i>
-      <span>Back</span>
+      <i class=" fas fa-arrow-left w-4 h-4"></i>
+      <span>Cancel</span>
     </button>
 </div>
 

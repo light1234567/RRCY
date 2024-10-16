@@ -31,7 +31,7 @@
 
     <!-- Case Status Filter -->
     <div class="relative">
-      <select v-model="selectedCaseStatus" class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
+      <select v-model="selectedCaseStatus" class="text-sm block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
         <option value="">Case Status</option>
         <option v-for="status in caseStatuses" :key="status" :value="status">{{ status }}</option>
       </select>
@@ -40,7 +40,7 @@
 
     <!-- Child Status Filter -->
     <div class="relative">
-      <select v-model="selectedChildStatus" class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
+      <select v-model="selectedChildStatus" class="text-sm  block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
         <option value="">Child Status</option>
         <option v-for="status in childStatuses" :key="status" :value="status">{{ status }}</option>
       </select>
@@ -52,10 +52,10 @@
 
 
       <!-- Clients Table -->
-      <div class="-ml-3 overflow-hidden  sm:rounded-lg mt-6">
+      <div class="-ml-4 -mr-4 overflow-hidden  sm:rounded-lg ">
         <div class="p-4">
           <table class="min-w-full divide-y  table-auto">
-            <thead class="border border-gray-300 text-white bg-white">
+            <thead class="border border-gray-200 text-white bg-white">
               <tr>
                 <th class="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Name</th>
                 <th class="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Age</th>
@@ -64,7 +64,7 @@
                 <th class="px-6 py-3 text-left text-xs font-bold text-gray-900 uppercase tracking-wider">Date Admitted</th>
               </tr>
             </thead>
-            <tbody class=" divide-y divide-gray-300">
+            <tbody class=" divide-y divide-gray-200">
               <tr v-for="(client, index) in sortedClients" :key="index"
                   class="cursor-pointer hover:bg-gray-100 transition-all duration-150"
                   @click="handleRowClick(client)">
@@ -103,7 +103,7 @@
     <!-- First Page Button (Disabled if on the first page) -->
     <button @click="firstPage" :disabled="currentPage === 1" 
             class="text-xs px-3 py-1 bg-gray-100 text-black rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-      « Previous
+      « 
     </button>
 
     <!-- Previous Page Button (Disabled if on the first page) -->
@@ -131,7 +131,7 @@
     <!-- Last Page Button (Disabled if on the last page) -->
     <button @click="lastPage" :disabled="currentPage === totalPages" 
             class="text-xs px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-     Next »
+      »
     </button>
   </div>
 </div>

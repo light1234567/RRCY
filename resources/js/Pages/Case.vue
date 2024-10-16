@@ -9,11 +9,11 @@
     </template>
 
     <!-- Container for Main Client Information -->
-    <div class="w-9/10 ml-7 max-w-8xl mt-6 space-y-6">
+    <div class="bg-slate-100 min-h-screen w-9/10 ml-7 max-w-8xl mt-6 space-y-6">
       <!-- Main Client Information -->
       <div
         v-if="client"
-        class="flex -mt-5 items-center justify-between p-6 bg-white border border-gray-200 rounded-lg shadow-lg"
+        class="flex -mt-5 items-center justify-between p-6 bg-white border border-gray-200  shadow-lg"
       >
         <!-- Left: Client Image and Details -->
         <div class="flex items-center space-x-6">
