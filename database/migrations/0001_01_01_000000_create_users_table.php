@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->string('lname', 15);
             $table->string('middlename', 15)->nullable();
             $table->string('email', 30)->unique();
-            $table->string('role',20);
+            $table->string('role', 20);
             $table->string('status', 1)->default('u'); // Default status "unverified"
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password', 60);
@@ -43,6 +44,19 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        // Insert initial data into users table
+        DB::table('users')->insert([    
+            'id' => 1,
+            'fname' => 'RRCY',
+            'lname' => 'TEST',
+            'email' => 'rrcytest@gmail.com',
+            'role' => 'social services',
+            'status' => 'v', // Use 'v' for verified
+            'password' => bcrypt('12345678'), // Use the password '12345678'
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     /**
