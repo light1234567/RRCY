@@ -142,14 +142,6 @@
               <span>Psychologist</span>
             </div>
           </div>
-          <div class="space-y-2">
-            <label for="ApprovedBy" class="block mb-12 mt-12 font-sm">Approved by:</label>
-            <div class="flex flex-col">
-              <strong><input type="text" id="preparedBy" v-model="form.approved_by" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode" 
-                @input="form.approved_by = removeNumbers(form.approved_by)"
-                maxlength="50"></strong>
-            </div>
-          </div>
           <div class="space-y-2 mt-4">
             <label for="notedBy" class="block mb-12 mt-12 font-sm">Noted by:</label>
             <div class="flex flex-col">
@@ -496,82 +488,74 @@ export default {
   const footerHeight = 0; // Adjust to fit the height of your footer
   const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
   const maxWidth = 170; // Maximum width for text
-  let contentYPos = 75; // Start Y position for content
+  let contentYPos = 67; // Start Y position for content
   let initialX = 20; // X position for content
   let currentPage = 1; // Start at page 1
   
-  const addFooter = () => {
-  if (currentPage === 1) {
-    pdf.setFontSize(9);
-    pdf.setFont('TimesNewRoman', 'bold');
-    pdf.setLineWidth(0.5);
-    pdf.line(17, 335, 173, 335); // Footer line
-
-    pdf.setFont('times', 'normal');
-    const footerText = pdf.splitTextToSize('DSWD Field Office XI , Ramon Magsaysay Avenue corner Damaso Suazo Street, Davao City, Philippines 8000', 160);
-    pdf.text(footerText, 95, 340, { align: 'center' });
-    pdf.text('Website: ', 45, 345, { align: 'center' });
-    pdf.text('Tel Nos.: (082) 227-1964 Email:', 105, 345, { align: 'center' });
-
-    pdf.setFontSize(9);
-    pdf.setTextColor(0, 0, 255); // Blue text color for links
-    pdf.text('http://www.dswd.gov.ph', 67, 345, { align: 'center' });
-    pdf.text('fo11@dswd.gov.ph ', 140, 345, { align: 'center' });
-    pdf.setLineWidth(0);
-    pdf.setDrawColor(0, 0, 255); // Blue lines for links
-    pdf.line(51, 346, 83, 346); // Underline for website link
-    pdf.line(127, 346, 153, 346); // Underline for email link
-
-    const footerImgData = '/images/footerimg.png';
-    pdf.addImage(footerImgData, 'PNG', 175, 330, 25, 12); // Footer image
-
-  } else {
-    // Footer for Page 2 and beyond
-    pdf.setTextColor(0, 0, 0); // Black text color for footer
-    pdf.setFontSize(8.5);
-    pdf.setFont('TimesNewRoman', 'bold');
-    pdf.setDrawColor(0, 0, 0); // Black lines for footer
-    pdf.setLineWidth(0.5);
-    pdf.line(17, 335, 193, 335); // Footer line extending further
-
-    pdf.setFont('times', 'bold');
-    pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 340, { align: 'center' });
-  }
-
-  // Reset the settings to defaults for the content after the footer
-  pdf.setTextColor(0, 0, 0); // Reset text color to black
-  pdf.setFontSize(11); // Reset font size to 11 (or whatever default size you use)
-  pdf.setFont('arial', 'normal'); // Reset font to Arial and normal style
-  pdf.setLineWidth(0); // Reset line width if needed
-  pdf.setDrawColor(0, 0, 0); // Reset draw color to black
-};
-
-    
   const addHeader = () => {
-    // Header text
-    pdf.setFontSize(9);
-    pdf.setFont('TimesNewRoman', 'italic');
-    pdf.text('DSWD-GF-010 | REV 02 | 22 SEP 2023', 135, 20);
-  };
+      // Header text
+      pdf.setFontSize(9);
+      pdf.setFont('TimesNewRoman', 'italic');
+      pdf.text('DSWD-GF-010 | REV 02 | 22 SEP 2023', 135, 18);
+    };
+    
+    // Helper function to add a new page if content exceeds the page height
+    const addNewPageIfNeeded = () => {
+      if (contentYPos >= maxContentHeight) {
+        addFooter(); // Add the footer for the current page
+        pdf.setTextColor(0, 0, 0);
+        pdf.addPage(); // Add new page
+        addHeader(); // Add the header on the new page
+        currentPage++; // Increment page number
+        contentYPos = 40; // Reset Y position for the new page
+        pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
+        pdf.setFontSize(11); // Set font size back to what it was
+      }
+    };
   
-  // Helper function to add a new page if content exceeds the page height
-  const addNewPageIfNeeded = () => {
-    if (contentYPos >= maxContentHeight) {
-      addFooter(); // Add the footer for the current page
-      pdf.addPage(); // Add new page
-      addHeader(); // Add the header on the new page
-      currentPage++; // Increment page number
-      contentYPos = 40; // Reset Y position for the new page
-      pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
-      pdf.setFontSize(11); // Set font size back to what it was
-    }
-  };
+    
+  const addFooter = () => {
+      if (currentPage === 1) {
+        pdf.setFontSize(9);
+        pdf.setFont('TimesNewRoman', 'bold');
+        pdf.setLineWidth(0.5);
+        pdf.line(21, 335, 176, 335); // Footer line
+  
+        pdf.setFont('times', 'normal');
+        const footerText = pdf.splitTextToSize('DSWD Field Office XI , Ramon Magsaysay Avenue corner Damaso Suazo Street, Davao City, Philippines 8000', 160);
+        pdf.text(footerText, 105  , 338, { align: 'center' });
+        pdf.text('Website: ', 53, 342, { align: 'center' });
+        pdf.text('Tel Nos.: (082) 227-1964 Email:', 116, 342, { align: 'center' });
 
-  addHeader();
-  pdf.setTextColor(0, 0, 0);
-  // DSWD logo
-  const imgData = '/images/headerlogo2.png';
-  pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
+        pdf.setFontSize(10);
+        pdf.setTextColor(0, 0, 255);
+        pdf.text('http://www.dswd.gov.ph', 77, 342, { align: 'center' });
+        pdf.text('fo11@dswd.gov.ph ', 152, 342, { align: 'center' });
+        pdf.setLineWidth(0);
+        pdf.setDrawColor(0, 0, 255);
+        pdf.line(59, 343, 95, 343);
+        pdf.line(138, 343, 166, 343);
+        
+
+      } else {
+        // Footer for Page 2 and beyond
+        pdf.setTextColor(0, 0, 0);
+        pdf.setFontSize(8.3);
+        pdf.setFont('TimesNewRoman', 'bold');
+        pdf.setDrawColor(0, 0, 0);
+        pdf.setLineWidth(0.5);
+        pdf.line(21, 335, 188, 335); // Footer line
+  
+        pdf.setFont('times', 'bold');
+        pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION/REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 338, { align: 'center' });
+      }
+    };
+
+    addHeader();
+    pdf.setTextColor(0, 0, 0);
+    // DSWD logo
+    const imgData = '/images/headerlogo2.png';
+    pdf.addImage(imgData, 'PNG', 16, 1, 65, 32);
 
   pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(12);
@@ -586,7 +570,7 @@ export default {
   pdf.text(`Name: ${this.form.name || ''}`, initialX, contentYPos);
   contentYPos += 6;
   pdf.text(`Age: ${this.form.age || ''}`, initialX, contentYPos);
-  pdf.text('years old', initialX + 16, contentYPos);
+  pdf.text('years old', initialX + 15, contentYPos);
   
   contentYPos += 6;
   addNewPageIfNeeded();
@@ -656,7 +640,7 @@ export default {
   });
 
   // Prepared by Section
-  contentYPos += 50;
+  contentYPos += 10;
   contentYPos += rowHeight; 
   addNewPageIfNeeded();
   pdf.setFontSize(11);
@@ -672,10 +656,11 @@ export default {
   contentYPos += 4; 
   addNewPageIfNeeded();
   pdf.setFont('arial', 'normal');
-  pdf.setFontSize(10);
-  pdf.text('Psychologist', initialX, contentYPos);
+  pdf.setFontSize(11);
+  pdf.text('Psychologist I', initialX, contentYPos);
 
   // Noted by Section
+  contentYPos += 10; 
   contentYPos += rowHeight; 
   addNewPageIfNeeded();
   pdf.setFontSize(11);
@@ -685,14 +670,14 @@ export default {
   contentYPos += 5; 
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
-  pdf.setFontSize(11);
-  pdf.text('ANGELIC B. PAÑA, RSW, MSSW', initialX, contentYPos);
-  contentYPos += 4; 
-  addNewPageIfNeeded();
-  pdf.setFont('arial', 'normal');
-  pdf.setFontSize(10);
-  pdf.text('SWO IV / Center Head', initialX, contentYPos);
-
+    pdf.setFontSize(11);
+    pdf.text(this.center_head, initialX, contentYPos);
+    contentYPos += 4; 
+    addNewPageIfNeeded();
+    pdf.setFont('arial', 'normal');
+    pdf.setFontSize(11);
+    pdf.text('SWO IV / Center Head', initialX, contentYPos);
+  
   // Add the footer for the last page
   addFooter();
 

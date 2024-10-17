@@ -769,7 +769,7 @@ confirmSave() {
       // Header text
       pdf.setFontSize(9);
       pdf.setFont('TimesNewRoman', 'italic');
-      pdf.text('DSWD-GF-010 | REV.00 | 12 SEP 2023', 135, 20);
+      pdf.text('DSWD-GF-010 | REV 02 | 22 SEP 2023', 135, 15);
     };
     
     // Helper function to add a new page if content exceeds the page height
@@ -791,50 +791,50 @@ confirmSave() {
       if (currentPage === 1) {
         pdf.setFontSize(9);
         pdf.setFont('TimesNewRoman', 'bold');
-        pdf.setLineWidth(0.5);
-        pdf.line(17, 335, 173, 335); // Footer line
+        pdf.setLineWidth(0);
+        pdf.line(21, 335, 176, 335); // Footer line
   
         pdf.setFont('times', 'normal');
-        const footerText = pdf.splitTextToSize('DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000', 160);
-        pdf.text(footerText, 95, 340, { align: 'center' });
-        pdf.text('Website: ', 45, 345, { align: 'center' });
-        pdf.text('Tel Nos.: (082) 227-1964 Email:', 105, 345, { align: 'center' });
+        const footerText = pdf.splitTextToSize('DSWD Field Office XI , Ramon Magsaysay Avenue corner Damaso Suazo Street, Davao City, Philippines 8000', 160);
+        pdf.text(footerText, 105  , 338, { align: 'center' });
+        pdf.text('Website: ', 53, 342, { align: 'center' });
+        pdf.text('Tel Nos.: (082) 227-1964 Email:', 116, 342, { align: 'center' });
 
-        pdf.setFontSize(9);
+        pdf.setFontSize(10);
         pdf.setTextColor(0, 0, 255);
-        pdf.text('http://www.dswd.gov.ph', 67, 345, { align: 'center' });
-        pdf.text('fo11@dswd.gov.ph ', 140, 345, { align: 'center' });
+        pdf.text('http://www.dswd.gov.ph', 77, 342, { align: 'center' });
+        pdf.text('fo11@dswd.gov.ph ', 152, 342, { align: 'center' });
         pdf.setLineWidth(0);
         pdf.setDrawColor(0, 0, 255);
-        pdf.line(51, 346, 83, 346);
-        pdf.line(127, 346, 153, 346);
+        pdf.line(59, 343, 95, 343);
+        pdf.line(138, 343, 166, 343);
         
-
 
         //pdf.text('Website: http://www.dswd.gov.ph Tel Nos.: (082) 227-1964 Email: fo11@dswd.gov.ph ', 105, 345, { align: 'center' });
   
         const footerImgData = '/images/footerimg.png';
-        pdf.addImage(footerImgData, 'PNG', 175, 330, 25, 12); // Footer image
+        pdf.addImage(footerImgData, 'PNG', 189, 330, 25, 12); // Footer image
   
       } else {
         // Footer for Page 2 and beyond
         pdf.setTextColor(0, 0, 0);
-        pdf.setFontSize(8.5);
+        pdf.setFontSize(8.3);
         pdf.setFont('TimesNewRoman', 'bold');
         pdf.setDrawColor(0, 0, 0);
         pdf.setLineWidth(0.5);
-        pdf.line(17, 335, 193, 335); // Footer line extending further
+        pdf.line(21, 335, 188, 335); // Footer line
   
         pdf.setFont('times', 'bold');
-        pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 340, { align: 'center' });
+        pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION/REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 338, { align: 'center' });
       }
     };
 
     addHeader();
+    
     pdf.setTextColor(0, 0, 0);
     // DSWD logo
     const imgData = '/images/headerlogo2.png';
-    pdf.addImage(imgData, 'PNG', 15, 10, 50, 30);
+    pdf.addImage(imgData, 'PNG', 15, 10, 65, 32);
   
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(13);
@@ -1123,9 +1123,22 @@ confirmSave() {
     contentYPos += 4; 
     addNewPageIfNeeded();
     pdf.setFont('arial', 'normal');
-    pdf.setFontSize(10);
-    pdf.text('Psychologist I', initialX, contentYPos);
   
+    contentYPos += rowHeight; 
+    addNewPageIfNeeded();
+    pdf.text('Approved by:', initialX, contentYPos);
+    
+    contentYPos += rowHeight; 
+    addNewPageIfNeeded();
+    pdf.setFont('arialbd', 'bold');
+    pdf.setFontSize(11);
+    pdf.text(this.form.approved_by, initialX, contentYPos);
+
+    contentYPos += 4; 
+    addNewPageIfNeeded();
+    pdf.setFont('arial', 'normal');
+    pdf.setFontSize(11);
+
     // Noted by Section
     contentYPos += rowHeight; 
     addNewPageIfNeeded();
@@ -1135,11 +1148,11 @@ confirmSave() {
     addNewPageIfNeeded();
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', initialX, contentYPos);
+    pdf.text(this.center_head, initialX, contentYPos);
     contentYPos += 4; 
     addNewPageIfNeeded();
     pdf.setFont('arial', 'normal');
-    pdf.setFontSize(10);
+    pdf.setFontSize(11);
     pdf.text('SWO IV / Center Head', initialX, contentYPos);
   
     // Add the footer for the last page
@@ -1151,7 +1164,7 @@ confirmSave() {
       pdf.setPage(i);
       pdf.setFontSize(9);
       pdf.setFont('TimesNewRoman', 'bold');
-      pdf.text(`PAGE ${i} of ${totalPages}`, 105, 333, { align: 'center' }); // Update the footer with the correct total pages
+      pdf.text(`PAGE ${i} of ${totalPages}`, 105, 334, { align: 'center' }); // Update the footer with the correct total pages
     }
   
     // Save the PDF with dynamic file name

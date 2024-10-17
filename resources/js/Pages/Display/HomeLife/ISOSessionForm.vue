@@ -58,35 +58,43 @@
       </div>
   
       <!-- Session Information Section -->
-      <div class="mb-6 flex items-center">
-      <!-- Session Field -->
-      <div class="w-1/2 flex items-center">
-        <label for="session" class="block font-medium w-auto">Session:</label>
-        <input type="text" id="session" v-model="form.session" class="underline-input shadow-sm w-1/2" :readonly="!editMode" maxlength="20" >
-      </div>
-  
-      <!-- Date Conducted Field -->
-      <div class="w-1/2 flex items-center justify-end space-x-2">
-        <label for="dateConducted" class="block font-medium text-right">Date Conducted:</label>
-        <input 
-            type="date" 
-            id="dateConducted" 
-            v-model="form.date_conducted" 
-            class="underline-input shadow-sm w-1/2" 
-            :readonly="!editMode" 
-            :max="new Date().toLocaleString('en-CA', { 
-      timeZone: 'Asia/Manila', 
-      year: 'numeric', 
-      month: '2-digit', 
-      day: '2-digit' 
-    }).split(',')[0]"  
-            @input="(e) => { e.target.setCustomValidity('') }" 
-            @invalid="(e) => { e.target.setCustomValidity('Please provide a date conducted') }" 
-            required
-          />
+      <div class="mb-6 flex flex-col items-center"> 
+  <!-- Session Field -->
+  <div class="w-full flex justify-center items-center">
+    <input 
+      type="text" 
+      id="session" 
+      v-model="form.session" 
+      class="underline-input shadow-sm text-center w-1/3" 
+      :readonly="!editMode" 
+      maxlength="20"
+    >
+    <label for="session" class="block font-medium mr-2">Session</label>
+    
+  </div>
 
-        </div>
-      </div>
+  <!-- Date Conducted Field -->
+  <div class="w-full flex justify-center items-center mt-4">
+    <label for="dateConducted" class="block font-medium mr-2">Date Conducted</label>
+    <input 
+      type="date" 
+      id="dateConducted" 
+      v-model="form.date_conducted" 
+      class="underline-input shadow-sm text-center w-1/3" 
+      :readonly="!editMode" 
+      :max="new Date().toLocaleString('en-CA', { 
+        timeZone: 'Asia/Manila', 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit' 
+      }).split(',')[0]"  
+      @input="(e) => { e.target.setCustomValidity('') }" 
+      @invalid="(e) => { e.target.setCustomValidity('Please provide a date conducted') }" 
+      required
+    >
+  </div>
+</div>
+
      
       <div class="mb-6 flex flex-col items-center">
         <input 
@@ -458,7 +466,7 @@ confirmSave() {
       // Header text
       pdf.setFontSize(9);
       pdf.setFont('TimesNewRoman', 'italic');
-      pdf.text('DSWD-GF-010 | REV 02 | 17 AUG 2022', 135, 20);
+      pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 135, 20);
     };
     
     // Helper function to add a new page if content exceeds the page height
@@ -476,19 +484,27 @@ confirmSave() {
   
     const addFooter = () => {
         if (currentPage === 1) {
-          pdf.setFontSize(9);
+          pdf.setFontSize(8);
           pdf.setFont('TimesNewRoman', 'bold');
           pdf.setLineWidth(0.5);
-          pdf.line(17, 335, 173, 335); // Footer line
+          pdf.line(21, 335, 190, 335); // Footer line
     
           pdf.setFont('times', 'normal');
           const footerText = pdf.splitTextToSize('DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000', 160);
-          pdf.text(footerText, 95, 340, { align: 'center' });
-          pdf.text('Website: http://www.rrcy.fo11@dswd.gov.ph Tel Nos.: (082) 293-03-06', 105, 345, { align: 'center' });
-    
-          const footerImgData = '/images/footerimg.png';
-          pdf.addImage(footerImgData, 'PNG', 175, 330, 25, 12); // Footer image
-    
+          pdf.text(footerText, 105, 340, { align: 'center' });
+          pdf.text('Website:', 71, 343, { align: 'center' });
+          pdf.text('Tel Nos.: (082) 293-03-06', 133, 343, { align: 'center' });
+
+
+
+          pdf.setFontSize(8);
+        pdf.setTextColor(0, 0, 255);
+        pdf.text('http://www.rrcy.fo11@dswd.gov.ph', 97, 343, { align: 'center' });
+        pdf.setLineWidth(0);
+        pdf.setDrawColor(0, 0, 255);
+        pdf.line(76, 344, 118, 344);
+
+        pdf.setTextColor(0, 0, 0);
         } else {
           // Footer for Page 2 and beyond
           pdf.setFontSize(8.5);
@@ -511,12 +527,12 @@ confirmSave() {
         pdf.setFontSize(10);
       pdf.setFont('arialbd', 'bold'); 
       pdf.text('PROTECTIVE SERVICES DIVISION', 150, 19, { align: 'center' });
-      pdf.text('Regional Rehabilitation Center for', 150, 24, { align: 'center' });
-      pdf.text('Youth FOR XI', 150, 28, { align: 'center' });
+      pdf.text('Regional Rehabilitation Center for', 150, 23, { align: 'center' });
+      pdf.text('Youth FOR XI', 150, 27, { align: 'center' });
     
       pdf.setFontSize(8);
-      pdf.setFont('arial', 'italic'); 
-      pdf.text('DSWD-GF-010A | REV 02 | 17 AUG 2022', 150, 32, { align: 'center' });
+      pdf.setFont('arial', 'normal'); 
+      pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 150, 32, { align: 'center' });
     
   
     contentYPos += -20;
@@ -529,29 +545,35 @@ confirmSave() {
   
     // Content starts below title
     pdf.setFont('arial', 'normal');
-    pdf.setFontSize(13);
+    pdf.setFontSize(12);
   
     contentYPos += rowHeight;
   
-  contentYPos += 6;
-  pdf.text(`Session:`, initialX, contentYPos);
-  
-  
-  const sessionValue = `${this.form.session || ''}`;
-  const sessionWidth = pdf.getTextWidth(sessionValue);
-  
-  
-  pdf.text(sessionValue, initialX + 18, contentYPos);  
-  pdf.line(initialX + 18, contentYPos + 1, initialX + 18 + sessionWidth, contentYPos + 1); 
-  
-  pdf.text(`Date Conducted:`, initialX + 100, contentYPos);
+    contentYPos += 6;
+const fetchedData = `${this.form.session || ''}`;  // Only fetch session data
+const staticText = 'Session';  // Static "Session" text
+const fetchedDataWidth = pdf.getTextWidth(fetchedData);  // Width of the fetched session data
+const combinedText = `${fetchedData} ${staticText}`;  // Combined string for display
+
+// Center the combined text (fetched data + "Session")
+pdf.text(combinedText, 105, contentYPos, { align: "center" });
+
+// Calculate starting X for underlining only the fetched data
+const centeredXForFetch = 105 - (pdf.getTextWidth(combinedText) / 2);  // Center combined text
+const startXForUnderline = centeredXForFetch;  // Starting X position of fetched data
+
+// Draw underline just for the fetched data part
+pdf.line(startXForUnderline, contentYPos + 1, startXForUnderline + fetchedDataWidth, contentYPos + 1);
+
+  contentYPos +=7;
+  pdf.text(`Date Conducted`, initialX + 50, contentYPos);
   
   
   const dateValue = `${this.form.date_conducted || ''}`;
   const dateWidth = pdf.getTextWidth(dateValue);
   
-  pdf.text(dateValue, initialX + 135, contentYPos); 
-  pdf.line(initialX + 135, contentYPos + 1, initialX + 135 + dateWidth, contentYPos + 1); 
+  pdf.text(dateValue, initialX +82, contentYPos); 
+  pdf.line(initialX + 82, contentYPos + 1, initialX + 82 + dateWidth, contentYPos + 1); 
   
     contentYPos += 15;
   
@@ -681,16 +703,14 @@ confirmSave() {
     contentYPos += 4; 
     pdf.setFont('arial', 'normal');
     pdf.setFontSize(10);
-    pdf.line(20, contentYPos+-3, 55, contentYPos+-3);
     pdf.text('HP III/SHP', initialX, contentYPos+2);
   
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text('ANGELIC B. PAÑA', initialX+100, contentYPos+-4);
+    pdf.text(this.center_head, initialX+100, contentYPos+-4);
     contentYPos += 5; 
     pdf.setFont('arial', 'normal');
     pdf.setFontSize(10);
-    pdf.line(120, contentYPos+-8, 157, contentYPos+-8);
     pdf.text('SWO IV / Center Head', initialX+100, contentYPos+-4);
   
     // Add the footer for the last page

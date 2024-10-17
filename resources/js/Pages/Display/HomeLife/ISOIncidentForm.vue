@@ -101,7 +101,7 @@
            <p class="item-center  text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
            <p class=" text-sm font-semibold">Regional Rehabilitation Center for</p>
            <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-           <p class="text-center text-xs">DSWD-GF-010 | REV 02 | 17 AUG 2022</p>
+           <p class="text-center text-xs">DSWD-GF-010 | REV 10 | 17 AUG 2022</p>
            <div class="text-xs font-semibold pt-12">
     <p class="text-sm font-semibold">
     DRN :
@@ -551,7 +551,7 @@ confirmSave() {
       // Header text
       pdf.setFontSize(9);
       pdf.setFont('TimesNewRoman', 'italic');
-      pdf.text('DSWD-GF-010 | REV 02 | 17 AUG 2022', 135, 20);
+      pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 135, 20);
     };
     
     // Helper function to add a new page if content exceeds the page height
@@ -569,19 +569,27 @@ confirmSave() {
   
     const addFooter = () => {
         if (currentPage === 1) {
-          pdf.setFontSize(9);
+          pdf.setFontSize(8);
           pdf.setFont('TimesNewRoman', 'bold');
           pdf.setLineWidth(0.5);
-          pdf.line(17, 335, 173, 335); // Footer line
+          pdf.line(21, 335, 190, 335); // Footer line
     
           pdf.setFont('times', 'normal');
           const footerText = pdf.splitTextToSize('DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000', 160);
-          pdf.text(footerText, 95, 340, { align: 'center' });
-          pdf.text('Website: http://www.rrcy.fo11@dswd.gov.ph Tel Nos.: (082) 293-03-06', 105, 345, { align: 'center' });
-    
-          const footerImgData = '/images/footerimg.png';
-          pdf.addImage(footerImgData, 'PNG', 175, 330, 25, 12); // Footer image
-    
+          pdf.text(footerText, 105, 340, { align: 'center' });
+          pdf.text('Website:', 71, 343, { align: 'center' });
+          pdf.text('Tel Nos.: (082) 293-03-06', 133, 343, { align: 'center' });
+
+
+
+          pdf.setFontSize(8);
+        pdf.setTextColor(0, 0, 255);
+        pdf.text('http://www.rrcy.fo11@dswd.gov.ph', 97, 343, { align: 'center' });
+        pdf.setLineWidth(0);
+        pdf.setDrawColor(0, 0, 255);
+        pdf.line(76, 344, 118, 344);
+
+        pdf.setTextColor(0, 0, 0);
         } else {
           // Footer for Page 2 and beyond
           pdf.setFontSize(8.5);
@@ -604,12 +612,12 @@ confirmSave() {
         pdf.setFontSize(10);
       pdf.setFont('arialbd', 'bold'); 
       pdf.text('PROTECTIVE SERVICES DIVISION', 150, 19, { align: 'center' });
-      pdf.text('Regional Rehabilitation Center for', 150, 24, { align: 'center' });
-      pdf.text('Youth FOR XI', 150, 28, { align: 'center' });
+      pdf.text('Regional Rehabilitation Center for', 150, 23, { align: 'center' });
+      pdf.text('Youth FOR XI', 150, 27, { align: 'center' });
     
       pdf.setFontSize(8);
-      pdf.setFont('arial', 'italic'); 
-      pdf.text('DSWD-GF-010A | REV 02 | 17 AUG 2022', 150, 32, { align: 'center' });
+      pdf.setFont('arial', 'normal'); 
+      pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 150, 31, { align: 'center' });
     
   
     contentYPos += -20;
@@ -821,7 +829,7 @@ confirmSave() {
   
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text('VAN M. DE LEON', initialX, contentYPos);
+    pdf.text(this.form.swapping_shp, initialX, contentYPos);
     contentYPos += 4; 
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(10);
@@ -830,11 +838,11 @@ confirmSave() {
   
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text('ANGELIC B. PAÑA', initialX+100, contentYPos+-4);
+    pdf.text(this.center_head,  initialX+100, contentYPos+-4);
     contentYPos += 5; 
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(10);
-    pdf.line(120, contentYPos+-8, 157, contentYPos+-8);
+    pdf.line(120, contentYPos+-8, 180, contentYPos+-8);
     pdf.text('SWO IV / Center Head', initialX+100, contentYPos+-4);
   
     // Add the footer for the last page
