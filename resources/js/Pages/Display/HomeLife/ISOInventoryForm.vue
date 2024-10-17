@@ -166,28 +166,28 @@
       <tbody>
         <tr v-for="(item, index) in form.items" :key="index">
           <td class="border border-gray-300 p-2">
-            <input type="text" v-model="item.name" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+            <input type="text" v-model="item.name" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode" maxlength="20">
           </td>
           <td class="border border-gray-300 p-2">
             <input min="0" type="number" v-model.number="item.qty" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
           </td>
           <td class="border border-gray-300 p-2">
-            <input type="text" v-model="item.brand" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+            <input type="text" v-model="item.brand" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode" maxlength="20">
           </td>
           <td class="border border-gray-300 p-2">
-            <input type="text" v-model="item.size" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+            <input type="text" v-model="item.size" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode" maxlength="10">
           </td>
           <td class="border border-gray-300 p-2">
-            <input type="text" v-model="item.color" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+            <input type="text" v-model="item.color" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode" maxlength="10">
           </td>
           <td class="border border-gray-300 p-2">
-            <input type="text" v-model="item.old" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+            <input type="text" v-model="item.old" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode" maxlength="10">
           </td>
           <td class="border border-gray-300 p-2">
-            <input type="text" v-model="item.new" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+            <input type="text" v-model="item.new" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode" maxlength="10" >
           </td>
           <td class="border border-gray-300 p-2">
-            <input type="text" v-model="item.remarks" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode">
+            <input type="text" v-model="item.remarks" class="w-full p-1 border-b-2 border-transparent rounded-none" :readonly="!editMode" maxlength="150">
           </td>
           <td v-if="editMode" class="border border-gray-300 p-2">
             <!-- Remove Button -->
@@ -218,6 +218,7 @@
             v-model="form.houseparent_name"
             class="mt-1 w-3/4 underline-input shadow-sm"
             :readonly="!editMode"
+            maxlength="50"
           >
         </div>
         <p class="text-sm mt-2">Name and Signature of Houseparent</p>
@@ -233,6 +234,7 @@
             v-model="form.resident_name"
             class="mt-1 w-3/4 underline-input shadow-sm"
             :readonly="!editMode"
+            maxlength="50"
           >
         </div>
         <p class="text-sm mt-2">Name & Signature of Residents</p>
@@ -245,7 +247,8 @@
         <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
         <input type="text" v-model="form.inventory_shp" 
       class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-100% px-2 mt-12 py-1 text-xs text-center" 
-      :readonly="!editMode"/>      
+      :readonly="!editMode"
+      maxlength="50"/>      
       <p class="text-sm flex-wrap justify-center text-center w-100%">HP III/SHP</p>
       </div>
     </div>

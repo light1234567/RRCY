@@ -127,14 +127,16 @@
                 <input type="text" v-model="form.parent_guardian" 
                   class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 text-xs" 
                   :readonly="!editMode"
-                  @input="form.parent_guardian = removeNumbers(form.parent_guardian)"/>
+                  @input="form.parent_guardian = removeNumbers(form.parent_guardian)"
+                  maxlength="50"/>
                 <label class="block text-base font-semibold text-gray-700 -mt-1">Pangalan/Pirma sa Ginikanan/Guardian</label>
               </div>
               <div>
                 <input type="text" v-model="form.second_kasabutan_case_manager" 
                   class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm w-1/3 px-2 mt-12 py-1 text-xs" 
                   :readonly="!editMode"
-                  @input="form.second_kasabutan_case_manager = removeNumbers(form.second_kasabutan_case_manager)"/>
+                  @input="form.second_kasabutan_case_manager = removeNumbers(form.second_kasabutan_case_manager)"
+                  maxlength="50"/>
                 <label class="block text-base font-semibold text-gray-700 -mt-1">Case Manager</label>
               </div>
             </div>

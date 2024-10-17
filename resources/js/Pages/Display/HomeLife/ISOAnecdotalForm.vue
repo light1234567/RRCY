@@ -106,7 +106,7 @@
            <div class="text-xs font-semibold pt-12">
     <p class="text-sm font-semibold">
     DRN :
-    <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+    <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" maxlength="20"/>
   </p>
   </div>
          </div>
@@ -117,7 +117,7 @@
         v-model="form.month" 
         class="underline-input text-sm -p-1" 
         style="background: transparent;" 
-        :readonly="!editMode" 
+        :disabled="!editMode" 
         @input="(e) => { e.target.setCustomValidity('') }" 
         @invalid="(e) => { e.target.setCustomValidity('Please select a month') }" 
         required
@@ -277,6 +277,7 @@
            v-model="form.color"
            class=" w-1/4 underline-input text-sm p-0 shadow-sm"
            :readonly="!editMode"
+           maxlength="10"
          >
        </div>
        </div>
@@ -292,6 +293,7 @@
              v-model="form.prepared_by"
              class="mt-1 w-3/4 underline-input text-sm shadow-sm"
              :readonly="!editMode"
+             maxlength="50"
            >
          </div>
          <p class="text-sm mt-2">Name and Signature of Houseparent</p>
@@ -324,6 +326,7 @@
            v-model="form.anecdotal_shp"
            class="mt-1 w-3/4 underline-input text-sm shadow-sm"
            :readonly="!editMode"
+           maxlength="50"
          >
          <p class="text-sm">HP III/SHP</p>
        </div>

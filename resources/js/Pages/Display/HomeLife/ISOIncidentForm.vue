@@ -105,7 +105,7 @@
            <div class="text-xs font-semibold pt-12">
     <p class="text-sm font-semibold">
     DRN :
-    <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+    <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" maxlength="20" />
   </p>
   </div> 
        
@@ -266,7 +266,8 @@
             id="preparedBy"
             v-model="form.prepared_by"
             class="mt-1 w-64 text-sm underline-input shadow-sm"
-            :readonly="!editMode">
+            :readonly="!editMode"
+            maxlength="50">
         </div>
   
         <!-- Reviewed and Approved by Fields -->
@@ -279,6 +280,7 @@
               v-model="form.incident_report_shp"
               class="font-semibold  mt-1 w-3/4 border-b-2 text-sm underline-input p-0 rounded-none shadow-sm"
               :readonly="!editMode"
+              maxlength="50"
             >
             <p class="font-semibold text-sm">HP III/SHP</p>
           </div>

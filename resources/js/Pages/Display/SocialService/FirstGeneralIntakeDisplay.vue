@@ -190,6 +190,7 @@
   v-model="sheet.occupation" 
   class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
+  maxlength="20"
 />
      </div>
    </div>
@@ -200,6 +201,7 @@
   v-model="sheet.highest_educ_att" 
   class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
+  maxlength="20"
 />
 </div>
  
@@ -211,6 +213,7 @@
   v-model="sheet.school_name" 
   class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
+  maxlength="50"
 />
      </div>
    </div>
@@ -222,6 +225,7 @@
   v-model="sheet.class_adviser"
   class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]"
   :readonly="!editMode"
+  maxlength="50"
 />
 
      </div>
@@ -856,6 +860,7 @@
   v-model="sheet.earnings_income" 
   class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
   :readonly="!editMode"  
+  maxlength="20"
 />
         </div>
         <div class="flex items-center mb-4">
@@ -865,6 +870,7 @@
   v-model="sheet.hrs_stay_in_street" 
   class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
   :readonly="!editMode" 
+  maxlength="10"
 />
         </div>
         <div class="flex items-center mb-4">
@@ -873,7 +879,8 @@
   type="text" 
   v-model="sheet.length_stay_in_street" 
   class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
-  :readonly="!editMode" 
+  :readonly="!editMode"
+  maxlength="10" 
 />
         </div>
         <div class="flex items-center mb-4">
@@ -883,6 +890,7 @@
   v-model="sheet.common_substance_used" 
   class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
   :readonly="!editMode" 
+  maxlength="20"
 />
         </div>
       </div>
@@ -920,7 +928,7 @@
     <div class="flex justify-between mb-8">
       <div class="flex flex-col items-start">
         <label class="block text-base font-semibold text-gray-700 mb-1">Prepared by:</label>
-        <input type="text" v-model="sheet.first_intake_case_manager" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+        <input type="text" v-model="sheet.first_intake_case_manager" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" maxlength="50" />
         <p>SWO __/Case Manager</p>
       </div>
       <div class="flex flex-col items-end">

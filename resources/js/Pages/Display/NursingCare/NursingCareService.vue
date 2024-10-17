@@ -126,7 +126,7 @@
   <!-- Row 2: Age and Medical Status -->
   <div class="flex  border-black custom-border-t col-span-2">
     <label class="border-none flex items-center block font-bold text-xs -mt-2  ml-1 whitespace-nowrap">CURRENT MEDICAL STATUS:</label>
-    <input type="text" v-model="form.current_medical_status" class="w-full border-none bg-transparent -mt-2 p-1 text-xs" :readonly="!editMode" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
+    <input type="text" v-model="form.current_medical_status" class="w-full border-none bg-transparent -mt-2 p-1 text-xs" :readonly="!editMode" oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" maxlength="50">
   </div>
   <div class="flex custom-border-l  custom-border-t2 ml-28 border-black col-span-2">
     <label class="border-none flex items-center  block  -mt-2 ml-1 font-bold text-xs">AGE:</label>
@@ -202,6 +202,7 @@
     class="w-full ml-40 bg-transparent  border-none p-1"  style="width: 200px; " 
     :readonly="!editMode" 
     oninput="this.value = this.value.replace(/[^0-9\/]/g, '')" 
+    maxlength="20"
   >
 </td>
 
@@ -220,7 +221,7 @@
           </tr>
           <tr>
             <td class="border-black border-r border-b text-sm p-2" style="width: 320px; ">BMI REMARKS</td>
-            <td class="border-black border-b text-sm p-2"><input type="text" v-model="form.bmi_remarks" class="w-full bg-transparent border-none p-1" :readonly="!editMode"></td>
+            <td class="border-black border-b text-sm p-2"><input type="text" v-model="form.bmi_remarks" class="w-full bg-transparent border-none p-1" :readonly="!editMode" maxlength="100"></td>
           </tr>
         </tbody>
       </table>
@@ -246,6 +247,7 @@
   class="w-full border-none p-1 text-xs" 
   :readonly="!editMode" 
   oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+  maxlength="50"
 />
 
       </div>
@@ -259,6 +261,7 @@
   class="w-full border-none p-1 text-xs" 
   :readonly="!editMode" 
   oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+  maxlength="50"
 />
 
       </div>
@@ -272,6 +275,7 @@
   class="-ml-4 w-full border-none p-1 text-xs" 
   :readonly="!editMode" 
   oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+  maxlength="50"
 />
 
       </div>
@@ -288,6 +292,7 @@
   class="w-full border-none p-1 text-xs" 
   :readonly="!editMode" 
   oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+  maxlength="50"
 />
 
       </div>
@@ -301,6 +306,7 @@
   class="w-full border-none p-1 text-xs" 
   :readonly="!editMode" 
   oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+  maxlength="50"
 />
 
       </div>
@@ -314,6 +320,7 @@
   class="w-full border-none p-1 text-xs" 
   :readonly="!editMode" 
   oninput="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')" 
+  maxlength="50"
 />
 
       </div>
@@ -421,6 +428,7 @@
           v-model="form.prepared_by"
           class=" w-full text-sm -ml-3 mt-1 border-none shadow-none"
           :readonly="!editMode"
+          maxlength="50"
         >
       </div>
 

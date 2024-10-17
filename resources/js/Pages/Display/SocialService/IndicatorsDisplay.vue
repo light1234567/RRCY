@@ -965,9 +965,10 @@
                   <input 
                     type="text" 
                     class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
-                    v-model="case_manager" 
+                    v-model="form.prepared_by" 
                     :readonly="!editMode"
-                    @input="case_manager = removeNumbers(case_manager)"
+                    @input="form.prepared_by = removeNumbers(form.prepared_by)"
+                    maxlength="50"
                   >
                   <span class="text-xs text-gray-700 mt-1">Case Manager</span>
                 </div>
@@ -978,7 +979,7 @@
                     type="text" 
                     class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
                     v-model="clientName" 
-                    :readonly="!editMode"
+                    readonly
                   >
                   <span class="text-xs text-gray-700 mt-1">Client</span>
                 </div>

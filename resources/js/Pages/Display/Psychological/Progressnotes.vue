@@ -84,7 +84,7 @@
   :readonly="!editMode" 
   @input="(e) => { e.target.setCustomValidity('') }" 
   @invalid="(e) => { e.target.setCustomValidity('Please provide the intervention period.'); }" 
-  required
+  required maxlength="20"
 />
   </div>
 </div>
@@ -137,7 +137,8 @@
             <label for="preparedBy" class="block mb-12 mt-12 font-sm">Prepared by:</label>
             <div class="flex flex-col">
               <strong><input type="text" id="preparedBy" v-model="form.prepared_by" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode" 
-                @input="form.prepared_by = removeNumbers(form.prepared_by)"></strong>
+                @input="form.prepared_by = removeNumbers(form.prepared_by)"
+                maxlength="50"></strong>
               <span>Psychologist</span>
             </div>
           </div>
@@ -145,7 +146,8 @@
             <label for="ApprovedBy" class="block mb-12 mt-12 font-sm">Approved by:</label>
             <div class="flex flex-col">
               <strong><input type="text" id="preparedBy" v-model="form.approved_by" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode" 
-                @input="form.approved_by = removeNumbers(form.approved_by)"></strong>
+                @input="form.approved_by = removeNumbers(form.approved_by)"
+                maxlength="50"></strong>
             </div>
           </div>
           <div class="space-y-2 mt-4">

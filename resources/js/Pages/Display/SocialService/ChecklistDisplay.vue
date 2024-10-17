@@ -209,13 +209,15 @@
     inputmode="text"
     oninput="this.value = this.value.replace(/[0-9]/g, '')"
     placeholder="Enter only letters"
+    maxlength="50"
   />
   <br>Admitting Officer
 </p>
 
         <p class="text-[15px] mb-4">Received by:</p>
         <p class="text-[15px]">
-          <input v-model="checklist_case_manager" class="w-1/2 font-semibold border-b border-black p-0 text-[15px]" :readonly="!editMode" style="border: none; border-bottom: 1px solid black;"/>
+          <input v-model="checklist_case_manager" class="w-1/2 font-semibold border-b border-black p-0 text-[15px]" :readonly="!editMode" style="border: none; border-bottom: 1px solid black;"
+          maxlength="50"/>
           <br>Case Manager
         </p>
   

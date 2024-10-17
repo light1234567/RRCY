@@ -106,7 +106,7 @@
           <div class="text-xs font-semibold pt-12">
    <p class="text-sm font-semibold">
    DRN :
-   <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+   <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" maxlength="20" />
  </p>
  </div>      </div>
      </div>
@@ -145,7 +145,7 @@
         :readonly="!editMode" 
         @input="(e) => { e.target.setCustomValidity('') }" 
         @invalid="(e) => { e.target.setCustomValidity('Please provide the requesting party name') }" 
-        required
+        required maxlength="50"
       />
 
      </div>
@@ -166,7 +166,8 @@
        <label for="requestingPartyPosition" class="block font-medium">Position:</label>
        <input type="text" v-model="form.requesting_party_position" id="requestingPartyPosition" 
              class="underline-input shadow-sm w-3/4" 
-             :readonly="!editMode">
+             :readonly="!editMode"
+             maxlength="50">
      </div>
      <div>
    <label for="timeOfDuty" class="block font-medium">Time of Duty:</label>
@@ -189,7 +190,8 @@
        <label for="sodName" class="block font-medium">Name of SOD accepted the request:</label>
        <input type="text" v-model="form.sod_name" id="sodName" 
              class="underline-input shadow-sm w-3/4" 
-             :readonly="!editMode">
+             :readonly="!editMode"
+             maxlength="50">
      </div>
      <div>
        <label for="sodDateOfDuty" class="block font-medium">Date of Duty:</label>
@@ -207,13 +209,15 @@
        <label for="sodPosition" class="block font-medium">Position:</label>
        <input type="text" v-model="form.sod_position" id="sodPosition" 
              class="underline-input shadow-sm w-3/4" 
-             :readonly="!editMode">
+             :readonly="!editMode"
+             maxlength="50">
      </div>
      <div>
        <label for="sodShiftTime" class="block font-medium">Shift/Time of Duty:</label>
        <input type="text" v-model="form.sod_shift_time" id="sodShiftTime" 
              class="underline-input shadow-sm w-3/4" 
-             :readonly="!editMode">
+             :readonly="!editMode"
+             maxlength="20">
      </div>
    </div>
  </div>
@@ -239,12 +243,14 @@
      <div>
        <label for="requestedBy" class="block font-medium">Requested by:</label>
        <input type="text" v-model="form.requested_by" id="requestedBy" class="underline-input shadow-sm w-3/4" 
-       :readonly="!editMode">
+       :readonly="!editMode"
+       maxlength="50">
        <div class="mb-6 flex justify-start items-center">
          <label for="requestedPosition" class="block font-medium">Position:</label>
    <input type="text" v-model="form.requested_by_position" id="requestedPosition" 
          class="underline-input shadow-sm w-1/2" 
-         :readonly="!editMode">
+         :readonly="!editMode"
+         maxlength="50">
        </div>
      </div>
      <div>
@@ -252,7 +258,7 @@
        <input type="text" v-model="form.accepted_by" id="acceptedBy" class="underline-input shadow-sm w-3/4" :readonly="!editMode">
        <div class="mb-6 flex justify-start items-center">
        <label for="acceptedPosition" class="block font-medium">Position:</label>
-       <input type="text" v-model="form.accepted_by_position" id="acceptedPosition" class="underline-input shadow-sm w-1/2" :readonly="!editMode">
+       <input type="text" v-model="form.accepted_by_position" id="acceptedPosition" class="underline-input shadow-sm w-1/2" :readonly="!editMode" maxlength="50">
      </div>
      </div>
    </div>
@@ -267,6 +273,7 @@
          v-model="form.swapping_shp"
          class="mt-1 w-3/4 border-none font-semibold text-base"
          :readonly="!editMode"
+         maxlength="50"
        >
        <p class="text-sm ">HP III/SHP</p>
      </div>

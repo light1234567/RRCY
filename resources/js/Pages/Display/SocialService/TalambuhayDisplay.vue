@@ -178,6 +178,7 @@
                v-model="form.talambuhay_case_manager" 
                :readonly="!editMode"
                @input="form.talambuhay_case_manager = removeNumbers(form.talambuhay_case_manager)"
+               maxlength="50"
              >
              <label class="">Case Manager:</label>
            </div>

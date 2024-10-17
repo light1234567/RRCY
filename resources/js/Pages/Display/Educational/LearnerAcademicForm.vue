@@ -118,7 +118,7 @@
   @input="(e) => { e.target.setCustomValidity('') }" 
   @invalid="(e) => { e.target.setCustomValidity('Please select a valid month') }" 
   :disabled="!editMode" 
-  required
+  required maxlength="10"
 >
   <option value="" disabled selected>Select month</option>
   <option value="January">January</option>
@@ -153,7 +153,7 @@
   @input="(e) => { e.target.setCustomValidity(''); e.target.value = e.target.value.replace(/[^a-zA-Z0-9\s-]/g, '') }" 
   @invalid="(e) => { e.target.setCustomValidity('Please provide the school year') }" 
   :readonly="!editMode"
-  required
+  required maxlength="10"
 />
 
 </div>
@@ -172,7 +172,7 @@
                   id="learnerName" 
                   class="block w-32 border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
                   style="margin-right:240px;margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
-                  readonly 
+                  readonly maxlength="50"
                 />
               </div>
               <div class="flex">
@@ -185,6 +185,7 @@
     style="margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
     oninput="this.value = Math.min(100, this.value.replace(/[^0-9]/g, '').slice(0, 3))" 
     :readonly="!editMode" 
+    maxlength="20"
   />
 </div>
 
@@ -199,6 +200,7 @@
     style="margin-right:310px; margin-left: 5px; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;" 
     oninput="this.value = this.value.replace(/[^0-9-]/g, '')"
     :readonly="!editMode"
+    maxlength="20"
   />
 </div>
 
@@ -344,6 +346,7 @@
                 class="block w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
                 style=" font-size:65%;padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
                 :readonly="!editMode"
+                maxlength="150"
               >
             </div>
             <p class="flex justify-center text-xs mt-2 font-bold">Category Adviser</p>
@@ -359,6 +362,7 @@
                 class="block w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 text-center focus:outline-none" 
                 style=" font-size:65%; padding: 0; line-height: 1.2; border-color: transparent; border-bottom-color: black;"
                 :readonly="!editMode"
+                maxlength="150"
               >
             </div>
             <p class="flex justify-center text-xs mt-2 font-bold">Educational Section Head</p>

@@ -31,11 +31,11 @@ class MonthlyInventoryController extends Controller
             'items.*.description' => 'nullable|string|max:50',
             'items.*.qty' => 'nullable|integer',
             'items.*.brand' => 'nullable|string|max:20',
-            'items.*.size' => 'nullable|string|max:4',
+            'items.*.size' => 'nullable|string|max:10',
             'items.*.color' => 'nullable|string|max:10',
             'items.*.old' => 'nullable|string|max:10',
             'items.*.new' => 'nullable|string|max:10',
-            'items.*.remarks' => 'nullable|string|max:100',
+            'items.*.remarks' => 'nullable|string|max:150',
         ]);    
 
         try {

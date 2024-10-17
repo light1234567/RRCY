@@ -51,7 +51,7 @@
            <div class="text-xs font-semibold pt-12">
     <p class="text-sm font-semibold">
     DRN :
-    <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" />
+    <input type="text" v-model="form.drn" class="underline-input text-sm p-1" :readonly="!editMode" maxlength="20" />
   </p>
   </div>        </div>
         </div>
@@ -62,7 +62,7 @@
       <!-- Session Field -->
       <div class="w-1/2 flex items-center">
         <label for="session" class="block font-medium w-auto">Session:</label>
-        <input type="text" id="session" v-model="form.session" class="underline-input shadow-sm w-1/2" :readonly="!editMode">
+        <input type="text" id="session" v-model="form.session" class="underline-input shadow-sm w-1/2" :readonly="!editMode" maxlength="20" >
       </div>
   
       <!-- Date Conducted Field -->
@@ -98,6 +98,7 @@
         @input="(e) => { e.target.setCustomValidity('') }" 
         @invalid="(e) => { e.target.setCustomValidity('Please provide a title') }" 
         required 
+        maxlength="50"
       />
         <label for="title" class="block font-medium mt-2 text-center">Title of Session:</label>
       </div>
@@ -163,6 +164,7 @@
         v-model="form.prepared_by"
         class="mt-1 w-60 underline-input text-sm shadow-sm"
         :readonly="!editMode"
+        maxlength="50"
       >
         </div>
         <br />
@@ -177,6 +179,7 @@
             v-model="form.session_shp"
             class="font-semibold mt-1 w-3/4 underline-input text-sm shadow-sm"
             :readonly="!editMode"
+            maxlength="50"
           >
           <p class="text-sm">HP III/SHP</p>
         </div>
@@ -189,7 +192,7 @@
             id="approvedBy"
             v-model="center_head"
             class="font-semibold mt-1 w-3/4 underline-input text-sm shadow-sm"
-            readonly
+            readonly maxlength="50"
           >
           <p class="text-sm">SWO IV / Center Head</p>
         </div>

@@ -125,7 +125,7 @@
       :readonly="!editMode" 
       @input="(e) => { e.target.setCustomValidity('') }" 
       @invalid="(e) => { e.target.setCustomValidity('Please provide a period') }" 
-      required 
+      required maxlength="10"
     />
   </div>
   
@@ -321,6 +321,7 @@
     :readonly="!editMode" 
     class="mt-3 border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" 
     oninput="this.value = this.value.replace(/[^a-zA-Z\s.,]/g, '')" 
+    maxlength="50"
   >
 </div>
 
@@ -336,6 +337,7 @@
     :readonly="!editMode" 
     class="mt-3 border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" 
     oninput="this.value = this.value.replace(/[^a-zA-Z\s.,]/g, '')" 
+    maxlength="50"
   >
 </div>
 
@@ -355,6 +357,7 @@
     :readonly="!editMode" 
     class="w-full border-t-0 border-l-0 border-r-0 border-b-1 border-black focus:outline-none" 
     oninput="this.value = this.value.replace(/[^a-zA-Z\s.,]/g, '')" 
+    maxlength="50"
   >
 </div>
 
@@ -369,6 +372,7 @@
     :readonly="!editMode" 
     class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" 
     oninput="this.value = this.value.replace(/[^a-zA-Z\s.,]/g, '')" 
+    maxlength="50"
   >
 </div>
 
@@ -377,7 +381,7 @@
 <div class="flex flex-wrap p-2">
   <div class="mt-4 flex flex-wrap p-2">Pinuy-Anan:</div>
   <div class="w-3/4 mt-2 p-2">
-    <input type="text" v-model="form.address" :readonly="!editMode" class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none">
+    <input type="text" v-model="form.address" :readonly="!editMode" class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" maxlength="150" >
   </div>
 </div>
 
@@ -390,7 +394,7 @@
     :readonly="!editMode" 
     class="border-t-0 border-l-0 border-r-0 w-full border-b-1 border-black focus:outline-none" 
     oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '')" 
-
+    maxlength="20"
   >
 </div>
 

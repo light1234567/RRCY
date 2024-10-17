@@ -79,7 +79,7 @@
                   type="text"
                   v-model="form.nickname"
                   class="p-1 border-b border-transparent focus:outline-none"
-                  :readonly="!editMode"
+                  :readonly="!editMode" maxlength="15"
                 />
               </div>
   
@@ -152,6 +152,7 @@
                   v-model="form.educational_attainment"
                   class="p-1 border-b border-transparent focus:outline-none"
                   :readonly="!editMode"
+                  maxlength="20"
                 />
               </div>
   
@@ -421,6 +422,7 @@
         v-model="form.prepared_by"
         class="w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
         :readonly="!editMode"
+        maxlength="50"
       >
     </strong>
   </div>
@@ -435,6 +437,7 @@
         v-model="form.approved_by"
         class="w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
         :readonly="!editMode"
+        maxlength="50"
       >
     </strong>
     <span></span>

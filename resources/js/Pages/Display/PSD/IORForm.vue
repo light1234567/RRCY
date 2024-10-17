@@ -156,6 +156,7 @@
     class="underline-input2 text-xs w-full border border-gray-300" 
     :readonly="!editMode" 
     oninput="this.value = this.value.replace(/[^a-zA-Z,\-\s]/g, '')"
+    maxlength="100"
   />
 </div>
 
@@ -703,7 +704,7 @@
               <th class="text-center p-2 border">DATE OF ATTENDANCE</th>
               <th class="text-center p-2 border">STATUS</th>
               <th class="text-center p-2 border">
-                  <button @click="removeTraining(index)" type="button" class="px-2 py-1 bg-red-500 text-white rounded" :disabled="!editMode">Remove</button>
+                <button @click="removeTraining" type="button" class="px-2 py-1 bg-red-500 text-white rounded" :disabled="!editMode">Remove</button>
               </th>
           </tr>
       </thead>
@@ -954,9 +955,12 @@
       addTraining() {
       this.form.trainings.push({ title: '', date_of_attendance: '', status: '' });
     },
-    removeTraining(index) {
-      this.form.trainings.splice(index, 1);
-    },
+    removeTraining() {
+  if (this.form.trainings.length > 0) {
+    this.form.trainings.pop(); // Removes the last added training
+  }
+}
+,
     fetchReportData() {
       const clientId = this.$route.params.id;
   
@@ -1277,10 +1281,9 @@ async confirmSave() {
           date_of_attendance: '',
           status: ''
         });
-      },
-      removeTraining(index) {
-        this.form.trainings.splice(index, 1);
-      },  exportToPdf() {
+      }, 
+      
+      exportToPdf() {
     const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
     const pageHeight = 356; // Total page height in mm
     const marginBottom = 30; // Bottom margin in mm

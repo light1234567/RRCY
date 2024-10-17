@@ -128,7 +128,7 @@
   placeholder="First Name" 
   @input="(e) => { client.first_name = removeNumbers(e.target.value); e.target.setCustomValidity('') }" 
   @invalid="(e) => { e.target.setCustomValidity('Please provide a valid first name.'); }" 
-  required 
+  required maxlength="20"
 />
 <input 
   type="text" 
@@ -137,7 +137,7 @@
   placeholder="Middle Name" 
   @input="(e) => { client.middle_name = removeNumbers(e.target.value); e.target.setCustomValidity('') }" 
   @invalid="(e) => { e.target.setCustomValidity('Please provide a valid middle name.'); }" 
-  required
+  maxlength="15"
 />
 <input 
   type="text" 
@@ -146,18 +146,18 @@
   placeholder="Last Name" 
   @input="(e) => { client.last_name = removeNumbers(e.target.value); e.target.setCustomValidity('') }" 
   @invalid="(e) => { e.target.setCustomValidity('Please provide a valid last name.'); }" 
-  required 
+  required maxlength="15"
 />
   </template>
 </div>
 
 <div class="flex text-[15px] items-center w-1/4">
           <label class="mb-3 text-black mr-2">Sex:</label>
-          <input type="text" class="underline-input bg-transparent mt-1 w-full" v-model="client.sex" :readonly="!editMode" @input="client.sex = removeNumbers(client.sex)" required>
+          <input type="text" class="underline-input bg-transparent mt-1 w-full" v-model="client.sex" :readonly="!editMode" @input="client.sex = removeNumbers(client.sex)" required maxlength="20">
         </div>
         <div class="flex text-[15px] items-center w-1/4">
           <label class="mb-3 text-black mr-2">Religion:</label>
-          <input type="text" class="underline-input bg-transparent mt-1 w-full" v-model="client.religion" :readonly="!editMode"  @input="client.religion = removeNumbers(client.religion)" required>
+          <input type="text" class="underline-input bg-transparent mt-1 w-full" v-model="client.religion" :readonly="!editMode"  @input="client.religion = removeNumbers(client.religion)" required maxlength="20" >
         </div>
         </div>
 
@@ -170,10 +170,10 @@
   </template>
   
   <template v-else>
-    <input type="text" class="underline-input w-1/4 mr-1" v-model="client.province" placeholder="Province"  @input="client.province = removeNumbers(client.province)" required>
-    <input type="text" class="underline-input w-1/4 mr-1" v-model="client.city" placeholder="City" @input="client.city = removeNumbers(client.city)" required>
-    <input type="text" class="underline-input w-1/4 mr-1" v-model="client.barangay" placeholder="Barangay" required>
-    <input type="text" class="underline-input w-1/4" v-model="client.street" placeholder="Street" required>
+    <input type="text" class="underline-input w-1/4 mr-1" v-model="client.province" placeholder="Province"  @input="client.province = removeNumbers(client.province)" required maxlength="20" >
+    <input type="text" class="underline-input w-1/4 mr-1" v-model="client.city" placeholder="City" @input="client.city = removeNumbers(client.city)" required maxlength="30" >
+    <input type="text" class="underline-input w-1/4 mr-1" v-model="client.barangay" placeholder="Barangay" required maxlength="30" >
+    <input type="text" class="underline-input w-1/4" v-model="client.street" placeholder="Street" required maxlength="60">
   </template>
 </div>
 
@@ -184,7 +184,7 @@
   
   <!-- Show the combined Date of Birth and Place of Birth when not in edit mode -->
   <template v-if="!editMode">
-    <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.date_of_birth + ' / ' + client.place_of_birth" readonly>
+    <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :value="client.date_of_birth + ' / ' + client.place_of_birth" readonly maxlength="50">
   </template>
   
   <!-- Show separate input fields for Date of Birth and Place of Birth in edit mode -->
@@ -208,11 +208,11 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="flex items-center text-[15px] ">
               <label class="mb-3    text-black mr-2 whitespace-nowrap">Committing Court:</label>
-              <input type="text" class="underline-input bg-transparent text-xs w-full" v-model="client.admissions[0].committing_court" :readonly="!editMode" required>
+              <input type="text" class="underline-input bg-transparent text-xs w-full" v-model="client.admissions[0].committing_court" :readonly="!editMode" required maxlength="50" >
           </div>
           <div class="text-[15px] flex items-center">
             <label class="mb-3 block    text-black ml-2  mr-2 whitespace-nowrap">Crim. Case #:</label>
-            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" v-model="client.admissions[0].crim_case_number" :readonly="!editMode" required
+            <input type="text" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" v-model="client.admissions[0].crim_case_number" :readonly="!editMode" required maxlength="25"
 >            </div>
         </div>
 
@@ -236,7 +236,7 @@
  <!-- Offense Committed Section -->
  <div class="text-[15px] flex items-center w-1/2">
           <label class="mb-3    text-black mr-2 whitespace-nowrap ml-4">Offense Committed:</label>
-          <input type="text" v-model="client.admissions[0].offense_committed" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs":readonly="!editMode"required
+          <input type="text" v-model="client.admissions[0].offense_committed" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs":readonly="!editMode"required maxlength="100"
 />
         </div>
 
@@ -246,11 +246,15 @@
             <div class="flex items-center text-[15px] w-1/2">
             <label class="mb-3 block text-black whitespace-nowrap mr-2">No. of Days in Jail:</label>
             <input type="number" v-model.number="client.admissions[0].days_in_jail" class="underline-input bg-transparent mt-1 mb-6 flex-grow text-xs" :readonly="!editMode" min="0" required
+            :max="99999"
+            @input="(e) => form.admission.days_in_jail = e.target.value.length > 5 ? e.target.value.slice(0, 5) : e.target.value"
 />
           </div>
           <div class="flex items-center text-[15px] w-1/2">
             <label class="mb-3 block    text-black ml-4 whitespace-nowrap mr-2">No. of Days in Detention Center:</label>
-            <input type="number" class="underline-input w-1/4 bg-transparent mt-1  mb-6 flex-grow text-xs" v-model="client.admissions[0].days_in_detention_center" :readonly="!editMode" min="0" required>
+            <input type="number" class="underline-input w-1/4 bg-transparent mt-1  mb-6 flex-grow text-xs" v-model="client.admissions[0].days_in_detention_center" :readonly="!editMode" min="0" required
+            :max="99999"
+            @input="(e) => form.admission.days_in_detention_center = e.target.value.length > 5 ? e.target.value.slice(0, 5) : e.target.value">
           </div>
         </div>
         <div class="mb-2">
@@ -259,7 +263,7 @@
             <!-- Tattoo/Scars -->
             <div class="flex items-center text-[15px]">
               <label class="mb-3 block text-black mr-2">a.Tattoo/Scars:</label>
-              <input type="text" v-model="client.admissions[0].distinguishing_marks[0].tattoo_scars" class="underline-input bg-transparent flex-grow text-xs w-[100px]" :readonly="!editMode" required
+              <input type="text" v-model="client.admissions[0].distinguishing_marks[0].tattoo_scars" class="underline-input bg-transparent flex-grow text-xs w-[100px]" :readonly="!editMode" required maxlength="150"
 />
             </div>
 
@@ -283,7 +287,7 @@
             <div class="flex items-center text-[15px]">
               <label class="mb-3    text-black mr-2">d. Colour of Eye:</label>
               <div v-if="client.admissions[0]?.distinguishing_marks?.[0]">
-<input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" v-model="client.admissions[0].distinguishing_marks[0].colour_of_eye" :readonly="!editMode" required
+<input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" v-model="client.admissions[0].distinguishing_marks[0].colour_of_eye" :readonly="!editMode" required maxlength="10"
 />
 </div>
             </div>
@@ -292,7 +296,7 @@
             <div class="flex items-center text-[15px]">
               <label class="mb-3    text-black mr-2">e. Skin:</label>
               <div v-if="client.admissions[0]?.distinguishing_marks?.[0]">
-<input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" v-model="client.admissions[0].distinguishing_marks[0].skin_colour" :readonly="!editMode" required
+<input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" v-model="client.admissions[0].distinguishing_marks[0].skin_colour" :readonly="!editMode" required maxlength="10"
 />
 </div>
             </div>
@@ -387,7 +391,8 @@
           v-if="isDocumentSubmitted(client, 'Others') && editMode" 
           type="text" 
           v-model="othersDocumentName" 
-          placeholder="Specify Others" 
+          placeholder="Specify Others"
+          maxlength="50" 
           class="ml-2 underline-input bg-transparent flex-grow text-xs w-full"
           @input="handleOtherDocument(client, othersDocumentName)" 
         >
@@ -462,6 +467,7 @@
   class="underline-input mt-1 w-full text-[15px]" 
   v-model="client.admissions[0].referring_party_name" 
   :readonly="!editMode" required
+  maxlength="50"
 >
 
 <label class="block text-[15px] text-black -mt-3">Name & Signature of Referring Party</label>
@@ -477,6 +483,7 @@
     v-model="client.admissions[0].admitting_officer" 
     :readonly="!editMode"
     @input="client.admissions[0].admitting_officer = removeNumbers(client.admissions[0].admitting_officer)" required
+    maxlength="50"
 
   >
   <label class="block text-[15px] text-black -mt-3">Admitting Officer</label>
@@ -490,6 +497,7 @@
       class="underline-input mt-1 w-full text-[15px]" 
       v-model="client.admissions[0].designation_id_contact" 
       :readonly="!editMode"
+      maxlength="50"
     >
     <label class="block  text-[15px] text-black -mt-3">Designation / ID No. / Contact #</label>
   </div>
@@ -499,6 +507,7 @@
       class="underline-input mt-1 w-full text-[15px]" 
       v-model="client.admissions[0].designation" 
       :readonly="!editMode" required
+      maxlength="50"
     >
     <label class="block text-black text-[15px] -mt-3 mb-4">Designation</label>
   </div>
@@ -511,6 +520,7 @@
       class="underline-input mt-1 w-full text-[15px]" 
       v-model="client.admissions[0].office_address" 
       :readonly="!editMode" required
+      maxlength="50"
     >
     <label class="block text-black text-[15px] -mt-3">Complete Address/Office Address</label>
   </div>
@@ -534,7 +544,6 @@
     v-model="client.admissions[0].date_time"  
     placeholder="Select Date and Time"
     :max="currentDateTime"
-    required
   >
 </template>
 

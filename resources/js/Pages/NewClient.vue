@@ -111,7 +111,7 @@
           id="child_status"
           v-model="form.client.child_status"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-          required
+          required maxlength="35"
         >
           <option value="">Select Child Status</option>
           <option value="Still at the Center (SATC)">Still at the Center (SATC)</option>
@@ -125,7 +125,7 @@
           id="clientSex"
           v-model="form.client.sex"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-          required maxlength="6"
+          required maxlength="20"
         >
           <option value="">Select Sex</option>
           <option value="Male">Male</option>
@@ -175,7 +175,7 @@
           v-model="form.client.barangay"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
           :disabled="!form.client.city"
-          required
+          required maxlength="30"
         >
           <option value="">Select Barangay</option>
           <option v-for="brgy in barangays" :key="brgy.psgc" :value="brgy.col_brgy">
@@ -189,6 +189,7 @@
           type="text"
           id="clientStreet"
           v-model="form.client.street"
+          maxlength="60"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
@@ -201,6 +202,7 @@
         <select
           id="clientReligion"
           v-model="form.client.religion"
+          maxlength="20"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
           required
         >
@@ -250,6 +252,7 @@
         type="text"
         id="tattooScars"
         v-model="form.distinguishing_marks.tattoo_scars"
+        maxlength="150"
         class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
       />
     </div>
@@ -313,6 +316,7 @@
         v-model="form.distinguishing_marks.custom_eye_color"
         class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         placeholder="Enter custom eye color"
+        maxlength="10"
       />
     </div>
 
@@ -346,6 +350,7 @@
         type="text"
         id="customSkinColour"
         v-model="form.distinguishing_marks.custom_skin_colour"
+        maxlength="10"
         class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         placeholder="Enter custom skin colour"
       />
@@ -389,7 +394,7 @@
           id="committingCourt"
           v-model="form.admission.committing_court"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
-          required
+          required maxlength="50"
         >
           <option value="" disabled>Select a branch</option>
           <option v-for="branch in filteredBranches" :key="branch.id" :value="branch.branch_name">
@@ -426,7 +431,7 @@
         id="crimCaseNumber"
         v-model="form.admission.crim_case_number"
         class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-        required
+        required maxlength="25"
       />
     </div>
 
@@ -455,6 +460,8 @@
         v-model="form.admission.days_in_jail"
         class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         required
+        :max="99999"
+         @input="(e) => form.admission.days_in_jail = e.target.value.length > 5 ? e.target.value.slice(0, 5) : e.target.value"
       />
     </div>
 
@@ -468,7 +475,9 @@
         id="daysInDetentionCenter"
         v-model="form.admission.days_in_detention_center"
         class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-        required
+        required 
+        :max="99999"
+        @input="(e) => form.admission.days_in_detention_center = e.target.value.length > 5 ? e.target.value.slice(0, 5) : e.target.value"
       />
     </div>
 
@@ -481,7 +490,7 @@
         id="case_status"
         v-model="form.admission.case_status"
         class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-        required
+        required maxlength="25"
       >
         <option value="">Select Case Status</option>
         <option value="On trial">On trial</option>
@@ -524,7 +533,7 @@
           id="offenseCommitted"
           v-model="form.admission.offense_committed"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
-          required
+          required maxlength="100"
         >
           <option value="" disabled>Select an offense</option>
           <option v-for="crime in filteredCrimes" :key="crime.id" :value="crime.crime_name">
@@ -631,6 +640,7 @@
         type="text"
         id="otherDocuments"
         v-model="form.documents_submitted.others"
+        maxlength="50"
         class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
       />
     </div>
@@ -671,6 +681,7 @@
           type="text"
           id="referringParty"
           v-model="form.admission.referring_party_name"
+          maxlength="50"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
@@ -683,6 +694,7 @@
           type="text"
           id="admittingOfficer"
           v-model="form.admission.admitting_officer"
+          maxlength="50"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
@@ -697,6 +709,7 @@
           type="text"
           id="designationContact"
           v-model="form.admission.designation_id_contact"
+          maxlength="50"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
@@ -709,6 +722,7 @@
           type="text"
           id="designation"
           v-model="form.admission.designation"
+          maxlength="50"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>
@@ -723,6 +737,7 @@
           type="text"
           id="officeAddress"
           v-model="form.admission.office_address"
+          maxlength="50"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         />
       </div>

@@ -198,6 +198,7 @@
             v-model="form.guardian_signature" 
             :readonly="!editMode"
             @input="form.guardian_signature = removeNumbers(form.guardian_signature)"
+            maxlength="50"
           >
           <label class="block  text-gray-700 mb-2">Name and signature (Parent/Guardian):</label>
         </div>

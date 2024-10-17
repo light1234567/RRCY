@@ -157,11 +157,11 @@
                 <label class="block text-gray-700 mt-1">Signature above-completed Name of CICL</label>
               </div>
               <div>
-                <input type="text" v-model="form.parent_custodian_name" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.parent_custodian_name = removeNumbers(form.parent_custodian_name)"/>
+                <input type="text" v-model="form.parent_custodian_name" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.parent_custodian_name = removeNumbers(form.parent_custodian_name)" maxlength="50"/>
                 <label class="block text-gray-700 mt-1">Signature above-completed Name of Parent/ Custodian</label>
               </div>
               <div>
-                <input type="text" v-model="form.lgu_worker_name" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.lgu_worker_name = removeNumbers(form.lgu_worker_name)"/>
+                <input type="text" v-model="form.lgu_worker_name" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.lgu_worker_name = removeNumbers(form.lgu_worker_name)" maxlength="50">
                 <label class="block text-gray-700 mt-1">Signature above-completed Name of LGU Worker</label>
               </div>
             </div>
@@ -172,11 +172,11 @@
             <h2 class="text-lg font-semibold">Witnesses:</h2>
             <div class="space-y-8 mt-4">
               <div>
-                <input type="text" v-model="form.rrcy_officer" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.rrcy_officer = removeNumbers(form.rrcy_officer)"/>
+                <input type="text" v-model="form.rrcy_officer" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.rrcy_officer = removeNumbers(form.rrcy_officer)" maxlength="50" />
                 <label class="block text-gray-700 mt-1">RRCY Administering Officer</label>
               </div>
               <div>
-                <input type="text" v-model="form.houseparent_on_duty" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.houseparent_on_duty = removeNumbers(form.houseparent_on_duty)"/>
+                <input type="text" v-model="form.houseparent_on_duty" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="form.houseparent_on_duty = removeNumbers(form.houseparent_on_duty)" :maxlength="50">
                 <label class="block text-gray-700 mt-1">Houseparent-On Duty</label>
               </div>
             </div>

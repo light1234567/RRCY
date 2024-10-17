@@ -80,7 +80,7 @@
                 :readonly="!editMode" 
                 @input="(e) => { e.target.setCustomValidity('') }" 
                 @invalid="(e) => { e.target.setCustomValidity('Please provide the period for the plan'); }"
-                required
+                required maxlength="15"
               />
                           </div>
                           <div class="flex items-center relative">
@@ -124,7 +124,7 @@
         :readonly="!editMode" 
         @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
         @invalid="(e) => { e.target.setCustomValidity('Please provide your objectives for this field'); }" 
-        required
+        required maxlength="150"
       ></textarea>
     </td>
     <td class="py-1 px-2 border-b border-r border-black">
@@ -135,7 +135,7 @@
         :readonly="!editMode" 
         @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
         @invalid="(e) => { e.target.setCustomValidity('Please provide activities for this field'); }" 
-        required
+        required maxlength="150"
       ></textarea>
     </td>
     <td class="py-1 px-2 border-b border-r border-black">
@@ -146,7 +146,7 @@
         :readonly="!editMode" 
         @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
         @invalid="(e) => { e.target.setCustomValidity('Please provide a time frame for this field.'); }" 
-        required
+        required maxlength="20"
       ></textarea>
     </td>
     <td class="py-1 px-2 border-b border-r border-black">
@@ -157,7 +157,7 @@
         :readonly="!editMode" 
         @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
         @invalid="(e) => { e.target.setCustomValidity('Please provide the name of the responsible person for this field'); }" 
-        required
+        required maxlength="50"
       ></textarea>
     </td>
     <td class="py-1 px-2 border-b border-r border-black">
@@ -168,7 +168,7 @@
         :readonly="!editMode" 
         @input="(e) => { adjustHeight(e); e.target.setCustomValidity(''); e.target.checkValidity(); }" 
         @invalid="(e) => { e.target.setCustomValidity('Please provide the expected outcome for this field'); }" 
-        required
+        required maxlength="150"
       ></textarea>
     </td>
     <td class="py-1 px-2 border-b border-black">
@@ -191,12 +191,12 @@
         <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
           <div>
             <label class="font-semibold">Prepared by:</label>
-            <input type="text" v-model="plan.prepared_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode" @input="plan.prepared_by = removeNumbers(plan.prepared_by)">
+            <input type="text" v-model="plan.prepared_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode" @input="plan.prepared_by = removeNumbers(plan.prepared_by)" maxlength="50" >
             <div class="text-xs mt-1">Social Welfare Officer I</div>
           </div>
           <div>
             <label class="font-semibold">Conformed by:</label>
-            <input type="text" v-model="plan.conformed_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode" @input="plan.conformed_by = removeNumbers(plan.conformed_by)">
+            <input type="text" v-model="plan.conformed_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode" @input="plan.conformed_by = removeNumbers(plan.conformed_by)" maxlength="50" >
             <div class="text-xs mt-1">Resident</div>
           </div>
           <div>

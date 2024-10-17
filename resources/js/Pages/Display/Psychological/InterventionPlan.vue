@@ -124,7 +124,7 @@
           class="w-full h-full p-1 bg-transparent border border-transparent align-top" 
           @input="(e) => { e.target.setCustomValidity('') }" 
           @invalid="(e) => { e.target.setCustomValidity('Please provide a responsible person name') }" 
-          required
+          required maxlength="50"
         ></textarea>
       </td>
       <td class="py-2 px-2 border-b border-r border-black bg-orange-100 align-top">
@@ -134,7 +134,7 @@
           class="w-full h-full p-1 bg-transparent border border-transparent align-top" 
           @input="(e) => { e.target.setCustomValidity('') }" 
           @invalid="(e) => { e.target.setCustomValidity('Please provide a time frame') }" 
-          required
+          required maxlength="20"
         ></textarea>
       </td>
       <td class="py-2 px-2 border-b border-r border-black bg-orange-100 align-top">
@@ -190,12 +190,12 @@
         <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
           <div>
             <label class="font-semibold">Approved by:</label>
-            <input type="text" v-model="form.approved_by" :readonly="!editMode" class="w-full border border-transparent p-1" />
+            <input type="text" v-model="form.approved_by" :readonly="!editMode" class="w-full border border-transparent p-1" maxlength="50"/>
             <div class="text-xs mt-1"></div>
           </div>
           <div>
             <label class="font-semibold">Prepared by:</label>
-            <input type="text" v-model="form.prepared_by" :readonly="!editMode" class="w-full border border-transparent p-1" />
+            <input type="text" v-model="form.prepared_by" :readonly="!editMode" class="w-full border border-transparent p-1" maxlength="50"/>
             <div class="text-xs mt-1">Psychologist I</div>
           </div>
           <div>

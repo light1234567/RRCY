@@ -286,18 +286,18 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="flex-grow flex items-center mr-4">
             <label class="block text-base font-semibold text-gray-700 mr-4">Mother's Occupation:</label>
-            <input type="text" v-model="sheet.occupation_of_mother" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+            <input type="text" v-model="sheet.occupation_of_mother" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" maxlength="50" />
           </div>
           <div class="flex-grow flex items-center mr-4">
             <label class="block text-base font-semibold text-gray-700 mr-4">Father's Occupation:</label>
-            <input type="text" v-model="sheet.occupation_of_father" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
+            <input type="text" v-model="sheet.occupation_of_father" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" maxlength="50" />
           </div>
         </div>
         <div class="space-y-2">
           <label>Siblings:</label>
-          <input type="text" v-model="sheet.siblings[0]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[0] = removeNumbers(sheet.siblings[0])"/>
-          <input type="text" v-model="sheet.siblings[1]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[1] = removeNumbers(sheet.siblings[1])"/>
-          <input type="text" v-model="sheet.siblings[2]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[2] = removeNumbers(sheet.siblings[2])"/>
+          <input type="text" v-model="sheet.siblings[0]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[0] = removeNumbers(sheet.siblings[0])" maxlength="50" />
+          <input type="text" v-model="sheet.siblings[1]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[1] = removeNumbers(sheet.siblings[1])" maxlength="50" />
+          <input type="text" v-model="sheet.siblings[2]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[2] = removeNumbers(sheet.siblings[2])" maxlength="50" />
         </div>
         <div class="space-y-2">
           <label>Responsible for Households Chores:</label>

@@ -117,7 +117,7 @@
   :readonly="!isEditable" 
   @input="(e) => { e.target.value = e.target.value.replace(/[a-zA-Z]/g, ''); e.target.setCustomValidity('') }" 
   @invalid="(e) => { e.target.setCustomValidity('Please provide a valid school year') }" 
-  required
+  required maxlength="10"
 />
   </label>
 </div>
@@ -131,6 +131,7 @@
       v-model="form.grading_period"
       :readonly="!isEditable"
       oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '')"
+      maxlength="10"
     />
     Grading Period
   </label>
@@ -160,6 +161,7 @@
   }" 
   @invalid="(e) => { e.target.setCustomValidity('Please provide a valid grade between 0 and 100'); }"
   required
+  maxlength="10"
 />
 
 </div>
@@ -537,7 +539,7 @@
         <div class="w-1/2">
           <label for="preparedBy" class="block text-sm font-medium">Prepared by:</label>
           <div class="flex items-center">
-            <input type="text" id="preparedBy" class="mt-1 w-3/4 underline-input" v-model="form.prepared_by" :readonly="!isEditable">
+            <input type="text" id="preparedBy" class="mt-1 w-3/4 underline-input" v-model="form.prepared_by" :readonly="!isEditable" maxlength="50" >
           </div>
           <p class="text-sm mt-2">EMAR Teacher</p>
         </div>
@@ -546,7 +548,7 @@
         <div class="w-1/2">
           <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
           <div class="flex items-center">
-            <input type="text" id="preparedBy" value="RALDIE LLOYD D. ADOLFO, LPT" class="text-sm font-bold mt-1 w-3/4 underline-input" v-model="form.noted_by" :readonly="!isEditable">
+            <input type="text" id="preparedBy" value="RALDIE LLOYD D. ADOLFO, LPT" class="text-sm font-bold mt-1 w-3/4 underline-input" v-model="form.noted_by" :readonly="!isEditable" maxlength="50">
           </div>
           <p class="text-sm mt-2">HP I / Educational Section Head</p>
         </div>
