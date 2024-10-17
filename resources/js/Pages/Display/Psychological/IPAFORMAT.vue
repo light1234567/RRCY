@@ -361,11 +361,8 @@
   
   
    <!-- Page 3 -->
-<<<<<<< HEAD
-   <div v-if="currentPage === 3" class="mt-8 max-w-3xl p-16 bg-white shadow-xl rounded-lg mx-auto border border-gray-400">
-=======
+
    <div v-if="currentPage === 3" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
->>>>>>> 50f6526afd507bd6ae94f3f07ae9cac4881d14ae
     <div class="relative flex justify-end items-center mb-2">
       <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010 | REV 02 | 22 SEP 2023</p>
             </div>
@@ -529,7 +526,6 @@
    </div>
    </div>
    </div>
-  </div>
   </form>
   </template>
   
