@@ -12,6 +12,7 @@ class CreateReadingAssessmentsTable extends Migration
             $table->unsignedMediumInteger('id', false)->autoIncrement();
             $table->unsignedMediumInteger('learner_assessment_form_id');            
             $table->string('pronunciation_remarks', 150)->nullable();
+            $table->string('advance_remarks', 150)->nullable();
             $table->integer('pronunciation');
             $table->integer('fluency');
             $table->integer('punctuation');

@@ -33,6 +33,7 @@
           @input="removeNumbers('first_name')"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
           required
+          maxlength="20"
         />
       </div>
       <div class="mb-2">
@@ -43,6 +44,7 @@
           v-model="form.client.middle_name"
           @input="removeNumbers('middle_name')"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+           maxlength="15"
         />
       </div>
       <div class="mb-2">
@@ -55,6 +57,7 @@
           v-model="form.client.last_name"
           @input="removeNumbers('last_name')"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+          maxlength="15"
           required
         />
       </div>
@@ -63,6 +66,7 @@
         <select
           id="clientSuffix"
           v-model="form.client.suffix"
+          maxlength="3"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
         >
           <option value="">Select Suffix</option>
@@ -98,7 +102,7 @@
           v-model="form.client.place_of_birth"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
           placeholder="City/Province"
-          required
+          required maxlength="50"
         />
       </div>
       <div class="mb-2">
@@ -121,7 +125,7 @@
           id="clientSex"
           v-model="form.client.sex"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-          required
+          required maxlength="6"
         >
           <option value="">Select Sex</option>
           <option value="Male">Male</option>
@@ -140,7 +144,7 @@
           v-model="form.client.province"
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
           @change="onProvinceChange"
-          required
+          required maxlength="20"
         >
           <option value="">Select Province</option>
           <option v-for="province in provinces" :key="province.psgc" :value="province.col_province">
@@ -156,7 +160,7 @@
           class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
           @change="onCityChange"
           :disabled="!form.client.province"
-          required
+          required maxlength="30"
         >
           <option value="">Select City/Municipality</option>
           <option v-for="citymuni in cityMunis" :key="citymuni.psgc" :value="citymuni.col_citymuni">
