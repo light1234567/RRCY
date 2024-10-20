@@ -1,12 +1,12 @@
 <template>
 
 <!-- Tabs for Actions (Back button visible only in edit mode) -->
-<div v-if="editMode" class="flex  p-4 space-x-4  bg-white">
-  <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
-    <!-- FontAwesome for Back -->
-    <i class="fas fa-arrow-left w-4 h-4"></i>
-    <span>Cancel</span>
-  </button>
+<div v-if="editMode" class="flex absolute p-4 space-x-4">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-600 text-white rounded-md text-xs">
+      <!-- FontAwesome for Back -->
+      <i class=" fas fa-arrow-left w-4 h-4"></i>
+      <span>Cancel</span>
+    </button>
 </div>
 
 <!-- Main Action Buttons -->
@@ -191,17 +191,17 @@
         <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
           <div>
             <label class="font-semibold">Prepared by:</label>
-            <input type="text" v-model="plan.prepared_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode" @input="plan.prepared_by = removeNumbers(plan.prepared_by)" maxlength="50" >
+            <input type="text" v-model="plan.prepared_by" :class="{'twinkle-border': editMode}" class="p-0 underline w-full border border-transparent" :readonly="!editMode" @input="plan.prepared_by = removeNumbers(plan.prepared_by)" maxlength="50" >
             <div class="text-xs mt-1">Social Welfare Officer I</div>
           </div>
           <div>
             <label class="font-semibold">Conformed by:</label>
-            <input type="text" v-model="plan.conformed_by" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" :readonly="!editMode" @input="plan.conformed_by = removeNumbers(plan.conformed_by)" maxlength="50" >
+            <input type="text" v-model="plan.conformed_by" :class="{'twinkle-border': editMode}" class="underline w-full border border-transparent p-0 " :readonly="!editMode" @input="plan.conformed_by = removeNumbers(plan.conformed_by)" maxlength="50" >
             <div class="text-xs mt-1">Resident</div>
           </div>
           <div>
             <label class="font-semibold">Noted by:</label>
-            <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" readonly>
+            <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="underline w-full border border-transparent p-0 " readonly>
             <div class="text-xs mt-1">Center Head/ SWO IV</div>
           </div>
         </div>

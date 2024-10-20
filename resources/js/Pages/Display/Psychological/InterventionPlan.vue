@@ -175,32 +175,38 @@
   
         <!-- Progress Notes Section -->
         <div class="space-y-4 mt-6">
-          <label for="progressNotes" class="block font-medium">Progress Notes:</label>
-          <textarea 
-            v-model="form.progress_notes" 
-            :readonly="!editMode" 
-            class="block w-full p-2 border border-transparent" 
-            @input="(e) => { e.target.setCustomValidity('') }" 
-            @invalid="(e) => { e.target.setCustomValidity('Please provide progress notes') }" 
-            required
-          ></textarea>
+        <label for="progressNotes" class="block font-medium">Progress Notes:</label>
+
+        <div 
+          class="block w-full p-2 border border-gray-300 rounded-md" 
+          style="min-height: 100px; white-space: pre-wrap; line-height: 1.5;" 
+          contenteditable="true" 
+          :contenteditable="editMode" 
+          @input="(e) => { form.progress_notes = e.target.innerText; e.target.setCustomValidity('') }" 
+          @invalid="(e) => { e.target.setCustomValidity('Please provide progress notes') }" 
+          @blur="(e) => { if (!form.progress_notes) { e.target.setCustomValidity('Please provide progress notes'); e.target.reportValidity(); } }"
+          required
+        >
+          {{ form.progress_notes }}
         </div>
+      </div>
+
   
         <!-- Signatures Section -->
         <div class="mt-4 grid grid-cols-3 gap-2 text-xs">
           <div>
             <label class="font-semibold">Approved by:</label>
-            <input type="text" v-model="form.approved_by" :readonly="!editMode" class="w-full border border-transparent p-1" maxlength="50"/>
-            <div class="text-xs mt-1"></div>
+            <input type="text" v-model="form.approved_by" :readonly="!editMode" class="w-full border border-transparent p-0 underline" maxlength="50"/>
+            <div class="text-xs mt-1">Psychometrician</div>
           </div>
           <div>
             <label class="font-semibold">Prepared by:</label>
-            <input type="text" v-model="form.prepared_by" :readonly="!editMode" class="w-full border border-transparent p-1" maxlength="50"/>
+            <input type="text" v-model="form.prepared_by" :readonly="!editMode" class="w-full border border-transparent p-0 underline" maxlength="50"/>
             <div class="text-xs mt-1">Psychologist I</div>
           </div>
           <div>
             <label class="font-semibold">Noted by:</label>
-            <input type="text" v-model="center_head" class="w-full border border-transparent p-1" />          
+            <input type="text" v-model="center_head" class="w-full border border-transparent p-0 underline" />          
             <div class="text-xs mt-1">SWO IV / Center Head</div>
           </div>
         </div>
@@ -730,33 +736,49 @@
           pdf.text(title, xPosition, finalLabelY); // Title below the signature line
       };
   
-    // 'Prepared by' section - Left aligned
-  const preparedByLabel = 'Prepared by:';
-  const preparedByName = this.form.prepared_by || ''; // Use 'N/A' if not defined
-  
-  // Set the font for the label and name
-  pdf.setFont('Arial', 'normal'); // Set font to normal for the label
-  pdf.text(preparedByLabel, 15, finalLineY - 15); // Label above the name
-  pdf.setFont('Arial', 'bold'); // Set font to bold for the name
-  pdf.text(preparedByName, 15, finalLineY); // Name above the line
-  pdf.line(15, finalLineY + 1, 15 + pdf.getTextWidth(preparedByName), finalLineY + 1); // Signature line below the name
-  pdf.setFont('Arial', 'normal'); // Reset font to normal for the title
-  pdf.text('Psychologist I', 15, finalLabelY); // Title below the signature line
-  
-  // 'Noted by' section - Right aligned
-  const notedByLabel = 'Noted by:';
-  const notedByName = this.center_head || ''; // Use 'N/A' if not defined
-  const notedByX = pageWidth - 95; // Starting x position for 'Noted by'
-  
-  // Set the font for the label and name
-  pdf.setFont('Arial', 'normal'); // Set font to normal for the label
-  pdf.text(notedByLabel, notedByX, finalLineY - 15); // Label above the name
-  pdf.setFont('Arial', 'bold'); // Set font to bold for the name
-  pdf.text(notedByName, notedByX, finalLineY); // Name above the line
-  pdf.line(notedByX, finalLineY + 1, notedByX + pdf.getTextWidth(notedByName), finalLineY + 1); // Signature line below the name
-  pdf.setFont('Arial', 'normal'); // Reset font to normal for the title
-  pdf.text('SWO IV / Center Head', notedByX, finalLabelY); // Title below the signature line
-  
+    // Define the y-position for all sections
+
+const sectionY = finalLineY - 10; // Same Y position for labels
+
+// 'Approved by' section - Left aligned
+const approvedByLabel = 'Approved by:';
+const approvedByName = this.form.approved_by || ''; // Fallback if not defined
+
+pdf.setFont('Arial', 'normal');
+pdf.text(approvedByLabel, 15, sectionY);
+pdf.setFont('Arial', 'bold');
+pdf.text(approvedByName, 15, finalLineY);
+pdf.line(15, finalLineY + 1, 15 + pdf.getTextWidth(approvedByName), finalLineY + 1);
+pdf.setFont('Arial', 'normal');
+pdf.text('Psychometrician', 15, finalLabelY);
+
+// 'Prepared by' section - Center aligned
+const preparedByLabel = 'Prepared by:';
+const preparedByName = this.form.prepared_by || ''; // Fallback if not defined
+
+const centerX = (pageWidth / 2 - 20) - (pdf.getTextWidth(preparedByName) / 2);
+
+pdf.setFont('Arial', 'normal');
+pdf.text(preparedByLabel, centerX, sectionY);
+pdf.setFont('Arial', 'bold');
+pdf.text(preparedByName, centerX, finalLineY);
+pdf.line(centerX, finalLineY + 1, centerX + pdf.getTextWidth(preparedByName), finalLineY + 1);
+pdf.setFont('Arial', 'normal');
+pdf.text('Psychologist I', centerX, finalLabelY);
+
+// 'Noted by' section - Right aligned
+const notedByLabel = 'Noted by:';
+const notedByName = this.center_head || ''; // Fallback if not defined
+const notedByX = pageWidth - 95;
+
+pdf.setFont('Arial', 'normal');
+pdf.text(notedByLabel, notedByX, sectionY);
+pdf.setFont('Arial', 'bold');
+pdf.text(notedByName, notedByX, finalLineY);
+pdf.line(notedByX, finalLineY + 1, notedByX + pdf.getTextWidth(notedByName), finalLineY + 1);
+pdf.setFont('Arial', 'normal');
+pdf.text('SWO IV / Center Head', notedByX, finalLabelY);
+
   };
   
   /**

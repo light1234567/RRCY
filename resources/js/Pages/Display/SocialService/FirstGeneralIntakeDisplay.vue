@@ -1,7 +1,7 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-600 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class=" fas fa-arrow-left w-4 h-4"></i>
         <span>Cancel</span>
@@ -139,47 +139,47 @@
         <div class="flex items-center mb-4">
         
           <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of client:</label>
-          <input type="text" v-model="sheet.name" class="mt-1 p-0 flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+          <input type="text" v-model="sheet.name" class="mt-1 p-0 flex-grow border-b-1 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
       </div>
   
    <div class="grid grid-cols-2 gap-4">
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
          <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Age:</label>
-         <input type="text" v-model="sheet.age" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+         <input type="text" v-model="sheet.age" class="-mt-2 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
          <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Sex:</label>
-         <input type="text" v-model="sheet.sex" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+         <input type="text" v-model="sheet.sex" class="-mt-2 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
    </div>
    <div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
        <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Address:</label>
-       <input type="text" v-model="sheet.address" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+       <input type="text" v-model="sheet.address" class="-mt-2 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
      </div>
    </div>
    <div class="grid grid-cols-2 gap-4">
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
          <label class="mt-2 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Date of Birth:</label>
-         <input type="date" v-model="sheet.date_of_birth" class=" p-0  w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+         <input type="date" v-model="sheet.date_of_birth" class=" p-0  w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
          <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Place of birth:</label>
-         <input type="text" v-model="sheet.place_of_birth" class=" p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+         <input type="text" v-model="sheet.place_of_birth" class=" p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
    </div>
    <div class="flex items-center mb-4">
      <div class="flex-grow flex items-center mr-4">
        <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Religion:</label>
-       <input type="text" v-model="sheet.religion" class="-mt-3 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+       <input type="text" v-model="sheet.religion" class="-mt-3 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
      </div>
    </div>
    <div class="flex items-center mb-4">
@@ -188,9 +188,8 @@
        <input 
   type="text" 
   v-model="sheet.occupation" 
-  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  class="mt-1 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
-  maxlength="20"
 />
      </div>
    </div>
@@ -199,9 +198,8 @@
  <input 
   type="text" 
   v-model="sheet.highest_educ_att" 
-  class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  class="mt-2 p-0 flex-grow border-b-1 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
-  maxlength="20"
 />
 </div>
  
@@ -211,9 +209,8 @@
        <input 
   type="text" 
   v-model="sheet.school_name" 
-  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  class="mt-1 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
-  maxlength="50"
 />
      </div>
    </div>
@@ -223,9 +220,8 @@
        <input
   type="text"
   v-model="sheet.class_adviser"
-  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]"
+  class="mt-1 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]"
   :readonly="!editMode"
-  maxlength="50"
 />
 
      </div>
@@ -234,39 +230,46 @@
 </div>
 
 
-     <div class="mb-8">
-       <h2 class="text-lg font-semibold">II. Problem Presented:</h2>
-       <textarea 
-  v-model="sheet.problem_presented" 
-  class="border w-full px-2 py-1" 
-  rows="4" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide a description of the problem presented.'); }" 
-  required
-></textarea>
-
-     </div>
+<div class="mb-8">
+  <h2 class="text-lg font-semibold">II. Problem Presented:</h2>
   
+  <div 
+    class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+    style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
+    contenteditable="true" 
+    :contenteditable="editMode"
+    @input="(e) => { sheet.problem_presented = e.target.innerText; e.target.setCustomValidity(''); }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide a description of the problem presented.'); }" 
+    :data-required="true"
+    @blur="(e) => { if (!sheet.problem_presented) { e.target.setCustomValidity('Please provide a description of the problem presented.'); e.target.reportValidity(); } }"
+  >
+    {{ sheet.problem_presented }}
+  </div>
+</div>
 
-     
-     <div class="mb-8">
+
+<div class="mb-8">
   <h2 class="text-lg font-semibold">III. Brief Physical Description of the Minor:</h2>
 
   <!-- Child's Description -->
   <div class="mb-4">
     <label class="block text-base text-black-700 mb-2">Child’s Description:</label>
-    <textarea 
-  v-model="sheet.brief_physical_description" 
-  class="border w-full px-2 py-1" 
-  rows="4" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide a brief physical description.'); }" 
-  required
-></textarea>
+    
+    <div 
+      class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+      style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
+      contenteditable="true" 
+      :contenteditable="editMode"
+      @input="(e) => { sheet.brief_physical_description = e.target.innerText; e.target.setCustomValidity(''); }"
+      @invalid="(e) => { e.target.setCustomValidity('Please provide a brief physical description.'); }" 
+      :data-required="true"
+      @blur="(e) => { if (!sheet.brief_physical_description) { e.target.setCustomValidity('Please provide a brief physical description.'); e.target.reportValidity(); } }"
+    >
+      {{ sheet.brief_physical_description }}
+    </div>
   </div>
 </div>
+
 
 
    </div>
@@ -277,7 +280,7 @@
           <p class="border-t -ml-7 mt-4 whitespace-nowrap" style="border-top: 2px solid black;">
             DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City
           </p>
-          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
         </div>
         <div class="ml-4">
           <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
@@ -858,9 +861,8 @@
           <input 
   type="text" 
   v-model="sheet.earnings_income" 
-  class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+  class="flex-grow mt-1 border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
   :readonly="!editMode"  
-  maxlength="20"
 />
         </div>
         <div class="flex items-center mb-4">
@@ -868,9 +870,8 @@
           <input 
   type="text" 
   v-model="sheet.hrs_stay_in_street" 
-  class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+  class="flex-grow mt-1 border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
   :readonly="!editMode" 
-  maxlength="10"
 />
         </div>
         <div class="flex items-center mb-4">
@@ -878,9 +879,8 @@
           <input 
   type="text" 
   v-model="sheet.length_stay_in_street" 
-  class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
-  :readonly="!editMode"
-  maxlength="10" 
+  class="flex-grow mt-1 border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+  :readonly="!editMode" 
 />
         </div>
         <div class="flex items-center mb-4">
@@ -888,9 +888,8 @@
           <input 
   type="text" 
   v-model="sheet.common_substance_used" 
-  class="flex-grow mt-1 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+  class="flex-grow mt-1 border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
   :readonly="!editMode" 
-  maxlength="20"
 />
         </div>
       </div>
@@ -901,34 +900,44 @@
 
 <div class="mb-8">
   <h2 class="text-lg font-semibold">V. INITIAL ASSESSMENT:</h2>
-  <textarea 
-  v-model="sheet.initial_assessment" 
-  class="border w-full px-2 py-1" 
-  rows="4" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide an initial assessment'); }" 
-  required
-></textarea>
+
+  <div 
+    class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+    style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
+    contenteditable="true" 
+    :contenteditable="editMode"
+    @input="(e) => { sheet.initial_assessment = e.target.innerText; e.target.setCustomValidity(''); }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide an initial assessment.'); }" 
+    :data-required="true"
+    @blur="(e) => { if (!sheet.initial_assessment) { e.target.setCustomValidity('Please provide an initial assessment.'); e.target.reportValidity(); } }"
+  >
+    {{ sheet.initial_assessment }}
+  </div>
 </div>
 
+
 <div class="mb-8">
-      <h2 class="text-lg font-semibold">VI. RECOMMENDATIONS:</h2>
-      <textarea
-  v-model="sheet.recommendations"
-  class="border w-full px-2 py-1"
-  rows="4"
-  :readonly="!editMode"
-  @input="(e) => { e.target.setCustomValidity('') }"
-  @invalid="(e) => { e.target.setCustomValidity('Please provide your recommendations in this field'); }"
-  required
-></textarea>
-    </div>
+  <h2 class="text-lg font-semibold">VI. RECOMMENDATIONS:</h2>
+
+  <div 
+    class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+    style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
+    contenteditable="true" 
+    :contenteditable="editMode"
+    @input="(e) => { sheet.recommendations = e.target.innerText; e.target.setCustomValidity(''); }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide your recommendations in this field'); }"
+    :data-required="true"
+    @blur="(e) => { if (!sheet.recommendations) { e.target.setCustomValidity('Please provide your recommendations in this field'); e.target.reportValidity(); } }"
+  >
+    {{ sheet.recommendations }}
+  </div>
+</div>
+
 
     <div class="flex justify-between mb-8">
       <div class="flex flex-col items-start">
         <label class="block text-base font-semibold text-gray-700 mb-1">Prepared by:</label>
-        <input type="text" v-model="sheet.first_intake_case_manager" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" maxlength="50" />
+        <input type="text" v-model="sheet.first_intake_case_manager" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
         <p>SWO __/Case Manager</p>
       </div>
       <div class="flex flex-col items-end">
@@ -1466,7 +1475,6 @@ calculateAge(birthDate) {
   // Add the header below the image
   pdf.setFontSize(8);
   pdf.setFont('TimesNewRoman', 'italic');
-  pdf.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 153, 24);
 
   // Add the title
   pdf.addFont('arialbd-bold.ttf', 'arialbd', 'bold');
@@ -1475,61 +1483,102 @@ calculateAge(birthDate) {
   pdf.text('GENERAL INTAKE SHEET', 108, 60, null, null, 'center');
   pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
   pdf.setFont('Arial', 'normal');  
-
+    
+  
 
   // Date
   pdf.setFontSize(12);
   pdf.text(`Date: ${String(this.sheet.date)}`, 160, 70);
   pdf.line(170, 71, 200, 71);
-
-// Function to add footer to the first page with debug text
+// Adjusted header function to accept y coordinate
+const addHeader = (pdf, y) => {
+    pdf.setFontSize(9);
+    pdf.setFont('TimesNewRoman', 'italic');
+    pdf.text('DSWD-GF-010A | REV 00 | 22 SEP 2023', 145, y); // y is now dynamic
+};
+// Function to add footer for the first page
 function addFirstPageFooter(pdf, totalPages) {
-    // Set font and add debug text for the footer
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(10);
+  const offset = 330; // Adjust according to the layout
+  
+  // Set bold font for the page number
+  pdf.setFont('TimesNewRoman', 'bold');
+  pdf.setFontSize(9);
+  pdf.text(`PAGE 1 of ${totalPages}`, 108, offset + 9, null, null, 'center');
 
-    // Footer text
-    const footerText = "DEBUG: Footer Page 1 of " + totalPages;
-    
-    // Add the footer text with correct alignment
-    pdf.text(footerText, 20, pdf.internal.pageSize.getHeight() - 10);  // Adjusted y-position for visibility
+  // Add horizontal line
+  pdf.setLineWidth(0.5);
+  pdf.line(18, offset + 10, 174, offset + 10); // Horizontal line
 
-    // Add a debug rectangle to visualize the footer area
-    pdf.rect(15, pdf.internal.pageSize.getHeight() - 30, 180, 20); // Debug rectangle for visual confirmation
+  // Set normal font for the footer text
+  pdf.setFont('TimesNewRoman', 'normal');
+  pdf.setFontSize(9);
 
-    // Add a simple placeholder image or comment out the image to debug
-    pdf.text("DEBUG: Footer Image Area", 20, pdf.internal.pageSize.getHeight() - 20); // Placeholder for image
+  // Add address information (in black)
+  pdf.setTextColor(0, 0, 0);
+  pdf.text(
+    'DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City',
+    96, offset + 13, null, null, 'center'
+  );
+
+  // Add Email label (in black)
+  pdf.text('Email:', 76, offset + 16, null, null, 'left');
+
+  // Set blue color and underline for the email
+  pdf.setTextColor(0, 0, 255); // Blue color
+  pdf.textWithLink('rrcy.fo11@dswd.gov.ph', 85, offset + 16, { url: 'mailto:rrcy.fo11@dswd.gov.ph' });
+
+  // Reset text color back to black and add the phone number
+  pdf.setTextColor(0, 0, 0);
+  pdf.text('Tel. No.: 293-0306', 117, offset + 16, null, null, 'left');
+
+  // Add the footer image
+  const footerImgData = '/images/footerimg.png'; // Ensure image path is correct and image is accessible
+  pdf.addImage(footerImgData, 'PNG', 175, offset + 5, 25, 15); // Adjust the position and size as needed
 }
 
-// Function to add footer for pages 2 and beyond with debug text
+
+// Function to add footer for pages 2 and beyond
 function addOtherPagesFooter(pdf, pageNumber, totalPages) {
-    // Set font for normal footer text
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(10);
-    
-    // Footer text for other pages
-    const footerText = "DEBUG: Footer Page " + pageNumber + " of " + totalPages;
+    const offset = 330; // Adjust according to the layout
+    pdf.setFont('TimesNewRoman', 'bold');
+    pdf.setFontSize(9);
+    pdf.text(`PAGE ${pageNumber} of ${totalPages}`, 108, offset + 9, null, null, 'center');
 
-    // Add the footer text
-    pdf.text(footerText, 20, pdf.internal.pageSize.getHeight() - 10);  // Adjusted y-position for visibility
+    // Add horizontal line
+    pdf.setLineWidth(0.5);
+    pdf.line(18, offset + 10, 198, offset + 10); // Horizontal line
 
-    // Add a debug rectangle to visualize the footer area
-    pdf.rect(15, pdf.internal.pageSize.getHeight() - 30, 180, 20); // Debug rectangle for visual confirmation
+    // Simple footer for other pages
+    pdf.setFont('TimesNewRoman');
+    pdf.setFontSize(9);
+    pdf.text('DSWD | FIELD OFFICE XI | ADMINISTRATIVE DIVISION', 108, offset + 13, null, null, 'center');
 }
-
-// Function to apply footers to all pages with debug text
-function addAllFooters(pdf, totalPages) {
-    // Loop through all pages to apply footers
+// Function to apply headers to all pages
+function addAllHeaders(pdf, totalPages) {
     for (let i = 1; i <= totalPages; i++) {
-        pdf.setPage(i);
+        pdf.setPage(i); // Set the current page
+        
+        // Check if it's the first page or subsequent pages
         if (i === 1) {
-            addFirstPageFooter(pdf, totalPages);  // Custom footer for the first page
+            addHeader(pdf, 20); // First page header at y = 20
         } else {
-            addOtherPagesFooter(pdf, i, totalPages);  // Footer for subsequent pages
+            addHeader(pdf, 14); // Subsequent pages header at y = 30 (or any higher value you need)
         }
     }
 }
 
+// Function to apply footers to all pages
+function addAllFooters(pdf, totalPages) {
+    for (let i = 1; i <= totalPages; i++) {
+        pdf.setPage(i); // Set the current page
+
+        if (i === 1) {
+            addFirstPageFooter(pdf, totalPages); // Footer for the first page
+        } else {
+            addOtherPagesFooter(pdf, i, totalPages); // Footer for other pages
+        }
+    }
+}
 // Function to check for page overflow and add a new page if necessary
 function checkAndAddPage(pdf, currentOffset, pageHeight, footerHeight) {
     // If the current offset exceeds the allowable page height (minus footer), add a new page
@@ -1588,7 +1637,7 @@ function checkAndAddPage(pdf, currentOffset, pageHeight, footerHeight) {
 pdf.text('Address:', 20, offset + 20); // Static label placement at 20x offset
 
 const addressText = String(this.sheet.address); // Dynamically fetch the address from the data
-const wrappedAddress = pdf.splitTextToSize(addressText, 150); // Wrap the address text to fit within 150 units of width
+const wrappedAddress = pdf.splitTextToSize(addressText, 125); // Wrap the address text to fit within 150 units of width
 
 // Adjust the offset to account for the wrapped address lines
 wrappedAddress.forEach((line, i) => {
@@ -1631,27 +1680,28 @@ offset += 10; // Move offset down
 
 // Occupation
 pdf.text(`Occupation:`, 20, offset);
-pdf.text(String(this.sheet.occupation), 45, offset);
+pdf.text(this.sheet.occupation ? String(this.sheet.occupation) : '', 45, offset); // Show blank if null
 pdf.line(45, offset + 1, 200, offset + 1);
 offset += 10; // Move offset down
 
 // Highest Educational Attainment
 pdf.text(`Highest Educ'l Att't:`, 20, offset);
-pdf.text(String(this.sheet.highest_educ_att), 59, offset);
+pdf.text(this.sheet.highest_educ_att ? String(this.sheet.highest_educ_att) : '', 59, offset); // Show blank if null
 pdf.line(59, offset + 1, 200, offset + 1);
 offset += 10; // Move offset down
 
 // Name of School
 pdf.text(`Name of School:`, 20, offset);
-pdf.text(String(this.sheet.school_name), 53, offset);
+pdf.text(this.sheet.school_name ? String(this.sheet.school_name) : '', 53, offset); // Show blank if null
 pdf.line(53, offset + 1, 200, offset + 1);
 offset += 10; // Move offset down
 
 // Class Adviser
 pdf.text(`Class Adviser:`, 20, offset);
-pdf.text(String(this.sheet.class_adviser), 50, offset);
+pdf.text(this.sheet.class_adviser ? String(this.sheet.class_adviser) : '', 50, offset); // Show blank if null
 pdf.line(50, offset + 1, 200, offset + 1);
 offset += 10; // Move offset down
+
 
 function addTextWithWrappingAndLines(pdf, text, x, y, maxWidth, pageHeight, footerHeight, lineHeight) {
   const lines = pdf.splitTextToSize(text, maxWidth); // Split long text into multiple lines
@@ -1665,7 +1715,7 @@ function addTextWithWrappingAndLines(pdf, text, x, y, maxWidth, pageHeight, foot
       pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
       pdf.setFont('Arial', 'normal'); 
       pdf.setFontSize(11);
-      y = 20; // Reset y position for the new page
+      y = 30; // Reset y position for the new page
     }
 
     pdf.text(line, x, y); // Add the text line at (x, y)
@@ -1724,7 +1774,7 @@ function addTextWithCheckboxAndWrapping(pdf, text, x, y, isChecked, maxWidth, pa
     pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
     pdf.setFont('Arial', 'normal'); 
     pdf.setFontSize(11);
-    y = 20; // Reset y position for the new page
+    y = 30; // Reset y position for the new page
   }
 
   // Calculate text lines with wrapping
@@ -1749,7 +1799,7 @@ function addTextWithCheckboxAndWrapping(pdf, text, x, y, isChecked, maxWidth, pa
     pdf.addFont('arial-normal.ttf', 'Arial', 'normal');
     pdf.setFont('Arial', 'normal'); 
     pdf.setFontSize(11);
-      y = 20; // Reset y position for new page
+      y = 30; // Reset y position for new page
     }
   });
 
@@ -1867,7 +1917,7 @@ function addStrainsWithCheckbox(pdf, strains, startX, startY, pageHeight, footer
     if (currentY + rowHeight > pageHeight - footerHeight) {
       // Check if we need to add a new page
       pdf.addPage();
-      currentY = 20; // Reset Y position after a page break
+      currentY = 30; // Reset Y position after a page break
     }
 
     drawCheckboxWithCheckmark(pdf, x, currentY, strain.value); // Draw the checkbox
@@ -1941,7 +1991,7 @@ function addLifeTransitions(pdf, transitions, startY, pageHeight, footerHeight, 
     // Check if we need to add a new page
     if (currentY + rowHeight > pageHeight - footerHeight) {
       pdf.addPage();
-      currentY = 20; // Reset Y position after a page break
+      currentY = 30; // Reset Y position after a page break
     }
 
     drawCheckboxWithBackground(pdf, 20, currentY, transition.value); // Draw checkbox
@@ -2002,7 +2052,7 @@ function addDevelopmentChanges(pdf, changes, startY, pageHeight, footerHeight, r
     // Check if we need to add a new page
     if (currentY + rowHeight > pageHeight - footerHeight) {
       pdf.addPage();
-      currentY = 20; // Reset Y position after a page break
+      currentY = 30; // Reset Y position after a page break
     }
 
     drawCheckboxWithBackground(pdf, 20, currentY, change.value); // Draw checkbox
@@ -2048,7 +2098,7 @@ function addNormalizationItemsSingleColumn(pdf, items, startY, pageHeight, foote
     // Check for page break before rendering
     if (currentY + rowHeight > pageHeight - footerHeight) {
       pdf.addPage();
-      currentY = 20; // Reset Y position for the new page
+      currentY = 30; // Reset Y position for the new page
     }
 
     // Apply indentation if necessary
@@ -2126,7 +2176,7 @@ function addFeelingsItemsAligned(pdf, items, startY, pageHeight, footerHeight, r
 
     if (currentY + rowHeight > pageHeight - footerHeight) {
       pdf.addPage();
-      currentY = 20; // Reset Y position for the new page
+      currentY = 30; // Reset Y position for the new page
     }
 
     // Render the left column item
@@ -2212,7 +2262,7 @@ function addFeelingsSection(pdf, items, startY, pageHeight, footerHeight, rowHei
     // Check for page break before rendering
     if (currentY + rowHeight > pageHeight - footerHeight) {
       pdf.addPage();
-      currentY = 20; // Reset Y position after a page break
+      currentY = 30; // Reset Y position after a page break
     }
 
     // Render left column item
@@ -2238,7 +2288,7 @@ function addFeelingsSection(pdf, items, startY, pageHeight, footerHeight, rowHei
 function checkAndAddPage(pdf, offset, pageHeight, footerHeight) {
   if (offset > pageHeight - footerHeight) {
     pdf.addPage(); // Add a new page
-    return 20; // Reset Y offset for the new page
+    return 30; // Reset Y offset for the new page
   }
   return offset; // Return the current offset if no new page is needed
 }
@@ -2339,7 +2389,7 @@ function addSkillsItems(pdf, items, startY, pageHeight, footerHeight, rowHeight)
     // Check if the next item fits on the current page
     if (y + rowHeight > pageHeight - footerHeight) {
       pdf.addPage();
-      currentY = 20; // Reset Y position for the new page
+      currentY = 30; // Reset Y position for the new page
       y = currentY + (rowIndex * rowHeight); // Recalculate Y position
     }
 
@@ -2434,7 +2484,7 @@ function renderResourcesSection(pdf, items, column1X, column2X, rowHeight, resou
     // Check if the next item fits on the current page
     if (y + rowHeight > pageHeight - footerHeight) {
       pdf.addPage();
-      resourceOffset = 20; // Reset Y position for the new page
+      resourceOffset = 30; // Reset Y position for the new page
     }
 
     if (leftColumnItems[i]) {
@@ -2492,7 +2542,7 @@ let incomeOffset = resourceOffset + 20;
 function checkAndAddPage(pdf, currentOffset, pageHeight, footerHeight) {
     if (currentOffset > pageHeight - footerHeight) {
         pdf.addPage(); // Add a new page
-        return 20; // Reset offset to a new starting point on the new page
+        return 30; // Reset offset to a new starting point on the new page
     }
     return currentOffset; // Return the current offset if no new page is added
 }
@@ -2553,7 +2603,7 @@ function checkAndAddPage(pdf, currentOffset, pageHeight, footerHeight) {
     const maxHeight = pageHeight - footerHeight; // Define a maximum height before needing a new page
     if (currentOffset > maxHeight) {
         pdf.addPage(); // Add a new page
-        return 20; // Reset offset to a new starting point on the new page
+        return 30; // Reset offset to a new starting point on the new page
     }
     return currentOffset; // Return the current offset if no new page is added
 }
@@ -2563,7 +2613,7 @@ function addTextWithWrappingAndLines(pdf, text, x, y, maxWidth, pageHeight, foot
         // Check if adding this line would exceed the page height
         if (y + rowHeight > pageHeight - footerHeight) {
             pdf.addPage(); // Add a new page
-            y = 20; // Reset y position
+            y = 30; // Reset y position
         }
         pdf.text(line, x, y);
         pdf.line(x, y + 1, x + maxWidth, y + 1); // Draw line under the text
@@ -2665,6 +2715,17 @@ pdf.text('Center Head/SWO IV', 130, currentYS - 10);
 
 // Final offset update after the section
 incomeOffset = currentYS + 30; // Update incomeOffset for the next section
+
+
+    // **NOW** calculate total number of pages after all content is added
+    const totalPages = pdf.internal.getNumberOfPages(); // Make sure this is AFTER content is added
+
+    // Apply headers to all pages
+    addAllHeaders(pdf, totalPages);
+
+    // Apply footers to all pages
+    addAllFooters(pdf, totalPages);
+
 
 
       // Save the PDF

@@ -326,7 +326,7 @@
       <p class="border-t mt-4 w-full" style="border-top: 2px solid black;">
         DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City
       </p>
-      <p>Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+      <p>Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
     </div>
     <div class="ml-4">
       <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
@@ -964,7 +964,7 @@
                   <label class="block text-gray-700">Prepared by:</label>
                   <input 
                     type="text" 
-                    class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+                    class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-sm p-0" 
                     v-model="form.prepared_by" 
                     :readonly="!editMode"
                     @input="form.prepared_by = removeNumbers(form.prepared_by)"
@@ -977,7 +977,7 @@
                   <label class="block text-gray-700">Discussed with:</label>
                   <input 
                     type="text" 
-                    class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+                    class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-sm p-0" 
                     v-model="clientName" 
                     readonly
                   >
@@ -1635,15 +1635,17 @@ async confirmSave() {
     const tableData = [
       // Physical table data
       [
-    { 
-      content: "Physical", 
-      rowSpan: 2, 
-      styles: { 
-        valign: 'middle', 
-        halign: 'center', 
-        fontStyle: 'bold'  // Make the content bold
-      } 
-    }, 
+      { 
+  content: "Physical", 
+  rowSpan: 2, 
+  styles: { 
+    valign: 'middle', 
+    halign: 'center', 
+    fontStyle: 'bold', // Make the content bold
+    fontWeight: 'bold'  // Ensure boldness is applied
+  } 
+},
+
     "Has very poor hygiene and grooming", "", 
     "Practices adequate self-care habits but still needs monitoring and supervision to maintain such", "", 
     "Practices adequate self-care habits even without monitoring and supervision", "", 
@@ -1846,6 +1848,8 @@ async confirmSave() {
       textColor: [0, 0, 0],  // Pure black for header text
       fontStyle: 'bold',
       fillColor: null,  // Remove background color
+      fontStyle: 'bold', // Make the content bold
+    fontWeight: 'bold'  // Ensure boldness is applied
     },
   
   

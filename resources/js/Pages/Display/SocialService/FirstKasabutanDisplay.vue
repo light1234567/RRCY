@@ -114,13 +114,13 @@
           <div class="space-y-12">
             <div>
               <input type="text" v-model="clientName" 
-                class="underline-input w-1/3 px-2 text-xs" 
+                class="underline-input w-1/3 px-2 text-sm" 
                 readonly/>
               <label class="block text-base -mt-1">Client/Resident</label>
             </div>
             <div>
               <input type="text" v-model="form.parent_guardian" 
-                class="underline-input w-1/3 px-2 mt-12 text-xs" 
+                class="underline-input w-1/3 px-2 mt-12 text-sm" 
                 :readonly="!editMode"
                 @input="form.parent_guardian = removeNumbers(form.parent_guardian)"
                 maxlength="50"/>
@@ -128,7 +128,7 @@
             </div>
             <div>
               <input type="text" v-model="form.first_kasabutan_case_manager" 
-                class="underline-input w-1/3 px-2 mt-12 py-1 text-xs" 
+                class="underline-input w-1/3 px-2 mt-12 py-1 text-sm" 
                 :readonly="!editMode"
                 @input="form.first_kasabutan_case_manager = removeNumbers(form.first_kasabutan_case_manager)"
                 maxlength="50"/>
@@ -138,7 +138,7 @@
         </div>
   
         <div class="text-left mt-16">
-          <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="w-full border border-transparent p-1" readonly>        <p>Center Head/SWO IV</p>
+          <input type="text" v-model="center_head" :class="{'twinkle-border': editMode}" class="underline w-full border border-transparent p-0" readonly>        <p>Center Head/SWO IV</p>
         </div>
   
         <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
@@ -148,7 +148,7 @@
             <p class="border-t text-[11.5px] -ml-7 mt-4 whitespace-nowrap" style="border-top: 2px solid black;">
               DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City
             </p>
-            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
           <div class="ml-4">
             <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">

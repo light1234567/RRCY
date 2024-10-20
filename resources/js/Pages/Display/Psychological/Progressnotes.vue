@@ -92,51 +92,59 @@
 
         <!-- Problem Behavior Log Section -->
         <div class="space-y-4 mt-6">
-          <h2 class="font-bold">PROBLEM BEHAVIOR LOG</h2>
-          <textarea 
-  id="problemBehaviorLog" 
-  v-model="form.problem_behavior_log" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide a log of problem behavior'); }" 
-  required>
-</textarea>
-        </div>
+  <h2 class="font-bold">PROBLEM BEHAVIOR LOG</h2>
+  <div 
+    id="problemBehaviorLog"
+    class="block w-full p-2 border border-gray-300 rounded-md"
+    style="white-space: pre-wrap; min-height: 50px;"
+    :contenteditable="editMode"
+    @input="(e) => { form.problem_behavior_log = e.target.innerText; e.target.setCustomValidity('') }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide a log of problem behavior'); }"
+    :data-required="true"
+    @blur="(e) => { if (!form.problem_behavior_log) { e.target.setCustomValidity('Please provide a log of problem behavior'); e.target.reportValidity(); } }"
+  >
+    {{ form.problem_behavior_log }}
+  </div>
+</div>
+
 
         <!-- Interventions Conducted Section -->
         <div class="space-y-4 mt-6">
-          <h2 class="font-bold">INTERVENTIONS CONDUCTED</h2>
-          <textarea 
-  id="interventionsConducted" 
-  v-model="form.interventions_conducted" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide details about the interventions conducted'); }" 
-  required>
-</textarea>
-        </div>
+  <h2 class="font-bold">INTERVENTIONS CONDUCTED</h2>
+  <div 
+    class="block w-full p-2 border border-gray-300 rounded-md" 
+    :contenteditable="editMode" 
+    @input="(e) => { form.interventions_conducted = e.target.innerText; e.target.setCustomValidity(''); }"
+    @blur="(e) => { if(!form.interventions_conducted) { e.target.setCustomValidity('Please provide details about the interventions conducted'); e.target.reportValidity(); } }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide details about the interventions conducted') }" 
+    style="white-space: pre-wrap; min-height: 50px;"
+    :data-required="true"
+  >
+    {{ form.interventions_conducted }}
+  </div>
+</div>
 
         <!-- Progress Notes Section -->
         <div class="space-y-4 mt-6">
-          <h2 class="font-bold">PROGRESS NOTES</h2>
-          <textarea 
-  id="progressNotes" 
-  v-model="form.progress_notes" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide progress notes for this field'); }" 
-  required>
-</textarea>
-        </div>
+  <h2 class="font-bold">PROGRESS NOTES</h2>
+  <div 
+    class="block w-full p-2 border border-gray-300 rounded-md" 
+    :contenteditable="editMode" 
+    @input="(e) => { form.progress_notes = e.target.innerText; e.target.setCustomValidity(''); }"
+    @blur="(e) => { if (!form.progress_notes) { e.target.setCustomValidity('Please provide progress notes for this field'); e.target.reportValidity(); } }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide progress notes for this field') }" 
+    style="white-space: pre-wrap; min-height: 50px;" 
+    :data-required="true"
+  >
+    {{ form.progress_notes }}
+  </div>
+</div>
 
         <div class="space-y-4 mt-6">
           <div class="space-y-2">
             <label for="preparedBy" class="block mb-12 mt-12 font-sm">Prepared by:</label>
             <div class="flex flex-col">
-              <strong><input type="text" id="preparedBy" v-model="form.prepared_by" class="block w-full p-0 border border-transparent rounded-md" :readonly="!editMode" 
+              <strong><input type="text" id="preparedBy" v-model="form.prepared_by" class="underline block w-full p-0 border border-transparent rounded-md" :readonly="!editMode" 
                 @input="form.prepared_by = removeNumbers(form.prepared_by)"
                 maxlength="50"></strong>
               <span>Psychologist</span>
@@ -145,7 +153,7 @@
           <div class="space-y-2 mt-4">
             <label for="notedBy" class="block mb-12 mt-12 font-sm">Noted by:</label>
             <div class="flex flex-col">
-              <strong><input type="text" v-model="center_head" class="block w-full p-0 border border-transparent rounded-md" :readonly></strong>
+              <strong><input type="text" v-model="center_head" class="underline block w-full p-0 border border-transparent rounded-md" :readonly></strong>
               <span>SWO IV / Center Head</span>
             </div>
           </div>
@@ -536,7 +544,9 @@ export default {
         pdf.line(59, 343, 95, 343);
         pdf.line(138, 343, 166, 343);
         
-
+        
+        const footerImgData = '/images/footerimg.png';
+        pdf.addImage(footerImgData, 'PNG', 178, 330, 25, 12); // Footer image
       } else {
         // Footer for Page 2 and beyond
         pdf.setTextColor(0, 0, 0);

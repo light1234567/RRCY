@@ -93,7 +93,7 @@
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
    <div class="p-8">
      <!-- Page 1 -->
-     <div v-if="currentPage === 1" class="max-w-3xl border border-gray-400 mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
+     <div v-if="currentPage === 1" class="max-w-3xl border border-gray-400 mx-auto bg-white p-16 rounded-lg shadow-lg -mb-4">
        <div class="flex items-center justify-between mb-4">
          <img src="/images/headerlogo2.png" alt="DSWD Logo" class="h-32 w-64 relative z-10">
          <div class="text-right">
@@ -107,66 +107,87 @@
          {{ message }}
        </div>
        <div class="mb-6">
-   
-         <p class=" mb-2"><u>Tungkol sa aking <span class="font-bold">Pamilya</span></u> (Ilan kaming magkakapatid at tungkol sa kanilang buhay o kaya trabaho; papa/mama at tungkol sa kanilang ikinabubuhay, tungkol sa pamilya at iba pa)</p>
-         <textarea 
-  class="w-full mt-1 p-2 border border-gray-300 rounded-md" 
-  rows="10" 
-  v-model="form.about_my_family" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide details about your family') }" 
-  required
-></textarea>
+  <p class="mb-2">
+    <u>Tungkol sa aking <span class="font-bold">Pamilya</span></u> 
+    (Ilan kaming magkakapatid at tungkol sa kanilang buhay o kaya trabaho; papa/mama at tungkol sa kanilang ikinabubuhay, tungkol sa pamilya at iba pa)
+  </p>
 
-       </div>
+  <div 
+    class="w-full mt-1 p-2 border border-gray-300 rounded-md" 
+    style="min-height: 150px; white-space: pre-wrap; line-height: 1.5;" 
+    contenteditable="true" 
+    :contenteditable="editMode" 
+    @input="(e) => { form.about_my_family = e.target.innerText; e.target.setCustomValidity('') }" 
+    @invalid="(e) => { e.target.setCustomValidity('Please provide details about your family') }" 
+    @blur="(e) => { if (!form.about_my_family) { e.target.setCustomValidity('Please provide details about your family'); e.target.reportValidity(); } }"
+    required
+  >
+    {{ form.about_my_family }}
+  </div>
+</div>
+
   
        <div class="mb-6">
-         <p class="mb-2"><u>Tungkol sa aking <span class="font-bold">Sarili</span></u> (Karanasan mula pagkabata, mga napagtagumpayan, mga bisyo/pagkakamali, eskwela, interes at mga gustong gawin, sports, ambisyon, pangarap at iba pa)</p>
-         <textarea 
-  class="w-full mt-1 p-2 border border-gray-300 rounded-md" 
-  rows="10" 
-  v-model="form.about_my_self" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide details about yourself') }" 
-  required
-></textarea>
+  <p class="mb-2">
+    <u>Tungkol sa aking <span class="font-bold">Sarili</span></u> 
+    (Karanasan mula pagkabata, mga napagtagumpayan, mga bisyo/pagkakamali, eskwela, interes at mga gustong gawin, sports, ambisyon, pangarap at iba pa)
+  </p>
 
-       </div>
+  <div 
+    class="w-full mt-1 p-2 border border-gray-300 rounded-md" 
+    style="min-height: 150px; white-space: pre-wrap; line-height: 1.5;" 
+    contenteditable="true" 
+    :contenteditable="editMode" 
+    @input="(e) => { form.about_my_self = e.target.innerText; e.target.setCustomValidity('') }" 
+    @invalid="(e) => { e.target.setCustomValidity('Please provide details about yourself') }" 
+    @blur="(e) => { if (!form.about_my_self) { e.target.setCustomValidity('Please provide details about yourself'); e.target.reportValidity(); } }"
+    required
+  >
+    {{ form.about_my_self }}
+  </div>
+</div>
+
   
        <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
           <div class="flex justify-between items-center">
             <div class="flex flex-col">
               <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
-              <p class="border-t mt-4 text-[10px]" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-              <p class="ml-4">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+              <p class="-ml-4 border-t mt-4 text-[11px] whitespace-nowrap" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+              <p class="ml-4">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
             </div>
             <div class="ml-4">
-              <img src="/images/footerimg.png" alt="" class="h-12 w-24 object-cover rounded-md">
+              <img src="/images/footerimg.png" alt="" class="-ml-4h-12 w-24 object-cover rounded-md">
             </div>
           </div>
         </div>
      </div>
   
      <!-- Page 2 -->
-     <div v-if="currentPage === 2" class="max-w-3xl mx-auto bg-white p-16 rounded-lg shadow-lg mb-10">
+     <div v-if="currentPage === 2" class="max-w-3xl mx-auto bg-white border border-gray-400 p-16 rounded-lg shadow-lg -mb-4">
        <div class="text-right mb-4">
          <p class="text-xs">DSWD-GF-010A | REV 00 | 22 SEP 2023  </p>
        </div>
   
        <div class="mb-6 mt-12">
-         <p class="mb-2"><u>Tungkol sa aking <span class="font-bold">kaso</span></u> (Ano at papaano nangyari, detalye ng pangyayari, ano ang rason at bakit nasangkot "Na-apil" sa kaso, sino-sino ang sangkot at iba pa)</p>
-         <textarea 
-  class="w-full mt-1 p-2 border border-gray-300 rounded-md" 
-  rows="15" 
-  v-model="form.about_my_case" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide details about your case') }" 
-  required
-></textarea>
-       </div>
+  <p class="mb-2">
+    <u>Tungkol sa aking <span class="font-bold">kaso</span></u> 
+    (Ano at papaano nangyari, detalye ng pangyayari, ano ang rason at bakit nasangkot "Na-apil" sa kaso, sino-sino ang sangkot at iba pa)
+  </p>
+
+  <div 
+    class="w-full mt-1 p-2 border border-gray-300 rounded-md" 
+    style="min-height: 225px; white-space: pre-wrap; line-height: 1.5;" 
+    contenteditable="true" 
+    :contenteditable="editMode" 
+    @input="(e) => { form.about_my_case = e.target.innerText; e.target.setCustomValidity('') }" 
+    @invalid="(e) => { e.target.setCustomValidity('Please provide details about your case') }" 
+    @blur="(e) => { if (!form.about_my_case) { e.target.setCustomValidity('Please provide details about your case'); e.target.reportValidity(); } }"
+    required
+  >
+    {{ form.about_my_case }}
+  </div>
+</div>
+
   
        <div class="mb-6">
          <h3 class="text-lg font-semibold mb-2">Received & Assessed:</h3>

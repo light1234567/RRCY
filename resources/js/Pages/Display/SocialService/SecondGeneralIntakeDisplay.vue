@@ -1,7 +1,7 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-600 to-gray-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900  text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class="fas fa-arrow-left w-4 h-4"></i>
         <span>Cancel</span>
@@ -96,7 +96,7 @@
     <div v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
       <div class="relative flex justify-between items-center mb-2"> 
            <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
-           <p class="text-[10px] italic -mt-10">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
+           <p class="text-[10px] italic -mt-10">DSWD-GF-010A | REV 00 | 12 SEP 2023</p>
          </div>
   
       <div class="bg-white  ">
@@ -108,7 +108,7 @@
   <input 
     type="date" 
     v-model="sheet.date_second" 
-    class="flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" 
+    class="flex-grow border-b-1 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" 
     :readonly="!editMode" 
     :max="currentDateTime.date" 
     required 
@@ -137,47 +137,47 @@
           <div class="flex items-center mb-4">
           
             <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Name of client:</label>
-            <input type="text" v-model="sheet.name" class="mt-1 p-0 flex-grow border-b-2 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+            <input type="text" v-model="sheet.name" class="mt-1 p-0 flex-grow border-b-1 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
         </div>
     
      <div class="grid grid-cols-2 gap-4">
        <div class="flex items-center mb-4">
          <div class="flex-grow flex items-center mr-4">
            <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Age:</label>
-           <input type="text" v-model="sheet.age" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+           <input type="text" v-model="sheet.age" class="-mt-2 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
          </div>
        </div>
        <div class="flex items-center mb-4">
          <div class="flex-grow flex items-center mr-4">
            <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Sex:</label>
-           <input type="text" v-model="sheet.sex" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+           <input type="text" v-model="sheet.sex" class="-mt-2 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
          </div>
        </div>
      </div>
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
          <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Address:</label>
-         <input type="text" v-model="sheet.address" class="-mt-2 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+         <input type="text" v-model="sheet.address" class="-mt-2 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
      <div class="grid grid-cols-2 gap-4">
        <div class="flex items-center mb-4">
          <div class="flex-grow flex items-center mr-4">
            <label class="mt-2 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Date of Birth:</label>
-           <input type="date" v-model="sheet.date_of_birth" class=" p-0  w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+           <input type="date" v-model="sheet.date_of_birth" class=" p-0  w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
          </div>
        </div>
        <div class="flex items-center mb-4">
          <div class="flex-grow flex items-center mr-4">
            <label class="mt-1 block text-base font-semibold text-gray-700 mr-4 whitespace-nowrap">Place of birth:</label>
-           <input type="text" v-model="sheet.place_of_birth" class=" p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+           <input type="text" v-model="sheet.place_of_birth" class=" p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
          </div>
        </div>
      </div>
      <div class="flex items-center mb-4">
        <div class="flex-grow flex items-center mr-4">
          <label class="-mt-2 block text-base font-semibold text-gray-700 mr-4">Religion:</label>
-         <input type="text" v-model="sheet.religion" class="-mt-3 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
+         <input type="text" v-model="sheet.religion" class="-mt-3 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" readonly />
        </div>
      </div>
      <div class="flex items-center mb-4">
@@ -186,7 +186,7 @@
          <input 
   type="text" 
   v-model="sheet.occupation" 
-  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  class="mt-1 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
 />
        </div>
@@ -196,7 +196,7 @@
    <input 
   type="text" 
   v-model="sheet.highest_educ_att" 
-  class="mt-2 p-0 flex-grow border-b-2 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  class="mt-2 p-0 flex-grow border-b-1 mr-4 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
 />
   </div>
@@ -207,7 +207,7 @@
          <input 
   type="text" 
   v-model="sheet.school_name" 
-  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
+  class="mt-1 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]" 
   :readonly="!editMode" 
 />
        </div>
@@ -218,7 +218,7 @@
          <input
   type="text"
   v-model="sheet.class_adviser"
-  class="mt-1 p-0 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]"
+  class="mt-1 p-0 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-[14px]"
   :readonly="!editMode"
 />
 
@@ -249,18 +249,20 @@
         </div>
       </div>
   
-      <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-        <div class="flex justify-between items-center">
-          <div class="flex flex-col">
-            <p class="ml-24 -mb-4 font-bold">PAGE 1 of 2</p>
-            <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-          </div>
-          <div class="ml-4">
-            <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
-          </div>
+      <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+      <div class="flex justify-between items-center">
+        <div class="flex flex-col">
+          <p class="ml-24 -mb-4 font-bold">PAGE 1 of {{ totalPages }}</p>
+          <p class="border-t -ml-7 mt-4 whitespace-nowrap" style="border-top: 2px solid black;">
+            DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City
+          </p>
+          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+        </div>
+        <div class="ml-4">
+          <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
         </div>
       </div>
+    </div>
     </div>
   
     <!-- Page 2 of 2 -->
@@ -268,40 +270,43 @@
       <div class="relative flex justify-between items-center mb-2">
           <p class="text-[10px] text-right mt-6 mb-4 w-full italic">DSPDP-GF-010A | REV.00 | 12 SEP 2023</p>
         </div>
-      <div class="mb-8">
-        <h2 class="text-lg font-semibold">Schools Activities Achievement:</h2>
-        <div class="space-y-2">
-          <textarea 
-  v-model="sheet.school_activities_achievement" 
-  class="border w-full px-2 py-1" 
-  rows="4" 
-  :readonly="!editMode" 
-></textarea>
+        <div class="mb-8">
+  <h2 class="text-lg font-semibold">Schools Activities Achievement:</h2>
+  <div class="space-y-2">
+    <div 
+      class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+      style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
+      contenteditable="true" 
+      :contenteditable="editMode"
+      @input="(e) => { sheet.school_activities_achievement = e.target.innerText; }"
+    >
+      {{ sheet.school_activities_achievement }}
+    </div>
+  </div>
+</div>
 
-        </div>
-      </div>
   
       <div class="mb-8">
         <h2 class="text-lg font-semibold">Family:</h2>
         <div class="grid grid-cols-2 gap-4">
           <div class="flex-grow flex items-center mr-4">
             <label class="block text-base font-semibold text-gray-700 mr-4">Mother's Occupation:</label>
-            <input type="text" v-model="sheet.occupation_of_mother" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" maxlength="50" />
+            <input type="text" v-model="sheet.occupation_of_mother" class="mt-1 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
           </div>
           <div class="flex-grow flex items-center mr-4">
             <label class="block text-base font-semibold text-gray-700 mr-4">Father's Occupation:</label>
-            <input type="text" v-model="sheet.occupation_of_father" class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" maxlength="50" />
+            <input type="text" v-model="sheet.occupation_of_father" class="mt-1 w-full border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" :readonly="!editMode" />
           </div>
         </div>
         <div class="space-y-2">
           <label>Siblings:</label>
-          <input type="text" v-model="sheet.siblings[0]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[0] = removeNumbers(sheet.siblings[0])" maxlength="50" />
-          <input type="text" v-model="sheet.siblings[1]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[1] = removeNumbers(sheet.siblings[1])" maxlength="50" />
-          <input type="text" v-model="sheet.siblings[2]" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[2] = removeNumbers(sheet.siblings[2])" maxlength="50" />
+          <input type="text" v-model="sheet.siblings[0]" class="border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[0] = removeNumbers(sheet.siblings[0])"/>
+          <input type="text" v-model="sheet.siblings[1]" class="border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[1] = removeNumbers(sheet.siblings[1])"/>
+          <input type="text" v-model="sheet.siblings[2]" class="border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" @input="sheet.siblings[2] = removeNumbers(sheet.siblings[2])"/>
         </div>
         <div class="space-y-2">
           <label>Responsible for Households Chores:</label>
-          <input type="text" v-model="sheet.responsible_for_households_chores" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
+          <input type="text" v-model="sheet.responsible_for_households_chores" class="border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
         </div>
       </div>
   
@@ -309,7 +314,7 @@
         <h2 class="text-lg font-semibold">Community:</h2>
         <div class="space-y-2">
           <label>No. of Days Detention/Jail/CSWD/MSWDO:</label>
-          <input type="text" v-model="sheet.detention_days" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
+          <input type="text" v-model="sheet.detention_days" class="border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
           <label>Water Source:</label><br />
           <label><input type="checkbox" v-model="sheet.community.water_source" :disabled="!editMode" /> Water Source</label><br />
           <label><input type="checkbox" v-model="sheet.community.light" :disabled="!editMode" /> Light</label><br />
@@ -322,22 +327,29 @@
       <div class="mb-8">
         <h2 class="text-lg font-semibold">House made of:</h2>
         <div class="space-y-2">
-          <input type="text" v-model="sheet.house_made_of" class="border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
+          <input type="text" v-model="sheet.house_made_of" class="border-b-1 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs w-full" :readonly="!editMode" />
         </div>
       </div>
   
-      <div class="border-gray-300 ml-6 mt-24 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
-        <div class="flex justify-between items-center">
-          <div class="flex flex-col">
-            <p class="ml-24 -mb-4 font-bold">PAGE 2 of 2</p>
-            <p class="border-t mt-4" style="border-top: 2px solid black;">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
-            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
-          </div>
-          <div class="ml-4">
-            <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
-          </div>
-        </div>
-      </div>
+      <div class="border-gray-300 ml-6 mt-8 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+  <div class="flex justify-between items-center">
+    
+    <!-- Left Section: Page number -->
+    <div class="flex flex-col flex-grow">
+      <!-- Page number centered -->
+      <p class="text-center -mb-1 font-bold">PAGE 2 of {{ totalPages }}</p>
+
+    <!-- Continuous horizontal line, moved to the left with space on the right -->
+    <div style="border-top: 2px solid black; width: 103%; margin-top: 4px; margin-left: -24px;"></div>
+
+
+      <!-- Text under the line -->
+      <p class="-ml-8 whitespace-nowrap"style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION |REGIONAL REHABILITATION CENTER FOR YOUTH
+      </p>
+    </div>
+
+  </div>
+</div>
     </div>
     </div>
   </form>
@@ -696,7 +708,7 @@ confirmSave() {
     const addHeader = () => {
       pdf.setFontSize(9);
       pdf.setFont('TimesNewRoman', 'italic');
-      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 135, 20);
+      pdf.text('DSWD-GF-010A | REV 00 | 12 SEP 2023', 135, 20);
     };
     
     // Helper function to add a new page if content exceeds the page height
@@ -816,17 +828,42 @@ confirmSave() {
   pdf.text(`${this.sheet.sex || ''}`, initialX+110, contentYPos);;
   pdf.line(130, contentYPos+1, 190, contentYPos+1); 
   
-  
-  contentYPos += rowHeight;
-  pdf.setFontSize(13);  
-  pdf.setFont('arial', 'normal');
-  pdf.text(`Address:`, initialX, contentYPos);
-  
-  pdf.setFontSize(10);
-  pdf.setFont('arial', 'normal');
-  pdf.text(`${this.sheet.address || ''}`, initialX+20, contentYPos);;
-  pdf.line(40, contentYPos+1, 190, contentYPos+1); 
-  
+// Initial values
+contentYPos += rowHeight; // Adjust starting position using rowHeight
+
+// Set the font for the "Address:" label
+pdf.setFontSize(13);  
+pdf.setFont('arial', 'normal');
+pdf.text(`Address:`, initialX, contentYPos); // Label for Address
+
+// Address content from the sheet
+const addressText = this.sheet.address || '';
+
+// Set the font for the address content
+pdf.setFontSize(10);
+pdf.setFont('arial', 'normal');
+
+// Wrap the address text if it exceeds the limit
+const wrappedAddress = pdf.splitTextToSize(addressText, 150); // 150 units width for wrapping
+
+// Adjust row height to minimal space for each line of the wrapped address
+wrappedAddress.forEach((line, i) => {
+    const lineX = i === 0 ? initialX + 20 : initialX; // Indent first line slightly, subsequent lines start at 20
+    const lineY = contentYPos + (i * rowHeight); // Adjust line position using rowHeight for each line
+    
+    // Render the current line
+    pdf.text(line, lineX, lineY);
+
+    // Draw underline for each line of the address
+    pdf.line(lineX, lineY + 1, 190, lineY + 1); // Underline from lineX to 190
+});
+
+// Only adjust `contentYPos` if there is more than one line (second row or more)
+if (wrappedAddress.length > 1) {
+    const totalAddressHeight = wrappedAddress.length * rowHeight - 7; // Calculate the height for multiple rows
+    contentYPos += totalAddressHeight; // Adjust contentYPos based on the number of lines
+}
+
   
   contentYPos += rowHeight;
   pdf.setFontSize(13);

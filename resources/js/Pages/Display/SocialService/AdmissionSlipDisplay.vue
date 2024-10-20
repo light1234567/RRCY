@@ -3,7 +3,7 @@
   <div>
 <!-- Tabs for Actions -->
 <div v-if="editMode" class="flex absolute p-4 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-600 text-white rounded-md text-xs">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 hover:bg-blue-950 text-white rounded-md text-xs">
       <!-- FontAwesome for Back -->
       <i class=" fas fa-arrow-left w-4 h-4"></i>
       <span>Cancel</span>
@@ -100,7 +100,7 @@
      <!-- Form Content -->
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
     <div>
-    <div ref="pdfContent" class="max-w-3xl border-gray-400 p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border ">
+    <div ref="pdfContent" class="max-w-3xl - border-gray-400 p-12 bg-white shadow-xl mx-auto my-8 border ">
       <div class=" relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class=" h-32 w-64 relative z-10">
         <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
@@ -176,6 +176,7 @@
     <input type="text" class="underline-input w-1/4" v-model="client.street" placeholder="Street" required maxlength="60">
   </template>
 </div>
+
 
         </div>
 
@@ -414,123 +415,133 @@
 
 <div class="text-[15px] mb-4">
   <label class="block font-semibold mb-2 text-black">General impression upon admission:</label>
-  <textarea 
-  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
-  style="line-height: 1.5;" 
-  v-model="client.admissions[0].general_impression" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
+  <div 
+  class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+  style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
+  contenteditable="true" 
+  :contenteditable="editMode"
+  @input="(e) => { client.admissions[0].general_impression = e.target.innerText; e.target.setCustomValidity(''); }"
   @invalid="(e) => { e.target.setCustomValidity('Please provide a general impression for this field'); }" 
-  required>
-</textarea>
+  :data-required="true"
+  @blur="(e) => { if(!client.admissions[0].general_impression) { e.target.setCustomValidity('Please provide a general impression for this field'); e.target.reportValidity(); } }">
+  {{ client.admissions[0].general_impression }}
+</div>
+
 
 </div>
 
 <div class="text-[15px] mb-4">
   <label class="block font-semibold mb-2 text-black">Action Taken:</label>
-  <textarea 
-  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
-  style="line-height: 1.5;" 
-  v-model="client.admissions[0].action_taken" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
+<div 
+  class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+  style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
+  contenteditable="true" 
+  :contenteditable="editMode"
+  @input="(e) => { client.admissions[0].action_taken = e.target.innerText; e.target.setCustomValidity(''); }"
   @invalid="(e) => { e.target.setCustomValidity('Please provide action taken for this field'); }" 
-  required>
-</textarea>
-
+  :data-required="true"
+  @blur="(e) => { if(!client.admissions[0].action_taken) { e.target.setCustomValidity('Please provide action taken for this field'); e.target.reportValidity(); } }">
+  {{ client.admissions[0].action_taken }}
 </div>
 
+
+</div>
+<div v-if="client.admissions[0]?.referring_party_signature || editMode" class="mb-4 ">
+      <label class="block mb-2 text-sm text-[15px] text-gray-700">
+        Upload or Update Referring Party Signature:
+      </label>
+
+      <!-- Show image preview if available -->
+      <div v-if="signaturePreview || client.admissions[0]?.referring_party_signature">
+        <img
+          :src="signaturePreview || getSignatureUrl(client.admissions[0]?.referring_party_signature)"
+          alt="Referring Party Signature"
+          class="h-24 w-auto mb-2"
+        />
+      </div>
+    </div>
 <div class="grid grid-cols-2 gap-4 mb-4">
-
-          
   <!-- Referring Party Section -->
-  <div class="flex flex-col justify-end text-[15px] mb-4">
-<!-- Display the current signature image if it exists or show a preview of the new uploaded image -->
-<div v-if="client.admissions[0]?.referring_party_signature || editMode" class="mb-4">
-  <label class="block mb-2 text-sm text-[15px] text-gray-700">
-    Upload or Update Referring Party Signature:
-  </label>
+  <div class="flex flex-col justify-center items-center text-[15px] mb-4">
+    <!-- Display the current signature image if it exists or show a preview of the new uploaded image -->
+   
 
-  <!-- Show image preview if available -->
-  <div v-if="signaturePreview || client.admissions[0]?.referring_party_signature">
-    <img
-      :src="signaturePreview || getSignatureUrl(client.admissions[0]?.referring_party_signature)"
-      alt="Referring Party Signature"
-      class="h-24 w-auto mb-2"
-    />
-  </div>
-</div>
-
-<!-- Text input for the referring party name -->
-<input 
-  type="text" 
-  class="underline-input mt-1 w-full text-[15px]" 
-  v-model="client.admissions[0].referring_party_name" 
-  :readonly="!editMode" required
-  maxlength="50"
->
-
-<label class="block text-[15px] text-black -mt-3">Name & Signature of Referring Party</label>
-</div>
-
-
-
-  <!-- Admitting Officer Section -->
-  <div class="flex flex-col justify-end text-[15px] mb-4">
-  <input 
-    type="text" 
-    class="underline-input mt-1 w-full " 
-    v-model="client.admissions[0].admitting_officer" 
-    :readonly="!editMode"
-    @input="client.admissions[0].admitting_officer = removeNumbers(client.admissions[0].admitting_officer)" required
-    maxlength="50"
-
-  >
-  <label class="block text-[15px] text-black -mt-3">Admitting Officer</label>
-</div>
-</div>
-
-<div class="grid grid-cols-2 gap-4 text-[15px] mb-4">
-  <div>
-    <input 
-      type="text" 
-      class="underline-input mt-1 w-full text-[15px]" 
-      v-model="client.admissions[0].designation_id_contact" 
-      :readonly="!editMode"
-      maxlength="50"
-    >
-    <label class="block  text-[15px] text-black -mt-3">Designation / ID No. / Contact #</label>
-  </div>
-  <div>
-    <input 
-      type="text" 
-      class="underline-input mt-1 w-full text-[15px]" 
-      v-model="client.admissions[0].designation" 
-      :readonly="!editMode" required
-      maxlength="50"
-    >
-    <label class="block text-black text-[15px] -mt-3 mb-4">Designation</label>
-  </div>
-</div>
-
-<div class="grid grid-cols-2 gap-4 text-[15px] mb-4">
-  <div>
-    <input 
-      type="text" 
-      class="underline-input mt-1 w-full text-[15px]" 
-      v-model="client.admissions[0].office_address" 
-      :readonly="!editMode" required
-      maxlength="50"
-    >
-    <label class="block text-black text-[15px] -mt-3">Complete Address/Office Address</label>
+    <!-- Text input for the referring party name, centered -->
+    <div class="text-center w-full">
+      <input 
+        type="text" 
+        class="underline-input mt-1 w-full text-[15px] mx-auto text-center" 
+        v-model="client.admissions[0].referring_party_name" 
+        :readonly="!editMode" 
+        required
+        maxlength="50"
+      >
+      <label class="block text-[15px] text-black -mt-3 text-center">Name & Signature of Referring Party</label>
+    </div>
   </div>
   
-  <div>
-  <!-- When not in edit mode, show the combined Date/Time as a single read-only field -->
-  <template v-if="!editMode">
+
+  <!-- Admitting Officer Section -->
+  <div class=" items-center justify-center text-center text-[15px] mb-4">
     <input 
       type="text" 
-      class="underline-input mt-1 w-full text-[15px]" 
+      class="underline-input mt-1 w-full text-center"  
+      v-model="client.admissions[0].admitting_officer" 
+      :readonly="!editMode"
+      @input="client.admissions[0].admitting_officer = removeNumbers(client.admissions[0].admitting_officer)" 
+      required
+      maxlength="50"
+    >
+    <label class="block text-[15px] text-black -mt-3 text-center">Admitting Officer</label>
+  </div>
+</div>
+
+
+<div class="grid grid-cols-2 gap-4 text-[15px] mb-4">
+  <div class="text-center mb-4">
+  <input 
+    type="text" 
+    class="underline-input mt-1 w-full text-[15px] text-center" 
+    v-model="client.admissions[0].designation_id_contact" 
+    :readonly="!editMode"
+    maxlength="50"
+  >
+  <label class="block text-[15px] text-black -mt-3">Designation / ID No. / Contact #</label>
+</div>
+
+<div class="text-center mb-4">
+  <input 
+    type="text" 
+    class="underline-input mt-1 w-full text-[15px] text-center" 
+    v-model="client.admissions[0].designation" 
+    :readonly="!editMode" 
+    required
+    maxlength="50"
+  >
+  <label class="block text-[15px] text-black -mt-3">Designation</label>
+</div>
+
+</div>
+
+<div class="grid grid-cols-2 gap-4 text-[15px] mb-4">
+  <div class="text-center mb-4">
+  <input 
+    type="text" 
+    class="underline-input mt-1 w-full text-[15px] text-center" 
+    v-model="client.admissions[0].office_address" 
+    :readonly="!editMode" 
+    required
+    maxlength="50"
+  >
+  <label class="block text-black text-[15px] -mt-3 text-center">Complete Address/Office Address</label> <!-- Center the label -->
+</div>
+
+<div class="text-center mb-4">
+   <!-- When not in edit mode, show the combined Date/Time as a single read-only field -->
+   <template v-if="!editMode">
+    <input 
+      type="text" 
+      class="underline-input mt-1 w-full text-[15px] text-center" 
       :value="formatDateTime(client.admissions[0]?.date_time)" 
       readonly required
     >
@@ -540,7 +551,7 @@
   <template v-else>
   <input 
     type="datetime-local"  
-    class="underline mt-1 w-full text-[15px]" 
+    class="underline mt-1 w-full text-[15px] text-center" 
     v-model="client.admissions[0].date_time"  
     placeholder="Select Date and Time"
     :max="currentDateTime"
@@ -548,7 +559,8 @@
 </template>
 
 
-  <label class="block text-black text-[15px] -mt-3">Date/Time</label>
+
+  <label class="block text-black text-[15px] -mt-3 text-center">Date/Time</label> <!-- Center the label -->
 </div>
 
 
@@ -581,7 +593,7 @@
           <p class="border-t -ml-7 mt-4 whitespace-nowrap" style="border-top: 2px solid black;">
             DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City
           </p>
-          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
         </div>
         <div class="ml-4">
           <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
@@ -1137,13 +1149,13 @@ function drawCheckmark(pdf, x, y) {
 function addFirstPageFooter(pdf, pageNumber, totalPages) {
   const footerYPosition = 326; // Adjust position as needed
 
-  // Set font to a built-in font like Times or Helvetica
+  // Set font to a built-in font like Times
   pdf.setFont('Times', 'bold');
   pdf.setFontSize(9);
-  
+
   // Centered page number text
   pdf.text(`PAGE ${pageNumber} of ${totalPages}`, 108, footerYPosition + 2, null, null, 'center');
-  
+
   // Add horizontal line for separation
   pdf.setLineWidth(0.5);
   pdf.line(18, footerYPosition + 5, 174, footerYPosition + 5); // Horizontal line across the page
@@ -1151,36 +1163,42 @@ function addFirstPageFooter(pdf, pageNumber, totalPages) {
   // Footer content for the first page
   pdf.setFont('Times', 'normal');
   pdf.setFontSize(9);
+  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 96, footerYPosition + 10, null, null, 'center');
 
- // Footer content for the first page
- pdf.setFont('TimesNewRoman', 'normal');
-  pdf.setFontSize(9);
-  pdf.text('DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Prk. 7 Bago-Oshiro, Tugbok Dist., Davao City', 96,footerYPosition + 10, null, null, 'center');
-  pdf.text('Email: rrcy.fo11@dswd.gov.ph    Tel. No.: 293-0306', 108, footerYPosition + 15, null, null, 'center');
+  // Print "Email:" in black
+  pdf.setTextColor(0, 0, 0);  // RGB for black color
+  pdf.text('Email:', 72, footerYPosition + 15);
 
-  // Add the footer image
-  const footerImgData = '/images/footerimg.png'; // Make sure the image is correctly loaded
+  // Set text color to blue for the email address only
+  pdf.setTextColor(0, 0, 255);  // RGB for blue color
+  pdf.text('rrcy.fo11@dswd.gov.ph', 81, footerYPosition + 15);
+
+  // Reset text color to black for the telephone number
+  pdf.setTextColor(0, 0, 0);  // RGB for black color
+  pdf.text('Tel. No.: 293-0306', 113, footerYPosition + 15);
+
+  // Add the footer image if the image is loaded correctly
+  const footerImgData = '/images/footerimg.png'; 
   pdf.addImage(footerImgData, 'PNG', 175, footerYPosition, 25, 15); // Adjust the position and size as needed
 }
-
 
 // Function to add footer for other pages
 function addOtherPagesFooter(pdf, pageNumber, totalPages) {
   const footerYPosition = 326; // Adjust position as needed
 
   // Simple footer for other pages
-  pdf.setFont('TimesNewRoman', 'bold');
+  pdf.setFont('Times', 'bold');
   pdf.setFontSize(9);
   pdf.text(`PAGE ${pageNumber} of ${totalPages}`, 108, footerYPosition + 2, null, null, 'center');
   pdf.setLineWidth(0.5);
   pdf.line(18, footerYPosition + 5, 198, footerYPosition + 5);
 
   // Simple footer text for other pages
-  pdf.setFont('TimesNewRoman', 'normal');
+  pdf.setFont('Times', 'normal');
   pdf.setFontSize(9);
   pdf.text('DSWD | FIELD OFFICE XI | ADMINISTRATIVE DIVISION', 108, footerYPosition + 10, null, null, 'center');
 }
-// Function to apply footers dynamically based on page number
+
 // Function to apply footers dynamically based on page number
 function addFooters(pdf) {
   const totalPages = pdf.internal.getNumberOfPages(); // Get the total number of pages after all content is added
@@ -1199,7 +1217,6 @@ function addFooters(pdf) {
 function checkAndAddPageIfNeeded(pdf, currentOffset) {
   const safeAreaHeight = 320; // Content area height excluding footer
   if (currentOffset >= safeAreaHeight) {
-    addFooters(pdf); // Add footer to the current page before moving to the next
     pdf.addPage();
     
     // Re-add the page-specific headers after a new page is added
@@ -1272,13 +1289,13 @@ function fillCheckboxWithCheck(pdf, x, y) {
     }
 
     // Handle Address Wrapping with conditional justification
-    pdf.text('Address:', 20, offset + 10);
+    pdf.text('Address:', 20, offset + 7);
     const addressText = `${client.province}, ${client.city}, ${client.barangay}, ${client.street}`;
     const wrappedAddress = pdf.splitTextToSize(addressText, 150);
 
     wrappedAddress.forEach((line, i) => {
-      const lineX = i === 0 ? 40 : 20; // First line starts at 40, subsequent lines at 20
-      const lineY = offset + 10 + i * 8; // Line height is 8mm
+      const lineX = i === 0 ? 38 : 20; // First line starts at 40, subsequent lines at 20
+      const lineY = offset + 7 + i * 8; // Line height is 8mm
 
       if (i < wrappedAddress.length - 1) {
         // Justify all lines except the last one
@@ -1296,22 +1313,22 @@ function fillCheckboxWithCheck(pdf, x, y) {
     offset += addressHeight + 1; // Adjust offset for the following content
 
     // Date of Birth and Place
-    pdf.text('Date/Place of Birth:', 20, offset + 10);
-    pdf.text(`${client.date_of_birth} / ${client.place_of_birth}`, 58, offset + 10);
-    pdf.line(58, offset + 11, 200, offset + 11);
+    pdf.text('Date/Place of Birth:', 20, offset + 4);
+    pdf.text(`${client.date_of_birth} / ${client.place_of_birth}`, 56, offset + 4);
+    pdf.line(56, offset + 5, 200, offset + 5);
 
     // Committing Court and Case Info
-    offset += 20;
-    pdf.text('Committing Court:', 20, offset);
-    pdf.text(`${client.admissions[0]?.committing_court}`, 56, offset);
-    pdf.line(56, offset + 1, 110, offset + 1);
+    offset += 11;
+    pdf.text('Committing Court:', 20, offset );
+    pdf.text(`${client.admissions[0]?.committing_court}`, 54, offset);
+    pdf.line(54, offset + 1, 110, offset + 1);
 
     pdf.text('Crim. Case #:', 115, offset);
     pdf.text(`${client.admissions[0]?.crim_case_number}`, 143, offset);
     pdf.line(143, offset + 1, 200, offset + 1);
 
 // Date Admitted Section (switched to the left)
-offset += 10;
+offset += 7;
 pdf.text('Date admitted to Center:', 20, offset);
 pdf.text(`${client.admissions[0]?.date_admitted}`, 64, offset);
 pdf.line(64, offset + 1, 110, offset + 1);
@@ -1354,43 +1371,43 @@ if (firstLineOffense.length === 1) {
 
 
     // Days in Jail and Detention Center
-    offset += 10;
+    offset += 7;
     pdf.text('No. of Days in Jail:', 20, offset);
-    pdf.text(String(client.admissions[0]?.days_in_jail), 57, offset);
-    pdf.line(57, offset + 1, 110, offset + 1);
+    pdf.text(String(client.admissions[0]?.days_in_jail), 56, offset);
+    pdf.line(56, offset + 1, 110, offset + 1);
 
     pdf.text('No. of Days in Detention Center:', 115, offset);
-    pdf.text(String(client.admissions[0]?.days_in_detention_center), 175, offset);
-    pdf.line(175, offset + 1, 200, offset + 1);
+    pdf.text(String(client.admissions[0]?.days_in_detention_center), 174, offset);
+    pdf.line(174, offset + 1, 200, offset + 1);
 
     // Distinguishing Marks
-    offset += 10;
+    offset += 7;
     pdf.setFont('helvetica', 'bold');
     pdf.text('Distinguishing Marks:', 20, offset);
     pdf.setFont('helvetica', 'normal');
 
-    pdf.text('a. Tattoo/Scars:', 20, offset + 10);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars}`, 51, offset + 10);
-    pdf.line(51, offset + 11, 110, offset + 11);
+    pdf.text('a. Tattoo/Scars:', 20, offset + 6);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars}`, 51, offset + 6);
+    pdf.line(51, offset + 7, 110, offset + 7);
 
-    pdf.text('b. Height:', 115, offset + 10);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.height}`, 138, offset + 10);
-    pdf.line(138, offset + 11, 200, offset + 11);
+    pdf.text('b. Height:', 115, offset + 6);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.height}`, 136, offset + 6);
+    pdf.line(136, offset + 7, 200, offset + 7);
 
-    pdf.text('c. Weight:', 20, offset + 20);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight}`, 40, offset + 20);
-    pdf.line(40, offset + 21, 110, offset + 21);
+    pdf.text('c. Weight:', 20, offset + 12);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight}`, 40, offset + 12);
+    pdf.line(40, offset + 13, 110, offset + 13);
 
-    pdf.text('d. Colour of Eye:', 115, offset + 20);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye}`, 150, offset + 20);
-    pdf.line(150, offset + 21, 200, offset + 21);
+    pdf.text('d. Colour of Eye:', 115, offset + 12);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye}`, 147, offset + 12);
+    pdf.line(147, offset + 13, 200, offset + 13);
 
-    pdf.text('e. Skin:', 20, offset + 30);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour}`, 36, offset + 30);
-    pdf.line(36, offset + 31, 110, offset + 31);
+    pdf.text('e. Skin:', 20, offset + 18);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour}`, 36, offset + 18);
+    pdf.line(36, offset + 19, 110, offset + 19);
 
     // Documents Submitted
-    offset += 40;
+    offset += 26;
     pdf.setFont('helvetica', 'bold');
     pdf.text('Put on Documents Submitted:', 20, offset);
     pdf.setFont('helvetica', 'normal');
@@ -1427,36 +1444,36 @@ if (documentNames.includes('Medical Certificates')) {
   fillCheckboxWithCheck(pdf, 157, offset + 4);
 }
 
-pdf.rect(20, offset + 12, 4, 4);
-pdf.text(`Consent from Parents`, 28, offset + 15.5);
+pdf.rect(20, offset + 10, 4, 4);
+pdf.text(`Consent from Parents`, 28, offset + 13.5);
 if (documentNames.includes('Consent from Parents')) {
-  fillCheckboxWithCheck(pdf, 20, offset + 12);
+  fillCheckboxWithCheck(pdf, 20, offset + 10);
 }
 
-pdf.rect(90, offset + 12, 4, 4);
-pdf.text(`School Records`, 98, offset + 15.5);
+pdf.rect(90, offset + 10, 4, 4);
+pdf.text(`School Records`, 98, offset + 13.5);
 if (documentNames.includes('School Records')) {
-  fillCheckboxWithCheck(pdf, 90, offset + 12);
+  fillCheckboxWithCheck(pdf, 90, offset + 10);
 }
 
 // Checkbox for "Others"
-pdf.rect(157, offset + 12, 4, 4);
-pdf.text(`Others`, 165, offset + 15.5);
+pdf.rect(157, offset + 10, 4, 4);
+pdf.text(`Others`, 165, offset + 13.5);
 
 // Check if "Others" is selected and adjust layout accordingly
 const othersDocument = documentNames.find(doc => !this.knownDocuments().includes(doc));
 
 if (othersDocument) {
   // Fill the checkbox for "Others"
-  fillCheckboxWithCheck(pdf, 157, offset + 12);
+  fillCheckboxWithCheck(pdf, 157, offset + 10);
   
   // Move to the next line to display "Other Documents Submitted" section
   offset += 16; // Add space below checkboxes
   pdf.setFont('helvetica', 'bold');
-  pdf.text('Other Documents Submitted:', 20, offset + 8); // Header for other documents
+  pdf.text('Other Documents Submitted:', 20, offset + 6); // Header for other documents
   
 // Display the actual name of the other document(s)
-offset += 8;
+offset += 4;
 pdf.setFont('helvetica', 'normal');
 
 // Split text into multiple lines if it's too long
@@ -1480,17 +1497,17 @@ offset += wrappedText.length * 4;
 
     // General Impression Section with Justified Text
     pdf.setFont('helvetica', 'bold');
-    pdf.text('General Impression upon admission:', 20, offset + 18); // Render the title first
+    pdf.text('General Impression upon admission:', 20, offset + 13); // Render the title first
     pdf.setFont('helvetica', 'normal');
 
     // Split the text for General Impression and justify the lines except the last one
     const impressionText = pdf.splitTextToSize(client.admissions[0]?.general_impression || '', 170);
     impressionText.forEach((line, i) => {
-      const lineY = offset + 28 + i * 6; // Adjust Y position dynamically based on index
+      const lineY = offset + 19 + i * 6; // Adjust Y position dynamically based on index
       
       if (i < impressionText.length - 1) {
         // Justify all lines except the last one
-        justifyLine(pdf, line, 20, lineY, 196);
+        justifyLine(pdf, line, 20, lineY, 180);
       } else {
         // Last line is not justified
         pdf.text(line, 20, lineY);
@@ -1502,21 +1519,21 @@ offset += wrappedText.length * 4;
 
     // Dynamically adjust offset based on General Impression content height
     const impressionHeight = impressionText.length * 8; // Each line takes up 8 units of space
-    offset += impressionHeight + 11; // Add some extra space after the General Impression
+    offset += impressionHeight + 12; // Add some extra space after the General Impression
 
     // Action Taken Section with Justified Text (Placed after General Impression)
     pdf.setFont('helvetica', 'bold');
-    pdf.text('Action Taken:', 20, offset + 18); // Render Action Taken title after General Impression
+    pdf.text('Action Taken:', 20, offset + 8); // Render Action Taken title after General Impression
     pdf.setFont('helvetica', 'normal');
 
     // Split the text for Action Taken and justify the lines except the last one
     const actionText = pdf.splitTextToSize(client.admissions[0]?.action_taken || '', 170);
     actionText.forEach((line, i) => {
-      const lineY = offset + 27 + i * 6; // Adjust Y position dynamically based on index
+      const lineY = offset + 15 + i * 6; // Adjust Y position dynamically based on index
       
       if (i < actionText.length - 1) {
         // Justify all lines except the last one
-        justifyLine(pdf, line, 20, lineY, 194);
+        justifyLine(pdf, line, 20, lineY, 180);
       } else {
         // Last line is not justified
         pdf.text(line, 20, lineY);
@@ -1528,47 +1545,110 @@ offset += wrappedText.length * 4;
 
  // Dynamically adjust the offset based on the height of the Action Taken content
  const actionHeight = actionText.length * 8; // Each line takes 8 units of space
-    offset += actionHeight + 35; // Add some extra space after Action Taken
+   // Get the page width
+const pageWidth = pdf.internal.pageSize.getWidth();
 
-    // Signature and Other Fields with Dynamic Page Break
-    offset = checkAndAddPageIfNeeded(pdf, offset); // Check if signature touches the footer
+// Set the X positions for the left and right side lines
+const leftLineStart = 20; // Left side line starting point
+const leftLineEnd = leftLineStart + 65; // Left line length (65 units)
 
-    // Name & Signature of Referring Party and Admitting Officer
-    pdf.text(client.admissions[0]?.referring_party_name || ' ', 20, offset);
-    pdf.line(20, offset + 1, 85, offset + 1);
-    pdf.text(client.admissions[0]?.admitting_officer || ' ', 130, offset);
-    pdf.line(130, offset + 1, 200, offset + 1);
+const rightLineStart = 130; // Right side line starting point
+const rightLineEnd = rightLineStart + 65; // Right line length (65 units)
 
-    pdf.text('Name & Signature of Referring Party', 20.5, offset + 5);
-    pdf.text('Admitting Officer', 150, offset + 5);
+// Update offset
+offset += actionHeight + 20; // Add some extra space after Action Taken
 
-    offset += 20;
+// Signature and Other Fields with Dynamic Page Break
+offset = checkAndAddPageIfNeeded(pdf, offset); // Check if signature touches the footer
 
-    offset = checkAndAddPageIfNeeded(pdf, offset); // Check if new fields touch the footer
+// Name & Signature of Referring Party (Left side)
+const referringPartyName = client.admissions[0]?.referring_party_name || ' ';
+const referringPartyNameWidth = pdf.getTextWidth(referringPartyName);
 
-    // Designation / ID No. / Contact # and Designation
-    pdf.text(client.admissions[0]?.designation_id_contact || ' ', 20, offset);
-    pdf.line(20, offset + 1, 85, offset + 1);
-    pdf.text(client.admissions[0]?.designation || ' ', 130, offset);
-    pdf.line(130, offset + 1, 200, offset + 1);
+// Center the referring party name above the line
+const referringPartyNameX = (leftLineEnd + leftLineStart) / 2 - referringPartyNameWidth / 2;
+pdf.text(referringPartyName, referringPartyNameX, offset);
 
-    pdf.text('Designation / ID No. / Contact #', 24, offset + 5);
-    pdf.text('Designation', 154, offset + 5);
+// Draw the line for referring party
+pdf.line(leftLineStart, offset + 1, leftLineEnd, offset + 1);
 
-    offset += 20;
+pdf.text('Name & Signature of Referring Party', leftLineStart, offset + 5);
 
-    offset = checkAndAddPageIfNeeded(pdf, offset); // Check if new fields touch the footer
+// Admitting Officer (Right side)
+const admittingOfficerName = client.admissions[0]?.admitting_officer || ' ';
+const admittingOfficerNameWidth = pdf.getTextWidth(admittingOfficerName);
 
-    // Complete Address/Office Address and Date/Time
-    pdf.text(client.admissions[0]?.office_address || ' ', 20, offset);
-    pdf.line(20, offset + 1, 85, offset + 1);
-    pdf.text(formatDateTime(client.admissions[0]?.date_time) || ' ', 130, offset);
-    pdf.line(130, offset + 1, 200, offset + 1);
+// Center the admitting officer name above the line
+const admittingOfficerNameX = (rightLineEnd + rightLineStart) / 2 - admittingOfficerNameWidth / 2;
+pdf.text(admittingOfficerName, admittingOfficerNameX, offset);
 
-    pdf.text('Complete Address/Office Address', 22, offset + 5);
-    pdf.text('Date/Time', 154, offset + 5);
+// Draw the line for admitting officer
+pdf.line(rightLineStart, offset + 1, rightLineEnd, offset + 1);
 
-    offset += 20;
+pdf.text('Admitting Officer', rightLineStart + 20, offset + 5);
+
+offset += 18;
+offset = checkAndAddPageIfNeeded(pdf, offset); // Check if new fields touch the footer
+
+// Designation / ID No. / Contact #
+const designationIdContact = client.admissions[0]?.designation_id_contact || ' ';
+const designationIdContactWidth = pdf.getTextWidth(designationIdContact);
+
+// Center the fetched data above the left line
+const designationIdContactX = (leftLineEnd + leftLineStart) / 2 - designationIdContactWidth / 2;
+pdf.text(designationIdContact, designationIdContactX, offset);
+
+// Draw the line for Designation / ID No. / Contact #
+pdf.line(leftLineStart, offset + 1, leftLineEnd, offset + 1);
+
+// Designation
+const designation = client.admissions[0]?.designation || ' ';
+const designationWidth = pdf.getTextWidth(designation);
+
+// Center the fetched data above the right line
+const designationX = (rightLineEnd + rightLineStart) / 2 - designationWidth / 2;
+pdf.text(designation, designationX, offset);
+
+// Draw the line for Designation
+pdf.line(rightLineStart, offset + 1, rightLineEnd, offset + 1);
+
+// Add labels below the lines
+pdf.text('Designation / ID No. / Contact #', leftLineStart + 4, offset + 5);
+pdf.text('Designation', rightLineStart + 24, offset + 5);
+
+offset += 18;
+
+
+offset = checkAndAddPageIfNeeded(pdf, offset); // Check if new fields touch the footer
+
+// Complete Address/Office Address
+const officeAddress = client.admissions[0]?.office_address || ' ';
+const officeAddressWidth = pdf.getTextWidth(officeAddress);
+
+// Center the fetched data above the left line
+const officeAddressX = (leftLineEnd + leftLineStart) / 2 - officeAddressWidth / 2;
+pdf.text(officeAddress, officeAddressX, offset);
+
+// Draw the line for Complete Address/Office Address
+pdf.line(leftLineStart, offset + 1, leftLineEnd, offset + 1);
+
+// Date/Time
+const dateTime = formatDateTime(client.admissions[0]?.date_time) || ' ';
+const dateTimeWidth = pdf.getTextWidth(dateTime);
+
+// Center the fetched data above the right line
+const dateTimeX = (rightLineEnd + rightLineStart) / 2 - dateTimeWidth / 2;
+pdf.text(dateTime, dateTimeX, offset);
+
+// Draw the line for Date/Time
+pdf.line(rightLineStart, offset + 1, rightLineEnd, offset + 1);
+
+// Add labels below the lines
+pdf.text('Complete Address/Office Address', leftLineStart + 2, offset + 5);
+pdf.text('Date/Time', rightLineStart + 24, offset + 5);
+
+offset += 15;
+
     // Continue adjusting offset dynamically as needed for other sections
 
     // Check if there's enough space for "Noted By" section

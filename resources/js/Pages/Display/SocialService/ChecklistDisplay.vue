@@ -1,7 +1,7 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-500 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class=" fas fa-arrow-left w-4 h-4"></i>
         <span>Cancel</span>
@@ -156,7 +156,7 @@
             <p class="border-t -ml-7 mt-4 whitespace-nowrap" style="border-top: 2px solid black;">
               DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City
             </p>
-            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrxy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+            <p class="ml-32">Email: <span style="color: blue; text-decoration: underline;">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
           <div class="ml-4">
             <img src="/images/footerimg.png" alt="Image description" class="h-12 w-24 object-cover rounded-md">
@@ -209,15 +209,13 @@
     inputmode="text"
     oninput="this.value = this.value.replace(/[0-9]/g, '')"
     placeholder="Enter only letters"
-    maxlength="50"
   />
   <br>Admitting Officer
 </p>
 
         <p class="text-[15px] mb-4">Received by:</p>
         <p class="text-[15px]">
-          <input v-model="checklist_case_manager" class="w-1/2 font-semibold border-b border-black p-0 text-[15px]" :readonly="!editMode" style="border: none; border-bottom: 1px solid black;"
-          maxlength="50"/>
+          <input v-model="checklist_case_manager" class="w-1/2 font-semibold border-b border-black p-0 text-[15px]" :readonly="!editMode" style="border: none; border-bottom: 1px solid black;"/>
           <br>Case Manager
         </p>
   

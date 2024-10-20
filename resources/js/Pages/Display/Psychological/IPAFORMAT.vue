@@ -34,12 +34,12 @@
       </button>
   
   </div>
-    
   <!-- Page 1 -->
   <form ref="IPAForm" @submit.prevent="submitForm" class="">
-    <div class="graph-background pt-0.5  -mr-9 -mb-8">
+   
+    <div class="graph-background pt-0.5 -mb-12 -mr-9 ">
 
-    <div class="-mt-8 mx-auto p-8 rounded-lg max-w-full" style="width: 8.5in; height: 13in;">
+    <div class="-mt-8 mx-auto p-8 rounded-lg " style="width: 8.5in; ">
     
       <div v-if="currentPage === 1" class="max-w-3xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
         <div class="relative flex justify-between items-center mb-2">
@@ -207,33 +207,41 @@
   
         <!-- Reason for Referral Section -->
         <div class="space-y-4 mt-6">
-          <h2 class="font-bold">II. REASON FOR REFERRAL</h2>
-          <textarea 
-  id="reasonForReferral" 
-  v-model="form.reason_for_referral" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide a reason for referral') }" 
-  required
-></textarea>
-        </div>
+  <h2 class="font-bold">II. REASON FOR REFERRAL</h2>
+  <div 
+    id="reasonForReferral"
+    class="block w-full p-2 border border-gray-300 rounded-md"
+    style="white-space: pre-wrap; min-height: 50px;" 
+    :contenteditable="editMode" 
+    @input="(e) => { form.reason_for_referral = e.target.innerText; e.target.setCustomValidity('') }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide a reason for referral') }"
+    :data-required="true"
+    @blur="(e) => { if(!form.reason_for_referral) { e.target.setCustomValidity('Please provide a reason for referral'); e.target.reportValidity(); } }"
+  >
+    {{ form.reason_for_referral }}
+  </div>
+</div>
+
   
         <!-- Brief Background Section -->
         <div class="space-y-4 mt-6">
           <h2 class="font-bold">III. BRIEF BACKGROUND</h2>
           <div class="space-y-2">
-            <label for="familyHistory" class="block font-bold">Family History</label>
-            <textarea 
-  id="familyHistory" 
-  v-model="form.family_history" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide family history information') }" 
-  required
-></textarea>
-          </div>
+  <label for="familyHistory" class="block font-bold">Family History</label>
+  <div 
+    id="familyHistory" 
+    class="block w-full p-2 border border-gray-300 rounded-md" 
+    style="white-space: pre-wrap; min-height: 50px;" 
+    :contenteditable="editMode" 
+    @input="(e) => { form.family_history = e.target.innerText; e.target.setCustomValidity('') }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide family history information') }"
+    :data-required="true"
+    @blur="(e) => { if(!form.family_history) { e.target.setCustomValidity('Please provide family history information'); e.target.reportValidity(); } }"
+  >
+    {{ form.family_history }}
+  </div>
+</div>
+
         </div>
   
         <div class=" border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;"> 
@@ -260,81 +268,103 @@
             </div>
    
             <div class="space-y-2">
-              <label for="sexualDevelopment" class="block font-bold">Sexual Development</label>
-              <textarea 
-  id="sexualDevelopment" 
-  v-model="form.sexual_development" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide details on sexual development') }" 
-  required
-></textarea>
-            </div>
-            <div class="space-y-2 mt-20">
-              <label for="medicalHistory" class="block font-bold">Medical and Psychological History</label>
-              <textarea 
-  id="medicalHistory" 
-  v-model="form.medical_history" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide medical history') }" 
-  required
-></textarea>
-            </div>
-            <div class="space-y-2 mt-20">
-              <label for="schoolHistory" class="block font-bold">School History</label>
-              <textarea 
-  id="schoolHistory" 
-  v-model="form.school_history" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the school history') }" 
-  required
-></textarea>
-            </div>
-            <div class="space-y-2 mt-20">
-              <label for="socialHistory" class="block font-bold">Social History (including Spiritual Development and Work Experience)</label>
-              <textarea 
-  id="socialHistory" 
-  v-model="form.social_history" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide social history information') }" 
-  required
-></textarea>
-            </div>
-            <div class="space-y-2 mt-20">
-              <label for="personalCharacteristics" class="block font-bold">Personal Characteristics</label>
-              <textarea 
-  id="personalCharacteristics" 
-  v-model="form.personal_characteristics" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide personal characteristics') }" 
-  required
-></textarea>
-            </div>
-        
-          <div class="space-y-4 mt-20">
-            <h2 class="font-bold">IV. ASSESSMENT TOOLS</h2>
-            <div class="space-y-2">
-              <label for="assessmentInterview" class="block font-medium"></label>
-              <textarea 
-  id="assessmentInterview" 
-  v-model="form.assessment_interview" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide an assessment interview') }" 
-  required
-></textarea>
-            </div>
-          </div>
+  <label for="sexualDevelopment" class="block font-bold">Sexual Development</label>
+  <div 
+    id="sexualDevelopment"
+    class="block w-full p-2 border border-gray-300 rounded-md"
+    style="white-space: pre-wrap; min-height: 50px;"
+    :contenteditable="editMode"
+    @input="(e) => { form.sexual_development = e.target.innerText; e.target.setCustomValidity('') }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide details on sexual development') }"
+    :data-required="true"
+    @blur="(e) => { if (!form.sexual_development) { e.target.setCustomValidity('Please provide details on sexual development'); e.target.reportValidity(); } }"
+  >
+    {{ form.sexual_development }}
+  </div>
+</div>
+
+<div class="space-y-2 mt-20">
+  <label for="medicalHistory" class="block font-bold">Medical and Psychological History</label>
+  <div 
+    id="medicalHistory"
+    class="block w-full p-2 border border-gray-300 rounded-md"
+    style="white-space: pre-wrap; min-height: 50px;"
+    :contenteditable="editMode"
+    @input="(e) => { form.medical_history = e.target.innerText; e.target.setCustomValidity('') }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide medical history') }"
+    :data-required="true"
+    @blur="(e) => { if (!form.medical_history) { e.target.setCustomValidity('Please provide medical history'); e.target.reportValidity(); } }"
+  >
+    {{ form.medical_history }}
+  </div>
+</div>
+
+<div class="space-y-2 mt-20">
+  <label for="schoolHistory" class="block font-bold">School History</label>
+  <div 
+    id="schoolHistory"
+    class="block w-full p-2 border border-gray-300 rounded-md"
+    style="white-space: pre-wrap; min-height: 50px;"
+    :contenteditable="editMode"
+    @input="(e) => { form.school_history = e.target.innerText; e.target.setCustomValidity('') }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide school history') }"
+    :data-required="true"
+    @blur="(e) => { if (!form.school_history) { e.target.setCustomValidity('Please provide school history'); e.target.reportValidity(); } }"
+  >
+    {{ form.school_history }}
+  </div>
+</div>
+
+<div class="space-y-2 mt-20">
+  <label for="socialHistory" class="block font-bold">Social History (including Spiritual Development and Work Experience)</label>
+  <div 
+    id="socialHistory"
+    class="block w-full p-2 border border-gray-300 rounded-md"
+    style="white-space: pre-wrap; min-height: 50px;"
+    :contenteditable="editMode"
+    @input="(e) => { form.social_history = e.target.innerText; e.target.setCustomValidity('') }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide social history') }"
+    :data-required="true"
+    @blur="(e) => { if (!form.social_history) { e.target.setCustomValidity('Please provide social history'); e.target.reportValidity(); } }"
+  >
+    {{ form.social_history }}
+  </div>
+</div>
+
+<div class="space-y-2 mt-20">
+  <label for="personalCharacteristics" class="block font-bold">Personal Characteristics</label>
+  <div 
+    id="personalCharacteristics"
+    class="block w-full p-2 border border-gray-300 rounded-md"
+    style="white-space: pre-wrap; min-height: 50px;"
+    :contenteditable="editMode"
+    @input="(e) => { form.personal_characteristics = e.target.innerText; e.target.setCustomValidity('') }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide personal characteristics') }"
+    :data-required="true"
+    @blur="(e) => { if (!form.personal_characteristics) { e.target.setCustomValidity('Please provide personal characteristics'); e.target.reportValidity(); } }"
+  >
+    {{ form.personal_characteristics }}
+  </div>
+</div>
+
+<div class="space-y-4 mt-20">
+  <h2 class="font-bold">IV. ASSESSMENT TOOLS</h2>
+  <div class="space-y-2">
+    <label for="assessmentInterview" class="block font-medium"></label>
+    <div 
+      id="assessmentInterview" 
+      class="block w-full p-2 border border-gray-300 rounded-md" 
+      style="white-space: pre-wrap; min-height: 50px;"
+      :contenteditable="editMode" 
+      @input="(e) => { form.assessment_interview = e.target.innerText; e.target.setCustomValidity('') }" 
+      @invalid="(e) => { e.target.setCustomValidity('Please provide an assessment interview') }" 
+      :data-required="true"
+      @blur="(e) => { if (!form.assessment_interview) { e.target.setCustomValidity('Please provide an assessment interview'); e.target.reportValidity(); } }"
+    >
+      {{ form.assessment_interview }}
+    </div>
+  </div>
+</div>
   
   
           
@@ -369,48 +399,54 @@
             </div>
   
             <div class="space-y-4 mt-6">
-            
-            <h2 class="font-bold">V. TEST RESULT AND DISCUSSION</h2>
-            <div class="space-y-2">
-              <textarea 
-  id="testResult" 
-  v-model="form.test_result" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide the test result') }" 
-  required
-></textarea>
-            </div>
-          </div>
-  
-  
-          <div class="space-y-4 mt-20">
-            <h2 class="font-bold">VI. CLINICAL IMPRESSION</h2>
-            <textarea 
-  id="clinicalImpression" 
-  v-model="form.clinical_impression" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide a clinical impression') }" 
-  required
-></textarea>
-          </div>
-  
-          <!-- Plan of Action Section -->
-          <div class="space-y-4 mt-20">
-            <h2 class="font-bold">VII. PLAN OF ACTION</h2>
-            <textarea 
-  id="planOfAction" 
-  v-model="form.plan_of_action" 
-  class="block w-full p-2 border border-gray-300 rounded-md" 
-  :readonly="!editMode" 
-  @input="(e) => { e.target.setCustomValidity('') }" 
-  @invalid="(e) => { e.target.setCustomValidity('Please provide a plan of action') }" 
-  required
-></textarea>
-          </div>
+  <h2 class="font-bold">V. TEST RESULT AND DISCUSSION</h2>
+  <div class="space-y-2">
+    <div 
+      id="testResult" 
+      class="block w-full p-2 border border-gray-300 rounded-md" 
+      style="white-space: pre-wrap; min-height: 50px;"
+      :contenteditable="editMode" 
+      @input="(e) => { form.test_result = e.target.innerText; e.target.setCustomValidity('') }" 
+      @invalid="(e) => { e.target.setCustomValidity('Please provide the test result') }" 
+      :data-required="true"
+      @blur="(e) => { if (!form.test_result) { e.target.setCustomValidity('Please provide the test result'); e.target.reportValidity(); } }"
+    >
+      {{ form.test_result }}
+    </div>
+  </div>
+</div>
+
+<div class="space-y-4 mt-20">
+  <h2 class="font-bold">VI. CLINICAL IMPRESSION</h2>
+  <div 
+    id="clinicalImpression" 
+    class="block w-full p-2 border border-gray-300 rounded-md" 
+    style="white-space: pre-wrap; min-height: 50px;"
+    :contenteditable="editMode" 
+    @input="(e) => { form.clinical_impression = e.target.innerText; e.target.setCustomValidity('') }" 
+    @invalid="(e) => { e.target.setCustomValidity('Please provide a clinical impression') }" 
+    :data-required="true"
+    @blur="(e) => { if (!form.clinical_impression) { e.target.setCustomValidity('Please provide a clinical impression'); e.target.reportValidity(); } }"
+  >
+    {{ form.clinical_impression }}
+  </div>
+</div>
+
+<div class="space-y-4 mt-20">
+  <h2 class="font-bold">VII. PLAN OF ACTION</h2>
+  <div 
+    id="planOfAction" 
+    class="block w-full p-2 border border-gray-300 rounded-md" 
+    style="white-space: pre-wrap; min-height: 50px;"
+    :contenteditable="editMode" 
+    @input="(e) => { form.plan_of_action = e.target.innerText; e.target.setCustomValidity('') }" 
+    @invalid="(e) => { e.target.setCustomValidity('Please provide a plan of action') }" 
+    :data-required="true"
+    @blur="(e) => { if (!form.plan_of_action) { e.target.setCustomValidity('Please provide a plan of action'); e.target.reportValidity(); } }"
+  >
+    {{ form.plan_of_action }}
+  </div>
+</div>
   
           <div class="space-y-4 mt-20">
             <div class="space-y-2">
@@ -420,7 +456,7 @@
       <input
         type="text"
         v-model="form.prepared_by"
-        class="w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
+        class="underline w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
         :readonly="!editMode"
         maxlength="50"
       >
@@ -435,7 +471,7 @@
       <input
         type="text"
         v-model="form.approved_by"
-        class="w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
+        class="underline w-full text-base w-48 -mr-12 mt-1 pl-0 border-none shadow-none"
         :readonly="!editMode"
         maxlength="50"
       >
@@ -447,7 +483,7 @@
 <div class="space-y-2 mt-4">
   <label for="notedBy" class="block mb-4 mt-8 font-sm">Noted by:</label>
   <div class="flex flex-col">
-    <strong><input type="text" v-model="center_head" class="block w-full p-0 border border-transparent rounded-md" :readonly></strong>
+    <strong><input type="text" v-model="center_head" class="underline block w-full p-0 border border-transparent rounded-md" :readonly></strong>
     <span>SWO IV / Center Head</span>
   </div>
 </div>
@@ -528,8 +564,10 @@
      </div>
    </div>
    </div>
-   </div>
+  </div>
+
   </form>
+ 
   </template>
   
   <script>
@@ -813,7 +851,7 @@ confirmSave() {
         //pdf.text('Website: http://www.dswd.gov.ph Tel Nos.: (082) 227-1964 Email: fo11@dswd.gov.ph ', 105, 345, { align: 'center' });
   
         const footerImgData = '/images/footerimg.png';
-        pdf.addImage(footerImgData, 'PNG', 189, 330, 25, 12); // Footer image
+        pdf.addImage(footerImgData, 'PNG', 178, 330, 25, 12); // Footer image
   
       } else {
         // Footer for Page 2 and beyond
@@ -871,9 +909,36 @@ confirmSave() {
     contentYPos += 5;
     pdf.text(`Gender`, initialX, contentYPos);
     pdf.text(`: ${this.form.gender || ''}`, initialX+45, contentYPos);
-    contentYPos += 5;
-    pdf.text(`Address`, initialX, contentYPos);
-    pdf.text(`: ${this.form.address || ''}`, initialX+45, contentYPos);
+// Define maximum line width for wrapping
+const maxLineWidth = 130; // Adjust this based on the available space
+
+// Increase Y position slightly for the next content
+contentYPos += 5;
+
+// Add label for 'Address'
+pdf.text(`Address`, initialX, contentYPos);
+
+// Define address text
+const addressText = this.form.address || '';
+
+// Split the address text into multiple lines if it exceeds the maximum line width
+const wrappedAddress = pdf.splitTextToSize(addressText, maxLineWidth);
+
+// Render the first line of the address
+pdf.text(`: ${wrappedAddress[0]}`, initialX + 45, contentYPos);
+
+// If the address is long and wrapped, render additional lines
+if (wrappedAddress.length > 1) {
+    wrappedAddress.slice(1).forEach((line, index) => {
+        contentYPos += 7; // Move to the next line
+        pdf.text(line, initialX + 47, contentYPos - 2); // Render each subsequent line starting at the same X position
+    });
+}
+contentYPos += -2; // Move contentYPos down for the next section, adjust as needed
+
+// Update Y position based on how many lines the address took up
+
+
     contentYPos += 5;
     pdf.text(`Religion`, initialX, contentYPos);
     pdf.text(`: ${this.form.religion || ''}`, initialX+45, contentYPos);
@@ -881,7 +946,7 @@ confirmSave() {
     pdf.text(`Educational Attainment`, initialX, contentYPos);
     pdf.text(`: ${this.form.educational_attainment || ''}`, initialX+45, contentYPos);
   
-    contentYPos += 9;
+    contentYPos += 5;
     addNewPageIfNeeded();
     pdf.text(`Offense Committed`, initialX, contentYPos);
     pdf.text(`: ${this.form.offense_committed || ''}`, initialX+45, contentYPos);
@@ -1119,25 +1184,28 @@ confirmSave() {
     addNewPageIfNeeded();
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text(this.form.prepared_by, initialX, contentYPos);
+    if (this.form.prepared_by) {
+        pdf.text(this.form.prepared_by, initialX, contentYPos);
+    } else {
+        pdf.text('', initialX, contentYPos);
+    }
     contentYPos += 4; 
     addNewPageIfNeeded();
     pdf.setFont('arial', 'normal');
-  
+
     contentYPos += rowHeight; 
     addNewPageIfNeeded();
     pdf.text('Approved by:', initialX, contentYPos);
-    
+
     contentYPos += rowHeight; 
     addNewPageIfNeeded();
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text(this.form.approved_by, initialX, contentYPos);
-
-    contentYPos += 4; 
-    addNewPageIfNeeded();
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
+    if (this.form.approved_by) {
+        pdf.text(this.form.approved_by, initialX, contentYPos);
+    } else {
+        pdf.text('', initialX, contentYPos);
+    }
 
     // Noted by Section
     contentYPos += rowHeight; 

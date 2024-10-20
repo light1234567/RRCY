@@ -161,7 +161,7 @@
           <div>
           <input 
             type="text" 
-            class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+            class="mt-1 w-full border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-sm p-0" 
             v-model="clientName" 
             readonly
           >
@@ -194,13 +194,13 @@
         <div class="mt-24 mb-6">
           <input 
             type="text" 
-            class="mt-1 w-1/3 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-xs" 
+            class="mt-1 w-1/3 border-b-2 border-black border-t-0 border-l-0 border-r-0 rounded-none shadow-sm text-sm p-0" 
             v-model="form.guardian_signature" 
             :readonly="!editMode"
             @input="form.guardian_signature = removeNumbers(form.guardian_signature)"
             maxlength="50"
           >
-          <label class="block  text-gray-700 mb-2">Name and signature (Parent/Guardian):</label>
+          <label class="block  mb-2">Name and signature (Parent/Guardian):</label>
         </div>
         <div class="mt-[700px] border-gray-300 ml-6 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
     <div class="flex justify-between items-center">
