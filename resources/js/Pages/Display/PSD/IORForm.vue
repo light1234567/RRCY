@@ -2447,11 +2447,11 @@ async confirmSave() {
   
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text('ANGELIC B. PAÑA', initialX+140, contentYPos+-4);
+    pdf.text(`${this.center_head||''}`, initialX+140, contentYPos+-4, "center");
     contentYPos += 5; 
     pdf.setFont('arial', 'normal');
     pdf.setFontSize(10);
-    pdf.text('Center Head', initialX+140, contentYPos+-4);
+    pdf.text('Center Head', initialX+140, contentYPos+-4, "center");
   
   
   // Footer for Page 2 and beyond

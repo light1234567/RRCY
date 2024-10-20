@@ -633,12 +633,12 @@
   <br />
 
   <div class="w-1/2 ml-auto">
-<div class="flex justify-center flex items-center mt-7">
+<div class="flex justify-center flex items-center mt-7 ">
   <input
     v-model="form.name"
     type="text"
     id="centerHeadSignature"
-    class=" mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none"
+    class=" mt-1 w-3/4 border-b-2 border-black border-t-0 border-l-0 border-r-0 p-0 rounded-none text-center"
     readonly
   >
 </div>
@@ -1177,6 +1177,7 @@ const pageHeight = pdf.internal.pageSize.getHeight();  // Long paper height in m
           pdf.setFont('Times', 'normal');
           pdf.text('DSWD FOXI, Regional Rehabilitation Center for Youth, Bago Oshiro, Davao City, Philippines 8000', 105, pageHeight - marginBottom + 10, { align: 'center' });
           pdf.text('Email:rrcy.fo11.dswd.gov.ph; Tel No.(082) 293-0306', 105, pageHeight - marginBottom + 15, { align: 'center' });
+          pdf.line(20,333,165,333);
       };
 
       const addFooter2 = () => {
@@ -1184,6 +1185,7 @@ const pageHeight = pdf.internal.pageSize.getHeight();  // Long paper height in m
           
           pdf.setFont('Times', 'normal');
           pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, pageHeight - marginBottom + 10, { align: 'center' });
+          pdf.line(20,333,190,333);
       }
 
 
