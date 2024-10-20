@@ -29,7 +29,9 @@ class CreateNursingCareServicesTable extends Migration
             $table->string('hair_status', 50)->nullable();
             $table->text('services_given')->nullable();
             $table->text('remarks')->nullable();
-            $table->string('prepared_by', 50)->nullable();
+            $table->string('f_prepared_by', 50)->nullable();
+            $table->string('s_prepared_by', 50)->nullable();
+            $table->string('t_prepared_by', 50)->nullable();
             $table->string('profile_image', 150)->nullable();
             $table->timestamps();
         

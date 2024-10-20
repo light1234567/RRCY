@@ -33,7 +33,9 @@ class NursingCareService extends Model
         'hair_status',
         'services_given',
         'remarks',
-        'prepared_by',
+        'f_prepared_by',
+        's_prepared_by',
+        't_prepared_by',
         'profile_image',
         'updated_by' 
     ];

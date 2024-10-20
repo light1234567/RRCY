@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS crimes;
+DROP TABLE IF EXISTS crime_categories;
 
 -- Create the crime_categories table
 CREATE TABLE IF NOT EXISTS crime_categories (

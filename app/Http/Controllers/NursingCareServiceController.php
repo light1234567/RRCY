@@ -35,7 +35,9 @@ class NursingCareServiceController extends Controller
             'hair_status' => 'nullable|string|max:50',
             'services_given' => 'nullable|string',
             'remarks' => 'nullable|string',
-            'prepared_by' => 'nullable|string|max:50',
+            'f_prepared_by' => 'nullable|string|max:50',
+            's_prepared_by' => 'nullable|string|max:50',
+            't_prepared_by' => 'nullable|string|max:50',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image validation
         ]);
     

@@ -421,41 +421,52 @@
   <div class="flex gap-4 mb-6 border-black border-t p-4">
     <!-- Prepared by Signature -->
     <div class="w-1/2 pr-4">
-      <label class="block text-sm font-bold">PREPARED BY:</label>
-      <div class="font-semibold flex items-center">
+    <label class="block text-sm font-bold">PREPARED BY:</label>
+    
+    <!-- Always show the first prepared by field -->
+    <div class="font-semibold flex items-center">
+      <input
+        type="text"
+        v-model="form.f_prepared_by"
+        class="w-full text-sm -ml-3 mt-1 border-none shadow-none"
+        :readonly="!editMode"
+        maxlength="50"
+      >
+    </div>
+
+    <!-- Conditionally render s_prepared_by if the user clicks 'Add More' or if there is existing data -->
+    <div v-if="showSPreparedBy || form.s_prepared_by">
+      <div class="font-semibold text-sm flex items-center">
         <input
           type="text"
-          v-model="form.prepared_by"
-          class=" w-full text-sm -ml-3 mt-1 border-none shadow-none"
+          v-model="form.s_prepared_by"
+          class="w-full text-sm -ml-3 mt-1 border-none shadow-none"
           :readonly="!editMode"
           maxlength="50"
         >
       </div>
+    </div>
 
-
-
-      <div class="font-semibold text-sm flex items-center">
-  <input
-    type="text"
-    value="PHILIP ROY D. CONTANGCO, RN"
-    class="w-full text-sm -ml-3 mt-1 border-none shadow-none"
-    :readonly="!editMode"
-    style="width: 100%;"
-  >
-</div>
-
-
-
+    <!-- Conditionally render t_prepared_by if the user clicks 'Add More' or if there is existing data -->
+    <div v-if="showTPreparedBy || form.t_prepared_by">
       <div class="font-semibold text-sm flex items-center">
         <input
           type="text"
-          value="CARL BRIAN T. BAUZON, RN"
-          class="w-full text-sm w-48 mr-28 mt-1 underline-input shadow-none"
+          v-model="form.t_prepared_by"
+          class="w-full text-sm -ml-3 mt-1 border-none shadow-none"
           :readonly="!editMode"
+          maxlength="50"
         >
       </div>
-      <p class="text-sm mt-2 ">RESIDENT NURSES RRCY</p>
     </div>
+
+    <!-- Button to show additional prepared_by fields -->
+    <button v-if="editMode && (!form.s_prepared_by || !form.t_prepared_by)" @click="addPreparedByField" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs flex items-center">
+      <i class="fas fa-plus mr-1"></i> Add Nurse Resident
+    </button>
+
+    <p class="text-sm mt-2">RESIDENT NURSES RRCY</p>
+  </div>
   
     <!-- Noted by Signature -->
     <div class="w-1/2 pl-4">
@@ -542,12 +553,16 @@ import Pagination from '@/Components/Pagination.vue';
           hair_status: '',
           services_given: '',
           remarks: '',
-          prepared_by: '',
+          f_prepared_by: '',
+          s_prepared_by: '',
+          t_prepared_by: '',
           noted_by: '',
           client_id: null, // Ensure client_id is explicitly defined
           id: null, // This will hold the id of NursingCareService if exists
         },
         editMode: false,
+        showSPreparedBy: false,
+        showTPreparedBy: false,
         message: '',
         messageType: '',
       };
@@ -661,6 +676,15 @@ import Pagination from '@/Components/Pagination.vue';
           this.isSaveResultModalOpen = true;
         }
       },
+      addPreparedByField() {
+    if (!this.form.s_prepared_by && !this.showSPreparedBy) {
+      // Show s_prepared_by if it is not already shown or filled
+      this.showSPreparedBy = true;
+    } else if (!this.form.t_prepared_by && !this.showTPreparedBy) {
+      // Show t_prepared_by if it is not already shown or filled
+      this.showTPreparedBy = true;
+    }
+  },
     computeBMI() {
       const heightInMeters = this.form.height_cm / 100;
       const weight = this.form.weight_kg;
