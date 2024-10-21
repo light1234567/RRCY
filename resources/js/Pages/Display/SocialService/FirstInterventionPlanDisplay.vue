@@ -2,7 +2,7 @@
 
 <!-- Tabs for Actions (Back button visible only in edit mode) -->
 <div v-if="editMode" class="flex absolute p-4 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-600 text-white rounded-md text-xs">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-600 hover:bg-blue-950 text-white rounded-md text-xs">
       <!-- FontAwesome for Back -->
       <i class=" fas fa-arrow-left w-4 h-4"></i>
       <span>Cancel</span>
@@ -23,20 +23,20 @@
   </button>
 
   <!-- Edit Button -->
-  <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+  <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
     <!-- FontAwesome for Edit -->
     <i class="fas fa-edit w-4 h-4"></i>
     <span>Edit</span>
   </button>
 
   <!-- Save Button (shown only in edit mode) -->
-  <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+  <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
     <i class="fas fa-check w-4 h-4"></i>
     <span>Save</span>
   </button>
 
   <!-- Export to PDF Button -->
-  <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+  <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
     <i class="fas fa-file-pdf w-4 h-4"></i>
     <span>Export PDF</span>
   </button>
@@ -48,7 +48,7 @@
   <div class="graph-background p-0.5 -mr-9 -mb-16">
 
   <div v-if="currentPage === 1">
-    <div class="h-[820px] max-w-7xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
+    <div class=" max-w-7xl p-12 bg-white shadow-xl rounded-lg mx-auto my-8 border border-gray-400">
       <div class="relative flex justify-between items-center mb-2">
         <img src="/images/headerlogo2.png" alt="Logo" class="h-32 w-64 relative z-10">
         <p class="text-[12px] text-right -mt-10" style="font-family: 'Times New Roman', Times, serif; font-style: italic;">DSWD-GF-010A | REV 00 | 22 SEP 2023
@@ -205,7 +205,7 @@
             <div class="text-xs mt-1">Center Head/ SWO IV</div>
           </div>
         </div>
-        <div class="border-gray-300 mt-[200px] text-center text-xs w-full" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="border-gray-300 mt-[250px] text-center text-xs w-full" style="font-family: 'Times New Roman', Times, serif;">
   <div class="flex justify-between items-center w-full">
     <div class="flex flex-col w-full">
       <!-- PAGE Number -->
@@ -850,13 +850,7 @@ const addSignatureSection = (startY) => {
 button {
   transition: background-color 0.3s;
 }
-button:hover {
-  background-color: #2563eb;
-  color: white;
-}
-.bg-green-500:hover {
-  background-color: #38a169;
-}
+
 @keyframes twinkle {
   0%, 100% { border-color: #a1b6cf; }
   50% { border-color: white; }

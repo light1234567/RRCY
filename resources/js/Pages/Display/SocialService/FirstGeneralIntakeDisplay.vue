@@ -1,7 +1,7 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 hover:bg-blue-950 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class=" fas fa-arrow-left w-4 h-4"></i>
         <span>Cancel</span>
@@ -15,21 +15,21 @@
         :currentPage="currentPage" 
         @update:currentPage="currentPage = $event" 
       />
-      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
       </button>
   
 
-      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
       </button>
 
       <!-- Download PDF Button -->
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
         <!-- FontAwesome for PDF Download -->
         <i class="fas fa-file-pdf w-4 h-4"></i>
         <span>Export PDF</span>
@@ -2742,13 +2742,5 @@ incomeOffset = currentYS + 30; // Update incomeOffset for the next section
                       linear-gradient(to bottom, #cccccc 1px, transparent 1px);
     background-size: 15px 15px; /* Adjust size as per your need */
   }
-button {
- transition: background-color 0.3s;
-}
-button:hover {
- background-color: #2563eb;
-}
-.bg-green-500:hover {
- background-color: #38a169;
-}
+
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <!-- Tabs for Actions -->
-  <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
+   <!-- Tabs for Actions -->
+   <div v-if="editMode" class="flex absolute p-4 space-x-4">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 hover:bg-blue-950 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class="fas fa-arrow-left w-4 h-4"></i>
         <span>Cancel</span>
@@ -15,25 +15,26 @@
         :currentPage="currentPage" 
         @update:currentPage="currentPage = $event" 
       />
-      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
       </button>
   
       <!-- Download PDF Button -->
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
         <!-- FontAwesome for PDF Download -->
         <i class="fas fa-file-pdf w-4 h-4"></i>
         <span>Export PDF</span>
       </button>
   </div>
+  
 
   <form ref="SessionForm" @submit.prevent="submitForm">
   <div class="graph-background pt-0.5  -mr-9 -mb-16">
@@ -214,9 +215,7 @@
                 <p class="pt-2">DSWD FOXI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000</p>
                 <p > Website: <span class="text-blue-600 underline">http://www.rrcy.fo11@dswd.gov.ph</span> Tel No.(082) 293-03-06</p>
             </div>
-            <div class="w-1/6 flex justify-end"> <!-- Restricting the image section to the right side -->
-                <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-32 object-cover"> <!-- Expanded width for image -->
-            </div>
+           
         </div>
     </div>
   
@@ -501,6 +500,7 @@ confirmSave() {
         pdf.setTextColor(0, 0, 255);
         pdf.text('http://www.rrcy.fo11@dswd.gov.ph', 97, 343, { align: 'center' });
         pdf.setLineWidth(0);
+        
         pdf.setDrawColor(0, 0, 255);
         pdf.line(76, 344, 118, 344);
 
@@ -690,29 +690,51 @@ pdf.line(startXForUnderline, contentYPos + 1, startXForUnderline + fetchedDataWi
   pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1); 
   
   
-    contentYPos += rowHeight; 
-    pdf.setFontSize(11);
-    pdf.text('Noted by:', initialX, contentYPos);
-    pdf.text('Approved by:', initialX+100, contentYPos);
-    
-    contentYPos += rowHeight; 
-  
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(11);
-    pdf.text(this.form.session_shp, initialX, contentYPos);
-    contentYPos += 4; 
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(10);
-    pdf.text('HP III/SHP', initialX, contentYPos+2);
-  
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(11);
-    pdf.text(this.center_head, initialX+100, contentYPos+-4);
-    contentYPos += 5; 
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(10);
-    pdf.text('SWO IV / Center Head', initialX+100, contentYPos+-4);
-  
+  contentYPos += rowHeight; 
+pdf.setFontSize(11);
+pdf.text('Noted by:', initialX, contentYPos);
+pdf.text('Approved by:', initialX + 100, contentYPos);
+
+contentYPos += rowHeight; 
+
+// Draw dynamic line and text for "Noted by"
+pdf.setFont('arialbd', 'bold');
+pdf.setFontSize(11);
+const sessionShp = this.form.session_shp || '';
+pdf.text(sessionShp, initialX, contentYPos);
+
+// Calculate width of "Noted by" and draw line
+const sessionShpWidth = pdf.getTextWidth(sessionShp);
+const notedLineStartX = initialX;
+const notedLineEndX = notedLineStartX + (sessionShpWidth > 0 ? sessionShpWidth + 10 : 100); // Add padding for line
+
+pdf.setLineWidth(0.2);
+pdf.line(notedLineStartX, contentYPos + 1, notedLineEndX, contentYPos + 1); // Draw the line
+
+contentYPos += 4; 
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(10);
+pdf.text('HP III/SHP', initialX, contentYPos + 2);
+
+// Draw dynamic line and text for "Approved by"
+pdf.setFont('arialbd', 'bold');
+pdf.setFontSize(11);
+const centerHead = this.center_head || '';
+pdf.text(centerHead, initialX + 100, contentYPos - 4);
+
+// Calculate width of "Approved by" and draw line
+const centerHeadWidth = pdf.getTextWidth(centerHead);
+const approvedLineStartX = initialX + 100;
+const approvedLineEndX = approvedLineStartX + (centerHeadWidth > 0 ? centerHeadWidth + 10 : 100); // Add padding for line
+
+pdf.setLineWidth(0.2);
+pdf.line(approvedLineStartX, contentYPos - 3, approvedLineEndX, contentYPos - 3); // Draw the line
+
+contentYPos += 5; 
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(10);
+pdf.text('SWO IV / Center Head', initialX + 100, contentYPos - 4);
+
     // Add the footer for the last page
     addFooter();
   

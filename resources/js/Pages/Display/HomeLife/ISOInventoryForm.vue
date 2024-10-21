@@ -2,10 +2,10 @@
   
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 hover:bg-blue-950 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class="fas fa-arrow-left w-4 h-4"></i>
-        <span>Back</span>
+        <span>Cancel</span>
       </button>
   </div>
   
@@ -16,34 +16,27 @@
         :currentPage="currentPage" 
         @update:currentPage="currentPage = $event" 
       />
-      <button @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
       </button>
   
-      
-  
-  
-      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
       </button>
-      
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+  
+      <!-- Download PDF Button -->
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
+        <!-- FontAwesome for PDF Download -->
         <i class="fas fa-file-pdf w-4 h-4"></i>
         <span>Export PDF</span>
       </button>
-  
-      <!-- Download PDF Button 
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-      
-        <i class="fas fa-file-pdf w-4 h-4"></i>
-        <span>Export PDF</span>
-      </button> -->
   </div>
-
+  
+    
   <!-- Modal for Save Confirmation -->
   <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
       <div class="fixed inset-0 bg-black opacity-50"></div>
@@ -102,8 +95,8 @@
     <!-- Header Section -->
     <div class="graph-background pt-0.5  -mr-9 -mb-16">
   
-    <div class="max-w-3xl mx-auto mt-8 p-12 bg-white border border-gray-400 rounded-lg shadow-lg">
-    <div class="text-center mb-8">
+      <div class="max-w-3xl mx-auto mt-8 p-12 bg-white border border-gray-400 rounded-lg shadow-lg" >
+        <div class="text-center mb-8">
       <div class="flex justify-between items-center mb-4">
         <img src="/images/headerlogo2.png" alt="DSWD Logo"  class="h-32 w-64 -mt-16 relative z-10" />
         <div class="text-right">
@@ -254,18 +247,17 @@
     </div>
   
   <!-- Footer Section -->
-  <div class=" pt-4 text-center text-xs " style="font-family: 'Times New Roman', Times, serif;">
-        <div class="flex justify-center w-full items-center">
-          <div class="flex flex-col">
-            <p class="mr-6 font-bold text-center ">PAGE 1 of 1</p>
-            <p class="border-t border-black pt-2 text-[10px]">DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000</p>
-            <p>Website:<span class="text-blue-600 underline"> http://www.rrcy.fo11@dswd.gov.ph Tel Nos.: (082) 293-03-06</span></p>
-          </div>
-          <div>
-            <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
-          </div>
+  <div class=" border-gray-300 pt-44 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;"> 
+        <div class="flex justify-between items-start w-full">
+            <div class="flex flex-col w-full"> <!-- Expanded width for the text section -->
+                <p class="font-bold">PAGE 1 of 1</p>
+                <p class="border-t-2 border-black"></p>
+                <p class="pt-2">DSWD FOXI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000</p>
+                <p > Website: <span class="text-blue-600 underline">http://www.rrcy.fo11@dswd.gov.ph</span> Tel No.(082) 293-03-06</p>
+            </div>
+         
         </div>
-      </div>
+    </div>
   </div>
   </div>
 </form>
@@ -485,11 +477,41 @@ confirmSave() {
       };
   
       const addFooter = () => {
-          pdf.setFontSize(9);
-          pdf.setFont('Times', 'normal');
-          pdf.text('DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000', 105, pageHeight - marginBottom + 10, { align: 'center' });
-          pdf.text('Website: http://www.rrcy.fo11@dswd.gov.ph Tel Nos.: (082) 293-03-06', 105, pageHeight - marginBottom + 15, { align: 'center' });
+        if (currentPage === 1) {
+          pdf.setFontSize(8);
+          pdf.setFont('TimesNewRoman', 'bold');
+          pdf.setLineWidth(0.5);
+          pdf.line(21, 335, 190, 335); // Footer line
+    
+          pdf.setFont('times', 'normal');
+          const footerText = pdf.splitTextToSize('DSWD Field Office XI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000', 160);
+          pdf.text(footerText, 105, 340, { align: 'center' });
+          pdf.text('Website:', 71, 343, { align: 'center' });
+          pdf.text('Tel Nos.: (082) 293-03-06', 133, 343, { align: 'center' });
+
+
+
+          pdf.setFontSize(8);
+        pdf.setTextColor(0, 0, 255);
+        pdf.text('http://www.rrcy.fo11@dswd.gov.ph', 97, 343, { align: 'center' });
+        pdf.setLineWidth(0);
+        
+   
+
+        pdf.setTextColor(0, 0, 0);
+        } else {
+          // Footer for Page 2 and beyond
+          pdf.setFontSize(8.5);
+          pdf.setFont('TimesNewRoman', 'bold');
+    
+          pdf.setLineWidth(0.5);
+          pdf.line(17, 335, 193, 335); // Footer line extending further
+    
+          pdf.setFont('times', 'bold');
+          pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 340, { align: 'center' });
+        }
       };
+  
   
       const addPage = () => {
           
@@ -566,9 +588,27 @@ confirmSave() {
       pdf.line(128, currentY + 1, 190, currentY + 1);
       pdf.text('Name & Signature of Houseparent', 160, currentY + 5, "center");
   
+      // "Noted by" text
       pdf.text('Noted by:', 105, currentY + 20, "center");
-      pdf.text(`${this.form.inventory_shp||''}`, 105, currentY + 30, "center");
-  
+
+      // Calculate the width of the fetched text for dynamic underline
+      const inventoryShp = this.form.inventory_shp || '';
+      const textWidth = pdf.getTextWidth(inventoryShp);
+
+      // Calculate dynamic start and end points for the underline based on the text width
+      const lineStartX = 105 - (textWidth / 2); // Center the line
+      const lineEndX = 105 + (textWidth / 2);
+
+      // Draw the dynamic line based on the length of the text
+      pdf.line(lineStartX, currentY + 31, lineEndX, currentY + 31);
+
+      // Display the fetched text for "Noted by"
+      pdf.text(inventoryShp, 105, currentY + 30, "center");
+
+      // Display the designation
+      pdf.text('HP III/SHP', 105, currentY + 35, "center");
+
+
       
       addFooter();
       // Page number handling

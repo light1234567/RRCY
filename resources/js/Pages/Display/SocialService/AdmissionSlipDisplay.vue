@@ -18,20 +18,20 @@
       @update:currentPage="currentPage = $event" 
     />
 
-  <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+  <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
     <!-- FontAwesome for Edit -->
     <i class="fas fa-edit w-4 h-4"></i>
     <span>Edit</span>
   </button>
 
-    <button v-if="editMode" @click="saveForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+    <button v-if="editMode" @click="saveForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
       <!-- FontAwesome for Save -->
       <i class="fas fa-check w-4 h-4"></i>
       <span>Save</span>
     </button>
 
     <!-- Download PDF Button -->
-    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
       <!-- FontAwesome for PDF Download -->
       <i class="fas fa-file-pdf w-4 h-4"></i>
       <span>Export PDF</span>

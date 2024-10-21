@@ -1,7 +1,7 @@
 <template>
 <!-- Tabs for Actions -->
 <div v-if="editMode" class="flex absolute p-4 space-x-4">
-    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
+    <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 hover:bg-blue-950 text-white rounded-md text-xs">
       <i class="fas fa-arrow-left w-4 h-4"></i>
       <span>Cancel</span>
     </button>
@@ -14,18 +14,18 @@
       :currentPage="currentPage" 
       @update:currentPage="currentPage = $event" 
     />
-    <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+    <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
       </button>
 
-    <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+    <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
       <i class="fas fa-check w-4 h-4"></i>
       <span>Save</span>
     </button>
 
-    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+    <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
       <i class="fas fa-file-pdf w-4 h-4"></i>
       <span>Export PDF</span>
     </button>
@@ -177,71 +177,8 @@
 
 
 
-  <!-- Modal for Save Result -->
-  <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="fixed inset-0 bg-black opacity-50"></div>
-    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-      <div class="bg-white p-6 text-center">
-        <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
-          <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </div>
-        </div>
-        <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
-          <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-        </div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
-        <div class="mt-2">
-          <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
-        </div>
-      </div>
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-          OK
-        </button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Modal for Save Result -->
-  <div v-if="isSaveResultModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
-    <div class="fixed inset-0 bg-black opacity-50"></div>
-    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-      <div class="bg-white p-6 text-center">
-        <div v-if="saveResultTitle === 'Error'" class="flex justify-center items-center mb-4">
-          <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </div>
-        </div>
-        <div v-if="saveResultTitle === 'Success'" class="flex justify-center items-center mb-4">
-          <div class="flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-        </div>
-        <h3 class="text-lg leading-6 font-medium text-gray-900">{{ saveResultTitle }}</h3>
-        <div class="mt-2">
-          <p class="text-sm text-gray-500">{{ saveResultMessage }}</p>
-        </div>
-      </div>
-      <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-        <button @click="closeSaveResultModal" :class="saveResultTitle === 'Error' ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 text-base font-medium text-white focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-          OK
-        </button>
-      </div>
-    </div>
-  </div>
-  <!-- Modal for Save Confirmation -->
-  <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+   <!-- Modal for Save Confirmation -->
+   <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
       <div class="fixed inset-0 bg-black opacity-50"></div>
       <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
         <div class="bg-white p-6">
@@ -293,7 +230,7 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
 </form>
 </template>
 
@@ -399,6 +336,12 @@ export default {
       this.editMode = false;
       this.fetchData(); // Reset the form with the latest data
     },
+    
+  closeSaveResultModal() {
+        this.isSaveResultModalOpen = false;
+        this.saveResultTitle = '';
+        this.saveResultMessage = '';
+      },
 
     submitForm() {
     const form = this.$refs.ProgressNotes;
@@ -436,17 +379,12 @@ export default {
       this.saveResultTitle = 'Error';
       this.saveResultMessage = 'An error occurred while saving.';
     } finally {
-      this.isModalOpen = false; // Close the save confirmation modal
-      this.isSaveResultModalOpen = true; // Open the result modal
+      this.isSaveResultModalOpen = true; // Show save result modal
+        this.isModalOpen = false; // Close confirmation modal
+        this.editMode = false; // Reset edit mode
+        console.log('Save result modal opened');
     }
   },
-
-  // Method to close the save result modal when the user clicks "OK"
-  closeSaveResultModal() {
-    this.isSaveResultModalOpen = false; // Close the result modal
-    this.editMode = false; // Ensure the form is no longer in edit mode if applicable
-  },
-
 
     calculateAge(birthDate) {
       const today = new Date();
@@ -710,19 +648,6 @@ export default {
 </script>
 
 <style scoped>
-button {
-  transition: background-color 0.3s;
-}
-button:hover {
-  background-color: #2563eb;
-}
-.twinkle-border {
-  animation: twinkle 2s infinite;
-}
-@keyframes twinkle {
-  0%, 100% { border-color: #a1b6cf; }
-  50% { border-color: white; }
-}
 .graph-background {
     background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
                       linear-gradient(to bottom, #cccccc 1px, transparent 1px);

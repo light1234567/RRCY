@@ -1,40 +1,41 @@
 <template>
  
-  <!-- Tabs for Actions -->
- <div v-if="editMode" class="flex absolute p-4 space-x-4">
-     <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
-       <!-- FontAwesome for Back -->
-       <i class="fas fa-arrow-left w-4 h-4"></i>
-       <span>Cancel</span>
-     </button>
- </div>
- 
- <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
-     <!-- Pagination Component -->
-     <Pagination 
-       :totalPages="totalPages" 
-       :currentPage="currentPage" 
-       @update:currentPage="currentPage = $event" 
-     />
-     <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+   <!-- Tabs for Actions -->
+   <div v-if="editMode" class="flex absolute p-4 space-x-4">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 hover:bg-blue-950 text-white rounded-md text-xs">
+        <!-- FontAwesome for Back -->
+        <i class="fas fa-arrow-left w-4 h-4"></i>
+        <span>Cancel</span>
+      </button>
+  </div>
+  
+  <div class="flex -ml-2 justify-end bg-transparent border -mr-9 border-gray-300 p-4 space-x-4 -mt-9">
+      <!-- Pagination Component -->
+      <Pagination 
+        :totalPages="totalPages" 
+        :currentPage="currentPage" 
+        @update:currentPage="currentPage = $event" 
+      />
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
       </button>
- 
-     <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
-       <!-- FontAwesome for Save -->
-       <i class="fas fa-check w-4 h-4"></i>
-       <span>Save</span>
-     </button>
- 
-     <!-- Download PDF Button -->
-     <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
-       <!-- FontAwesome for PDF Download -->
-       <i class="fas fa-file-pdf w-4 h-4"></i>
-       <span>Export PDF</span>
-     </button>
- </div>
+  
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
+        <!-- FontAwesome for Save -->
+        <i class="fas fa-check w-4 h-4"></i>
+        <span>Save</span>
+      </button>
+  
+      <!-- Download PDF Button -->
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
+        <!-- FontAwesome for PDF Download -->
+        <i class="fas fa-file-pdf w-4 h-4"></i>
+        <span>Export PDF</span>
+      </button>
+  </div>
+  
 
   <!-- Modal for Save Confirmation -->
   <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
@@ -271,7 +272,7 @@
        <input
          type="text"
          v-model="form.swapping_shp"
-         class="mt-1 w-3/4 border-none font-semibold text-base"
+         class="underline p-0 w-3/4 border-none font-semibold text-base"
          :readonly="!editMode"
          maxlength="50"
        >
@@ -285,10 +286,10 @@
          type="text"
          id="approvedBy"
          v-model="center_head"
-         class="mt-1 w-3/4 border-none font-semibold"
+         class="p-0 underline mt-1 w-3/4 border-none font-semibold"
          readonly
        >
-       <p class="text-sm ml-2">SWO IV / Center Head</p>
+       <p class="text-sm ">SWO IV / Center Head</p>
      </div>
    </div>
  
@@ -300,9 +301,7 @@
                <p class="pt-2">DSWD FOXI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000</p>
                <p > Website: <span class="text-blue-600 underline">http://www.rrcy.fo11@dswd.gov.ph</span> Tel No.(082) 293-03-06</p>
            </div>
-           <div class="w-1/6 flex justify-end"> <!-- Restricting the image section to the right side -->
-               <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-32 object-cover"> <!-- Expanded width for image -->
-           </div>
+        
        </div>
    </div>
  </div>

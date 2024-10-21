@@ -1,7 +1,7 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 hover:bg-blue-950 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class="fas fa-arrow-left w-4 h-4"></i>
         <span>Cancel</span>
@@ -15,19 +15,19 @@
         :currentPage="currentPage" 
         @update:currentPage="currentPage = $event" 
       />
-      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="saveData" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
       </button>
   
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
       
         <i class="fas fa-file-pdf w-4 h-4"></i>
         <span>Export PDF</span>
@@ -551,7 +551,7 @@
   
           pdf.setFont('Times', 'italic'); // Use built-in 'Times' font in italic
           pdf.setFontSize(9);
-          pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', pageWidth - 68, 24); // Adjusted X position
+          pdf.text('DSWD-GF-010 | REV 01 | 17 AUG 2022', pageWidth - 68, 24); // Adjusted X position
   
           pdf.addFont('arialbd-bold.ttf', 'Arial', 'bold');
           pdf.setFont('Arial', 'bold');  
@@ -568,7 +568,7 @@
       const addHeaderOtherPages = () => {
       pdf.setFont('Times', 'italic'); // Use built-in 'Times' font in italic
       pdf.setFontSize(9);
-      pdf.text('DSPDP-GF-010A | REV.00 | 12 SEP 2023', 287, 10);
+      pdf.text('DSWD-GF-010 | REV 01 | 17 AUG 2022', 287, 20);
     };
   
       /**
@@ -813,26 +813,46 @@ pdf.text('SWO IV / Center Head', notedByX, finalLabelY);
       // After adding the table, get the last Y position
       const lastY = pdf.lastAutoTable ? pdf.lastAutoTable.finalY : tableStartY;
   
-      // Add Progress Notes Section
-  const progressNotesY = lastY + 10; // Adjust Y position below the table
-  pdf.setFont('Arial', 'bold');
-  pdf.setFontSize(12);
-  pdf.text('Progress Notes:', 15, progressNotesY); // Label for Progress Notes
-  pdf.setFontSize(10);
-  pdf.setFont('Arial', 'normal');
-  // Use splitTextToSize to handle long text dynamically
-  const progressNotesText = this.form.progress_notes || '';
-  const maxWidth = pageWidth - 30; // Maximum width for text wrapping
-  const splitNotes = pdf.splitTextToSize(progressNotesText, maxWidth); // Split text into multiple lines
-  
-  // Calculate the Y position for the first line of the progress notes
-  let currentY = progressNotesY + 6; // Start below the label
-  
-  // Loop through each line and add it to the PDF
-  splitNotes.forEach((line) => {
-      pdf.text(line, 15, currentY);
-      currentY += 6; // Adjust Y position for the next line (increase as needed)
-  });
+// Function to add the header on each page
+function addHeader() {
+    pdf.setFont('Times', 'italic'); // Use built-in 'Times' font in italic
+    pdf.setFontSize(9);
+    pdf.text('DSWD-GF-010 | REV 01 | 17 AUG 2022', 287, 20); // Aligns header at the top-right
+}
+
+// Add Progress Notes Section
+const progressNotesY = lastY + 10; // Adjust Y position below the table
+pdf.setFont('Arial', 'bold'); // Set back the font for the Progress Notes label
+pdf.setFontSize(12);
+pdf.text('Progress Notes:', 15, progressNotesY); // Label for Progress Notes
+
+pdf.setFontSize(10);
+pdf.setFont('Arial', 'normal'); // Set back to Arial and normal font for progress notes
+
+// Use splitTextToSize to handle long text dynamically
+const progressNotesText = this.form.progress_notes || '';
+const maxWidth = pageWidth - 30; // Maximum width for text wrapping
+const splitNotes = pdf.splitTextToSize(progressNotesText, maxWidth); // Split text into multiple lines
+
+// Set the Y position for the first line of the progress notes
+let currentY = progressNotesY + 6; // Start below the label
+const pageHeight = pdf.internal.pageSize.height; // Get page height
+const bottomMargin = 20; // Set a bottom margin
+
+// Loop through each line and add it to the PDF
+splitNotes.forEach((line) => {
+    // Check if adding this line would exceed the page height
+    if (currentY + 6 > pageHeight - bottomMargin) { // Check if we are reaching the bottom of the page
+        pdf.addPage(); // Add a new page
+        addHeader(); // Add the header on the new page
+        pdf.setFont('Arial', 'normal'); // Reset the font back to Arial normal after the header
+        pdf.setFontSize(10); // Reset font size to normal for the subsequent text
+        currentY = 30; // Reset Y position for the new page (consider top margin)
+    }
+    pdf.text(line, 15, currentY);
+    currentY += 6; // Adjust Y position for the next line
+});
+
   
   // Adjust the Y position for the signature section
   const signatureStartY = currentY + 10; // Add a gap before the signature section
@@ -869,19 +889,7 @@ pdf.text('SWO IV / Center Head', notedByX, finalLabelY);
   
   
   <style scoped>
-  button {
-    transition: background-color 0.3s;
-  }
-  button:hover {
-    background-color: #2563eb;
-  }
-  .twinkle-border {
-    animation: twinkle 2s infinite;
-  }
-  @keyframes twinkle {
-    0%, 100% { border-color: #a1b6cf; }
-    50% { border-color: white; }
-  }
+
   .graph-background {
       background-image: linear-gradient(to right, #cccccc 1px, transparent 1px), 
                         linear-gradient(to bottom, #cccccc 1px, transparent 1px);

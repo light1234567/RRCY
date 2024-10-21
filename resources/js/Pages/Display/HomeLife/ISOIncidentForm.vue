@@ -1,7 +1,7 @@
 <template>
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 hover:bg-blue-950 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class="fas fa-arrow-left w-4 h-4"></i>
         <span>Cancel</span>
@@ -15,20 +15,20 @@
         :currentPage="currentPage" 
         @update:currentPage="currentPage = $event" 
       />
-      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
       </button>
   
       <!-- Download PDF Button -->
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
         <!-- FontAwesome for PDF Download -->
         <i class="fas fa-file-pdf w-4 h-4"></i>
         <span>Export PDF</span>
@@ -275,15 +275,16 @@
           <div class="">
             <label for="reviewedBy" class="block font-medium text-sm">Reviewed by:</label>
             <input
-              type="text"
-              id="reviewedBy"
-              v-model="form.incident_report_shp"
-              class="font-semibold  mt-1 w-3/4 border-b-2 text-sm underline-input p-0 rounded-none shadow-sm"
-              :readonly="!editMode"
-              maxlength="50"
+                type="text"
+                id="reviewedBy"
+                v-model="form.incident_report_shp" 
+                class="font-semibold mt-1 w-3/4 border-b-2 text-sm underline-input p-0 rounded-none shadow-sm"
+                :readonly="!editMode"
+                maxlength="50"
             >
             <p class="font-semibold text-sm">HP III/SHP</p>
-          </div>
+        </div>
+
           <div>
             <label for="approvedBy" class="block font-medium text-sm">Approved by:</label>
             <input
@@ -306,9 +307,7 @@
                 <p class="pt-2">DSWD FOXI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000</p>
                 <p > Website: <span class="text-blue-600 underline">http://www.rrcy.fo11@dswd.gov.ph</span> Tel No.(082) 293-03-06</p>
             </div>
-            <div class="w-1/6 flex justify-end"> <!-- Restricting the image section to the right side -->
-                <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-32 object-cover"> <!-- Expanded width for image -->
-            </div>
+          
         </div>
     </div>
     </div>
@@ -437,22 +436,22 @@
       },
   
       submitForm() {
-  const form = this.$refs.IncidentForm; // Ensure the form's ref is set in the template
-  let isFormValid = true;
+      const form = this.$refs.IncidentForm; // Ensure the form's ref is set in the template
+      let isFormValid = true;
 
-  // Validate the form fields and check for any invalid fields
-  if (!form.checkValidity()) {
-    isFormValid = false;
-    form.reportValidity(); // This will display validation messages and scroll to the first invalid field
-  }
+      // Validate the form fields and check for any invalid fields
+      if (!form.checkValidity()) {
+        isFormValid = false;
+        form.reportValidity(); // This will display validation messages and scroll to the first invalid field
+      }
 
-  // If all fields are valid, open the confirmation modal
-  if (isFormValid) {
-    this.isModalOpen = true;  // Open the modal to confirm saving
-  } else {
-    console.warn('Form contains invalid fields. Please correct them.');
-  }
-},
+      // If all fields are valid, open the confirmation modal
+      if (isFormValid) {
+        this.isModalOpen = true;  // Open the modal to confirm saving
+      } else {
+        console.warn('Form contains invalid fields. Please correct them.');
+      }
+    },
 
 confirmSave() {
   const url = `/api/incident-reports/${this.form.client_id}`;
@@ -505,6 +504,7 @@ confirmSave() {
     })
     .finally(() => {
       this.isModalOpen = false;  // Close the confirmation modal
+      
     });
 },
 
@@ -524,9 +524,8 @@ confirmSave() {
       },
   
       closeSaveResultModal() {
-        this.isSaveResultModalOpen = false;
-        this.saveResultTitle = '';
-        this.saveResultMessage = '';
+        this.isSaveResultModalOpen = false; // Close the result modal
+        this.editMode = false; // Ensure the form is no longer in edit mode if applicable
       },
   
       updatePage(newPage) {
@@ -799,51 +798,63 @@ confirmSave() {
   
   
   
-  
     contentYPos += rowHeight; 
-    contentYPos +=15;
-    addNewPageIfNeeded();
-    pdf.text('Prepared by:', initialX, contentYPos);
-    
-    contentYPos += rowHeight; 
-  
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
-    const prepared_byValue = `${this.form.prepared_by || ''}`;
+contentYPos += 15;
+addNewPageIfNeeded();
+pdf.text('Prepared by:', initialX, contentYPos);
+
+contentYPos += rowHeight; 
+
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(11);
+
+// Check if "prepared_by" has a value, else leave blank
+const prepared_byValue = `${this.form.prepared_by || ''}`;
+if (prepared_byValue) {
     const prepared_byWidth = pdf.getTextWidth(prepared_byValue);
-  
-  pdf.text(prepared_byValue, initialX, contentYPos);  
-  pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1); 
-  
-  
-  
-  
-    // Noted by Section
-    contentYPos += rowHeight; 
+    pdf.text(prepared_byValue, initialX, contentYPos);  
+    pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1);
+}
+
+// Noted by Section
+contentYPos += rowHeight; 
+contentYPos += 4;
+pdf.setFontSize(11);
+pdf.text('Reviewed by:', initialX, contentYPos);
+pdf.text('Approved by:', initialX + 100, contentYPos);
+
+contentYPos += rowHeight; 
+
+pdf.setFont('arialbd', 'bold');
+pdf.setFontSize(11);
+
+// Check if "incident_report_shp" has a value, else leave blank
+if (this.form.incident_report_shp) {
+    pdf.text(this.form.incident_report_shp, initialX, contentYPos); // Fetch the value from form.incident_report_shp
     contentYPos += 4;
-    pdf.setFontSize(11);
-    pdf.text('Reviewed by:', initialX, contentYPos);
-    pdf.text('Approved by:', initialX+100, contentYPos);
-    
-    contentYPos += rowHeight; 
-  
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(11);
-    pdf.text(this.form.swapping_shp, initialX, contentYPos);
-    contentYPos += 4; 
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(10);
-    pdf.line(20, contentYPos+-3, 55, contentYPos+-3);
-    pdf.text('HP III/SHP', initialX, contentYPos+2);
-  
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(11);
-    pdf.text(this.center_head,  initialX+100, contentYPos+-4);
-    contentYPos += 5; 
+    pdf.line(20, contentYPos - 3, 55, contentYPos - 3); // Draw underline for "Reviewed by"
+    pdf.text('HP III/SHP', initialX, contentYPos + 2); // Title "HP III/SHP"
+} else {
+    // If no value, do nothing or handle accordingly
+    console.log("No 'Reviewed by' data available.");
+}
+
+
+pdf.setFont('arialbd', 'bold');
+pdf.setFontSize(11);
+
+// Check if "center_head" has a value, else leave blank
+if (this.center_head) {
+    pdf.text(this.center_head, initialX + 100, contentYPos - 4);
+    contentYPos += 5;
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(10);
-    pdf.line(120, contentYPos+-8, 180, contentYPos+-8);
-    pdf.text('SWO IV / Center Head', initialX+100, contentYPos+-4);
+    pdf.line(120, contentYPos - 8, 180, contentYPos - 8);
+    pdf.text('SWO IV / Center Head', initialX + 100, contentYPos - 4);
+}
+
   
     // Add the footer for the last page
     addFooter();

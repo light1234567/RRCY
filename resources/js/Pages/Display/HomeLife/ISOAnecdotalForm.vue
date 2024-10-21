@@ -2,7 +2,7 @@
 
   <!-- Tabs for Actions -->
   <div v-if="editMode" class="flex absolute p-4 space-x-4">
-      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 text-white rounded-md text-xs">
+      <button @click="cancelEdit" class="flex space-x-2 px-3 py-3 bg-blue-900 hover:bg-blue-950 text-white rounded-md text-xs">
         <!-- FontAwesome for Back -->
         <i class="fas fa-arrow-left w-4 h-4"></i>
         <span>Cancel</span>
@@ -16,20 +16,20 @@
         :currentPage="currentPage" 
         @update:currentPage="currentPage = $event" 
       />
-      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+      <button v-if="!editMode" @click="toggleEdit" class="flex items-center space-x-2 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Edit -->
         <i class="fas fa-edit w-4 h-4"></i>
         <span>Edit</span>
       </button>
   
-      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 text-white rounded-md text-xs">
+      <button v-if="editMode" @click="submitForm" class="flex items-center space-x-2 px-3 py-1 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs">
         <!-- FontAwesome for Save -->
         <i class="fas fa-check w-4 h-4"></i>
         <span>Save</span>
       </button>
   
       <!-- Download PDF Button -->
-      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 text-white rounded-md text-xs">
+      <button @click="exportToPdf" class="flex items-center space-x-2 px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md text-xs">
         <!-- FontAwesome for PDF Download -->
         <i class="fas fa-file-pdf w-4 h-4"></i>
         <span>Export PDF</span>
@@ -352,9 +352,7 @@
                 <p class="pt-2">DSWD FOXI, Ramon Magsaysay Corner D. Suazo Street, Davao City, Philippines 8000</p>
                 <p > Website: <span class="text-blue-600 underline">http://www.rrcy.fo11@dswd.gov.ph</span> Tel No.(082) 293-03-06</p>
             </div>
-            <div class="w-1/6 flex justify-end"> <!-- Restricting the image section to the right side -->
-                <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-32 object-cover"> <!-- Expanded width for image -->
-            </div>
+            
         </div>
     </div>
    </div>
@@ -528,10 +526,9 @@ confirmSave() {
      },
   
      closeSaveResultModal() {
-       this.isSaveResultModalOpen = false;
-       this.saveResultTitle = '';
-       this.saveResultMessage = '';
-     },
+        this.isSaveResultModalOpen = false; // Close the result modal
+        this.editMode = false; // Ensure the form is no longer in edit mode if applicable
+      },
   
      updatePage(newPage) {
        this.currentPage = newPage;
@@ -812,39 +809,82 @@ confirmSave() {
     pdf.line(initialX+100, contentYPos + 1, initialX+100 + signature_residentsWidth, contentYPos + 1); 
   
   
-  
-  
     contentYPos += 5; 
-  
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(10);
-    pdf.text('Name & Signature of Residents', initialX+100, contentYPos);
+
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(10);
+
+// Display the label "Name & Signature of Residents"
+pdf.text('Name & Signature of Residents', initialX + 100, contentYPos);
+
+// Add the fetched data (resident's name)
+contentYPos += 5; // Move Y position down for the fetched data
+pdf.setFontSize(12); // Adjust font size for the resident's name
+const residentName = this.form.name || '';
+pdf.text(residentName, initialX + 100, contentYPos - 10); // Display the fetched resident's name or leave blank if empty
+
+// Calculate the width of the resident's name to draw a line that matches its length
+const textWidth = pdf.getTextWidth(residentName);
+const lineStartX = initialX + 100;
+const lineEndX = lineStartX + (textWidth > 0 ? textWidth + 10 : 100); // Add a little padding for the line
+
+// Draw a line under the name (if a name is fetched, or draw a default-length line)
+pdf.setLineWidth(0.2);
+pdf.line(lineStartX, contentYPos - 9, lineEndX, contentYPos - 9); // Draw the line
+
+
   
     // Noted by Section
-    contentYPos += rowHeight; 
-    contentYPos += 4;
-    pdf.setFontSize(11);
-    pdf.text('Noted by:', initialX, contentYPos);
-    pdf.text('Approved by:', initialX+100, contentYPos);
-    
-    contentYPos += rowHeight; 
-  
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(11);
-    pdf.text(this.form.anecdotal_shp, initialX, contentYPos);
-    contentYPos += 4; 
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(10);
-    pdf.text('HP III/SHP', initialX, contentYPos+2);
-  
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(11);
-    pdf.text(this.center_head,  initialX+100, contentYPos+-4);
-    contentYPos += 5; 
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(10);
-    pdf.text('SWO IV / Center Head', initialX+100, contentYPos+-4);
-  
+contentYPos += rowHeight; 
+contentYPos += 4;
+pdf.setFontSize(11);
+pdf.text('Noted by:', initialX, contentYPos);
+pdf.text('Approved by:', initialX + 100, contentYPos);
+
+contentYPos += rowHeight;
+
+// Display the anecdotal_shp name
+// pdf.setFont('arialbd', 'bold');
+pdf.setFontSize(11);
+const anecdotalShp = this.form.anecdotal_shp || '';
+pdf.text(anecdotalShp, initialX, contentYPos);
+
+// Calculate the width of anecdotal_shp to draw a line that matches its length
+const shpTextWidth = pdf.getTextWidth(anecdotalShp);
+const shpLineStartX = initialX;
+const shpLineEndX = shpLineStartX + (shpTextWidth > 0 ? shpTextWidth + 10 : 100); // Add some padding for the line
+
+// Draw the line under anecdotal_shp (or a default length if the field is empty)
+pdf.setLineWidth(0.2);
+pdf.line(shpLineStartX, contentYPos + 1, shpLineEndX, contentYPos + 1); // Draw the line under the name
+
+// Add HP III/SHP title below the line
+contentYPos += 4; 
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(10);
+pdf.text('HP III/SHP', initialX, contentYPos + 2);
+
+// Display the Center Head name
+pdf.setFont('arialbd', 'bold');
+pdf.setFontSize(11);
+const centerHead = this.center_head || '';
+pdf.text(centerHead, initialX + 100, contentYPos - 4);
+
+// Calculate the width of center_head to draw a line that matches its length
+const centerHeadTextWidth = pdf.getTextWidth(centerHead);
+const centerHeadLineStartX = initialX + 100;
+const centerHeadLineEndX = centerHeadLineStartX + (centerHeadTextWidth > 0 ? centerHeadTextWidth + 10 : 100); // Add padding for the line
+
+// Draw the line under center_head (or a default length if the field is empty)
+pdf.setLineWidth(0.2);
+pdf.line(centerHeadLineStartX, contentYPos - 3, centerHeadLineEndX, contentYPos - 3); // Draw the line under the name
+
+// Add SWO IV / Center Head title below the line
+contentYPos += 5; 
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(10);
+pdf.text('SWO IV / Center Head', initialX + 100, contentYPos - 4);
+
     // Add the footer for the last page
     addFooter();
   
