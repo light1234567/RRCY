@@ -48,7 +48,7 @@
            <p class="item-center  text-sm font-semibold">PROTECTIVE SERVICES DIVISION</p>
            <p class=" text-sm font-semibold">Regional Rehabilitation Center for</p>
            <p class="mr-20 text-sm font-semibold">Youth/RFO XI</p>
-           <p class="text-center text-xs">DSWD-GF-010 | REV 02 | 17 AUG 2022</p>
+           <p class="text-center text-xs">DSWD-GF-010 | REV 10 | 17 AUG 2022</p>
            <div class="text-xs font-semibold pt-12">
     <p class="text-sm font-semibold">
     DRN :
@@ -477,7 +477,8 @@ confirmSave() {
         currentPage++; // Increment page number
         contentYPos = 40; // Reset Y position for the new page
         pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
-        pdf.setFontSize(11); // Set font size back to what it was
+        pdf.setFontSize(12); // Set font size back to what it was
+        pdf.setDrawColor(0, 0, 0);
       }
     };
   
@@ -500,7 +501,6 @@ confirmSave() {
         pdf.setTextColor(0, 0, 255);
         pdf.text('http://www.rrcy.fo11@dswd.gov.ph', 97, 343, { align: 'center' });
         pdf.setLineWidth(0);
-        
         pdf.setDrawColor(0, 0, 255);
         pdf.line(76, 344, 118, 344);
 
@@ -526,13 +526,13 @@ confirmSave() {
         // Add title and header text
         pdf.setFontSize(10);
       pdf.setFont('arialbd', 'bold'); 
-      pdf.text('PROTECTIVE SERVICES DIVISION', 150, 19, { align: 'center' });
-      pdf.text('Regional Rehabilitation Center for', 150, 23, { align: 'center' });
-      pdf.text('Youth FOR XI', 150, 27, { align: 'center' });
+      pdf.text('PROTECTIVE SERVICES DIVISION', 160, 19, { align: 'center' });
+      pdf.text('Regional Rehabilitation Center for', 160, 23, { align: 'center' });
+      pdf.text('Youth FOR XI', 160, 27, { align: 'center' });
     
       pdf.setFontSize(8);
       pdf.setFont('arial', 'normal'); 
-      pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 150, 32, { align: 'center' });
+      pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 160, 32, { align: 'center' });
     
   
     contentYPos += -20;
@@ -690,51 +690,32 @@ pdf.line(startXForUnderline, contentYPos + 1, startXForUnderline + fetchedDataWi
   pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1); 
   
   
-  contentYPos += rowHeight; 
-pdf.setFontSize(11);
-pdf.text('Noted by:', initialX, contentYPos);
-pdf.text('Approved by:', initialX + 100, contentYPos);
+    contentYPos += rowHeight; 
+    pdf.setFontSize(11);
+    pdf.text('Noted by:', initialX, contentYPos);
+    pdf.text('Approved by:', initialX+100, contentYPos);
+    
+    contentYPos += rowHeight; 
+  
+    pdf.setFont('Arialbd', 'bold');
+  const incident_report_shpValue = `${this.form.session_shp || ''}`;
+const incident_report_shpWidth = pdf.getTextWidth(incident_report_shpValue);
+const pageWidth = pdf.internal.pageSize.getWidth();
+const centerX = (pageWidth - incident_report_shpWidth) / 2;
+pdf.text(incident_report_shpValue, initialX, contentYPos + 3);
+pdf.line(initialX, contentYPos + 4, initialX + incident_report_shpWidth, contentYPos + 4); 
+pdf.setFont('Arial', 'normal');
+pdf.text(`HP III/SHP`, initialX, contentYPos + 9);
 
-contentYPos += rowHeight; 
-
-// Draw dynamic line and text for "Noted by"
-pdf.setFont('arialbd', 'bold');
-pdf.setFontSize(11);
-const sessionShp = this.form.session_shp || '';
-pdf.text(sessionShp, initialX, contentYPos);
-
-// Calculate width of "Noted by" and draw line
-const sessionShpWidth = pdf.getTextWidth(sessionShp);
-const notedLineStartX = initialX;
-const notedLineEndX = notedLineStartX + (sessionShpWidth > 0 ? sessionShpWidth + 10 : 100); // Add padding for line
-
-pdf.setLineWidth(0.2);
-pdf.line(notedLineStartX, contentYPos + 1, notedLineEndX, contentYPos + 1); // Draw the line
-
-contentYPos += 4; 
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(10);
-pdf.text('HP III/SHP', initialX, contentYPos + 2);
-
-// Draw dynamic line and text for "Approved by"
-pdf.setFont('arialbd', 'bold');
-pdf.setFontSize(11);
-const centerHead = this.center_head || '';
-pdf.text(centerHead, initialX + 100, contentYPos - 4);
-
-// Calculate width of "Approved by" and draw line
-const centerHeadWidth = pdf.getTextWidth(centerHead);
-const approvedLineStartX = initialX + 100;
-const approvedLineEndX = approvedLineStartX + (centerHeadWidth > 0 ? centerHeadWidth + 10 : 100); // Add padding for line
-
-pdf.setLineWidth(0.2);
-pdf.line(approvedLineStartX, contentYPos - 3, approvedLineEndX, contentYPos - 3); // Draw the line
-
-contentYPos += 5; 
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(10);
-pdf.text('SWO IV / Center Head', initialX + 100, contentYPos - 4);
-
+    pdf.setFontSize(11);
+  pdf.setFont('Arialbd', 'bold');
+ const center_headValue = `${this.center_head || ''}`;
+ const center_headWidth = pdf.getTextWidth(center_headValue);
+ pdf.text(center_headValue, initialX + 100, contentYPos+3); 
+ pdf.line(initialX + 100, contentYPos+4 , initialX + 100 + center_headWidth, contentYPos+4); 
+ pdf.setFont('Arial', 'normal');
+ pdf.text(`SWO IV / Center Head`, initialX + 100, contentYPos+9);
+ 
     // Add the footer for the last page
     addFooter();
   

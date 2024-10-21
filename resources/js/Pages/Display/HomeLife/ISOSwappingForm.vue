@@ -496,7 +496,7 @@ confirmSave() {
    const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
    const pageHeight = pdf.internal.pageSize.getHeight(); // Total page height in mm
    const marginBottom = 30; // Bottom margin in mm
-   const rowHeight = 8; // Height of each row
+   const rowHeight = 3; // Height of each row
    const lineHeight = 7; // Space between lines
    const footerHeight = 0; // Adjust to fit the height of your footer
    const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
@@ -510,7 +510,7 @@ confirmSave() {
      // Header text
      pdf.setFontSize(9);
      pdf.setFont('TimesNewRoman', 'italic');
-     pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 135, 20);
+     pdf.text('DSWD-GF-010 | REV 02 | 17 AUG 2022', 135, 20);
    };
    
    // Helper function to add a new page if content exceeds the page height
@@ -522,7 +522,8 @@ confirmSave() {
        currentPage++; // Increment page number
        contentYPos = 40; // Reset Y position for the new page
        pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
-       pdf.setFontSize(11); // Set font size back to what it was
+       pdf.setFontSize(12); // Set font size back to what it was
+       pdf.setDrawColor(0, 0, 0);
      }
    };
  
@@ -568,13 +569,13 @@ confirmSave() {
  
    pdf.setFontSize(10);
       pdf.setFont('arialbd', 'bold'); 
-      pdf.text('PROTECTIVE SERVICES DIVISION', 150, 19, { align: 'center' });
-      pdf.text('Regional Rehabilitation Center for', 150, 23, { align: 'center' });
-      pdf.text('Youth FOR XI', 150, 27, { align: 'center' });
+      pdf.text('PROTECTIVE SERVICES DIVISION', 160, 19, { align: 'center' });
+      pdf.text('Regional Rehabilitation Center for', 160, 23, { align: 'center' });
+      pdf.text('Youth FOR XI', 160, 27, { align: 'center' });
     
       pdf.setFontSize(8);
       pdf.setFont('arial', 'normal'); 
-      pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 150, 31, { align: 'center' });
+      pdf.text('DSWD-GF-010 | REV 02 | 17 AUG 2022', 160, 31, { align: 'center' });
     
  
    contentYPos += -20;
@@ -724,23 +725,24 @@ confirmSave() {
    
    contentYPos += rowHeight; 
  
-   pdf.setFont('arialbd', 'bold');
-   pdf.setFontSize(11);
-   pdf.text(this.form.swapping_shp, initialX, contentYPos);
-   contentYPos += 4; 
-   pdf.setFont('arial', 'normal');
-   pdf.setFontSize(10);
-   pdf.line(20, contentYPos+-3, 55, contentYPos+-3);
-   pdf.text('HP III/SHP', initialX, contentYPos+2);
- 
-   pdf.setFont('arialbd', 'bold');
-   pdf.setFontSize(11);
-   pdf.text(this.center_head,  initialX+100, contentYPos+-4);
-   contentYPos += 5; 
-   pdf.setFont('arial', 'normal');
-   pdf.setFontSize(10);
-   pdf.line(120, contentYPos+-8, 180, contentYPos+-8);
-   pdf.text('SWO IV / Center Head', initialX+100, contentYPos+-4);
+   pdf.setFont('Arialbd', 'bold');
+  const incident_report_shpValue = `${this.form.session_shp || ''}`;
+const incident_report_shpWidth = pdf.getTextWidth(incident_report_shpValue);
+const pageWidth = pdf.internal.pageSize.getWidth();
+const centerX = (pageWidth - incident_report_shpWidth) / 2;
+pdf.text(incident_report_shpValue, initialX, contentYPos + 3);
+pdf.line(initialX, contentYPos + 4, initialX + incident_report_shpWidth, contentYPos + 4); 
+pdf.setFont('Arial', 'normal');
+pdf.text(`HP III/SHP`, initialX, contentYPos + 9);
+
+    pdf.setFontSize(11);
+  pdf.setFont('Arialbd', 'bold');
+ const center_headValue = `${this.center_head || ''}`;
+ const center_headWidth = pdf.getTextWidth(center_headValue);
+ pdf.text(center_headValue, initialX + 100, contentYPos+3); 
+ pdf.line(initialX + 100, contentYPos+4 , initialX + 100 + center_headWidth, contentYPos+4); 
+ pdf.setFont('Arial', 'normal');
+ pdf.text(`SWO IV / Center Head`, initialX + 100, contentYPos+9);
  
    // Add the footer for the last page
    addFooter();

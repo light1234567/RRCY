@@ -535,7 +535,7 @@ confirmSave() {
        // Add logic to fetch data or change content based on the page
      },
      exportToPdf() {
-    const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
+      const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
     const pageHeight = pdf.internal.pageSize.getHeight(); // Total page height in mm
     const marginBottom = 30; // Bottom margin in mm
     const rowHeight = 8; // Height of each row
@@ -564,7 +564,8 @@ confirmSave() {
         currentPage++; // Increment page number
         contentYPos = 40; // Reset Y position for the new page
         pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
-        pdf.setFontSize(11); // Set font size back to what it was
+        pdf.setFontSize(12); // Set font size back to what it was
+        pdf.setDrawColor(0, 0, 0);
       }
     };
   
@@ -603,9 +604,8 @@ confirmSave() {
           pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 340, { align: 'center' });
         }
       };
-  
-      pdf.setTextColor(0, 0, 0);
-  
+
+
     // DSWD logo
     const imgData = '/images/headerlogo2.png';
     pdf.addImage(imgData, 'PNG', 15, 5, 70, 35);
@@ -613,13 +613,13 @@ confirmSave() {
         // Add title and header text
         pdf.setFontSize(10);
       pdf.setFont('arialbd', 'bold'); 
-      pdf.text('PROTECTIVE SERVICES DIVISION', 150, 19, { align: 'center' });
-      pdf.text('Regional Rehabilitation Center for', 150, 23, { align: 'center' });
-      pdf.text('Youth FOR XI', 150, 27, { align: 'center' });
+      pdf.text('PROTECTIVE SERVICES DIVISION', 160, 19, { align: 'center' });
+      pdf.text('Regional Rehabilitation Center for', 160, 23, { align: 'center' });
+      pdf.text('Youth FOR XI', 160, 27, { align: 'center' });
     
       pdf.setFontSize(8);
       pdf.setFont('arial', 'normal'); 
-      pdf.text('DSWD-GF-010A | REV 02 | 17 AUG 2022', 150, 32, { align: 'center' });
+      pdf.text('DSWD-GF-010 | REV 02 | 17 AUG 2022', 160, 32, { align: 'center' });
     
   
     contentYPos += -20;
@@ -629,279 +629,232 @@ confirmSave() {
     pdf.text(`${this.form.drn || ''}`, initialX+122, contentYPos+-5);
     pdf.line(142, contentYPos+-4, 190, contentYPos+-4); 
   
+  contentYPos += 10;
+  pdf.setFont('arialbd', 'bold');
+  pdf.setFontSize(11);
+  pdf.text(`FOR THE MONTH OF ${this.form.month}`, initialX + 60, contentYPos);
+  pdf.line(119, contentYPos+1, 150, contentYPos+1); 
+
+
+  // Content starts below title
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+
+  contentYPos += 15;
+  pdf.text(`Pangalan:`, initialX, contentYPos);
+const nameValue = `${this.form.name || ''}`;
+const nameWidth = pdf.getTextWidth(nameValue);
+pdf.text(nameValue, initialX + 18, contentYPos); 
+pdf.line(initialX + 18, contentYPos + 1, initialX + 18 + nameWidth, contentYPos + 1); 
+
+
+pdf.text(`Petsa:`, initialX + 100, contentYPos);
+const dateValue = `${this.form.date || ''}`;
+const dateWidth = pdf.getTextWidth(dateValue);
+pdf.text(dateValue, initialX + 112, contentYPos);
+pdf.line(initialX + 112, contentYPos + 1, initialX + 112 + dateWidth, contentYPos + 1);
+
+
+
+
+
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('I. PHYSICAL :', initialX, contentYPos+5);
+  pdf.setFont('arial', 'normal');
+  pdf.text('Management of personal hygiene and improvement of self-care habits.', initialX+27, contentYPos+5);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const physicalLog = `${this.form.physical || ''}`;
+  const physicalLogLines = pdf.splitTextToSize(physicalLog, maxWidth);
+
+  physicalLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+4);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('II. EMOTIONAL :', initialX, contentYPos+5);
+  pdf.setFont('arial', 'normal');
+  pdf.text('The degree to which the resident displayed his coping capacity towards ill/guilty', initialX+31, contentYPos+5);
+  pdf.text('feelings and feelings of helplessness.', initialX, contentYPos+10);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const emotionallLog = `${this.form.emotional || ''}`;
+  const emotionallLogLines = pdf.splitTextToSize(emotionallLog, maxWidth);
+
+  emotionallLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+8);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('III. SOCIAL/BEHAVIORAL :', initialX, contentYPos+5);
+  pdf.setFont('arial', 'normal');
+  pdf.text('The level to which the resident demonstrated honesty, self-control,', initialX+50, contentYPos+5);
+  pdf.text('and a sense of responsibility.', initialX, contentYPos+10);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const behaviorallLog = `${this.form.behavioral || ''}`;
+  const behaviorallLogLines = pdf.splitTextToSize(behaviorallLog, maxWidth);
+
+  behaviorallLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+8);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('IV. SPIRITUAL :', initialX, contentYPos+5);
+  pdf.setFont('arial', 'normal');
+  pdf.text('Attitude displayed towards the acceptance of the present situation.', initialX+30, contentYPos+5);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const spirituallLog = `${this.form.spiritual || ''}`;
+  const spirituallLogLines = pdf.splitTextToSize(spirituallLog, maxWidth);
+
+  spirituallLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+4);
+    contentYPos += lineHeight;
+  });
+
+  contentYPos += rowHeight;
+  addNewPageIfNeeded();
+  pdf.setFont('arialbd', 'bold');
+  pdf.text('V. RECOMMENDATION:', initialX, contentYPos+5);
+
+  contentYPos += rowHeight;
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const recommendationlLog = `${this.form.recommendation || ''}`;
+  const recommendationlLogLines = pdf.splitTextToSize(recommendationlLog, maxWidth);
+
+  recommendationlLogLines.forEach(line => {
+    addNewPageIfNeeded(); // Check for overflow before adding a line
+    pdf.text(line, initialX, contentYPos+4);
+    contentYPos += lineHeight;
+  });
+
+
+  contentYPos +=rowHeight;
+  addNewPageIfNeeded();
+
+  pdf.text(`Color:`, initialX, contentYPos);
+
+// Get the session value and its width
+const colorValue = `${this.form.color || ''}`;
+const colorWidth = pdf.getTextWidth(colorValue);
+
+// Display the session value and underline only the value
+pdf.text(colorValue, initialX + 12, contentYPos);  // Adjust the X position to align the value after the label
+pdf.setLineWidth(0);
+pdf.line(initialX + 12, contentYPos + 1, initialX + 12 + colorWidth, contentYPos + 1); // Underline for session value
+
+contentYPos +=10;
+  // Prepared by Section
+  contentYPos += rowHeight; 
+  addNewPageIfNeeded();
+  pdf.text('Prepared by:', initialX, contentYPos);
   
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(14);
-    pdf.text('Anecdotal Report', 105, 60, { align: 'center' });
-    contentYPos += 15;
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(11);
-    pdf.text(`FOR THE MONTH OF `, initialX+40, contentYPos);
-    pdf.text(`${this.form.month || ''}`, initialX+80, contentYPos);
-    pdf.line(98, contentYPos+1, 145, contentYPos+1); 
-  
-    // Content starts below title
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
-  
-    contentYPos += 15;
-    pdf.text(`Pangalan:`, initialX, contentYPos);
-  const nameValue = `${this.form.name || ''}`;
-  const nameWidth = pdf.getTextWidth(nameValue);
-  pdf.text(nameValue, initialX + 18, contentYPos); 
-  pdf.line(initialX + 18, contentYPos + 1, initialX + 18 + nameWidth, contentYPos + 1); 
-  
-  
-  pdf.text(`Petsa:`, initialX + 100, contentYPos);
-  const dateValue = `${this.form.date || ''}`;
-  const dateWidth = pdf.getTextWidth(dateValue);
-  pdf.text(dateValue, initialX + 112, contentYPos);
-  pdf.line(initialX + 112, contentYPos + 1, initialX + 112 + dateWidth, contentYPos + 1);
-  
-  
-  
-  
-  
-  
-    contentYPos += rowHeight;
-    contentYPos += 5;
-    addNewPageIfNeeded();
-    pdf.setFont('arialbd', 'bold');
-    pdf.text('I. PHYSICAL :', initialX, contentYPos+5);
-    pdf.setFont('arial', 'normal');
-    pdf.text('Management of personal hygiene and improvement of self-care habits.', initialX+27, contentYPos+5);
-  
-    contentYPos += rowHeight;
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
-    const physicalLog = `${this.form.physical || ''}`;
-    const physicalLogLines = pdf.splitTextToSize(physicalLog, maxWidth);
-  
-    physicalLogLines.forEach(line => {
-      addNewPageIfNeeded(); // Check for overflow before adding a line
-      pdf.text(line, initialX, contentYPos+4);
-      contentYPos += lineHeight;
-    });
-  
-    contentYPos += rowHeight;
-    contentYPos += 5;
-    addNewPageIfNeeded();
-    pdf.setFont('arialbd', 'bold');
-    pdf.text('II. EMOTIONAL :', initialX, contentYPos+5);
-    pdf.setFont('arial', 'normal');
-    pdf.text('The degree to which the resident displayed his coping capacity towards ill/guilty', initialX+31, contentYPos+5);
-    pdf.text('feelings and feelings of helplessness.', initialX, contentYPos+10);
-  
-    contentYPos += rowHeight;
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
-    const emotionallLog = `${this.form.emotional || ''}`;
-    const emotionallLogLines = pdf.splitTextToSize(emotionallLog, maxWidth);
-  
-    emotionallLogLines.forEach(line => {
-      addNewPageIfNeeded(); // Check for overflow before adding a line
-      pdf.text(line, initialX, contentYPos+8);
-      contentYPos += lineHeight;
-    });
-  
-    contentYPos += rowHeight;
-    contentYPos += 5;
-    addNewPageIfNeeded();
-    pdf.setFont('arialbd', 'bold');
-    pdf.text('III. SOCIAL/BEHAVIORAL :', initialX, contentYPos+5);
-    pdf.setFont('arial', 'normal');
-    pdf.text('The level to which the resident demonstrated honesty, self-control,', initialX+50, contentYPos+5);
-    pdf.text('and a sense of responsibility.', initialX, contentYPos+10);
-  
-    contentYPos += rowHeight;
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
-    const behaviorallLog = `${this.form.behavioral || ''}`;
-    const behaviorallLogLines = pdf.splitTextToSize(behaviorallLog, maxWidth);
-  
-    behaviorallLogLines.forEach(line => {
-      addNewPageIfNeeded(); // Check for overflow before adding a line
-      pdf.text(line, initialX, contentYPos+8);
-      contentYPos += lineHeight;
-    });
-  
-    contentYPos += rowHeight;
-    contentYPos += 5;
-    addNewPageIfNeeded();
-    pdf.setFont('arialbd', 'bold');
-    pdf.text('IV. SPIRITUAL :', initialX, contentYPos+5);
-    pdf.setFont('arial', 'normal');
-    pdf.text('Attitude displayed towards the acceptance of the present situation.', initialX+30, contentYPos+5);
-  
-    contentYPos += rowHeight;
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
-    const spirituallLog = `${this.form.spiritual || ''}`;
-    const spirituallLogLines = pdf.splitTextToSize(spirituallLog, maxWidth);
-  
-    spirituallLogLines.forEach(line => {
-      addNewPageIfNeeded(); // Check for overflow before adding a line
-      pdf.text(line, initialX, contentYPos+4);
-      contentYPos += lineHeight;
-    });
-  
-    contentYPos += rowHeight;
-    contentYPos += 5;
-    addNewPageIfNeeded();
-    pdf.setFont('arialbd', 'bold');
-    pdf.text('V. RECOMMENDATION:', initialX, contentYPos+5);
-  
-    contentYPos += rowHeight;
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
-    const recommendationlLog = `${this.form.recommendation || ''}`;
-    const recommendationlLogLines = pdf.splitTextToSize(recommendationlLog, maxWidth);
-  
-    recommendationlLogLines.forEach(line => {
-      addNewPageIfNeeded(); // Check for overflow before adding a line
-      pdf.text(line, initialX, contentYPos+4);
-      contentYPos += lineHeight;
-    });
-  
-  
-    contentYPos += rowHeight;
-    contentYPos += 30;
-    addNewPageIfNeeded();
-  
-    pdf.text(`Color:`, initialX, contentYPos);
-  
-  // Get the session value and its width
-  const colorValue = `${this.form.color || ''}`;
-  const colorWidth = pdf.getTextWidth(colorValue);
-  
-  // Display the session value and underline only the value
-  pdf.text(colorValue, initialX + 12, contentYPos);  // Adjust the X position to align the value after the label
+  contentYPos += rowHeight; 
+  addNewPageIfNeeded();
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const prepared_byValue = `${this.form.prepared_by || ''}`;
+  const prepared_byWidth = pdf.getTextWidth(prepared_byValue);
   pdf.setLineWidth(0);
-  pdf.line(initialX + 12, contentYPos + 1, initialX + 12 + colorWidth, contentYPos + 1); // Underline for session value
-  
-  contentYPos +=5;
-    // Prepared by Section
-    contentYPos += rowHeight; 
-    addNewPageIfNeeded();
-    pdf.text('Prepared by:', initialX, contentYPos);
-    
-    contentYPos += rowHeight; 
-  
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
-    const prepared_byValue = `${this.form.prepared_by || ''}`;
-    const prepared_byWidth = pdf.getTextWidth(prepared_byValue);
-    pdf.setLineWidth(0);
-    pdf.text(prepared_byValue, initialX, contentYPos);  
-    pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1); 
-  
-  
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(10);
-    pdf.text('Name and Signature of Houseparent', initialX, contentYPos+5);
-  
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(11);
-    const signature_residentsValue = `${this.form.signature_residents || ''}`;
-    const signature_residentsWidth = pdf.getTextWidth(signature_residentsValue);
-    pdf.setLineWidth(0);
-    pdf.text(signature_residentsValue, initialX+100, contentYPos);  
-    pdf.line(initialX+100, contentYPos + 1, initialX+100 + signature_residentsWidth, contentYPos + 1); 
-  
-  
-    contentYPos += 5; 
-
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(10);
-
-// Display the label "Name & Signature of Residents"
-pdf.text('Name & Signature of Residents', initialX + 100, contentYPos);
-
-// Add the fetched data (resident's name)
-contentYPos += 5; // Move Y position down for the fetched data
-pdf.setFontSize(12); // Adjust font size for the resident's name
-const residentName = this.form.name || '';
-pdf.text(residentName, initialX + 100, contentYPos - 10); // Display the fetched resident's name or leave blank if empty
-
-// Calculate the width of the resident's name to draw a line that matches its length
-const textWidth = pdf.getTextWidth(residentName);
-const lineStartX = initialX + 100;
-const lineEndX = lineStartX + (textWidth > 0 ? textWidth + 10 : 100); // Add a little padding for the line
-
-// Draw a line under the name (if a name is fetched, or draw a default-length line)
-pdf.setLineWidth(0.2);
-pdf.line(lineStartX, contentYPos - 9, lineEndX, contentYPos - 9); // Draw the line
+  pdf.text(prepared_byValue, initialX, contentYPos);  
+  pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1); 
 
 
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  pdf.text('Name and Signature of Houseparent', initialX, contentYPos+5);
+
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  const signature_residentsValue = `${this.form.name || ''}`;
+  const signature_residentsWidth = pdf.getTextWidth(signature_residentsValue);
+  pdf.setLineWidth(0);
+  pdf.text(signature_residentsValue, initialX+100, contentYPos);  
+  pdf.line(initialX+100, contentYPos + 1, initialX+100 + signature_residentsWidth, contentYPos + 1); 
+
+
+
+
+  contentYPos += 5; 
+  addNewPageIfNeeded();
+  pdf.setFont('arial', 'normal');
+  pdf.setFontSize(11);
+  pdf.text('Name & Signature of Residents', initialX+100, contentYPos);
+
+  // Noted by Section
+  contentYPos += rowHeight; 
+  contentYPos += 4;
+  addNewPageIfNeeded();
+  pdf.setFontSize(11);
+  pdf.text('Noted by:', initialX, contentYPos);
+  pdf.text('Approved by:', initialX+100, contentYPos);
   
-    // Noted by Section
-contentYPos += rowHeight; 
-contentYPos += 4;
+  contentYPos += rowHeight; 
+  addNewPageIfNeeded();
 pdf.setFontSize(11);
-pdf.text('Noted by:', initialX, contentYPos);
-pdf.text('Approved by:', initialX + 100, contentYPos);
+pdf.setFont('Arialbd', 'bold');
 
-contentYPos += rowHeight;
+const anecdotal_shpValue = `${this.form.anecdotal_shp || ''}`;
+const anecdotal_shpWidth = pdf.getTextWidth(anecdotal_shpValue);
+const pageWidth = pdf.internal.pageSize.getWidth();
+const centerX = (pageWidth - anecdotal_shpWidth) / 2;
+pdf.text(anecdotal_shpValue, initialX, contentYPos + 8);
+pdf.line(initialX, contentYPos + 9, initialX + anecdotal_shpWidth, contentYPos + 9); 
+pdf.setFont('Arial', 'normal');
+pdf.text(`HP III/SHP`, initialX, contentYPos + 14);
 
-// Display the anecdotal_shp name
-// pdf.setFont('arialbd', 'bold');
-pdf.setFontSize(11);
-const anecdotalShp = this.form.anecdotal_shp || '';
-pdf.text(anecdotalShp, initialX, contentYPos);
+  pdf.setFontSize(11);
+  pdf.setFont('Arialbd', 'bold');
+ const center_headValue = `${this.center_head || ''}`;
+ const center_headWidth = pdf.getTextWidth(center_headValue);
+ pdf.text(center_headValue, initialX + 100, contentYPos+8); 
+ pdf.line(initialX + 100, contentYPos + 9, initialX + 100 + center_headWidth, contentYPos + 9); 
+ pdf.setFont('Arial', 'normal');
+ pdf.text(`SWO IV / Center Head`, initialX + 100, contentYPos+14);
+ 
+  // Add the footer for the last page
+  addFooter();
 
-// Calculate the width of anecdotal_shp to draw a line that matches its length
-const shpTextWidth = pdf.getTextWidth(anecdotalShp);
-const shpLineStartX = initialX;
-const shpLineEndX = shpLineStartX + (shpTextWidth > 0 ? shpTextWidth + 10 : 100); // Add some padding for the line
-
-// Draw the line under anecdotal_shp (or a default length if the field is empty)
-pdf.setLineWidth(0.2);
-pdf.line(shpLineStartX, contentYPos + 1, shpLineEndX, contentYPos + 1); // Draw the line under the name
-
-// Add HP III/SHP title below the line
-contentYPos += 4; 
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(10);
-pdf.text('HP III/SHP', initialX, contentYPos + 2);
-
-// Display the Center Head name
-pdf.setFont('arialbd', 'bold');
-pdf.setFontSize(11);
-const centerHead = this.center_head || '';
-pdf.text(centerHead, initialX + 100, contentYPos - 4);
-
-// Calculate the width of center_head to draw a line that matches its length
-const centerHeadTextWidth = pdf.getTextWidth(centerHead);
-const centerHeadLineStartX = initialX + 100;
-const centerHeadLineEndX = centerHeadLineStartX + (centerHeadTextWidth > 0 ? centerHeadTextWidth + 10 : 100); // Add padding for the line
-
-// Draw the line under center_head (or a default length if the field is empty)
-pdf.setLineWidth(0.2);
-pdf.line(centerHeadLineStartX, contentYPos - 3, centerHeadLineEndX, contentYPos - 3); // Draw the line under the name
-
-// Add SWO IV / Center Head title below the line
-contentYPos += 5; 
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(10);
-pdf.text('SWO IV / Center Head', initialX + 100, contentYPos - 4);
-
-    // Add the footer for the last page
-    addFooter();
-  
-    const totalPages = pdf.internal.getNumberOfPages();
+  const totalPages = pdf.internal.getNumberOfPages();
       for (let i = 1; i <= totalPages; i++) {
         pdf.setPage(i);
         pdf.setFontSize(9);
         pdf.setFont('TimesNewRoman', 'bold');
         pdf.text(`PAGE ${i} of ${totalPages}`, 105, 333, { align: 'center' }); // Update the footer with the correct total pages
       }
-  
-    // Save the PDF with dynamic file name
-    pdf.save(`Anecdotal_Report_${this.form.name || ''}.pdf`);
-  },
-   }
-  };
-  </script>
+
+  // Save the PDF with dynamic file name
+  pdf.save(`Anecdotal_Report_${this.form.name || ''}.pdf`);
+},
+ }
+};
+</script>
   
   <style scoped>
     .underline-input {

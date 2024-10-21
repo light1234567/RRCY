@@ -536,7 +536,7 @@ confirmSave() {
     const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
     const pageHeight = pdf.internal.pageSize.getHeight(); // Total page height in mm
     const marginBottom = 30; // Bottom margin in mm
-    const rowHeight = 8; // Height of each row
+    const rowHeight = 6; // Height of each row
     const lineHeight = 7; // Space between lines
     const footerHeight = 0; // Adjust to fit the height of your footer
     const maxContentHeight = pageHeight - marginBottom - footerHeight; // Reduce height to account for footer
@@ -549,8 +549,8 @@ confirmSave() {
     const addHeader = () => {
       // Header text
       pdf.setFontSize(9);
-      pdf.setFont('TimesNewRoman', 'italic');
-      pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 135, 20);
+      pdf.setFont('TimesNewRoman', 'normal');
+      pdf.text('DSWD-GF-010 | REV 02 | 17 AUG 2022', 135, 20);
     };
     
     // Helper function to add a new page if content exceeds the page height
@@ -562,7 +562,9 @@ confirmSave() {
         currentPage++; // Increment page number
         contentYPos = 40; // Reset Y position for the new page
         pdf.setFont('arial', 'normal'); // Reset font to 'arial' and style to 'normal'
-        pdf.setFontSize(11); // Set font size back to what it was
+        pdf.setFontSize(12); // Set font size back to what it was
+        pdf.setLineWidth(0);
+        pdf.setDrawColor(0, 0, 0);
       }
     };
   
@@ -602,7 +604,6 @@ confirmSave() {
         }
       };
   
-  
     // DSWD logo
     const imgData = '/images/headerlogo2.png';
     pdf.addImage(imgData, 'PNG', 15, 5, 70, 35);
@@ -610,13 +611,13 @@ confirmSave() {
         // Add title and header text
         pdf.setFontSize(10);
       pdf.setFont('arialbd', 'bold'); 
-      pdf.text('PROTECTIVE SERVICES DIVISION', 150, 19, { align: 'center' });
-      pdf.text('Regional Rehabilitation Center for', 150, 23, { align: 'center' });
-      pdf.text('Youth FOR XI', 150, 27, { align: 'center' });
+      pdf.text('PROTECTIVE SERVICES DIVISION', 160, 19, { align: 'center' });
+      pdf.text('Regional Rehabilitation Center for', 160, 24, { align: 'center' });
+      pdf.text('Youth FOR XI', 160, 28, { align: 'center' });
     
       pdf.setFontSize(8);
-      pdf.setFont('arial', 'normal'); 
-      pdf.text('DSWD-GF-010 | REV 10 | 17 AUG 2022', 150, 31, { align: 'center' });
+      pdf.setFont('arial', 'italic'); 
+      pdf.text('DSWD-GF-010A | REV 02 | 17 AUG 2022', 160, 32, { align: 'center' });
     
   
     contentYPos += -20;
@@ -798,64 +799,57 @@ confirmSave() {
   
   
   
-    contentYPos += rowHeight; 
-contentYPos += 15;
-addNewPageIfNeeded();
-pdf.text('Prepared by:', initialX, contentYPos);
-
-contentYPos += rowHeight; 
-
-pdf.setFont('arial', 'normal');
-pdf.setFontSize(11);
-
-// Check if "prepared_by" has a value, else leave blank
-const prepared_byValue = `${this.form.prepared_by || ''}`;
-if (prepared_byValue) {
-    const prepared_byWidth = pdf.getTextWidth(prepared_byValue);
-    pdf.text(prepared_byValue, initialX, contentYPos);  
-    pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1);
-}
-
-// Noted by Section
-contentYPos += rowHeight; 
-contentYPos += 4;
-pdf.setFontSize(11);
-pdf.text('Reviewed by:', initialX, contentYPos);
-pdf.text('Approved by:', initialX + 100, contentYPos);
-
-contentYPos += rowHeight; 
-
-pdf.setFont('arialbd', 'bold');
-pdf.setFontSize(11);
-
-// Check if "incident_report_shp" has a value, else leave blank
-if (this.form.incident_report_shp) {
-    pdf.text(this.form.incident_report_shp, initialX, contentYPos); // Fetch the value from form.incident_report_shp
-    contentYPos += 4;
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(10);
-    pdf.line(20, contentYPos - 3, 55, contentYPos - 3); // Draw underline for "Reviewed by"
-    pdf.text('HP III/SHP', initialX, contentYPos + 2); // Title "HP III/SHP"
-} else {
-    // If no value, do nothing or handle accordingly
-    console.log("No 'Reviewed by' data available.");
-}
-
-
-pdf.setFont('arialbd', 'bold');
-pdf.setFontSize(11);
-
-// Check if "center_head" has a value, else leave blank
-if (this.center_head) {
-    pdf.text(this.center_head, initialX + 100, contentYPos - 4);
-    contentYPos += 5;
-    pdf.setFont('arialbd', 'bold');
-    pdf.setFontSize(10);
-    pdf.line(120, contentYPos - 8, 180, contentYPos - 8);
-    pdf.text('SWO IV / Center Head', initialX + 100, contentYPos - 4);
-}
-
   
+    contentYPos += rowHeight; 
+    contentYPos +=15;
+    addNewPageIfNeeded();
+    pdf.setFontSize(11);
+    pdf.text('Prepared by:', initialX, contentYPos);
+    
+    contentYPos += rowHeight; 
+  
+    pdf.setFont('arial', 'normal');
+    pdf.setFontSize(11);
+    const prepared_byValue = `${this.form.prepared_by || ''}`;
+    const prepared_byWidth = pdf.getTextWidth(prepared_byValue);
+  
+  pdf.text(prepared_byValue, initialX, contentYPos);  
+  pdf.line(initialX, contentYPos + 1, initialX + prepared_byWidth, contentYPos + 1); 
+  
+  
+  
+  
+    // Noted by Section
+    contentYPos += rowHeight; 
+    contentYPos += 7;
+    addNewPageIfNeeded();
+    pdf.setFontSize(11);
+    pdf.text('Reviewed by:', initialX, contentYPos);
+    pdf.text('Approved by:', initialX+100, contentYPos);
+    
+    contentYPos += rowHeight; 
+    addNewPageIfNeeded();
+    pdf.setFontSize(11);
+
+  pdf.setFont('Arialbd', 'bold');
+  const incident_report_shpValue = `${this.form.incident_report_shp || ''}`;
+const incident_report_shpWidth = pdf.getTextWidth(incident_report_shpValue);
+const pageWidth = pdf.internal.pageSize.getWidth();
+const centerX = (pageWidth - incident_report_shpWidth) / 2;
+pdf.text(incident_report_shpValue, initialX, contentYPos + 3);
+pdf.line(initialX, contentYPos + 4, initialX + incident_report_shpWidth, contentYPos + 4); 
+pdf.setFont('Arial', 'normal');
+pdf.text(`HP III/SHP`, initialX, contentYPos + 9);
+
+    pdf.setFontSize(11);
+  pdf.setFont('Arialbd', 'bold');
+ const center_headValue = `${this.center_head || ''}`;
+ const center_headWidth = pdf.getTextWidth(center_headValue);
+ pdf.text(center_headValue, initialX + 100, contentYPos+3); 
+ pdf.line(initialX + 100, contentYPos+4 , initialX + 100 + center_headWidth, contentYPos+4); 
+ pdf.setFont('Arial', 'normal');
+ pdf.text(`SWO IV / Center Head`, initialX + 100, contentYPos+9);
+ 
     // Add the footer for the last page
     addFooter();
   
