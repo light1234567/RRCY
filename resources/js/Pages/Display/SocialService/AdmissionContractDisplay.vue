@@ -197,7 +197,7 @@
   
   
         <!-- Text under the line -->
-        <p class="-ml-8 whitespace-nowrap"style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION |REGIONAL REHABILITATION CENTER FOR YOUTH
+        <p class="-ml-8 whitespace-nowrap" style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION |REGIONAL REHABILITATION CENTER FOR YOUTH
         </p>
       </div>
   
@@ -601,16 +601,19 @@ daySuffix(day) {
     pdf.text('after Care Service.', initialX+10, contentYPos);
   
     contentYPos += 10;
+    const signedDay = this.form.signed_day || ''; // Fetch the day
+    const dayWithSuffix = signedDay ? `${signedDay}${this.daySuffix(signedDay)}` : ''; // Combine day with suffix
+
     pdf.setFont('arial', 'normal');
     pdf.setFontSize(13);
     pdf.text('Signed', initialX, contentYPos);
     pdf.setFontSize(11);
-    pdf.text(`${this.form.signed_day || ''}`, initialX+19, contentYPos+-1);
+    pdf.text(dayWithSuffix, initialX + 19, contentYPos - 1); 
     pdf.setFontSize(13);
     pdf.line(37, contentYPos, 55, contentYPos); 
     pdf.text('day of', initialX+40, contentYPos);
     pdf.setFontSize(11);
-    pdf.text(`${this.form.signed_month || ''}`, initialX+58, contentYPos+-1);
+    pdf.text(`${this.form.signed_month || ''}`, initialX+55, contentYPos+-1);
     pdf.setFontSize(13);
     pdf.line(75, contentYPos, 95, contentYPos); 
     pdf.text(', 2024. RRCY Davao City.', initialX+76, contentYPos);
@@ -618,7 +621,7 @@ daySuffix(day) {
     // Signature Section
     contentYPos += 25;
     pdf.setFont('arialbd', 'bold');
-    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 120, contentYPos);
+    pdf.text(this.center_head, 120, contentYPos);
     pdf.setFont('arial', 'normal');
     pdf.text('Center Head/SWO IV', 120, contentYPos + 6);
     contentYPos += 1;

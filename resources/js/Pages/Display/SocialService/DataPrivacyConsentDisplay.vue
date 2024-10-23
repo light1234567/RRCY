@@ -215,7 +215,7 @@
   
   
         <!-- Text under the line -->
-        <p class="-ml-8 whitespace-nowrap"style="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION |REGIONAL REHABILITATION CENTER FOR YOUTH
+        <p class="-ml-8 whitespace-nowrap" style ="text-align: center; font-weight: bold; margin-top: -1px;">DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION |REGIONAL REHABILITATION CENTER FOR YOUTH
         </p>
       </div>
   
@@ -565,7 +565,7 @@
     pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', 105, 335, null, null, 'center');
   
     // Save the PDF
-    pdf.save('DataPrivacyConsent_Legal.pdf');
+    pdf.save('DataPrivacyConsent.pdf');
   }
   
    }

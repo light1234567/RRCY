@@ -90,16 +90,15 @@
 </div>
         </div>
 
-        <!-- Problem Behavior Log Section -->
-        <div class="space-y-4 mt-6">
-  <h2 class="font-bold">PROBLEM BEHAVIOR LOG</h2>
-  <div 
-    id="problemBehaviorLog"
-    class="block w-full p-2 border border-gray-300 rounded-md"
-    style="white-space: pre-wrap; min-height: 50px;"
+      <!-- Problem Behavior Log Section -->
+<div class="text-[15px] mb-4 mt-6">
+  <h2 class="font-bold mb-2">PROBLEM BEHAVIOR LOG</h2>
+  <div
+    class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed"
+    style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
     :contenteditable="editMode"
-    @input="(e) => { form.problem_behavior_log = e.target.innerText; e.target.setCustomValidity('') }"
-    @invalid="(e) => { e.target.setCustomValidity('Please provide a log of problem behavior'); }"
+    @input="(e) => { form.problem_behavior_log = e.target.innerText; e.target.setCustomValidity(''); }"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide a log of problem behavior'); }" 
     :data-required="true"
     @blur="(e) => { if (!form.problem_behavior_log) { e.target.setCustomValidity('Please provide a log of problem behavior'); e.target.reportValidity(); } }"
   >
@@ -108,37 +107,39 @@
 </div>
 
 
-        <!-- Interventions Conducted Section -->
-        <div class="space-y-4 mt-6">
-  <h2 class="font-bold">INTERVENTIONS CONDUCTED</h2>
+<!-- Interventions Conducted Section -->
+<div class="text-[15px] mb-4 mt-6">
+  <h2 class="font-bold mb-2">INTERVENTIONS CONDUCTED</h2>
   <div 
-    class="block w-full p-2 border border-gray-300 rounded-md" 
-    :contenteditable="editMode" 
+    class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+    style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
+     :contenteditable="editMode"
     @input="(e) => { form.interventions_conducted = e.target.innerText; e.target.setCustomValidity(''); }"
     @blur="(e) => { if(!form.interventions_conducted) { e.target.setCustomValidity('Please provide details about the interventions conducted'); e.target.reportValidity(); } }"
-    @invalid="(e) => { e.target.setCustomValidity('Please provide details about the interventions conducted') }" 
-    style="white-space: pre-wrap; min-height: 50px;"
-    :data-required="true"
+    @invalid="(e) => { e.target.setCustomValidity('Please provide details about the interventions conducted'); }"
   >
     {{ form.interventions_conducted }}
   </div>
 </div>
 
-        <!-- Progress Notes Section -->
-        <div class="space-y-4 mt-6">
-  <h2 class="font-bold">PROGRESS NOTES</h2>
+
+<!-- Progress Notes Section -->
+<div class="text-[15px] mb-4 mt-6">
+  <h2 class="font-bold mb-2">PROGRESS NOTES</h2>
   <div 
-    class="block w-full p-2 border border-gray-300 rounded-md" 
-    :contenteditable="editMode" 
+    class="p-1 mt-1 block w-full border border-gray-300 rounded-md shadow-sm text-[15px] leading-relaxed" 
+    style="line-height: 1.5; white-space: pre-wrap; min-height: 50px;" 
+    :contenteditable="editMode"
     @input="(e) => { form.progress_notes = e.target.innerText; e.target.setCustomValidity(''); }"
     @blur="(e) => { if (!form.progress_notes) { e.target.setCustomValidity('Please provide progress notes for this field'); e.target.reportValidity(); } }"
-    @invalid="(e) => { e.target.setCustomValidity('Please provide progress notes for this field') }" 
-    style="white-space: pre-wrap; min-height: 50px;" 
+    @invalid="(e) => { e.target.setCustomValidity('Please provide progress notes for this field'); }"
     :data-required="true"
   >
     {{ form.progress_notes }}
   </div>
 </div>
+
+
 
         <div class="space-y-4 mt-6">
           <div class="space-y-2">
@@ -547,22 +548,22 @@ export default {
     contentYPos += lineHeight;
   });
 
-  // Section: Interventions Conducted
+  
   contentYPos += rowHeight;
   contentYPos += 15;
   addNewPageIfNeeded();
   pdf.setFont('arialbd', 'bold');
-  pdf.setFontSize(11);
   pdf.text('INTERVENTIONS CONDUCTED:', initialX, contentYPos);
 
   contentYPos += rowHeight;
   pdf.setFont('arial', 'normal');
-  const interventionsConducted = `${this.form.interventions_conducted || ''}`;
-  const interventionLines = pdf.splitTextToSize(interventionsConducted, maxWidth);
+  pdf.setFontSize(11);
+  const interventions_conductedLog = `${this.form.interventions_conducted || ''}`;
+  const interventions_conductedLines = pdf.splitTextToSize(interventions_conductedLog, maxWidth);
 
-  interventionLines.forEach(line => {
+  interventions_conductedLines.forEach(line => {
     addNewPageIfNeeded(); // Check for overflow before adding a line
-    pdf.text(`• ${line}`, initialX + 5, contentYPos);
+    pdf.text(line, initialX, contentYPos);
     contentYPos += lineHeight;
   });
 
@@ -605,7 +606,7 @@ export default {
   addNewPageIfNeeded();
   pdf.setFont('arial', 'normal');
   pdf.setFontSize(11);
-  pdf.text('Psychologist I', initialX, contentYPos);
+  pdf.text('Psychologist', initialX, contentYPos);
 
   // Noted by Section
   contentYPos += 10; 

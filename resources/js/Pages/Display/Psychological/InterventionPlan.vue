@@ -202,7 +202,7 @@
           <div>
             <label class="font-semibold">Prepared by:</label>
             <input type="text" v-model="form.prepared_by" :readonly="!editMode" class="w-full border border-transparent p-0 underline" maxlength="50"/>
-            <div class="text-xs mt-1">Psychologist I</div>
+            <div class="text-xs mt-1">Psychologist </div>
           </div>
           <div>
             <label class="font-semibold">Noted by:</label>
@@ -592,6 +592,7 @@
       pdf.addImage(imgData, 'PNG', pageWidth - 35, footerY - 10, 22, 12); // Add footer image
   
       // Footer text
+  
       pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION/REGIONAL REHABILITATION CENTER FOR YOUTH', pageWidth / 2, footerY - 1, { align: 'center' });
   
       // Contact information
@@ -628,6 +629,7 @@
       pdf.line(15, footerY - 5, pageWidth - 15, footerY - 5); // Draw footer line
   
       // Footer text
+      pdf.setFont('Times', 'bold');
       pdf.text('DSWD | FIELD OFFICE XI | PROTECTIVE SERVICES DIVISION | REGIONAL REHABILITATION CENTER FOR YOUTH', pageWidth / 2, footerY - 1, { align: 'center' });
   
       // Add page numbering
@@ -764,7 +766,7 @@ pdf.setFont('Arial', 'bold');
 pdf.text(preparedByName, centerX, finalLineY);
 pdf.line(centerX, finalLineY + 1, centerX + pdf.getTextWidth(preparedByName), finalLineY + 1);
 pdf.setFont('Arial', 'normal');
-pdf.text('Psychologist I', centerX, finalLabelY);
+pdf.text('Psychologist', centerX, finalLabelY);
 
 // 'Noted by' section - Right aligned
 const notedByLabel = 'Noted by:';
@@ -873,7 +875,7 @@ splitNotes.forEach((line) => {
       }
   
       // Save the PDF with the plan name
-      pdf.save(`intervention-plan-${this.form.clientName || 'Unnamed'}.pdf`);
+      pdf.save(`intervention-plan.pdf`);
   };
   
   

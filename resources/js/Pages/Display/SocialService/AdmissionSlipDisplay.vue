@@ -1387,23 +1387,24 @@ if (firstLineOffense.length === 1) {
     pdf.setFont('helvetica', 'normal');
 
     pdf.text('a. Tattoo/Scars:', 20, offset + 6);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars}`, 51, offset + 6);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars ?? ''}`, 51, offset + 6);
+
     pdf.line(51, offset + 7, 110, offset + 7);
 
     pdf.text('b. Height:', 115, offset + 6);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.height}`, 136, offset + 6);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.height ?? ''}`, 136, offset + 6);
     pdf.line(136, offset + 7, 200, offset + 7);
 
     pdf.text('c. Weight:', 20, offset + 12);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight}`, 40, offset + 12);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight ?? ''}`, 40, offset + 12);
     pdf.line(40, offset + 13, 110, offset + 13);
 
     pdf.text('d. Colour of Eye:', 115, offset + 12);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye}`, 147, offset + 12);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye ?? ''}`, 147, offset + 12);
     pdf.line(147, offset + 13, 200, offset + 13);
 
     pdf.text('e. Skin:', 20, offset + 18);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour}`, 36, offset + 18);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour ?? ''}`, 36, offset + 18);
     pdf.line(36, offset + 19, 110, offset + 19);
 
     // Documents Submitted
@@ -1671,7 +1672,7 @@ offset += 15;
 
     // Dynamic Noted By value from Vue.js input field
     pdf.setFont('helvetica', 'bold');
-    pdf.text(client.admissions[0]?.center_head || 'ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center');
+    pdf.text(this.center_head || '', 108, offset + 6, null, null, 'center');
 
     // Draw underline
     pdf.line(78, offset + 7, 140, offset + 7);

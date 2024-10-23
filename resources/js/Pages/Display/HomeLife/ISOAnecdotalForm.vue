@@ -185,7 +185,7 @@
          <textarea
           id="physical"
           v-model="form.physical"
-          class="border border-gray-400 p-2 rounded-md w-full"
+          class="border border-gray-400 p-2 rounded-md w-full" style="height: 150px;"
           rows="3"
           :readonly="!editMode"
           @input="(e) => { e.target.setCustomValidity('') }"
@@ -204,7 +204,7 @@
          <textarea
             id="emotional"
             v-model="form.emotional"
-            class="border border-gray-400 p-2 rounded-md w-full"
+            class="border border-gray-400 p-2 rounded-md w-full" style="height: 150px;"
             rows="3"
             :readonly="!editMode"
             @input="(e) => { e.target.setCustomValidity('') }"
@@ -222,7 +222,7 @@
          <textarea
             id="behavioral"
             v-model="form.behavioral"
-            class="border border-gray-400 p-2 rounded-md w-full"
+            class="border border-gray-400 p-2 rounded-md w-full" style="height: 150px;"
             rows="3"
             :readonly="!editMode"
             @input="(e) => { e.target.setCustomValidity('') }"
@@ -240,7 +240,7 @@
          <textarea
             id="spiritual"
             v-model="form.spiritual"
-            class="border border-gray-400 p-2 rounded-md w-full"
+            class="border border-gray-400 p-2 rounded-md w-full" style="height: 150px;"
             rows="3"
             :readonly="!editMode"
             @input="(e) => { e.target.setCustomValidity('') }"
@@ -255,7 +255,7 @@
          <textarea
           id="recommendation"
           v-model="form.recommendation"
-          class="border border-gray-400 p-2 rounded-md w-full"
+          class="border border-gray-400 p-2 rounded-md w-full" style="height: 150px;"
           rows="3"
           :readonly="!editMode"
           @input="(e) => { e.target.setCustomValidity('') }"

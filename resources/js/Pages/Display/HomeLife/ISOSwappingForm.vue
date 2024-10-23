@@ -286,7 +286,7 @@
          type="text"
          id="approvedBy"
          v-model="center_head"
-         class="p-0 underline mt-1 w-3/4 border-none font-semibold"
+         class="p-0 underline mt-1 w-72 border-none font-semibold"
          readonly
        >
        <p class="text-sm ">SWO IV / Center Head</p>
@@ -703,16 +703,16 @@ confirmSave() {
  
  contentYPos += 15;
  pdf.text(`Position:`, initialX, contentYPos);
- const requesting_party_position2Value = `${this.form.requesting_party_position || ''}`;
- const requesting_party_position2Width = pdf.getTextWidth(requesting_party_position2Value);
- pdf.text(requesting_party_position2Value, initialX + 18, contentYPos);  
- pdf.line(initialX + 18, contentYPos + 1, initialX + 18 + requesting_party_position2Width, contentYPos + 1); 
+ const requested_by_positionValue = `${this.form.requested_by_position || ''}`;
+ const requested_by_positionWidth = pdf.getTextWidth(requested_by_positionValue);
+ pdf.text(requested_by_positionValue, initialX + 18, contentYPos);  
+ pdf.line(initialX + 18, contentYPos + 1, initialX + 18 + requested_by_positionWidth, contentYPos + 1); 
  
  pdf.text(`Position:`, initialX + 100, contentYPos);
- const dateValue = `${this.form.date_conducted || ''}`;
- const dateWidth = pdf.getTextWidth(dateValue);
- pdf.text(dateValue, initialX + 135, contentYPos); 
- pdf.line(initialX + 135, contentYPos + 1, initialX + 135 + dateWidth, contentYPos + 1); 
+ const accepted_by_positionValue = `${this.form.accepted_by_position || ''}`;
+ const accepted_by_positionWidth = pdf.getTextWidth(accepted_by_positionValue);
+ pdf.text(accepted_by_positionValue, initialX + 119, contentYPos); 
+ pdf.line(initialX + 119, contentYPos + 1, initialX + 119 + accepted_by_positionWidth, contentYPos + 1); 
  
  
  

@@ -348,7 +348,7 @@
   
     // Client/Resident underline and label
     contentYPos += 20;
-    pdf.text(`${this.form.client_resident || ''}`, initialX, contentYPos - 2);
+    pdf.text(`${this.clientName || ''}`, initialX, contentYPos - 2);
     pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
     contentYPos += 5; // Move Y position down for the text
     pdf.text('Client/Resident', 20, contentYPos); // Label below the underline
@@ -370,7 +370,7 @@
     // Signature Section
     contentYPos += 25;
     pdf.setFont('arialbd', 'bold');
-    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 20, contentYPos);
+    pdf.text(this.center_head, 20, contentYPos);
     pdf.setFont('arial', 'normal');
     pdf.text('Center Head/SWO IV', 20, contentYPos + 6);
     contentYPos += 1;

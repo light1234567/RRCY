@@ -326,7 +326,7 @@
       <div class="border-t border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
         <div class="flex justify-between items-center">
           <div class="flex flex-col">
-            <p class="font-bold">PAGE 1 of 1</p>
+            <p class="font-bold">PAGE 1 of 2</p>
             <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
             <p>Email: <span class="text-blue-600 underline">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
           </div>
@@ -548,16 +548,28 @@
         <div class="w-1/2">
           <label for="notedBy" class="block text-sm font-medium">Noted by:</label>
           <div class="flex items-center">
-            <input type="text" id="preparedBy" value="RALDIE LLOYD D. ADOLFO, LPT" class="text-sm font-bold mt-1 w-3/4 underline-input" v-model="form.noted_by" :readonly="!isEditable" maxlength="50">
+            <input type="text" id="preparedBy" class="text-sm font-bold mt-1 w-3/4 underline-input" v-model="form.noted_by" :readonly="!isEditable" maxlength="50">
           </div>
           <p class="text-sm mt-2">HP I / Educational Section Head</p>
         </div>
       </div>
 
-      <!-- Footer Section -->
+      <div class="border-t border-gray-300 pt-4 text-center text-xs" style="font-family: 'Times New Roman', Times, serif;">
+        <div class="flex justify-between items-center">
+          <div class="flex flex-col">
+            <p class="font-bold">PAGE 2 of 2</p>
+            <p class="border-t border-black pt-2">DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY) Pk. 7 Bago-Oshiro, Tugbok Dist., Davao City</p>
+            <p>Email: <span class="text-blue-600 underline">rrcy.fo11@dswd.gov.ph</span> Tel. No.: 293-0306</p>
+          </div>
+          <div>
+            <img src="/images/footerimg.png" alt="Footer Image" class="h-12 w-24 object-cover">
+          </div>
+        </div>
+      </div>
+</div>
       
       </div>
-      </div>
+
 </form>
 </template>
 
@@ -898,8 +910,19 @@ exportToPdf() {
         'Some words are pronounced correctly',
         'Most words are pronounced correctly',
         'All words are pronounced correctly',
-        '',
-        { content: this.form.assessments.reading.pronunciation_remarks || '', rowSpan: 3 } // Merge Remarks cell across 3 rows
+        { 
+      content: this.form.assessments.reading.pronunciation || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    },
+        { content: this.form.assessments.reading.pronunciation_remarks || '',
+        styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      },
+        rowSpan: 3 } // Merge Remarks cell across 3 rows
       ],
       [
         { content: 'Fluency of Reading', styles: { fontStyle: 'bold' } },
@@ -907,7 +930,14 @@ exportToPdf() {
         'Reads word for word',
         'Words are grouped together logically',
         'Reading is easy and fluent',
-        '',
+        
+{ 
+      content: this.form.assessments.reading.fluency || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    },
         '' // Leave empty since it's merged
       ],
       [
@@ -916,7 +946,13 @@ exportToPdf() {
         'Punctuation marks replaced with a breath',
         'Punctuation is observed, but tends to stop at the end of a line.',
         'Punctuation is used correctly and efficiently',
-        '',
+{ 
+      content: this.form.assessments.reading.punctuation || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    },
         '' // Leave empty since it's merged
       ]
     ],
@@ -951,7 +987,13 @@ pdf.autoTable({
     head: [], // Header for the new table
     body: [
         ['','', 'Remarks'],
-        ['Advance', 'He can identify details from the text. He can give insightful evidence to support his conclusions and to make inferences. He can interpret unfamiliar words based on context. He demonstrates a sophisticated understanding of the concepts and competencies relevant to the expected learning.', { content: this.form.assessments.reading.advance_remarks || '', rowSpan: 5 }],
+        ['Advance', 'He can identify details from the text. He can give insightful evidence to support his conclusions and to make inferences. He can interpret unfamiliar words based on context. He demonstrates a sophisticated understanding of the concepts and competencies relevant to the expected learning.',
+         { content: this.form.assessments.reading.advance_remarks || '',
+         styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      },
+       rowSpan: 5 }],
         ['Proficient', 'He can identify the main and details about the text. He can give evidence from the text to support conclusions. His ability to make inferences is limited as he can understand familiar words, but he has trouble interpreting new words. He demonstrates a complete understanding of the concepts and competencies relevant to the expected learning.'],
         ['Developing', 'He can identify the main idea and a few details about the text. He struggles to provide evidence and make inferences. He can understand familiar words when they are used in familiar contexts. He demonstrates a partial understanding of the concepts and competencies relevant to the expected learning.'],
         ['Emerging', 'His ability to interpret individual words significantly limits his understanding of the text. He can identify the main idea of the text, but he cannot give details or textual evidence to support conclusions about the text. He demonstrates an initial understanding of the concepts and competencies relevant to the expected learning.'],
@@ -994,7 +1036,11 @@ contentYPos += pdf.autoTable.previous.finalY ;
       this.form.assessments.writing.punctuation[1] ? '/' : '',
       this.form.assessments.writing.punctuation[2] ? '/' : '',
       this.form.assessments.writing.punctuation[3] ? '/' : '',
-      { content: this.form.assessments.writing.punctuation_remarks || '', rowSpan: 5 }
+      { content: this.form.assessments.writing.punctuation_remarks || '',
+        styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }, rowSpan: 5 }
     ],
     [
       'Capitalization\nHe uses capital letters to begin sentences and for names',
@@ -1074,7 +1120,11 @@ contentYPos += pdf.autoTable.previous.finalY ;
         // Advance row
         ['Advance', 
         '• He demonstrates advanced ability to view the situation mathematically\n• Approach or representation is effective and is easily followed\n• Reasoning and evidence is clear and well presented.\n• Information is correct and complete\n• Explanation, description, or justification is clear.\n• Writing may include details and/or examples', 
-        { content: this.form.assessments.numeracy.advance_remarks || '', rowSpan: 4 }],
+        { content: this.form.assessments.numeracy.advance_remarks || '',
+        styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }, rowSpan: 4 }],
 
         // Proficient row
         ['Proficient', 
@@ -1124,7 +1174,12 @@ contentYPos += pdf.autoTable.previous.finalY ;
       this.form.assessments.group_work.participation[0] ? '/' : '',
       this.form.assessments.group_work.participation[1] ? '/' : '',
       this.form.assessments.group_work.participation[2] ? '/' : '',
-      { content: this.form.assessments.group_work.participation_remarks || '', rowSpan: 6 }],
+      { content: this.form.assessments.group_work.participation_remarks || '',
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      },
+       rowSpan: 6 }],
 
 
       ['Maintained focus on the task at hand', 
@@ -1225,8 +1280,11 @@ contentYPos += pdf.autoTable.previous.finalY ;
   pdf.text('Noted by:',102, contentYPos); 
   pdf.setFontSize(9);
   pdf.setFont('arialbd', 'bold');
-  pdf.text('RALDIE LLOYD D. ADOLFO, LPT', initialX+98, contentYPos); 
-  pdf.line(118, contentYPos+1, 168, contentYPos+1);
+  const noted_byValue = `${this.form.noted_by || ''}`;
+    const noted_byWidth = pdf.getTextWidth(noted_byValue);
+    pdf.text(noted_byValue, initialX + 98, contentYPos); 
+    pdf.line(initialX + 98, contentYPos+1, initialX + 98 + noted_byWidth, contentYPos+1); 
+  
   pdf.text('HP I / Educational Section Head', 118, contentYPos+5);
 
   addFooter(); 

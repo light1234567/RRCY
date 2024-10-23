@@ -1586,7 +1586,8 @@ async confirmSave() {
       doc.setDrawColor(0, 0, 0);
       doc.setLineWidth(0.6);
       doc.line(15, footerY - 5, pageWidth - 15, footerY - 5);
-  
+      doc.setFont('Times', 'bold');
+      doc.setFontSize(9);
       doc.text('DSWD | PROTECTIVE SERVICES DIVISION / FIELD OFFICE XI | REGIONAL REHABILITATION CENTER FOR YOUTH', pageWidth / 2, footerY - 1, { align: 'center' });
   
       doc.setFont('Times', 'bold');
@@ -1649,9 +1650,16 @@ async confirmSave() {
     "Has very poor hygiene and grooming", "", 
     "Practices adequate self-care habits but still needs monitoring and supervision to maintain such", "", 
     "Practices adequate self-care habits even without monitoring and supervision", "", 
-    this.form.physical_raw_score1 || "", 
     { 
-      content: this.form.physical_score_per_area1 || "", 
+      content: this.form.physical_raw_score1 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    },
+    
+    { 
+      content: this.form.physical_score_per_area1 || "" , 
       rowSpan: 2, 
       styles: { 
         valign: 'middle', 
@@ -1665,7 +1673,13 @@ async confirmSave() {
     "Is completely dependent to others due to absence of appropriate skills to manage physical disability", "", 
     "With very limited skills to manage physical disability which causes him or her to unnecessarily require assistance from others at times", "", 
     "Has appropriate skills to function within capacity", "", 
-    this.form.physical_raw_score2 || "", 
+    { 
+      content: this.form.physical_raw_score2 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    },
     ""  // Empty cell placeholder for the second row because it's merged above
   ],
   
@@ -1675,7 +1689,13 @@ async confirmSave() {
     "Is oftentimes sad / lonely which results to his or her lack of interest in anything despite encouragement from others.", "", 
     "Experiences sadness / loneliness which he or she allows to interfere in the performance of daily tasks and dealings with others.", "",
     "Copes well with sadness or loneliness as he or she does not let such emotion interfere both in daily tasks and social relationship", "",
-    this.form.emotional_raw_score1 || "",  // Raw score for first row
+    { 
+      content: this.form.emotional_raw_score1 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
     { content: this.form.emotional_score_per_area1 || "", rowSpan: 3, styles: { valign: 'middle', halign: 'center', lineWidth: 0.2, lineColor: [0, 0, 0] } }  // Merge Score per Area across 3 rows
   ],
   [
@@ -1683,7 +1703,13 @@ async confirmSave() {
     "Feels hopeless most of the time which is manifested through the following:\n* Suicidal events\n* Absence of any interest in the center's activities\n* Self-isolation\n* Lack of desire to improve self / does not believe that his or her situation will improve at all", "",
     "Feels hopeless at times and allows such emotion to negatively affect performance of tasks and social relationship. However, he or she shows no suicidal tendency", "",
     "Is generally optimistic despite difficult situations which enable him or her to perform tasks or roles", "",
-    this.form.emotional_raw_score2 || "",  // Raw score for second row
+    { 
+      content: this.form.emotional_raw_score2 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row  // Raw score for second row
     ""  // Empty placeholder for the Score per Area column since it's merged above
   ],
   [
@@ -1691,7 +1717,13 @@ async confirmSave() {
     "Oftentimes experiences extreme / severe fear because of traumatic event/s in life which results to social and functional impairment like withdrawal, fighting back, and unnecessary cautiousness", "",
     "Sometimes experiences fear as a result of traumatic event. With constant encouragement; however, he or she tries not to allow such to affect dealings with others and performance of tasks", "",
     "Copes well with traumatic events as evident by his or her social and functional adjustment even with very minimal requirement for support from others", "",
-    this.form.emotional_raw_score3 || "",  // Raw score for third row
+    { 
+      content: this.form.emotional_raw_score3 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row // Raw score for third row
     ""  // Empty placeholder for the Score per Area column since it's merged above
   ],
   
@@ -1700,7 +1732,13 @@ async confirmSave() {
       "Harbors ill feelings which renders him or her unable to build good relationships with others and to focus on tasks at hand as indicated by any or all of the following:\n* Dwells most of the time on planning revenge\n* Not open to reconciliation or forgiveness\n* Aggressive\n* Relationship with others is superficial\n* Displaces anger to others","",
       "Is trying to overcome ill feelings (e.g. hatred, resentment, and anger) as may be evident by any or all of the following expressions:\n* That revenge may only worsen the situation\n* That reconciliation may be possible in the future\n* That he or she may consider forgiving the individual/s who has/have done wrong to him or her","",
      "Has decided to let go of ill-feelings as may be evident in any or all of the following:\n* Has forgiven others\n* Is ready to ask forgiveness for those whom he may have done wrong\n* Believes that there are people who are genuinely interested in his or her welfare","",
-      this.form.emotional_raw_score4 || "",
+     { 
+      content: this.form.emotional_raw_score4 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
       { content: "" || "", rowSpan: 3, styles: { valign: 'middle', halign: 'center', lineWidth: 0.2, lineColor: [0, 0, 0] } }  // Merge Score per Area across 3 rows
   
     
@@ -1709,14 +1747,26 @@ async confirmSave() {
       "Is severely guilty for grave offense committed which make him or her feel unworthy and incapable of doing good","",
       "Feels guilty for grave offense committed which make him or her at times doubt capacity to be a good person","",
       "Because of feelings of guilt for an offense committed, he or she strives to change negative attitudes that cause damage to others","",
-      this.form.emotional_raw_score5 || "",
+      { 
+      content: this.form.emotional_raw_score5 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
       ""
     ],
     [ 
       "Is severely guilty because of the incarceration of her abuser which, she is made to believe, resulted to the difficulties being faced by the family. Such emotion cripples her daily interaction with others","",
       "Sometimes think that she is to blame because of family disintegration due to the case she filed against her perpetrator","",
       "Believes that revealing the truth about the abuse she experienced and taking legal action are appropriate. Feels good about self for taking the right action against her perpetrator.","",
-      this.form.emotional_raw_score6 || "",
+      { 
+      content: this.form.emotional_raw_score6 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
       ""
     ],
   
@@ -1726,7 +1776,13 @@ async confirmSave() {
     "Has no self-control as may be evident in any or all of the following:\n* Frequent involvement in fights (physical and verbal)\n* Inappropriate sexual behavior (e.g. frequent masturbation even in the presence of others)\n* Saying offensive words without caution\n* Vices","", 
     "Exercises self-control when he or she believes that it will bring him or her some reward or will make him or her appear good to others", "",
     "Exercises self-control in all cases as evident in the following:\n* Cautious in giving comments so that he or she may not hurt or offend others\n* Avoids involvement in fights\n* Avoids stealing\n* Avoids display of inappropriate sexual behavior", "",
-    this.form.social_raw_score1, 
+    { 
+      content: this.form.social_raw_score1 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
       { content: this.form.emotional_score_per_area1 || "", rowSpan: 2, styles: { valign: 'middle', halign: 'center', lineWidth: 0.2, lineColor: [0, 0, 0] } }  // Merge Score per Area across 3 rows
   
   ],
@@ -1734,7 +1790,13 @@ async confirmSave() {
     "Lacks sense of responsibility as evident in refusing to perform tasks / roles and constantly complaining even if tasks given are:\n* Appropriate to age, intellectual ability, physical strength\n* Not against his or her principles and religious belief", "",
     "Carries out responsibilities but requires supervision and close monitoring", "",
     "Performs responsibilities to the best of his or her ability even without prodding. He or she may at times express complaints but does so only when task given is not within his or her own capacity and not against religious beliefs and principles", "",
-    this.form.social_raw_score2, 
+    { 
+      content: this.form.social_raw_score2 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
     ""
   ],
   [
@@ -1743,7 +1805,13 @@ async confirmSave() {
     "Has no self-confidence which cause him or her to do most or all of the following:\n* Always refuses to participate in sports, socio-cultural, and skills training even if constantly encouraged\n* Constantly makes negative self-talk (e.g. I cannot do it, I am good for nothing, etc.)\n* Always dwells on what she or he cannot do rather than on what she or he can perform\n* Isolates self, most of the time", "",
     "Tries to participate in center's activities although with some degree of hesitation because of doubt that she or he will be able to perform as expected. Needs constant encouragement.", "",
     "Aware of limitations but still maintain healthy self-confidence as shown in his or her ability to do the following:\n* Assert\n* Avoid saying self-demeaning words\n* Active participation in center's activities", "",
-    this.form.social_raw_score3, 
+    { 
+      content: this.form.social_raw_score3 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
     { content: "" || "", rowSpan: 6, styles: { valign: 'middle', halign: 'center', lineWidth: 0.2, lineColor: [0, 0, 0] } }  // Merge Score per Area across 3 rows
   
   ],
@@ -1752,7 +1820,13 @@ async confirmSave() {
     "Disrespectful as evident in the following:\n* Defies center's rules and regulations\n* Does not want to perform tasks\n* Always answers back", "",
     "Is selective in showing respect", "",
     "Respects others at all times", "",
-    this.form.social_raw_score4, 
+    { 
+      content: this.form.social_raw_score4 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
     ""
   ],
   [
@@ -1760,41 +1834,107 @@ async confirmSave() {
     "Can't decide for himself or herself either because of absence of appropriate decision-making skills", "",
     "Makes decisions but always needs the confirmation of others", "",
     "Decides for himself or herself but refers to others for assistance when appropriate", "",
-    this.form.social_raw_score5, 
+    { 
+      content: this.form.social_raw_score5 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
     ""
   ],
   [
     "Domineering and manipulative as can be gleaned from any or all of the following:\n* Attempts to lead others to violate center's rules and regulations\n* Imposes harsh decisions, distorted values, false beliefs, inappropriate practices, etc.\n* Intimates or threatens others to get things done", "",
     "Sometimes tends to dominate and manipulate others, but tries to control such tendency especially when attention is called", "",
    "Refrains from domineering or manipulating others as evident in the following:\n* Adheres to group decision\n* Refrains from imposing beliefs, values or practices to others\n* Refrains from threatening others to achieve or get what he or she wants", "",
-    this.form.social_raw_score6, 
+   { 
+      content: this.form.social_raw_score6 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
     ""
   ],
   [
     "Is always involved in stealing and shows no remorse", "",
     "Has the tendency to steal but shows remorse by returning stolen items and expressing the need to be restrained from committing such act", "",
     "Does not steal", "",
-    this.form.social_raw_score7, 
+    { 
+      content: this.form.social_raw_score7 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
     ""
   ],
   [
     "Always tells lies to damage or hurt others and to make self-appear superior over other people", "",
     "Has the tendency to lie in some occasions but avoids that may harm or damage others", "",
     "Strives to be honest at all times","", 
-    this.form.social_raw_score8, 
+    { 
+      content: this.form.social_raw_score8 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, // Raw score for first row
     ""
   ],
   
   
       // Spiritual table data
       [
-      "Spiritual", "Blames God for his or her crises or failures in life which results to lingering hopelessness and other negative emotions","", "Does not blame God for his or her crises and failures in life but doubts whether God cares for him or her at all", "","Recognizes that God cares for him or her and is ready to provide needed strength to cope with the crisis and failures in life","", this.form.spiritual_raw_score1, this.form.spiritual_score_per_area1],
+      "Spiritual", "Blames God for his or her crises or failures in life which results to lingering hopelessness and other negative emotions","", "Does not blame God for his or her crises and failures in life but doubts whether God cares for him or her at all", "","Recognizes that God cares for him or her and is ready to provide needed strength to cope with the crisis and failures in life","", 
+      { 
+      content: this.form.spiritual_raw_score1 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }, 
+    { 
+content:  this.form.spiritual_score_per_area1 || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    },],
   
       // Educational / Literacy table data
-      ["Educational / Literacy", "Not able to read, write and count","", "Undertakes non-formal education or willingly receives tutorial services to learn basic", "","Able to read, write and count with comprehension appropriate to age and educational attainment","", this.form.educational_raw_score, this.form.educational_score_per_area],
+      ["Educational / Literacy", "Not able to read, write and count","", "Undertakes non-formal education or willingly receives tutorial services to learn basic", "","Able to read, write and count with comprehension appropriate to age and educational attainment","", 
+      { 
+content: this.form.educational_raw_score || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    },  
+    { 
+content: this.form.educational_score_per_area || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }],
   
       // Economic Productivity table data
-      ["Economic Productivity", "No employable skills and has no interest to acquire any which could support his or her needs","", "Needs to brush up skills to make them usable for employment", "","Has employable skills", "",this.form.economic_raw_score, this.form.economic_score_per_area],
+      ["Economic Productivity", "No employable skills and has no interest to acquire any which could support his or her needs","", "Needs to brush up skills to make them usable for employment", "","Has employable skills", "", 
+      { 
+content: this.form.economic_raw_score || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    },
+    { 
+content: this.form.economic_score_per_area || "", 
+      styles: { 
+        valign: 'middle',  // Center vertically
+        halign: 'center'   // Center horizontally
+      }
+    }],
   
       [{ content: "GENERAL SCORE", styles: { fontStyle: 'bold', halign: 'left' } }, { content: this.form.general_score || "", colSpan: 7 }],
       [{ content: "INTERPRETATION", styles: { fontStyle: 'bold', halign: 'left' } }, { content: this.form.interpretation || "", colSpan: 7 }],
@@ -1907,7 +2047,7 @@ async confirmSave() {
       const underlineOffset = 2;  // Offset from text to underline
   
       // Case Manager (Prepared by)
-      const caseManager = this.case_manager || "";
+      const caseManager = this.form.prepared_by || "";
       let caseManagerText = doc.splitTextToSize(caseManager, maxWidth);  // Split text to fit within maxWidth
       doc.text('Prepared by:', 15, startY);  // Label
       doc.text(caseManagerText, 15, startY + 12);  // Case manager's name (text may be wrapped)

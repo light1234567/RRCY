@@ -2425,12 +2425,19 @@ async confirmSave() {
   contentYPos += 5;
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text(`${this.form.prepared_by_one || ''}`, initialX+10, contentYPos);
+    const prepared_by_oneValue = `${this.form.prepared_by_one || ''}`;
+    const prepared_by_oneWidth = pdf.getTextWidth(prepared_by_oneValue);
+    pdf.text(prepared_by_oneValue, initialX + 10, contentYPos); 
+    pdf.line(initialX + 10, contentYPos+1, initialX + 10 + prepared_by_oneWidth, contentYPos+1); 
   
   
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text(`${this.form.prepared_by_two || ''}`, initialX+70, contentYPos);
+    const prepared_by_twoValue = `${this.form.prepared_by_two || ''}`;
+    const prepared_by_twoWidth = pdf.getTextWidth(prepared_by_twoValue);
+    pdf.text(prepared_by_twoValue, initialX + 70, contentYPos); 
+    pdf.line(initialX + 70, contentYPos+1, initialX + 70 + prepared_by_twoWidth, contentYPos+1); 
+  
   
     contentYPos += 4; 
     pdf.setFont('arial', 'normal');
@@ -2447,11 +2454,12 @@ async confirmSave() {
   
     pdf.setFont('arialbd', 'bold');
     pdf.setFontSize(11);
-    pdf.text(`${this.center_head||''}`, initialX+140, contentYPos+-4, "center");
+    pdf.text(`${this.center_head||''}`, initialX+155, contentYPos+-4, "center");
+    pdf.line(136, contentYPos-3, 197, contentYPos-3); // Underline first (left aligned)
     contentYPos += 5; 
     pdf.setFont('arial', 'normal');
     pdf.setFontSize(10);
-    pdf.text('Center Head', initialX+140, contentYPos+-4, "center");
+    pdf.text('Center Head', initialX+135, contentYPos+-4, "center");
   
   
   // Footer for Page 2 and beyond

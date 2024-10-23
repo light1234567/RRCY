@@ -934,7 +934,6 @@ if (wrappedAddress.length > 1) {
         pdf.text(line, initialX + 47, contentYPos - 2); // Render each subsequent line starting at the same X position
     });
 }
-contentYPos += -2; // Move contentYPos down for the next section, adjust as needed
 
 // Update Y position based on how many lines the address took up
 
@@ -1210,6 +1209,7 @@ contentYPos += -2; // Move contentYPos down for the next section, adjust as need
     // Noted by Section
     contentYPos += rowHeight; 
     addNewPageIfNeeded();
+    pdf.setFont('arial', 'normal');
     pdf.text('Noted by:', initialX, contentYPos);
     
     contentYPos += rowHeight; 

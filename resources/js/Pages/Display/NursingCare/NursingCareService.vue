@@ -845,7 +845,7 @@ import Pagination from '@/Components/Pagination.vue';
     pdf.setFontSize(9);
     pdf.setFont('TimesNewRoman', 'italic');
     pdf.setTextColor(0, 0, 0);
-    pdf.text('DSWD-GF-010 | REV 02 | 22 SEP 2023', 135, 20);
+    pdf.text('DSWD-GF-010 | REV 01 | 17 AUG 2022', 135, 20);
   };
   
   // Helper function to add a new page if content exceeds the page height
@@ -1205,27 +1205,42 @@ remarksLogLines.forEach(line => {
 contentYPos += 10;
 
 
+  // Exporting f_prepared_by field
+  if (this.form.f_prepared_by) {
+    pdf.setFontSize(11);
+    pdf.setFont('arialbd', 'bold');
+    pdf.text(`${this.form.f_prepared_by}`, initialX +12, contentYPos);
+    contentYPos += 5;  // Adjust space after each field
+  }
 
-pdf.setFont('arialbd', 'bold');
-  pdf.setFontSize(11);
-  pdf.text('PHILIP ROY D. CONTANGCO, RN', initialX+5, contentYPos+10);
-  pdf.text('CARLBRIAN T. BAUZON, RN', initialX+8, contentYPos+15);
-  contentYPos += 5; 
+  // Conditionally render s_prepared_by if it exists
+  if (this.form.s_prepared_by) {
+    pdf.setFontSize(11);
+    pdf.setFont('arialbd', 'bold');
+    pdf.text(`${this.form.s_prepared_by}`, initialX +12, contentYPos);
+    contentYPos += 5;
+  }
+
+  // Conditionally render t_prepared_by if it exists
+  if (this.form.t_prepared_by) {
+    pdf.setFontSize(11);
+    pdf.setFont('arialbd', 'bold');
+    pdf.text(`${this.form.t_prepared_by}`, initialX +12, contentYPos);
+    contentYPos += 5;
+  }
+
+  // Adding the Resident Nurses RRCY part
   pdf.setFont('arial', 'normal');
   pdf.setFontSize(10);
-  pdf.line(27, contentYPos+11, 82, contentYPos+11);
-  pdf.text('RESIDENT NURSES RRCY', initialX+12, contentYPos+15);
-
+  pdf.text('RESIDENT NURSES RRCY', initialX + 12, contentYPos);
 
 
   pdf.setFont('arialbd', 'bold');
   pdf.setFontSize(11);
-  pdf.text('ANGELIC B. PAÑA, RSW, MSSW', initialX+105, contentYPos+5);
-  contentYPos += 5; 
+  pdf.text(this.center_head, initialX+105, contentYPos-5);
   pdf.setFont('arial', 'normal');
   pdf.setFontSize(10);
-  pdf.line(125, contentYPos+1, 185, contentYPos+1);
-  pdf.text('SWO IV / Center Head', initialX+116, contentYPos+5);
+  pdf.text('SWO IV / Center Head', initialX+105, contentYPos-1);
 
 
   addFooter();

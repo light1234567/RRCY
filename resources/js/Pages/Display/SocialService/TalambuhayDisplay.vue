@@ -625,7 +625,7 @@ async confirmSave() {
    contentYPos += 20;
    pdf.setFont('arial', 'normal');
    pdf.setFontSize(11);
-   pdf.text(`${this.talambuhay_case_manager || ''}`, initialX, contentYPos - 2);
+   pdf.text(`${this.form.talambuhay_case_manager || ''}`, initialX, contentYPos - 2);
    pdf.line(20, contentYPos, 100, contentYPos); // Underline for Case Manager
    contentYPos += 5;
    pdf.text('Case Manager', 20, contentYPos); // Label for Case Manager
@@ -657,7 +657,7 @@ async confirmSave() {
         pdf.text(`PAGE ${i} of ${totalPages}`, 105, 333, { align: 'center' }); // Update the footer with the correct total pages
       }
    // Save the PDF
-   pdf.save(`Talambuhay_${this.clientName || 'NoName'}.pdf`);
+   pdf.save(`Talambuhay.pdf`);
   },
   
   

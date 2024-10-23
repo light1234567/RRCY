@@ -323,8 +323,9 @@
   const maxWidth = 170;
   
   const clientName = this.clientName;
-  const text1 = 'Ako si ' + clientName + ' usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili “COLOR RED” and akong Performance equivalent to “OUTSTANDING”.';
-  const text2 = 'Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.';
+const text1 = 'Ako si ' + clientName + ' usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili “COLOR RED” and akong Performance equivalent to “OUTSTANDING”.';
+const text2 = 'Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.';
+
   
   // Function to justify text
   function justifyText(text, maxWidth, initialX, yPos, pdf) {
@@ -361,7 +362,7 @@
     // Underlined sections for Client/Resident, Guardian, and Case Manager
     contentYPos += 40;
   
-    pdf.text(`${this.form.client_resident || ''}`, initialX, contentYPos - 2);
+    pdf.text(`${this.clientName || ''}`, initialX, contentYPos - 2);
     pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
     contentYPos += 5; // Move Y position down for the text
     pdf.text('Client/Resident', 20, contentYPos); // Label below the underline
@@ -383,7 +384,7 @@
     // Signature Section
     contentYPos += 25;
     pdf.setFont('arialbd', 'bold');
-    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 20, contentYPos);
+    pdf.text(this.center_head, 20, contentYPos);
     pdf.setFont('arial', 'normal');
     pdf.text('Center Head/SWO IV', 20, contentYPos + 6);
     contentYPos += 1;
@@ -416,57 +417,7 @@
   },
   
   
-  printContent() {
-    const originalContent = document.body.innerHTML;
-  
-    // Base64 encoded image for header logo (replace with actual Base64 data)
-    const headerLogoBase64 = 'data:image/png;base64,...'; // Replace with your Base64 encoded image string
-    const footerImgBase64 = 'data:image/png;base64,...'; // Replace with your Base64 encoded image string
-  
-    document.body.innerHTML = `
-      <div style="font-family: 'Times New Roman', Times, serif; font-size: 12px;">
-        <div class="content">
-          <div class="header" style="text-align: center;">
-            <img src="${headerLogoBase64}" style="width: 200px; margin-bottom: 20px;" alt="Logo">
-            <p style="font-size: 10px;">DSWD-GF-010A | REV 00 | 22 SEP 2023
-  </p>
-          </div>
-  
-          <h1 style="text-align: center; font-size: 28px; margin-bottom: 40px; font-weight: bold;">KASABUTAN</h1>
-  
-          <div style="text-align: justify; margin-bottom: 16px;">
-            <p><span style="margin-left: 32px;">Ako</span> si <span style="font-weight: bold; text-decoration: underline;">${this.clientName}</span> usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili <strong>“COLOR RED”</strong> and akong Performance equivalent to <strong>“OUTSTANDING”</strong>.</p>
-            <p style="margin-left: 32px;">Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.</p>
-          </div>
-  
-          <div style="margin-bottom: 32px;">
-            <p>Client/Resident: <span style="border-bottom: 2px solid black;">${this.form.client_resident}</span></p>
-            <p>Pangalan/Pirma sa Ginikanan/Guardian: <span style="border-bottom: 2px solid black;">${this.form.parent_guardian}</span></p>
-            <p>Case Manager: <span style="border-bottom: 2px solid black;">${this.sheet.first_kasabutan_case_manager}</span></p>
-          </div>
-  
-          <div style="text-align: left; margin-top: 64px;">
-            <p><u><strong>ANGELIC B. PAÑA, RSW, MSSW</strong></u></p>
-            <p>Center Head/SWO IV</p>
-          </div>
-        </div>
-  
-        <div style="text-align: center; font-size: 10px; position: fixed; bottom: 20px; left: 0; right: 0;">
-          <p>DSWD Field Office XI, Regional Rehabilitation Center for Youth (RRCY)</p>
-          <p>Email: rrcy.fo11@dswd.gov.ph | Tel. No.: 293-0306</p>
-        </div>
-  
-        <div style="position: absolute; bottom: 0; right: 20px; font-size: 10px;">
-          PAGE 1 of 1
-        </div>
-      </div>
-    `;
-  
-    window.print(); // Trigger the print dialog
-  
-    document.body.innerHTML = originalContent; // Restore the original content of the page
-    window.location.reload(); // Reload the page to restore any event listeners and state
-  },
+
     },
   };
   </script>
