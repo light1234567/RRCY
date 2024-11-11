@@ -178,10 +178,16 @@
     class="underline-input border-none focus:outline-none w-full p-0" 
     v-model="form.date" 
     :readonly="!isEditable" 
-    @input="(e) => { e.target.setCustomValidity('') }" 
-    @invalid="(e) => { e.target.setCustomValidity('Please select a date') }" 
-    required
-  />
+    :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a report date') }"
+                  required
+                />
 
   </div>
 

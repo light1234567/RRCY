@@ -19,11 +19,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/dashboard', fn() => Inertia::render('Dashboard'))->name('dashboard');
     Route::get('/cicl', fn() => Inertia::render('CICL'))->name('cicl');
 
-    // Admin-only routes with middleware to check for admin role
+
     Route::middleware(\App\Http\Middleware\CheckAdminRole::class)->group(function () {
-        Route::get('/new', fn() => Inertia::render('NewClient'))->name('new');
         Route::get('/user', fn() => Inertia::render('User'))->name('user');
     });
+
+    Route::middleware(\App\Http\Middleware\CheckRole::class)->group(function () {
+        Route::get('/new', fn() => Inertia::render('NewClient'))->name('new');
+    });
+
+ 
 
     Route::get('/logs', fn() => Inertia::render('Logs'))->name('logs');
 

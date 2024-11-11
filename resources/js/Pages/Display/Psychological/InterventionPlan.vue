@@ -53,11 +53,16 @@
               v-model="form.as_of_date" 
               class="flex-grow border-b-0 border-black border-t-0 mr-4 border-l-0 border-r-0 rounded-none shadow-sm w-1/8 px-2 py-1" 
               :readonly="!editMode" 
-              :max="currentDate" 
-              @input="(e) => { e.target.setCustomValidity('') }" 
-              @invalid="(e) => { e.target.setCustomValidity('Please select a valid date up to the present') }" 
-              required 
-            />
+              :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a report date') }"
+                  required
+                />
           </p>
         </div>
   

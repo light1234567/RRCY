@@ -140,10 +140,16 @@
         v-model="form.assessment_date"
         class="underline-input2 text-xs p-2 border border-gray-300 w-1/2"
         :readonly="!editMode"
-        @input="(e) => { e.target.setCustomValidity('') }" 
-        @invalid="(e) => { e.target.setCustomValidity('Please provide an assessment date') }" 
-        required
-      />
+        :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a report date') }"
+                  required
+                />
 
   </div>
   
@@ -458,7 +464,16 @@
         </div>
         <div class="flex items-center justify-start ml-12 mb-6">
           <label class="block text-sm font-bold mr-2">Date of Assessment:</label>
-          <input type="date" v-model="form.assessment_date" class="underline-input2 text-sm p-2 border border-gray-300 w-1/2" :readonly="!editMode" />
+          <input type="date" v-model="form.assessment_date" class="underline-input2 text-sm p-2 border border-gray-300 w-1/2" :readonly="!editMode"      :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a report date') }"
+                  required
+                />
         </div>
       </div>
   
@@ -724,7 +739,16 @@
 </td>
 
               <td class="p-2 border">
-                  <input type="date" v-model="training.date_of_attendance" class="w-full p-1 border-none border-gray-300 rounded text-sm" :readonly="!editMode" />
+                  <input type="date" v-model="training.date_of_attendance" class="w-full p-1 border-none border-gray-300 rounded text-sm" :readonly="!editMode"      :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a report date') }"
+                  required
+                />
               </td>
               <td class="p-2 border">
   <input 

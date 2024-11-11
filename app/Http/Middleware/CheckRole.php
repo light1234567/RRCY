@@ -5,11 +5,11 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class CheckAdminRole
+class CheckRole
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!in_array($request->user()->role, [ 'admin'])) {
+        if (!in_array($request->user()->role, [ 'social services'])) {
             return redirect()->route('dashboard');
         }
 

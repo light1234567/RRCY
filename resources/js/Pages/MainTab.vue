@@ -34,6 +34,7 @@
           <div class="mt-2 text-gray-700 space-y-1">
             <p class="text-sm"><span class="font-semibold">Age:</span> {{ calculateAge(client.date_of_birth) }} years old</p>
             <p class="text-sm"><span class="font-semibold">Address:</span> {{ formattedAddress }}</p>
+            
             <p class="text-sm">
   <span class="font-semibold">Case Status: </span>
   <span v-if="!editCaseStatusMode">{{ client?.admission?.case_status || 'N/A' }}</span>
@@ -42,8 +43,8 @@
       {{ status }}
     </option>
   </select>
-  <!-- Edit icon at the end of Case Status -->
-  <i v-if="!editCaseStatusMode" class="fas fa-edit ml-2 cursor-pointer" @click="toggleEditCaseStatus"></i>
+  <!-- Show edit icon only if user role is admin or social services -->
+  <i v-if="!editCaseStatusMode && (user.role === 'admin' || user.role === 'social services')" class="fas fa-edit ml-2 cursor-pointer" @click="toggleEditCaseStatus"></i>
 </p>
 
 <p class="text-sm">
@@ -54,9 +55,10 @@
       {{ status }}
     </option>
   </select>
-  <!-- Edit icon at the end of Child Status -->
-  <i v-if="!editChildStatusMode" class="border-0 fas fa-edit ml-2 cursor-pointer" @click="toggleEditChildStatus"></i>
+  <!-- Show edit icon only if user role is admin or social services -->
+  <i v-if="!editChildStatusMode && (user.role === 'admin' || user.role === 'social services')" class="border-0 fas fa-edit ml-2 cursor-pointer" @click="toggleEditChildStatus"></i>
 </p>
+
 
 
           </div>

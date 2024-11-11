@@ -136,10 +136,16 @@
       v-model="form.date_of_admission" 
       class="border-b-1 border-black border-t-0 border-l-0 border-r-0 text-xs block w-32 text-center focus:outline-none" 
       :readonly="!editMode" 
-      @input="(e) => { e.target.setCustomValidity('') }" 
-      @invalid="(e) => { e.target.setCustomValidity('Please provide a date of admission') }" 
-      required 
-/>
+      :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a report date') }"
+                  required
+                />
 
   </div>
 
@@ -151,10 +157,17 @@
       v-model="form.date" 
       class="border-b-1 border-black border-t-0 border-l-0 border-r-0 text-xs block w-32 text-center focus:outline-none" 
       :readonly="!editMode" 
-      @input="(e) => { e.target.setCustomValidity('') }" 
-      @invalid="(e) => { e.target.setCustomValidity('Please provide the date') }" 
-      required 
-/>  </div>
+      :max="new Date().toLocaleString('en-CA', { 
+      timeZone: 'Asia/Manila', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).split(',')[0]"  
+                  @input="(e) => { e.target.setCustomValidity('') }" 
+                  @invalid="(e) => { e.target.setCustomValidity('Please provide a report date') }"
+                  required
+                />
+               </div>
 </div>
 
 <!-- Form Fields for Name, Birthdate, and Age -->

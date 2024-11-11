@@ -14,7 +14,7 @@ class AdminController extends Controller
     public function index()
     {
         $users = User::select(
-            DB::raw("CONCAT(fname, ' ', middlename, ' ', lname) as full_name"),
+            DB::raw("CONCAT(fname, ' ', lname) as full_name"),
             'id',
             'role',
             'email',
@@ -31,7 +31,7 @@ class AdminController extends Controller
     public function show($id)
     {
         $user = User::select(
-            DB::raw("CONCAT(fname, ' ', middlename, ' ', lname) as full_name"),
+            DB::raw("CONCAT(fname,  ' ', lname) as full_name"),
             'id',
             'role',
             'email',
