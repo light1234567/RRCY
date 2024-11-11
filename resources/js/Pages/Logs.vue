@@ -7,9 +7,9 @@
         <h1 class="ml-4 text-lg font-bold text-red-800">System Logs</h1>
       </div>
     </template>
-
+    <div class=" bg-[#f1f5f9] h-full ">
     <!-- Add red background to this container -->
-    <div class="pr-80 pl-20 md:pl-32 lg:pl-80 bg-[#f1f5f9] py-8">
+    <div class="pr-80 pl-20 md:pl-32 lg:pl-80 py-8">
       <table class="w-full bg-white border border-gray-300 text-sm shadow-md p-6 mb-4 mt-4 rounded-sm">
         <!-- Table Header with background color -->
         <thead class="bg-[#e2e8f0]">
@@ -19,7 +19,7 @@
             <th class="border px-2 py-1 w-1/12">Table</th>
             <th class="border px-2 py-1 w-1/6">Client Name</th>
             <th class="border px-2 py-1 w-1/6">Date/Time</th>
-            <th class="border px-2 py-1 w-1/6"></th> <!-- Set the width here -->
+            <th class="border px-2 py-1 w-1/6">Details</th> <!-- Set the width here -->
           </tr>
         </thead>
         <tbody>
@@ -82,7 +82,7 @@
         </div>
       </div>
     </div>
-
+  </div>
     <!-- Modal for log details -->
     <LogsModal 
       v-if="isModalOpen" 
