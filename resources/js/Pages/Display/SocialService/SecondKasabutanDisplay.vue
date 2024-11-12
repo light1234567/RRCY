@@ -304,43 +304,77 @@
     pdf.setTextColor(0, 0, 0); // Black text for title
     pdf.text('KASABUTAN', 105, 60, null, null, 'center'); // Centered title
   
-    // Main Content: Adjust positioning and apply bold/underline styles
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(12);
-    
-    let contentYPos = 80; // Start below the title
-    const initialX = 20;  // Adjust this value to shift the text further right as needed
-    const maxWidth = 175;
-  
-    const clientName = this.clientName;
-    const text1 = 'Ako si ' + clientName + ' nagapanumpa ug naga saad na unsa man ang mahitabo sa akoan bahin niini PAGAPATAOD UG BOLITAS SA AKONG KINATAWO/OTIN, walay tulubagon ang DSWD-RRCY tungod kini maoy akong kabubut-on.';
-  
-    // Function to justify text
-    function justifyText(text, maxWidth, initialX, yPos, pdf) {
-        const lines = pdf.splitTextToSize(text, maxWidth);
-        lines.forEach((line, lineIndex) => {
-            const words = line.split(' ');
-            if (words.length > 1 && lineIndex < lines.length - 1) {
-                const totalWordsWidth = words.reduce((total, word) => total + pdf.getTextWidth(word), 0);
-                const totalSpaceWidth = maxWidth - totalWordsWidth;
-                const spaceWidth = totalSpaceWidth / (words.length - 1);
-  
-                let x = initialX;
-                words.forEach((word, index) => {
-                    pdf.text(word, x, yPos);
-                    x += pdf.getTextWidth(word) + spaceWidth;  // Add space between words
-                });
-            } else {
-                // For the last line or single-word lines, print as is (no extra spaces)
-                pdf.text(line, initialX, yPos);
-            }
-            yPos += 7; // Move to the next line
-        });
-    }
-  
-    pdf.setFontSize(13);
-    // Justify the first text
-    justifyText(text1, maxWidth, initialX, contentYPos, pdf);
+// Main Content: Adjust positioning and apply bold/underline styles
+pdf.setFont('arial', 'normal');
+pdf.setFontSize(12);
+
+let contentYPos = 80; // Start below the title
+const initialX = 20;  // Adjust this value to shift the text further right as needed
+const maxWidth = 165;
+
+const clientName = this.clientName || '________________'; // Example name, use dynamic data if available
+
+const text1 = 'Ako si ';
+const text2 = ' nagapanumpa ug naga saad na unsa man ang  ';
+const separateText2 ='mahitabo sa akoan bahin niini ';
+const boldText = 'PAGAPATAOD UG BOLITAS SA AKONG KINATAWO/';
+const boldText2 = 'OTIN,';
+const text3 = ' walay tulubagon ang DSWD-RRCY tungod kini maoy akong kabubut-on.';
+
+// Function to justify text
+function justifyText(text, maxWidth, initialX, yPos, pdf) {
+    const lines = pdf.splitTextToSize(text, maxWidth);
+    lines.forEach((line, lineIndex) => {
+        const words = line.split(' ');
+        if (words.length > 1 && lineIndex < lines.length - 1) {
+            const totalWordsWidth = words.reduce((total, word) => total + pdf.getTextWidth(word), 0);
+            const totalSpaceWidth = maxWidth - totalWordsWidth;
+            const spaceWidth = totalSpaceWidth / (words.length - 1);
+
+            let x = initialX;
+            words.forEach((word, index) => {
+                pdf.text(word, x, yPos);
+                x += pdf.getTextWidth(word) + spaceWidth;  // Add space between words
+            });
+        } else {
+            // For the last line or single-word lines, print as is (no extra spaces)
+            pdf.text(line, initialX, yPos);
+        }
+        yPos += 7; // Move to the next line
+    });
+}
+
+pdf.setFontSize(13);
+// Justify the first text part
+justifyText(text1, maxWidth , initialX + 10, contentYPos, pdf);
+
+// Add client name with bold and underline
+pdf.setFont('arialbd', 'bold');
+const clientNameWidth = pdf.getTextWidth(clientName);
+pdf.text(clientName, initialX  + 10 + pdf.getTextWidth(text1), contentYPos);
+pdf.setLineWidth(0.2);
+pdf.line(initialX + 10+ pdf.getTextWidth(text1), contentYPos + 1, initialX  + 10+ pdf.getTextWidth(text1) + clientNameWidth, contentYPos + 1);
+
+// Add the second part of the text
+pdf.setFont('arial', 'normal');
+justifyText(text2, maxWidth, initialX + 12 + clientNameWidth + pdf.getTextWidth(text1), contentYPos, pdf);
+
+// Add the separated text "mahitabo sa akoa bahin niini" 
+pdf.setFont('arial', 'normal'); 
+justifyText(separateText2, maxWidth, initialX, contentYPos + 8, pdf);
+
+// Add bold text "PAGAPATAOD UG BOLITAS SA AKONG KINATAWO/OTIN,"
+pdf.setFont('arialbd', 'bold');
+justifyText(boldText, maxWidth, initialX + 62, contentYPos + 8, pdf);
+
+// Add bold text "OTIN," 
+pdf.setFont('arialbd', 'bold'); 
+justifyText(boldText2, maxWidth, initialX, contentYPos + 16, pdf);
+
+// Add the third part of the text
+pdf.setFont('arial', 'normal');
+justifyText(text3, maxWidth, initialX -100 + pdf.getTextWidth(boldText), contentYPos + 16, pdf);
+
   
     // Underlined sections for Client/Resident, Guardian, and Case Manager
     contentYPos += 40;
@@ -370,7 +404,7 @@
     // Signature Section
     contentYPos += 25;
     pdf.setFont('arialbd', 'bold');
-    pdf.text(this.center_head, 20, contentYPos);
+    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 20, contentYPos);
     pdf.setFont('arial', 'normal');
     pdf.text('Center Head/SWO IV', 20, contentYPos + 6);
     contentYPos += 1;
@@ -399,6 +433,7 @@
     // Save the PDF
     pdf.save(`kasabutan-${this.form.client_id}.pdf`);
   },
+  
   
   
     }

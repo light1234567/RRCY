@@ -609,7 +609,7 @@
             v-model="form.documents_submitted.documents"
             class="mr-1"
           />
-          <span class="text-sm">Consent from Parents</span>
+          <span class="text-sm">Birth Certificates</span>
         </div>
         <div class="flex items-center">
           <input
@@ -618,7 +618,7 @@
             v-model="form.documents_submitted.documents"
             class="mr-1"
           />
-          <span class="text-sm">School Records</span>
+          <span class="text-sm">Referral Letters</span>
         </div>
         <div class="flex items-center">
           <input

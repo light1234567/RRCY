@@ -313,55 +313,77 @@
     pdf.setTextColor(0, 0, 0); // Black text for title
     pdf.text('KASABUTAN', 105, 60, null, null, 'center'); // Centered title
   
-    // Main Content: Adjust positioning and apply bold/underline styles
-    pdf.setFont('arial', 'normal');
-    pdf.setFontSize(12);
-    
-    let contentYPos = 80; // Start below the title
-  
-  const initialX = 20;  // Initial X position for the text
-  const maxWidth = 170;
-  
-  const clientName = this.clientName;
-const text1 = 'Ako si ' + clientName + ' usa ka residente diri sa DSWD-RRCY. Ako maningkamot na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili “COLOR RED” and akong Performance equivalent to “OUTSTANDING”.';
-const text2 = 'Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.';
+      // Main Content: Adjust positioning and apply bold/underline styles
+      pdf.setFont('arial', 'normal');
+      pdf.setFontSize(12);
+      
+          let contentYPos = 80; // Start below the title
+    const initialX = 20;  // Initial X position for the text
+    const maxWidth = 184; // Define the maximum width for each line
 
-  
-  // Function to justify text
-  function justifyText(text, maxWidth, initialX, yPos, pdf) {
-      const lines = pdf.splitTextToSize(text, maxWidth);
-      lines.forEach((line, lineIndex) => {
-          const words = line.split(' ');
-          if (words.length > 1 && lineIndex < lines.length - 1) {
-              const totalWordsWidth = words.reduce((total, word) => total + pdf.getTextWidth(word), 0);
-              const totalSpaceWidth = maxWidth - totalWordsWidth;
-              const spaceWidth = totalSpaceWidth / (words.length - 1);
-  
-              let x = initialX;
-              words.forEach((word) => {
-                  pdf.text(word, x, yPos);
-                  x += pdf.getTextWidth(word) + spaceWidth;  // Add extra space between words
-              });
-          } else {
-              // For the last line or single-word lines, print as is (no extra spaces)
-              pdf.text(line, initialX, yPos);
-          }
-          yPos += 7; // Move to the next line
-      });
-  }
-  
-  // Justify the first text
-  justifyText(text1, maxWidth, initialX, contentYPos, pdf);
-  
-  // Add some spacing before the second paragraph
-  contentYPos += 35;  
-  
-  // Justify the second text
-  justifyText(text2, maxWidth, initialX, contentYPos, pdf);
-  
-    // Underlined sections for Client/Resident, Guardian, and Case Manager
-    contentYPos += 40;
-  
+    const clientName = this.clientName || '________________'; // Example name, use dynamic data if available
+
+    // Start building the text sections with alternating font styles
+    pdf.setFont('arial', 'normal');
+    pdf.text('Ako si ', initialX + 10, contentYPos);
+
+    // Position client name with bold font
+    pdf.setFont('arialbd', 'bold');
+    const akoSiWidth = pdf.getTextWidth('Ako si ');
+    pdf.text(clientName, initialX + 10 + akoSiWidth, contentYPos);
+
+
+    // Connect and add the next text "usa ka residente diri sa DSWD-RRCY."
+    pdf.setFont('arial', 'normal');
+    const clientNameWidth = pdf.getTextWidth(clientName + ' ');
+    pdf.text('usa ka residente diri sa DSWD-RRCY. Ako maningkamot', initialX + 13 + akoSiWidth + clientNameWidth, contentYPos);
+
+    // Define the remaining text parts with appropriate font styles
+    const textPart1 = 'na dili mo buhat us salaod na mulabag sa polisiya sa center. Ug ako mouyong na dili ko buhatan ug pasahan sa Final Report didto sa court kung dili ';
+
+    // Split and position the first part of the text
+    const splitTextPart1 = pdf.splitTextToSize(textPart1, maxWidth);
+    pdf.text(splitTextPart1, initialX, contentYPos + 5);
+
+    // Calculate the total height of textPart1 for correct positioning of the next elements
+    const textPart1Height = pdf.getTextDimensions(splitTextPart1).h;
+
+   
+    // Bold "COLOR RED" part
+    pdf.setFont('arialbd', 'bold');
+    const colorRedText = '"COLOR RED"';
+    pdf.text(colorRedText, initialX + 96, contentYPos + textPart1Height + 1);
+
+    // Continue with nbormal font
+    pdf.setFont('arial', 'normal');
+    const textPart2 = ' and akong Performance ';
+    const splitTextPart2 = pdf.splitTextToSize(textPart2, maxWidth);
+    pdf.text(splitTextPart2, initialX + 125, contentYPos + textPart1Height + 1);
+
+    // Calculate the total height for the next bold text
+    const textPart2Height = pdf.getTextDimensions(splitTextPart2).h;
+
+     // Bold "equivalent to" part 
+     pdf.setFont('arial', 'normal'); 
+    const equivalentToText = 'equivalent to '; 
+    pdf.text(equivalentToText, initialX, contentYPos + textPart1Height + textPart2Height + 1);
+
+    // Bold "OUTSTANDING" part
+    pdf.setFont('arialbd', 'bold');
+    const outstandingText = '"OUTSTANDING"';
+    pdf.text(outstandingText, initialX + 25, contentYPos + textPart1Height + textPart2Height + 1);
+
+    // Move to the next line for the second paragraph
+    contentYPos += textPart1Height + textPart2Height + 30; // Adjust the line height as needed
+    pdf.setFont('arial', 'normal');
+
+    // Define the continuation of the message
+    const text2 = '         Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa center/RRCY hangtud na ako moabot sa 21 anyos.';
+    const splitText2 = pdf.splitTextToSize(text2, maxWidth);
+    pdf.text(splitText2, initialX , contentYPos - 20);
+
+
+    contentYPos += 30; 
     pdf.text(`${this.clientName || ''}`, initialX, contentYPos - 2);
     pdf.line(20, contentYPos, 100, contentYPos); // Underline first (left aligned)
     contentYPos += 5; // Move Y position down for the text
@@ -384,7 +406,7 @@ const text2 = 'Ug kung ako makasala, andam ko na maextend akong pagpuyo diri sa 
     // Signature Section
     contentYPos += 25;
     pdf.setFont('arialbd', 'bold');
-    pdf.text(this.center_head, 20, contentYPos);
+    pdf.text('ANGELIC B. PAÑA, RSW, MSSW', 20, contentYPos);
     pdf.setFont('arial', 'normal');
     pdf.text('Center Head/SWO IV', 20, contentYPos + 6);
     contentYPos += 1;

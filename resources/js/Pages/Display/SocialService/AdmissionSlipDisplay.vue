@@ -355,7 +355,7 @@
           :checked="isDocumentSubmitted(client, 'Consent from Parents')" 
           @change="toggleDocument(client, 'Consent from Parents')" 
           :disabled="!editMode"
-        > Consent from Parents
+        > Birth Certificate
       </label>
 
       <!-- School Records Checkbox -->
@@ -366,7 +366,7 @@
           :checked="isDocumentSubmitted(client, 'School Records')" 
           @change="toggleDocument(client, 'School Records')" 
           :disabled="!editMode"
-        > School Records
+        > Referral Letters
       </label>
 
       <!-- Others Checkbox -->
@@ -407,7 +407,6 @@
     </div>
   </div>
 </div>
-
 
 
 
@@ -1079,6 +1078,9 @@ toggleDocument(client, documentName) {
 }
 
 ,
+
+
+
 async exportToPdf() {
 const pdf = new jsPDF('p', 'mm', [216, 356]); // Legal size: 216mm x 356mm
 
@@ -1387,24 +1389,23 @@ if (firstLineOffense.length === 1) {
     pdf.setFont('helvetica', 'normal');
 
     pdf.text('a. Tattoo/Scars:', 20, offset + 6);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars ?? ''}`, 51, offset + 6);
-
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.tattoo_scars}`, 51, offset + 6);
     pdf.line(51, offset + 7, 110, offset + 7);
 
     pdf.text('b. Height:', 115, offset + 6);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.height ?? ''}`, 136, offset + 6);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.height}`, 136, offset + 6);
     pdf.line(136, offset + 7, 200, offset + 7);
 
     pdf.text('c. Weight:', 20, offset + 12);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight ?? ''}`, 40, offset + 12);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.weight}`, 40, offset + 12);
     pdf.line(40, offset + 13, 110, offset + 13);
 
     pdf.text('d. Colour of Eye:', 115, offset + 12);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye ?? ''}`, 147, offset + 12);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.colour_of_eye}`, 147, offset + 12);
     pdf.line(147, offset + 13, 200, offset + 13);
 
     pdf.text('e. Skin:', 20, offset + 18);
-    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour ?? ''}`, 36, offset + 18);
+    pdf.text(`${client.admissions[0]?.distinguishing_marks[0]?.skin_colour}`, 36, offset + 18);
     pdf.line(36, offset + 19, 110, offset + 19);
 
     // Documents Submitted
@@ -1446,13 +1447,13 @@ if (documentNames.includes('Medical Certificates')) {
 }
 
 pdf.rect(20, offset + 10, 4, 4);
-pdf.text(`Consent from Parents`, 28, offset + 13.5);
+pdf.text(`Birth Certificate`, 28, offset + 13.5);
 if (documentNames.includes('Consent from Parents')) {
   fillCheckboxWithCheck(pdf, 20, offset + 10);
 }
 
 pdf.rect(90, offset + 10, 4, 4);
-pdf.text(`School Records`, 98, offset + 13.5);
+pdf.text(`Referral Letters`, 98, offset + 13.5);
 if (documentNames.includes('School Records')) {
   fillCheckboxWithCheck(pdf, 90, offset + 10);
 }
@@ -1672,7 +1673,7 @@ offset += 15;
 
     // Dynamic Noted By value from Vue.js input field
     pdf.setFont('helvetica', 'bold');
-    pdf.text(this.center_head || '', 108, offset + 6, null, null, 'center');
+    pdf.text(client.admissions[0]?.center_head || 'ANGELIC B. PAÑA, RSW, MSSW', 108, offset + 6, null, null, 'center');
 
     // Draw underline
     pdf.line(78, offset + 7, 140, offset + 7);
