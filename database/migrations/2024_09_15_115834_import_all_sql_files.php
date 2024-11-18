@@ -24,6 +24,10 @@ class ImportAllSqlFiles extends Migration
             database_path('sql/rtc_provinces.sql'),
             database_path('sql/crimes.sql'),
             database_path('sql/rtc_branches.sql'),
+            database_path('sql/clients.sql'),
+            database_path('sql/admissions.sql'),
+            database_path('sql/distinguishing_marks.sql'),
+            database_path('sql/documents_submitted.sql'),
         ];
 
         // Loop through each file and execute the SQL statements
