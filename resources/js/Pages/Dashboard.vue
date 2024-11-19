@@ -180,6 +180,12 @@
     <button @click="closeOffenseModal" class="absolute top-2 right-2 px-2 p-2 rounded-full">
       <i class="fas fa-times text-red-600 text-xl"></i>
     </button>
+
+     <!-- Buttons section -->
+     <div class="flex justify-between items-center mt-4">
+      <!-- Download Button -->
+      <button @click="downloadClientsByOffense" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download</button>
+    </div>
   </div>
 </div>
 
@@ -202,6 +208,7 @@
           <tr v-for="client in clientsByChildStatus" :key="client.id" class="border-t text-gray-700">
             <td class="text-sm">{{ client.name }}</td>
             <td class="text-sm">{{ client.date_admitted }}</td>
+            
           </tr>
         </tbody>
       </table>
@@ -210,7 +217,7 @@
     <!-- Buttons section -->
     <div class="flex justify-between items-center mt-4">
       <!-- Download Button -->
-      <button @click="downloadClientsByChildStatus" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download CSV</button>
+      <button @click="downloadClientsByChildStatus" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download</button>
     </div>
 
     <!-- Close button with icon placed at the top-right corner -->
@@ -247,6 +254,11 @@
     <button @click="closeCaseStatusModal" class="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-200">
       <i class="fas fa-times text-red-600 text-xl"></i>
     </button>
+
+    <div class="flex justify-between items-center mt-4">
+      <!-- Download Button -->
+      <button @click="downloadClientsByCaseStatus" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download</button>
+    </div>
   </div>
 </div>
 
@@ -282,7 +294,7 @@
     <!-- Buttons section -->
     <div class="flex justify-between items-center mt-4">
       <!-- Download Button -->
-      <button @click="downloadClientsByAge" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download CSV</button>
+      <button @click="downloadClientsByAge" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download</button>
     </div>
   </div>
 </div>
@@ -397,6 +409,7 @@ import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, CategoryScale, Li
 import axios from 'axios';
 import '@fortawesome/fontawesome-free/css/all.css';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import * as XLSX from 'xlsx';
 
 ChartJS.register(ChartDataLabels);
 
@@ -415,98 +428,313 @@ const isAgeDistributionModalOpen = ref(false); // Age Distribution modal visibil
 const selectedAge = ref(''); // The selected age
 const clientsByAge = ref([]); // Clients who belong to the selected age group
 
-// Method to download all client data as a CSV file
+
+
 const downloadAllData = () => {
   if (!clients.value.length) return;
 
-  // CSV column headers
-  const headers = ['Name', 'Age', 'Case Status', 'Child Status', 'Date Admitted', 'Offense Committed'];
+  // Prepare the data and ensure 'Date Admitted' is in string format (text)
+  const data = clients.value.map(client => ({
+    Name: client.name,
+    Age: String(client.age),  // Convert Age to string so it is treated as text
+    'Case Status': client.case_status,
+    'Child Status': client.child_status,
+    'Date Admitted': client.date_admitted,  // Ensure 'Date Admitted' is in string format for consistency
+    'Offense Committed': client.offense_committed
+  }));
 
-  // Create CSV content
-  const csvContent = [
-    headers.join(','), // Join headers with a comma
-    ...clients.value.map(client => {
-      return [
-        client.name,             // Name
-        client.age,              // Age
-        client.case_status,      // Case Status
-        client.child_status,     // Child Status
-        client.date_admitted,    // Date Admitted
-        client.offense_committed // Offense Committed
-      ].join(',');
-    })
-  ].join('\n'); // Separate rows by newlines
+  // Add the header row
+  const header = ['Name', 'Age', 'Case Status', 'Child Status', 'Date Admitted', 'Offense Committed'];
 
-  // Create a Blob from the CSV content
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Create a worksheet from the data
+  const ws = XLSX.utils.json_to_sheet(data, {
+    header: header,
+    dateNF: 'yyyy-mm-dd',  // Format dates as 'yyyy-mm-dd'
+  });
 
-  // Create a link to download the CSV file
-  const link = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  link.href = url;
-  link.setAttribute('download', 'dashboard_all_clients_data.csv');
+  // Calculate column widths based on both header and data content
+  const columnWidths = header.map((column, index) => {
+    let maxLength = column.length;  // Start by considering the length of the header
 
-  // Append the link, trigger the download, and then remove the link
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    // Also consider the data in the column
+    data.forEach(client => {
+      const cellValue = String(client[Object.keys(client)[index]]); // Convert value to string
+      maxLength = Math.max(maxLength, cellValue.length); // Update the max length if the current value is longer
+    });
+
+    return maxLength; // Return the max length for this column
+  });
+
+  // Apply column widths (adjust 'wch' for character width)
+  ws['!cols'] = columnWidths.map(width => ({ wch: width }));
+
+  // Set column alignment: Align all columns to the left
+  Object.keys(ws).forEach((key) => {
+    if (key[0] !== '!') { // Skip special properties like '!cols'
+      if (!ws[key].s) ws[key].s = {}; // Create style object if not already present
+
+      // Set alignment for all columns to left
+      ws[key].s.alignment = { vertical: 'center', horizontal: 'left' };
+    }
+  });
+
+  // Create a new workbook and append the sheet
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Clients');
+
+  // Write the workbook to a file and trigger the download
+  XLSX.writeFile(wb, 'dashboard_all_clients_data.xlsx');
 };
 
-// Method to download the clients by child status as a CSV file
+
+
+
+
 const downloadClientsByChildStatus = () => {
   if (!clientsByChildStatus.value.length) return;
 
-  // CSV column headers
-  const headers = ['Name', 'Date Admitted'];
+  // Ensure the 'Date Admitted' field is treated as a string for consistency in Excel
+  const data = clientsByChildStatus.value.map(client => ({
+    Name: client.name,
+    'Date Admitted': client.date_admitted ? new Date(client.date_admitted).toISOString().split('T')[0] : '',  // Ensure date format
+    'Child Status': client.child_status
+  }));
 
-  // Create CSV content
-  const csvContent = [
-    headers.join(','), // Join headers with a comma
-    ...clientsByChildStatus.value.map(client => `${client.name},${client.date_admitted}`) // Join each client's data
-  ].join('\n'); // Separate rows by newlines
+  // Add the header row
+  const header = ['Name', 'Date Admitted', 'Child Status'];
 
-  // Create a Blob from the CSV content
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Create a worksheet from the data
+  const ws = XLSX.utils.json_to_sheet(data, {
+    header: header,
+    dateNF: 'yyyy-mm-dd',  // Ensure 'Date Admitted' is formatted as 'yyyy-mm-dd'
+  });
 
-  // Create a link to download the CSV file
-  const link = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  link.href = url;
-  link.setAttribute('download', `clients_child_status_${selectedChildStatus.value}.csv`);
+  // Calculate column widths based on both header and data content
+  const columnWidths = header.map((column, index) => {
+    let maxLength = column.length;  // Start by considering the length of the header
 
-  // Append the link, trigger the download, and then remove the link
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    // Also consider the data in the column
+    data.forEach(client => {
+      const cellValue = String(client[header[index]]); // Get the value based on header
+      maxLength = Math.max(maxLength, cellValue.length); // Update the max length if the current value is longer
+    });
+
+    return maxLength; // Return the max length for this column
+  });
+
+  // Apply column widths (adjust 'wch' for character width)
+  ws['!cols'] = columnWidths.map(width => ({ wch: width }));
+
+  // Set column alignment: Align all columns to the left
+  Object.keys(ws).forEach((key) => {
+    if (key[0] !== '!') { // Skip special properties like '!cols'
+      if (!ws[key].s) ws[key].s = {}; // Create style object if not already present
+
+      // Set alignment for all columns to left
+      ws[key].s.alignment = { vertical: 'center', horizontal: 'left' };
+    }
+  });
+
+  // Ensure that `selectedChildStatus.value` is defined before using it
+  const fileName = selectedChildStatus.value ? `clients_child_status_${selectedChildStatus.value}.xlsx` : 'clients_child_status.xlsx';
+  
+  // Truncate sheet name to 31 characters to avoid error
+  const sheetName = `Clients_${selectedChildStatus.value || 'All'}`.slice(0, 31);
+
+  // Create a new workbook and append the sheet
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sheetName);
+
+  // Write the workbook to a file and trigger the download
+  XLSX.writeFile(wb, fileName);
 };
 
+
 // Method to download the clients by age data as a CSV file
+
+
+const downloadClientsByOffense = () => {
+  if (!clientsByOffense.value.length) return;
+
+  // Prepare the data, ensuring 'Date Admitted' is treated as a string for consistent formatting
+  const data = clientsByOffense.value.map(client => ({
+    Name: client.name,
+    'Date Admitted': client.date_admitted ? new Date(client.date_admitted).toISOString().split('T')[0] : '',  // Ensure date format
+    Offense: client.offense_committed,  // Offense information
+  }));
+
+  // Add the header row
+  const header = ['Name', 'Date Admitted', 'Offense'];
+
+  // Create a worksheet from the data
+  const ws = XLSX.utils.json_to_sheet(data, {
+    header: header,
+    dateNF: 'yyyy-mm-dd',  // Ensure 'Date Admitted' is formatted as 'yyyy-mm-dd'
+  });
+
+  // Calculate column widths based on both header and data content
+  const columnWidths = header.map((column, index) => {
+    let maxLength = column.length;  // Start by considering the length of the header
+
+    // Also consider the data in the column
+    data.forEach(client => {
+      const cellValue = String(client[header[index]]); // Get the value based on header
+      maxLength = Math.max(maxLength, cellValue.length); // Update the max length if the current value is longer
+    });
+
+    return maxLength; // Return the max length for this column
+  });
+
+  // Apply column widths (adjust 'wch' for character width)
+  ws['!cols'] = columnWidths.map(width => ({ wch: width }));
+
+  // Set column alignment: Align all columns to the left
+  Object.keys(ws).forEach((key) => {
+    if (key[0] !== '!') { // Skip special properties like '!cols'
+      if (!ws[key].s) ws[key].s = {}; // Create style object if not already present
+
+      // Set alignment for all columns to left
+      ws[key].s.alignment = { vertical: 'center', horizontal: 'left' };
+    }
+  });
+
+  // Ensure that `selectedOffense.value` is defined before using it
+  const fileName = selectedOffense.value ? `clients_offense_${selectedOffense.value}.xlsx` : 'clients_offense.xlsx';
+
+  // Truncate sheet name to 31 characters to avoid error
+  const sheetName = `Clients_Offense_${selectedOffense.value || 'All'}`.slice(0, 31);
+
+  // Create a new workbook and append the sheet
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sheetName);
+
+  // Write the workbook to a file and trigger the download
+  XLSX.writeFile(wb, fileName);
+};
+
+
+
+const downloadClientsByCaseStatus = () => {
+  if (!clientsByCaseStatus.value.length) return;
+
+  // Prepare the data, ensuring 'Date Admitted' is treated as a string for consistent formatting
+  const data = clientsByCaseStatus.value.map(client => ({
+    Name: client.name,
+    'Date Admitted': client.date_admitted ? new Date(client.date_admitted).toISOString().split('T')[0] : '',  // Ensure date format
+    'Case Status': client.case_status,  // Case Status information
+  }));
+
+  // Add the header row
+  const header = ['Name', 'Date Admitted', 'Case Status'];
+
+  // Create a worksheet from the data
+  const ws = XLSX.utils.json_to_sheet(data, {
+    header: header,
+    dateNF: 'yyyy-mm-dd',  // Ensure 'Date Admitted' is formatted as 'yyyy-mm-dd'
+  });
+
+  // Calculate column widths based on both header and data content
+  const columnWidths = header.map((column, index) => {
+    let maxLength = column.length;  // Start by considering the length of the header
+
+    // Also consider the data in the column
+    data.forEach(client => {
+      const cellValue = String(client[header[index]]); // Get the value based on header
+      maxLength = Math.max(maxLength, cellValue.length); // Update the max length if the current value is longer
+    });
+
+    return maxLength; // Return the max length for this column
+  });
+
+  // Apply column widths (adjust 'wch' for character width)
+  ws['!cols'] = columnWidths.map(width => ({ wch: width }));
+
+  // Set column alignment: Align all columns to the left
+  Object.keys(ws).forEach((key) => {
+    if (key[0] !== '!') { // Skip special properties like '!cols'
+      if (!ws[key].s) ws[key].s = {}; // Create style object if not already present
+
+      // Set alignment for all columns to left
+      ws[key].s.alignment = { vertical: 'center', horizontal: 'left' };
+    }
+  });
+
+  // Ensure that `selectedCaseStatus.value` is defined before using it
+  const fileName = selectedCaseStatus.value ? `clients_case_status_${selectedCaseStatus.value}.xlsx` : 'clients_case_status.xlsx';
+
+  // Truncate sheet name to 31 characters to avoid error
+  const sheetName = `Clients_Case_${selectedCaseStatus.value || 'All'}`.slice(0, 31);
+
+  // Create a new workbook and append the sheet
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sheetName);
+
+  // Write the workbook to a file and trigger the download
+  XLSX.writeFile(wb, fileName);
+};
+
+
+
+
 const downloadClientsByAge = () => {
   if (!clientsByAge.value.length) return;
 
-  // CSV column headers
-  const headers = ['Name', 'Date Admitted'];
+  // Prepare the data, ensuring 'Date Admitted' is treated as a string for consistent formatting
+  const data = clientsByAge.value.map(client => ({
+    Name: client.name,
+    'Age': client.age,
+    'Date Admitted': client.date_admitted ? new Date(client.date_admitted).toISOString().split('T')[0] : '',  // Ensure date format
+  }));
 
-  // Create CSV content
-  const csvContent = [
-    headers.join(','), // Join headers with a comma
-    ...clientsByAge.value.map(client => `${client.name},${client.date_admitted}`) // Join each client's data
-  ].join('\n'); // Separate rows by newlines
+  // Add the header row
+  const header = ['Name', 'Age', 'Date Admitted'];
 
-  // Create a Blob from the CSV content
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Create a worksheet from the data
+  const ws = XLSX.utils.json_to_sheet(data, {
+    header: header,
+    dateNF: 'yyyy-mm-dd',  // Ensure 'Date Admitted' is formatted as 'yyyy-mm-dd'
+  });
 
-  // Create a link to download the CSV file
-  const link = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  link.href = url;
-  link.setAttribute('download', `clients_age_${selectedAge.value}.csv`);
+  // Calculate column widths based on both header and data content
+  const columnWidths = header.map((column, index) => {
+    let maxLength = column.length;  // Start by considering the length of the header
 
-  // Append the link, trigger the download, and then remove the link
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+    // Also consider the data in the column
+    data.forEach(client => {
+      const cellValue = String(client[header[index]]); // Get the value based on header
+      maxLength = Math.max(maxLength, cellValue.length); // Update the max length if the current value is longer
+    });
+
+    return maxLength; // Return the max length for this column
+  });
+
+  // Apply column widths (adjust 'wch' for character width)
+  ws['!cols'] = columnWidths.map(width => ({ wch: width }));
+
+  // Set column alignment: Align all columns to the left
+  Object.keys(ws).forEach((key) => {
+    if (key[0] !== '!') { // Skip special properties like '!cols'
+      if (!ws[key].s) ws[key].s = {}; // Create style object if not already present
+
+      // Set alignment for all columns to left
+      ws[key].s.alignment = { vertical: 'center', horizontal: 'left' };
+    }
+  });
+
+  // Ensure that `selectedAge.value` is defined before using it
+  const fileName = selectedAge.value ? `clients_age_${selectedAge.value}.xlsx` : 'clients_age.xlsx';
+
+  // Truncate sheet name to 31 characters to avoid error
+  const sheetName = `Clients_Age_${selectedAge.value || 'All'}`.slice(0, 31);
+
+  // Create a new workbook and append the sheet
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, sheetName);
+
+  // Write the workbook to a file and trigger the download
+  XLSX.writeFile(wb, fileName);
 };
+
 
 
 // Method to toggle sidebar
