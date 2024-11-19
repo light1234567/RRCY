@@ -23,7 +23,7 @@
     </template>
 
 
-    <div class="mt-1 min-h-screen bg-slate-100">
+    <div class="mt-1 min-h-screen bg-slate-100"  style="background-image: url('/images/da.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center;">
     <!-- Main Content Wrapper -->
     <div class="-mb-10 flex flex-wrap lg:flex-nowrap p-8 -gap-1">
       <div class="-mt-6 flex flex-col space-y-4 w-1/2">

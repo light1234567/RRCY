@@ -9,7 +9,7 @@
     </template>
 
     <!-- Container for Main Client Information -->
-    <div class="bg-slate-100 min-h-screen w-9/10 ml-7 max-w-8xl mt-6 space-y-6">
+    <div class="bg-slate-100 min-h-screen w-9/10 ml-7 max-w-8xl mt-6 space-y-6"  style="background-image: url('/images/da.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center;">
       <!-- Main Client Information -->
       <div
         v-if="client"

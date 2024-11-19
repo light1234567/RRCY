@@ -7,7 +7,7 @@
         <h1 class="ml-4 text-lg font-bold text-red-800">System Logs</h1>
       </div>
     </template>
-    <div class=" bg-[#f1f5f9] h-full ">
+    <div class=" bg-[#f1f5f9] h-full " style="background-image: url('/images/da.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center;">
     <!-- Add red background to this container -->
     <div class="pr-80 pl-20 md:pl-32 lg:pl-80 py-8">
       <table class="w-full bg-white border border-gray-300 text-sm shadow-md p-6 mb-4 mt-4 rounded-sm">

@@ -10,7 +10,7 @@
       </div>
     </template>
 
-    <div class="bg-slate-100 mt-0.5">
+    <div class="bg-slate-100 mt-0.5" style="background-image: url('/images/da.jpg'); background-repeat: no-repeat; background-size: cover; background-position: center;">
       <h1 class="text-lg p-1 text-customBlue ml-10 font-bold mb-4"></h1>
       <form @submit.prevent="saveForm">
         <!-- Client Information -->

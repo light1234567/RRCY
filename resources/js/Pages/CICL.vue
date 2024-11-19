@@ -8,7 +8,7 @@
         </div>
       </template>
 
-      <div class="bg-slate-50 min-h-screen ml-5 max-w-8xl mx-auto px-4 -mr-4 sm:px-6 lg:px-8 mt-4">
+      <div class="min-h-screen ml-5 max-w-8xl mx-auto px-4 -mr-4 sm:px-6 lg:px-8 mt-4 bg-cover bg-center" style="background-image: url('/images/da.jpg')">
 
 
 
@@ -31,7 +31,7 @@
 
       <!-- Case Status Filter -->
       <div class="relative">
-        <select v-model="selectedCaseStatus" class="text-sm block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
+        <select v-model="selectedCaseStatus" class="text-sm block appearance-none w-full bg-white border border-gray-400 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
           <option value="">Case Status</option>
           <option v-for="status in caseStatuses" :key="status" :value="status">{{ status }}</option>
         </select>
