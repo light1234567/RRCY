@@ -190,6 +190,7 @@
     </div>
   </div>
 </div>
+
 <!-- Modal for showing clients who belong to the selected child status -->
 <div v-if="isChildStatusModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
   <div class="relative bg-white p-6 rounded-lg shadow-lg w-96">
