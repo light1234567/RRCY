@@ -37,6 +37,7 @@
         "vue-chartjs": "^5.3.1",
         "vue-router": "^4.4.0",
         "vue3-datepicker": "^0.4.0",
+        "xlsx": "^0.18.5",
         "ziggy": "^2.4.0",
         "ziggy-js": "^2.3.0"
     }

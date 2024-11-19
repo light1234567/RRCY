@@ -18,7 +18,7 @@ export default defineConfig({
                 'resources/js/Pages/Auth/VerifyOtp.vue',
 
                 'resources/js/Pages/Case.vue',
-                'resources/js/Pages/AdmissionEdit.vue',
+   
                 'resources/js/Pages/CICL.vue',
                 'resources/js/Pages/Dashboard.vue',
                 'resources/js/Pages/Logs.vue',
