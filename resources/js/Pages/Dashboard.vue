@@ -156,150 +156,207 @@
 
 <!-- Modal for showing clients who committed the selected offense -->
 <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-  <div class="relative bg-white p-6 rounded-lg shadow-lg w-96">
-    <h2 class="text-xl font-bold mb-4">{{ selectedOffense }}</h2>
-    <p>Total Clients: {{ clientsByOffense.length }}</p> <!-- Total number of clients -->
-    
-    <!-- Scrollable table container -->
-    <div class="overflow-y-auto max-h-60 mt-4">
-      <table class="table-auto w-full mt-4">
+  <div class="relative bg-white p-6 rounded-lg shadow-lg w-[32rem]">
+    <!-- Modal Header -->
+    <div class="flex justify-between items-center">
+      <h2 class="text-lg font-semibold">{{ selectedOffense }}</h2>
+      <button @click="closeOffenseModal" class="text-gray-500 hover:text-red-600">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+
+    <!-- Total Clients Count -->
+    <p class="text-sm text-gray-500 mt-2">
+      <span class="font-medium text-gray-800">Total Clients:</span> {{ clientsByOffense.length }}
+    </p>
+
+    <!-- Scrollable Table -->
+    <div class="overflow-y-auto max-h-80 mt-4">
+      <table class="table-auto w-full text-left">
         <thead>
-          <tr class="text-left text-gray-700">
-            <th class="text-sm font-semibold">Client Name</th>
-            <th class="text-sm font-semibold">Date Admitted</th>
+          <tr class="border-b text-gray-700">
+            <th class="text-sm font-semibold py-2">Client Name</th>
+            <th class="text-sm font-semibold py-2">Date Admitted</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="client in clientsByOffense" :key="client.id" class="border-t text-gray-700">
-            <td class="text-sm">{{ client.name }}</td>
-            <td class="text-sm">{{ client.date_admitted }}</td>
+          <tr 
+            v-for="client in clientsByOffense" 
+            :key="client.id" 
+            class="hover:bg-gray-50 border-b text-gray-800"
+          >
+            <td class="py-2 text-sm">{{ client.name }}</td>
+            <td class="py-2 text-sm">{{ client.date_admitted }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Close button with icon placed at the top-right corner -->
-    <button @click="closeOffenseModal" class="absolute top-2 right-2 px-2 p-2 rounded-full">
-      <i class="fas fa-times text-red-600 text-xl"></i>
-    </button>
-
-     <!-- Buttons section -->
-     <div class="flex justify-between items-center mt-4">
-      <!-- Download Button -->
-      <button @click="downloadClientsByOffense" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download</button>
+    <!-- Action Buttons -->
+    <div class="flex justify-end mt-4">
+      <button 
+        @click="downloadClientsByOffense" 
+        class="px-4 py-2 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white rounded hover:opacity-90 transition-opacity"
+      >
+        Download
+      </button>
     </div>
   </div>
 </div>
+
 
 <!-- Modal for showing clients who belong to the selected child status -->
 <div v-if="isChildStatusModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-  <div class="relative bg-white p-6 rounded-lg shadow-lg w-96">
-    <h2 class="text-lg font-bold mb-4">{{ selectedChildStatus }}</h2>
-    <p>Total Clients: {{ clientsByChildStatus.length }}</p> <!-- Total number of clients -->
+  <div class="relative bg-white p-6 rounded-lg shadow-lg w-[32rem]">
+    <!-- Modal Header -->
+    <div class="flex justify-between items-center">
+      <h2 class="text-lg font-semibold">{{ selectedChildStatus }}</h2>
+      <button @click="closeChildStatusModal" class="text-gray-500 hover:text-red-600">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
 
-    <!-- Scrollable table container -->
-    <div class="overflow-y-auto max-h-60 mt-4">
-      <table class="table-auto w-full">
+    <!-- Total Clients Count -->
+    <p class="text-sm text-gray-500 mt-2">
+      <span class="font-medium text-gray-800">Total Clients:</span> {{ clientsByChildStatus.length }}
+    </p>
+
+    <!-- Scrollable Table -->
+    <div class="overflow-y-auto max-h-80 mt-4">
+      <table class="table-auto w-full text-left">
         <thead>
-          <tr class="text-left text-gray-700">
-            <th class="text-sm font-semibold">Client Name</th>
-            <th class="text-sm font-semibold">Date Admitted</th>
+          <tr class="border-b text-gray-700">
+            <th class="text-sm font-semibold py-2">Client Name</th>
+            <th class="text-sm font-semibold py-2">Date Admitted</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="client in clientsByChildStatus" :key="client.id" class="border-t text-gray-700">
-            <td class="text-sm">{{ client.name }}</td>
-            <td class="text-sm">{{ client.date_admitted }}</td>
-            
+          <tr 
+            v-for="client in clientsByChildStatus" 
+            :key="client.id" 
+            class="hover:bg-gray-50 border-b text-gray-800"
+          >
+            <td class="py-2 text-sm">{{ client.name }}</td>
+            <td class="py-2 text-sm">{{ client.date_admitted }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Buttons section -->
-    <div class="flex justify-between items-center mt-4">
-      <!-- Download Button -->
-      <button @click="downloadClientsByChildStatus" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download</button>
+    <!-- Action Buttons -->
+    <div class="flex justify-end mt-4">
+      <button 
+        @click="downloadClientsByChildStatus" 
+        class="px-4 py-2 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white rounded hover:opacity-90 transition-opacity"
+      >
+        Download
+      </button>
     </div>
-
-    <!-- Close button with icon placed at the top-right corner -->
-    <button @click="closeChildStatusModal" class="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-200">
-      <i class="fas fa-times text-red-600 text-xl"></i>
-    </button>
   </div>
 </div>
+
 
 
 <!-- Modal for showing clients who belong to the selected case status -->
 <div v-if="isCaseStatusModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-  <div class="relative bg-white p-6 rounded-lg shadow-lg w-96">
-    <h2 class="text-lg font-bold mb-4">{{ selectedCaseStatus }}</h2>
-    <p>Total Clients: {{ clientsByCaseStatus.length }}</p> <!-- Total number of clients -->
+  <div class="relative bg-white p-6 rounded-lg shadow-lg w-[32rem]">
+    <!-- Modal Header -->
+    <div class="flex justify-between items-center">
+      <h2 class="text-lg font-semibold">{{ selectedCaseStatus }}</h2>
+      <button @click="closeCaseStatusModal" class="text-gray-500 hover:text-red-600">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
 
-    <!-- Table to separate client names and dates -->
-    <table class="table-auto w-full mt-4">
-      <thead>
-        <tr class="text-left text-gray-700">
-          <th class="text-sm font-semibold">Client Name</th>
-          <th class="text-sm font-semibold">Date Admitted</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="client in clientsByCaseStatus" :key="client.id" class="border-t text-gray-700">
-          <td class="text-sm">{{ client.name }}</td>
-          <td class="text-sm">{{ client.date_admitted }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Total Clients Count -->
+    <p class="text-sm text-gray-500 mt-2">
+      <span class="font-medium text-gray-800">Total Clients:</span> {{ clientsByCaseStatus.length }}
+    </p>
 
-    <!-- Close button with icon placed at the top-right corner -->
-    <button @click="closeCaseStatusModal" class="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-200">
-      <i class="fas fa-times text-red-600 text-xl"></i>
-    </button>
+    <!-- Table -->
+    <div class="overflow-y-auto max-h-80 mt-4">
+      <table class="table-auto w-full text-left">
+        <thead>
+          <tr class="border-b text-gray-700">
+            <th class="text-sm font-semibold py-2">Client Name</th>
+            <th class="text-sm font-semibold py-2">Date Admitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr 
+            v-for="client in clientsByCaseStatus" 
+            :key="client.id" 
+            class="hover:bg-gray-50 border-b text-gray-800"
+          >
+            <td class="py-2 text-sm">{{ client.name }}</td>
+            <td class="py-2 text-sm">{{ client.date_admitted }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <div class="flex justify-between items-center mt-4">
-      <!-- Download Button -->
-      <button @click="downloadClientsByCaseStatus" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download</button>
+    <!-- Action Buttons -->
+    <div class="flex justify-end mt-4">
+      <button 
+        @click="downloadClientsByCaseStatus" 
+        class="px-4 py-2 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white rounded hover:opacity-90 transition-opacity"
+      >
+        Download
+      </button>
     </div>
   </div>
 </div>
 
 <!-- Modal for showing clients within the selected age range -->
 <div v-if="isAgeDistributionModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-  <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
-    <h2 class="text-lg font-bold mb-4">Age: {{ selectedAge }}</h2>
-    <p>Total Clients: {{ clientsByAge.length }}</p> <!-- Total number of clients -->
+  <div class="relative bg-white p-6 rounded-lg shadow-lg w-[32rem]">
+    <!-- Modal Header -->
+    <div class="flex justify-between items-center">
+      <h2 class="text-lg font-semibold">Age: {{ selectedAge }}</h2>
+      <button @click="closeAgeDistributionModal" class="text-gray-500 hover:text-red-600">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
 
-    <!-- Scrollable table container -->
-    <div class="overflow-y-auto max-h-60 mt-4">
-      <table class="table-auto w-full">
+    <!-- Total Clients Count -->
+    <p class="text-sm text-gray-500 mt-2">
+      <span class="font-medium text-gray-800">Total Clients:</span> {{ clientsByAge.length }}
+    </p>
+
+    <!-- Scrollable Table -->
+    <div class="overflow-y-auto max-h-80 mt-4">
+      <table class="table-auto w-full text-left">
         <thead>
-          <tr class="text-left text-gray-700">
-            <th class="text-sm font-semibold">Client Name</th>
-            <th class="text-sm font-semibold">Date Admitted</th>
+          <tr class="border-b text-gray-700">
+            <th class="text-sm font-semibold py-2">Client Name</th>
+            <th class="text-sm font-semibold py-2">Date Admitted</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="client in clientsByAge" :key="client.id" class="border-t text-gray-700">
-            <td class="text-sm">{{ client.name }}</td>
-            <td class="text-sm">{{ client.date_admitted }}</td>
+          <tr 
+            v-for="client in clientsByAge" 
+            :key="client.id" 
+            class="hover:bg-gray-50 border-b text-gray-800"
+          >
+            <td class="py-2 text-sm">{{ client.name }}</td>
+            <td class="py-2 text-sm">{{ client.date_admitted }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Close Button as Icon -->
-    <button @click="closeAgeDistributionModal" class="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-200">
-      <i class="fas fa-times text-red-600 text-xl"></i>
-    </button>
-
-    <!-- Buttons section -->
-    <div class="flex justify-between items-center mt-4">
-      <!-- Download Button -->
-      <button @click="downloadClientsByAge" class="px-4 py-2 bg-[conic-gradient(at_bottom_right,_var(--tw-gradient-stops))] from-blue-700 via-blue-800 to-gray-900 text-white rounded">Download</button>
+    <!-- Action Buttons -->
+    <div class="flex justify-end mt-4">
+      <button 
+        @click="downloadClientsByAge" 
+        class="px-4 py-2 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white rounded hover:opacity-90 transition-opacity"
+      >
+        Download
+      </button>
     </div>
   </div>
 </div>
+
 
 
 
