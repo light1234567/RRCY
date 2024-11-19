@@ -316,12 +316,13 @@
       <label><input type="checkbox" v-model="sheet.major_life_event.disability" :disabled="!editMode" /> acquired disability</label><br />
       
       <!-- Other specify field with small text input and underline -->
-      <div class="flex items-center whitespace-nowrap">
+      <div class="flex items-center whitespace-normal">
   <input type="checkbox" v-model="sheet.major_life_event.othersEnabled" :disabled="!editMode" @change="focusInput('majorLifeEvent')" />
-  <label class="ml-2">
+  <label class="ml-2" style="max-width: 330px; word-wrap: break-word; display: inline-block;">
     Others(<span v-if="sheet.major_life_event.othersEnabled" ref="majorLifeEvent" contenteditable="true" @input="updateMajorLifeEventOthers" class="editable">{{ sheet.major_life_event.others }}</span><span v-else>pls. specify</span>)
   </label>
 </div>
+
     </div>  
   </div>
 </div>
@@ -385,7 +386,36 @@
         <span class="ml-2">Beginning romantic relationship of parents</span>
       </label>
     </div>
+    
   </div>
+  <div class="flex items-center whitespace-nowrap">
+  <input 
+    type="checkbox" 
+    v-model="sheet.life_transition.othersEnabled" 
+    :disabled="!editMode" 
+    @change="focusInput('lifeTransition')" 
+  />
+  <label class="ml-2" style="max-width: 330px; word-wrap: break-word; display: inline-block;">
+    Others (
+    <span v-if="sheet.life_transition.othersEnabled">
+      <span 
+        ref="lifeTransition"
+        contenteditable="true" 
+        @blur="saveLifeTransitionOthers" 
+        @input="updateLifeTransitionOthers"
+        class="editable"
+        v-text="sheet.life_transition.others" 
+        style="white-space: pre-wrap; word-wrap: break-word; display: inline-block; " 
+      ></span>
+    </span>
+    <span v-else>pls. specify</span>
+    )
+  </label>
+</div>
+
+
+
+
 </div>
 
    
@@ -594,12 +624,11 @@
           <input type="checkbox" v-model="sheet.normalization.independence" :disabled="!editMode" />
           <span>Independence</span>
         </label>
-        <div class="flex items-center space-x-1 whitespace-nowrap">
-  <input type="checkbox" v-model="sheet.normalization.othersEnabled" :disabled="!editMode" @change="focusInput('attachments')" />
-  <label class="ml-2">
-    Others(<span v-if="sheet.normalization.othersEnabled" ref="attachments" contenteditable="true" @input="updatenNormalizationOthers" class="editable">{{ sheet.normalization.others }}</span><span v-else>pls. specify</span>)
-  </label>
-</div>
+         <label class="flex items-center space-x-1 whitespace-nowrap">
+          <input type="checkbox" v-model="sheet.normalization.rebellion" :disabled="!editMode" />
+          <span>Rebellion</span>
+        </label>
+
       </div>
     <div class="ml-24">
         <label class="flex items-center space-x-1 whitespace-nowrap">
@@ -614,10 +643,24 @@
           <input type="checkbox" v-model="sheet.normalization.guilt" :disabled="!editMode" />
           <span>Guilt</span>
         </label>
-        <label class="flex items-center space-x-1 whitespace-nowrap">
-          <input type="checkbox" v-model="sheet.normalization.rebellion" :disabled="!editMode" />
-          <span>Rebellion</span>
-        </label>
+       
+        <div class="flex items-center space-x-1 whitespace-nowrap">
+  <input 
+    type="checkbox" 
+    v-model="sheet.normalization.othersEnabled" 
+    :disabled="!editMode" 
+    @change="focusInput('attachments')" 
+  />
+  <label class="ml-2">
+    Others(
+      <span v-if="sheet.normalization.othersEnabled" ref="attachments" contenteditable="true" 
+            @input="updateNormalizationOthers" class="editable">
+        {{ sheet.normalization.others }}
+      </span>
+      <span v-else>pls. specify</span>
+    )
+  </label>
+</div>
     </div>
   </div>
 </div>
@@ -1054,7 +1097,7 @@ export default {
           kinship_foster_placement: false,
           beginning_romantic_relationship: false,
           beginning_parents_romantic_relationship: false,
-          others: false,
+          others: '',
         },
         development_changes: {
           early_childhood: false,
@@ -1428,6 +1471,9 @@ calculateAge(birthDate) {
     },
     updateEnduringLifeStrainOthers(event) {
       this.sheet.enduring_life_strain.others = event.target.innerText;
+    },
+    updateLifeTransitionOthers(event) {
+      this.sheet.life_transition.others = event.target.innerText;
     },
     updateBehaviourTowardsIncidentOthers1(event) {
       this.sheet.behaviour_towards_incident.others1 = event.target.innerText;
@@ -1829,8 +1875,7 @@ const majorLifeEvents = [
   { label: 'Victim of sexual abuse', value: this.sheet.major_life_event.sexual_abuse },
   { label: 'Victim of verbal abuse', value: this.sheet.major_life_event.verbal_abuse },
   { label: 'Acquired disability', value: this.sheet.major_life_event.disability },
-  { label: 'Others (pls. Specify)', value: this.sheet.major_life_event.others },
-];
+{ label: this.sheet.major_life_event.others ? `Others (${this.sheet.major_life_event.others})` : 'Others (pls. Specify)', value: this.sheet.major_life_event.others, }  ];
 
 // Split the events into two columns (left and right)
 const halfLength = Math.ceil(majorLifeEvents.length / 2);
@@ -1898,11 +1943,17 @@ const enduringLifeStrains = [
   { label: 'Physical illness', value: this.sheet.enduring_life_strain.physical_illness },
   { label: 'Lack of recreational facilities', value: this.sheet.enduring_life_strain.lack_recreational_facilities },
   { label: 'Exclusion from peers', value: this.sheet.enduring_life_strain.exclusion_from_peers },
-  { label: 'Other (pls. specify)', value: this.sheet.enduring_life_strain.other },
+
   { label: 'Constant need to earn for the family', value: this.sheet.enduring_life_strain.constant_need_to_earn },
   { label: 'Lack of educational opportunity', value: this.sheet.enduring_life_strain.lack_education_opportunity },
   { label: 'Exclusion from school', value: this.sheet.enduring_life_strain.exclusion_from_school },
-  { label: 'With disability', value: this.sheet.enduring_life_strain.with_disability }
+  { label: 'With disability', value: this.sheet.enduring_life_strain.with_disability },
+  {
+  label: this.sheet.enduring_life_strain.others 
+    ? `Others (${this.sheet.enduring_life_strain.others})` 
+    : 'Others (pls. specify)',
+  value: this.sheet.enduring_life_strain.others,
+},
 ];
 
 // Dynamic function to add checkboxes with text and handle page breaks
@@ -1980,7 +2031,12 @@ const lifeTransitions = [
   { label: 'Moving from biological family to a kinship/foster placement', value: this.sheet.life_transition.kinship_foster_placement },
   { label: 'Beginning romantic relationship', value: this.sheet.life_transition.beginning_romantic_relationship },
   { label: 'Beginning romantic relationship of parents', value: this.sheet.life_transition.beginning_parents_romantic_relationship },
-  { label: 'Others (pls. specify)', value: this.sheet.life_transition.others }
+  {
+  label: this.sheet.life_transition.others 
+    ? `Others (${this.sheet.life_transition.others})` 
+    : 'Others (pls. specify)',
+  value: this.sheet.life_transition.others,
+},
 ];
 
 // Dynamic function to add life transitions with checkboxes and handle page breaks
@@ -2212,10 +2268,16 @@ const feelingsItems = [
   { label: 'begging', value: this.sheet.behaviour_towards_incident.begging },
   { label: 'staying in the street', value: this.sheet.behaviour_towards_incident.staying_in_street },
   { label: 'indulge in illegal substance', value: this.sheet.behaviour_towards_incident.indulge_in_illegal_substance },
+  {
+  label: this.sheet.behaviour_towards_incident.others1 
+    ? `Others (${this.sheet.behaviour_towards_incident.others1})` 
+    : 'Others (pls. specify)',
+  value: this.sheet.behaviour_towards_incident.others1,
+},
   { label: 'unresponsive/ passive', value: this.sheet.behaviour_towards_incident.unresponsive_passive },
   { label: 'withdrawal', value: this.sheet.behaviour_towards_incident.withdrawal },
   { label: 'snatching', value: this.sheet.behaviour_towards_incident.snatching },
-  { label: 'others (pls. specify)', value: this.sheet.behaviour_towards_incident.others }
+ 
 ];
 
 // Dynamically add feelings items to the PDF
@@ -2241,13 +2303,22 @@ const feelingsItems1 = [
   { label: 'Feeling of Freedom', value: this.sheet.normalization.feeling_of_freedom, x: 30 },
   { label: 'Hatred', value: this.sheet.normalization.hatred, x: 30 },
   { label: 'Independence', value: this.sheet.normalization.independence, x: 30 },
-  { label: 'Others (pls specify)', value: this.sheet.normalization.others, x: 30 },
+  {
+  label: this.sheet.normalization.others 
+    ? `Others (${this.sheet.normalization.others})` 
+    : 'Others (pls. specify)',
+  value: this.sheet.normalization.others, // Fallback if undefined or null
+  x: 30, // Fixed x value
+},
 
   // Right column
   { label: 'Contented', value: this.sheet.normalization.contented, x: 90 },
   { label: 'Belongingness', value: this.sheet.normalization.belongingness, x: 90 },
   { label: 'Guilt', value: this.sheet.normalization.guilt, x: 90 },
-  { label: 'Rebellion', value: this.sheet.normalization.rebellion, x: 90 }
+  { label: 'Rebellion', value: this.sheet.normalization.rebellion, x: 90 },
+ 
+
+
 ];
 
 // Function to dynamically add Feelings section with page break handling
@@ -2318,12 +2389,19 @@ const attachmentsItems = [
   { label: 'Aunt', value: this.sheet?.attachments?.aunt || false },
   { label: 'Neighbour', value: this.sheet?.attachments?.neighbour || false },
   { label: 'Cousin', value: this.sheet?.attachments?.cousin || false },
+  { label: 'Teacher', value: this.sheet?.attachments?.teacher || false },
   { label: 'Father', value: this.sheet?.attachments?.father || false },
   { label: 'Grandfather', value: this.sheet?.attachments?.grandfather || false },
   { label: 'Uncle', value: this.sheet?.attachments?.uncle || false },
   { label: 'Peer', value: this.sheet?.attachments?.peer || false },
   { label: 'Schoolmate', value: this.sheet?.attachments?.schoolmate || false },
-  { label: 'Classmate', value: this.sheet?.attachments?.classmate || false }
+  { label: 'Classmate', value: this.sheet?.attachments?.classmate || false },
+  {
+  label: this.sheet.normalization.others
+    ? `Others (${this.sheet.normalization.others})` 
+    : 'Others (pls. specify)',
+  value: this.sheet.normalization.others,
+}
 ];
 
 // Define column X positions
@@ -2370,7 +2448,12 @@ const skillsItems = [
   { label: 'Survival skills', value: this.sheet.skills.survival_skills },
   { label: 'Decision making skills', value: this.sheet.skills.decision_making_skills },
   { label: 'Comprehension', value: this.sheet.skills.comprehension },
-  { label: 'Others', value: this.sheet.skills.others }
+  {
+  label: this.sheet.skills.others
+    ? `Others (${this.sheet.skills.others})` 
+    : 'Others (pls. specify)',
+  value: this.sheet.skills.others,
+}
 ];
 
 // Function to add skill items with checkboxes and styles
@@ -2441,7 +2524,14 @@ const internalResourcesItems = [
   { label: 'Spirituality', value: this.sheet.resources.spirituality, indent: true, column: 1 },
   { label: 'Resourceful', value: this.sheet.resources.resourceful, indent: true, column: 1 },
   { label: 'Obedient', value: this.sheet.resources.obedient, column: 1 },
-  { label: 'Others', value: this.sheet.resources.others, indent: true, column: 1 },
+  {
+  label: this.sheet.resources.others1
+    ? `Others (${this.sheet.resources.others1})` 
+    : 'Others (pls. specify)',
+  value: this.sheet.resources.others1,
+  indent: true,
+  column: 1
+},
   { label: 'Education', value: this.sheet.resources.education, indent: true, column: 2 },
   { label: 'Discipline', value: this.sheet.resources.discipline, indent: true, column: 2 },
   { label: 'Respectful', value: this.sheet.resources.respectful, indent: true, column: 2 },
@@ -2456,7 +2546,13 @@ const externalResourcesItems = [
   { label: 'Recreational services', value: this.sheet.resources.recreational_services, indent: true, column: 1 },
   { label: 'NGOs existing in the community', value: this.sheet.resources.ngos, column: 1 },
   { label: 'Civic Organization', value: this.sheet.resources.civic_organization, column: 1 },
-  { label: 'Others (pls. specify)', value: this.sheet.resources.others, column: 1 },
+  {
+  label: this.sheet.resources.others2
+    ? `Others (${this.sheet.resources.others2})` 
+    : 'Others (pls. specify)',
+  value: this.sheet.resources.others2,
+  column: 1
+},
 
   // Additional items from your HTML
   { label: 'Other Street Children', value: this.sheet.resources.street_children, column: 2 },
