@@ -160,23 +160,25 @@
     <h2 class="text-xl font-bold mb-4">{{ selectedOffense }}</h2>
     <p>Total Clients: {{ clientsByOffense.length }}</p> <!-- Total number of clients -->
     
-    <!-- Table to separate client names and dates -->
-    <table class="table-auto w-full mt-4">
-      <thead>
-        <tr class="text-left text-gray-700">
-          <th class="text-sm font-semibold">Client Name</th>
-          <th class="text-sm font-semibold">Date Admitted</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="client in clientsByOffense" :key="client.id" class="border-t text-gray-700">
-          <td class="text-sm">{{ client.name }}</td>
-          <td class="text-sm">{{ client.date_admitted }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Scrollable table container -->
+    <div class="overflow-y-auto max-h-60 mt-4">
+      <table class="table-auto w-full mt-4">
+        <thead>
+          <tr class="text-left text-gray-700">
+            <th class="text-sm font-semibold">Client Name</th>
+            <th class="text-sm font-semibold">Date Admitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="client in clientsByOffense" :key="client.id" class="border-t text-gray-700">
+            <td class="text-sm">{{ client.name }}</td>
+            <td class="text-sm">{{ client.date_admitted }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <!-- Close button with correct positioning inside the modal -->
+    <!-- Close button with icon placed at the top-right corner -->
     <button @click="closeOffenseModal" class="absolute top-2 right-2 px-2 p-2 rounded-full">
       <i class="fas fa-times text-red-600 text-xl"></i>
     </button>
@@ -188,7 +190,6 @@
     </div>
   </div>
 </div>
-
 <!-- Modal for showing clients who belong to the selected child status -->
 <div v-if="isChildStatusModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
   <div class="relative bg-white p-6 rounded-lg shadow-lg w-96">
