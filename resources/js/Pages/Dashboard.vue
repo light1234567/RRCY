@@ -719,10 +719,14 @@ const downloadClientsByCaseStatus = () => {
   });
 
   // Ensure that `selectedCaseStatus.value` is defined before using it
-  const fileName = selectedCaseStatus.value ? `clients_case_status_${selectedCaseStatus.value}.xlsx` : 'clients_case_status.xlsx';
+  const fileName = selectedCaseStatus.value 
+    ? `clients_case_status_${selectedCaseStatus.value.replace(/\//g, '')}.xlsx` 
+    : 'clients_case_status.xlsx';
 
-  // Truncate sheet name to 31 characters to avoid error
-  const sheetName = `Clients_Case_${selectedCaseStatus.value || 'All'}`.slice(0, 31);
+  // Truncate and sanitize sheet name to avoid errors with invalid characters
+  const sheetName = `Clients_Case_${selectedCaseStatus.value || 'All'}`
+    .replace(/[\\/:*?[\]]/g, '')  // Remove invalid characters
+    .slice(0, 31);  // Truncate sheet name to 31 characters
 
   // Create a new workbook and append the sheet
   const wb = XLSX.utils.book_new();
@@ -731,6 +735,7 @@ const downloadClientsByCaseStatus = () => {
   // Write the workbook to a file and trigger the download
   XLSX.writeFile(wb, fileName);
 };
+
 
 
 

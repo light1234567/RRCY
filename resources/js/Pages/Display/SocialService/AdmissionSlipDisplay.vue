@@ -288,8 +288,15 @@
             <div class="flex items-center text-[15px]">
               <label class="mb-3    text-black mr-2">d. Colour of Eye:</label>
               <div v-if="client.admissions[0]?.distinguishing_marks?.[0]">
-<input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" v-model="client.admissions[0].distinguishing_marks[0].colour_of_eye" :readonly="!editMode" required maxlength="10"
-/>
+                <input type="text"
+       class="underline-input1 bg-transparent flex-grow text-xs w-[100px]"
+       v-model="client.admissions[0].distinguishing_marks[0].colour_of_eye"
+       :readonly="!editMode"
+       required
+       maxlength="10"
+       @input="client.admissions[0].distinguishing_marks[0].colour_of_eye = $event.target.value.replace(/[^A-Za-z\s]/g, '')"
+       />
+
 </div>
             </div>
 
@@ -297,8 +304,14 @@
             <div class="flex items-center text-[15px]">
               <label class="mb-3    text-black mr-2">e. Skin:</label>
               <div v-if="client.admissions[0]?.distinguishing_marks?.[0]">
-<input type="text" class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" v-model="client.admissions[0].distinguishing_marks[0].skin_colour" :readonly="!editMode" required maxlength="10"
+                <input type="text" 
+       class="underline-input1 bg-transparent flex-grow text-xs w-[100px]" 
+       v-model="client.admissions[0].distinguishing_marks[0].skin_colour" 
+       :readonly="!editMode" 
+       maxlength="10" 
+       @input="client.admissions[0].distinguishing_marks[0].skin_colour = $event.target.value.replace(/[^A-Za-z\s]/g, '')" 
 />
+
 </div>
             </div>
           </div>
@@ -400,7 +413,7 @@
   
         <!-- Display the "Others" document name if it exists and not in edit mode -->
         <span v-if="getOthersDocument(client) && !editMode" class="underline ml-2">
-          1. {{ getOthersDocument(client) }}
+         {{ getOthersDocument(client) }}
         </span>
       </div>
 
