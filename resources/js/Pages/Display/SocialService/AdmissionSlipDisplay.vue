@@ -488,7 +488,7 @@
         required
         maxlength="50"
       >
-      <label class="block text-[15px] text-black -mt-3 text-center">Name & Signature of Referring Party</label>
+      <label class="block text-[15px] text-black -mt-3 text-center">Name of Referring Party</label>
     </div>
   </div>
   

@@ -51,7 +51,7 @@ return new class extends Migration
             'fname' => 'RRCY',
             'lname' => 'TEST',
             'email' => 'rrcytest@gmail.com',
-            'role' => 'social services',
+            'role' => 'admin',
             'status' => 'v', // Use 'v' for verified
             'password' => bcrypt('12345678'), // Use the password '12345678'
             'created_at' => now(),

@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
             'fname' => 'Michael ',
             'lname' => 'Entero',
             'middlename' => 'Estorgio',
-            'email' => 'michaelentero123@gmail.com',
+            'email' => 'raborden02372@usep.edu.ph',
             'role' => 'admin',
             'status' => 'v',
-            'password' => Hash::make('kel12345'),
+            'password' => Hash::make('12345678'),
 
         ]);
     }

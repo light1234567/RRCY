@@ -35,14 +35,15 @@
                   First Name: <span class="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
-                  id="clientFirstName"
-                  v-model="form.client.first_name"
-                  @input="removeNumbers('first_name')"
-                  class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-                  required
-                  maxlength="20"
-                />
+  type="text"
+  id="clientFirstName"
+  v-model="form.client.first_name"
+  @input="form.client.first_name = $event.target.value.replace(/[^a-zA-Z\s]/g, '')"
+  class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+  required
+  maxlength="20"
+/>
+
               </div>
               <div class="mb-2">
                 <label
@@ -51,13 +52,14 @@
                   >Middle Name:</label
                 >
                 <input
-                  type="text"
-                  id="clientMiddleName"
-                  v-model="form.client.middle_name"
-                  @input="removeNumbers('middle_name')"
-                  class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-                  maxlength="15"
-                />
+  type="text"
+  id="clientMiddleName"
+  v-model="form.client.middle_name"
+  @input="form.client.middle_name = $event.target.value.replace(/[^a-zA-Z\s]/g, '')"
+  class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+  maxlength="15"
+/>
+
               </div>
               <div class="mb-2">
                 <label
@@ -67,14 +69,15 @@
                   Last Name: <span class="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
-                  id="clientLastName"
-                  v-model="form.client.last_name"
-                  @input="removeNumbers('last_name')"
-                  class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-                  maxlength="15"
-                  required
-                />
+  type="text"
+  id="clientLastName"
+  v-model="form.client.last_name"
+  @input="form.client.last_name = $event.target.value.replace(/[^a-zA-Z\s]/g, '')"
+  class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+  maxlength="15"
+  required
+/>
+
               </div>
               <div class="mb-2">
                 <label for="clientSuffix" class="block mb-1 text-sm font-medium"
@@ -294,17 +297,15 @@
                     Please specify: <span class="text-red-500">*</span>
                   </label>
                   <input
-                    type="text"
-                    id="customReligion"
-                    v-model="form.client.customReligion"
-                    class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
-                    placeholder="Enter your religion"
-                    @input="
-                      form.client.customReligion =
-                        form.client.customReligion.replace(/\d+/g, '')
-                    "
-                    required
-                  />
+  type="text"
+  id="customReligion"
+  v-model="form.client.customReligion"
+  class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm twinkle-border"
+  placeholder="Enter your religion"
+  @input="form.client.customReligion = $event.target.value.replace(/[^a-zA-Z\s]/g, '')"
+  required
+/>
+
                 </div>
               </transition>
             </div>
@@ -327,16 +328,14 @@
                 Tattoo/Scars:
               </label>
               <input
-                type="text"
-                id="tattooScars"
-                v-model="form.distinguishing_marks.tattoo_scars"
-                maxlength="150"
-                class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-                @input="
-                  form.distinguishing_marks.tattoo_scars =
-                    form.distinguishing_marks.tattoo_scars.replace(/\d+/g, '')
-                "
-              />
+  type="text"
+  id="tattooScars"
+  v-model="form.distinguishing_marks.tattoo_scars"
+  maxlength="150"
+  class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+  @input="form.distinguishing_marks.tattoo_scars = $event.target.value.replace(/[^a-zA-Z\s]/g, '')"
+/>
+
             </div>
 
             <div class="mb-2">
@@ -344,13 +343,16 @@
                 Height (cm):
               </label>
               <input
-                type="number"
-                id="height"
-                v-model="form.distinguishing_marks.height"
-                class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
-                max="999"
-                min="0"
-              />
+  type="text"  
+  id="height"
+  v-model="form.distinguishing_marks.height"
+  class="w-full px-3 py-2 border rounded-md shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 text-sm"
+  maxlength="3"
+  @input="form.distinguishing_marks.height = $event.target.value.replace(/[^0-9]/g, '')"
+  min="0"
+  max="999"
+/>
+
             </div>
 
             <div class="mb-2">
@@ -841,7 +843,7 @@
                   for="referringParty"
                   class="block mb-1 text-sm font-medium"
                 >
-                  Name & Signature of Referring Party:
+                  Name of Referring Party:
                 </label>
                 <input
                   type="text"
